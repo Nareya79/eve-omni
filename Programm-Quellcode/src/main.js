@@ -1205,6 +1205,51 @@ async function kfLoop(){
   kf.busy = false;
   if (kf.on) kf.timer = setTimeout(kfLoop, wait);
 }
+/* ---------------- HZ23: Intel-Kanäle mitlesen (wie RIFT) ----------------
+   EVE schreibt Chats nach Dokumente\EVE\logs\Chatlogs\<Kanal>_<JJJJMMTT>_<HHMMSS>[_<Charakter-ID>].txt (UTF-16 LE, nur mit „Chat in Datei protokollieren“).
+   Wir lesen nur neue Zeilen der gewählten Kanäle und schicken sie an die Seite – dort Systemerkennung und Alarm über den Alert. */
+const intel = { on: false, chans: [], dir: '', timer: null, pos: {} };
+function intelDir(){ return intel.dir || path.join(app.getPath('documents'), 'EVE', 'logs', 'Chatlogs'); }
+const INTEL_FILE = /^(.+)_(\d{8})_(\d{6})(?:_\d+)?\.txt$/;
+function intelFiles(){
+  let out = [];
+  try{ out = fs.readdirSync(intelDir()).map(f => { const m = INTEL_FILE.exec(f); if (!m) return null; let st; try{ st = fs.statSync(path.join(intelDir(), f)); }catch(e){ return null; } return { f, chan: m[1], t: st.mtimeMs, size: st.size }; }).filter(Boolean); }catch(e){}
+  return out;
+}
+function intelList(){
+  const files = intelFiles(), last = {};
+  files.forEach(x => { if (!last[x.chan] || x.t > last[x.chan]) last[x.chan] = x.t; });
+  return { dir: intelDir(), ok: fs.existsSync(intelDir()), chans: Object.keys(last).filter(c => Date.now() - last[c] < 30 * 86400000).sort((a, b) => last[b] - last[a]) };
+}
+// ponytail: Abfrage jede Sekunde statt fs.watch (auf Windows bei OneDrive/Netzlaufwerk unzuverlässig) – bei sehr vielen Logdateien auf fs.watch umstellen
+function intelTick(){
+  intel.timer = null;
+  if (!intel.on || !intel.chans.length) return;
+  const want = intel.chans.map(c => c.toLowerCase()), now = Date.now();
+  intelFiles().filter(x => want.indexOf(x.chan.toLowerCase()) >= 0 && now - x.t < 86400000).forEach(x => {
+    const p = path.join(intelDir(), x.f);
+    if (intel.pos[p] === undefined){ intel.pos[p] = x.size; return; }   // alte Zeilen beim Start nicht melden
+    if (x.size < intel.pos[p]) intel.pos[p] = 0;
+    if (x.size === intel.pos[p]) return;
+    let len = x.size - intel.pos[p]; len -= len % 2;   // UTF-16: nur ganze Zeichen
+    if (len <= 0) return;
+    let buf = Buffer.alloc(len);
+    try{ const fd = fs.openSync(p, 'r'); fs.readSync(fd, buf, 0, len, intel.pos[p]); fs.closeSync(fd); }catch(e){ return; }
+    intel.pos[p] += len;
+    buf.toString('utf16le').replace(/^\uFEFF/, '').split(/\r?\n/).forEach(line => {
+      const m = /^\s*\[\s*([\d.]+ [\d:]+)\s*\]\s*(.+?)\s>\s(.*)$/.exec(line);
+      if (m && m[2] !== 'EVE-System' && m[2] !== 'EVE System') send({ type: 'intel', chan: x.chan, who: m[2].trim(), text: m[3].trim(), t: Date.parse(m[1].replace(/\./g, '-').replace(' ', 'T') + 'Z') || now });
+    });
+  });
+  intel.timer = setTimeout(intelTick, 1000);
+}
+function intelSet(o){
+  o = o || {};
+  intel.on = !!o.on; intel.chans = Array.isArray(o.chans) ? o.chans.map(String) : []; intel.dir = String(o.dir || '');
+  clearTimeout(intel.timer); intel.timer = null;
+  if (intel.on && !TEST) intelTick();
+  return intelList();
+}
 function kfSet(on){
   on = !!on;
   if (on === kf.on) return;
@@ -1718,6 +1763,8 @@ ipcMain.on('evecore:showMain', () => showWin(true));
 ipcMain.on('evecore:openExternal', (ev, url) => { url = String(url || ''); if (/^https:\/\/login\.eveonline\.com\//.test(url)) shell.openExternal(url); });
 ipcMain.on('evecore:quit', () => { quitting = true; app.quit(); });
 ipcMain.on('evecore:killfeed', (ev, on) => { if (!TEST) kfSet(on); else kf.on = !!on; });
+ipcMain.handle('evecore:intelList', () => intelList());   // HZ23
+ipcMain.handle('evecore:intelSet', (ev, o) => intelSet(o));
 ipcMain.handle('evecore:activateClient', (ev, hwnd) => activateClient(hwnd));
 ipcMain.handle('evecore:frontClient', () => (fg.clients.find(c => c.hwnd === fg.lastEve) || {}).name || '');
 ipcMain.handle('evecore:mainState', () => ({ visible: !!(win && !win.isDestroyed() && win.isVisible() && !win.isMinimized()), mode: S.mode }));

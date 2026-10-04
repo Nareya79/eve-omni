@@ -79,6 +79,7 @@ section.panel{display:none}
 #jp-history-table .jp-pin[aria-pressed="true"]{color:var(--accent)}
 #jp-history-table tr.jp-pinned td{background:color-mix(in srgb, var(--accent) 8%, transparent)}
 .sys-ac-host{position:relative}
+.gh-intel{color:var(--warn)}.grx-c.intel{max-width:28rem}.grx-c.intel small{white-space:normal}
 .sys-me{position:absolute;right:3px;bottom:3px;height:calc(100% - 6px);max-height:1.9rem;min-width:1.8rem;padding:0 5px;border:0;background:transparent;color:var(--accent2);cursor:pointer;font-size:.95rem;line-height:1}.sys-me:hover{background:var(--surface-2)}.sys-me:disabled{opacity:.5;cursor:wait}input.has-me{padding-right:2rem}
 .charbox{margin-bottom:16px}
 .charbox > summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px}
@@ -3943,6 +3944,12 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
   <button class="btn ghost" id="ga-tone-play" type="button">&#x25B6;&#xFE0E; Anh&ouml;ren</button>
   <button class="btn ghost" id="ga-test" type="button">Alarm testen</button>
   <span class="item-sub" id="ga-status2" style="flex:1 1 100%"></span>
+  <h4 class="acc-h" style="flex:1 1 100%;margin:10px 0 0">Intel-Kan&auml;le (wie RIFT)<span class="q-tip" title="EVE Omni liest die Chat-Logs der gewählten Kanäle mit. Erkennt es ein System im Umkreis (wie oben) oder auf deiner Route, kommt der Alarm hier über den Alert. „clr“ = System wieder frei. In EVE muss „Chat in Datei protokollieren“ an sein (Einstellungen › Chat). Nur im Programm.">?</span></h4>
+  <label class="chk" style="flex:1 1 100%"><input type="checkbox" id="ga-intel-on"> Intel-Kan&auml;le mitlesen</label>
+  <div class="field" style="flex:1 1 100%"><label>Kan&auml;le <button class="btn ghost" id="ga-intel-scan" type="button" style="height:1.6rem;padding:0 8px">Kan&auml;le suchen</button></label><div id="ga-intel-chans" style="display:flex;flex-wrap:wrap;gap:4px 16px"></div></div>
+  <div class="field" style="flex:1 1 320px"><label for="ga-intel-dir">Chat-Log-Ordner (leer = Dokumente\EVE\logs\Chatlogs)</label><input type="text" id="ga-intel-dir" spellcheck="false"></div>
+  <div class="field"><label for="ga-intel-tone">Ton f&uuml;r Intel</label><select id="ga-intel-tone"></select></div>
+  <span class="item-sub" id="ga-intel-st" style="flex:1 1 100%"></span>
 </div>
 </div>
 <div class="set-pane" data-pane="program" id="set-pane-program">
@@ -4067,7 +4074,8 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
 <h3 class="acc-h">Was EVE Omni kann</h3>
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – Karte auch als Universum-Schema wie im Atlas (Live-Ebenen Schiffe/Kapseln/NPC/Sprünge/Souveränität mit Top 20, Regionskarte mit Kästchen und Konstellationen, PNG speichern); Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, Jump Planner, Jump Bridges, Regionskarte mit Route, Kills und Charakteren.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, Neocom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), Neocom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, Deckkraft mit Strg + Mausrad, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen).</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
-<details class="skills-more" open><summary>Beta 4.0.71 · 04.10.2026</summary><ul class="about-list"><li>📍 in jedem Ortsfeld (Reiseroute, Jump Planner, Routenplaner, Hauling, Kartensuche): Klick trägt dein aktuelles System ein – wie „Standort ermitteln“ am Handy. Welcher Charakter: der im Feld gewählte (Route: „Standort von“, Hauling: Hauler), sonst der einzige laufende EVE-Client bzw. einzige Online-Charakter, sonst kleines Auswahlmenü. Nicht bei „Meiden“/Zwischenstopps.</li><li>Navigation folgt dir selbst: „Standort mitverfolgen“ ist jetzt ab Werk an (abschaltbar). Alle 30 s: „hier bin ich“ rückt weiter, das Start-Feld läuft mit, verlässt du die Route, wird sie ab deinem System automatisch neu berechnet, am Ziel steht „Ziel erreicht“.</li></ul></details>
+<details class="skills-more" open><summary>Beta 4.0.72 · 04.10.2026</summary><ul class="about-list"><li>Fehler behoben: „Kürzer über Thera/Turnur?“ bzw. die Route meldete „Route nicht berechenbar (ESI 420)“. 420 heißt: EVE bremst, weil in der letzten Minute zu viele ESI-Abfragen fehlgeschlagen sind. EVE Omni wartet jetzt, bis EVE wieder freigibt, und fragt dann noch einmal – und hält bei fast leerem Fehlerkonto alle Abfragen kurz an, statt weitere Fehler zu sammeln.</li><li>Intel-Kanäle wie bei RIFT (Einstellungen › Alarme › Alert › Intel-Kanäle): EVE Omni liest die Chat-Logs deiner Intel-Kanäle mit. Erkennt es ein System im Alert-Umkreis oder auf deiner Route, kommt der Alarm über den Alert – Overlay geht auf, eigener Ton (wählbar), Desktop-Meldung, Eintrag im Gang-Report mit der Original-Zeile. „+3“ = 4 Piloten, „clr“ nimmt die Meldung wieder weg. Kanäle mit „intel“ im Namen sind vorausgewählt. In EVE muss „Chat in Datei protokollieren“ an sein. Nur im Programm.</li></ul></details>
+<details class="skills-more"><summary>Beta 4.0.71 · 04.10.2026</summary><ul class="about-list"><li>📍 in jedem Ortsfeld (Reiseroute, Jump Planner, Routenplaner, Hauling, Kartensuche): Klick trägt dein aktuelles System ein – wie „Standort ermitteln“ am Handy. Welcher Charakter: der im Feld gewählte (Route: „Standort von“, Hauling: Hauler), sonst der einzige laufende EVE-Client bzw. einzige Online-Charakter, sonst kleines Auswahlmenü. Nicht bei „Meiden“/Zwischenstopps.</li><li>Navigation folgt dir selbst: „Standort mitverfolgen“ ist jetzt ab Werk an (abschaltbar). Alle 30 s: „hier bin ich“ rückt weiter, das Start-Feld läuft mit, verlässt du die Route, wird sie ab deinem System automatisch neu berechnet, am Ziel steht „Ziel erreicht“.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.70 · 04.10.2026</summary><ul class="about-list"><li>Charaktere: Jede Karte hat unten „Skills, Implantate, Klone“ zum Aufklappen – aktueller Skill mit Restzeit, die nächsten Skills, wann die Warteschlange leer ist, aktive Implantate, Heimatstation, Klonsprung-Sperre und Sprungklone. Knopf „alle aufklappen“. Auch im Charaktere-Overlay. Der Reiter „Klone &amp; Implantate“ entfällt.</li><li>Planeten haben eine eigene Seite (Neocom › Planeten) mit „Planeten (PI)“ und „PI-Planer“ – vorher öffnete das Symbol die Charakter-Seite mit denselben Reitern, darum sah beides gleich aus.</li><li>„Route ab hier“ aus der Charakterkarte entfernt – die Reiseroute hat dafür „📍 Start = mein Standort“ mit Charakterwahl.</li><li>Stream-Tasten/Mirabox: Drehknopf „Jukebox“ drücken = Play/Pause, Jukebox-Taste drücken = Jukebox-Overlay auf/zu (vorher umgekehrt). Die Taste zeigt weiter Titel und läuft/Pause. Dafür einmal Einstellungen › Programm › Stream-Tasten „Plugin installieren“ und die Stream-Dock-Software neu starten.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.69 · 04.10.2026</summary><ul class="about-list"><li>Gank-Sicherheit statt Haken: In Hub-Handel und Hauling (auch im Overlay unter „Suchoptionen“) wählst du vor der Suche <b>aus / vorsichtig (1500) / normal (2000) / an der Grenze (3000 ISK/EHP)</b>. Standard ist „normal“: Bisher kappte der Haken genau auf die Gank-Grenze (3000 ISK/EHP, ab da lohnt sich ein Gank) – z. B. 1,37 Mrd in der Charon mit 3× Bulkheads, also ohne jeden Abstand. „normal“ hält ein Drittel Abstand (ca. 913 Mio). Ein früher gesetzter Haken wird zu „normal“. Die automatische Schiffswahl rechnet mit der gewählten Stufe.</li><li>Ampel ehrlicher: grün „sicher“ bis 2000, gelb „riskant“ 2000–3000, rot „Gank-Ziel“ über 3000 ISK/EHP. „sicher (an der Grenze)“ aus 4.0.68 entfällt.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.68 · 04.10.2026</summary><ul class="about-list"><li>Fehler behoben: Gank-Ampel fehlte im Handel- und Hauling-Overlay – jetzt steht sie in jeder Option. Konnte die Ampel nicht rechnen (kein Schiff erkannt, EHP nicht berechenbar), war sie einfach weg; jetzt steht der Grund da. Haken „nur gank-sichere Ladung“: meldet, wenn er nicht rechnen kann, statt still das volle Budget zu nehmen; im Hauling wurde ein sicheres Budget von 0 zum vollen Budget – jetzt Meldung „keine Ladung gank-sicher möglich“. Auf die Grenze gekappte Ladung heißt jetzt „Gank: sicher (an der Grenze)“ statt „knapp“. Rigs zählen nicht mehr zum Gank-Wert (droppen nie, laut zeronin.de).</li></ul></details>
@@ -4518,6 +4526,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     "EVE aktualisiert die Planetendaten nur, wenn du die Kolonie im Spiel öffnest („Stand“ je Planet). Laufzeiten der Extraktoren sind fest – der Lagerfüllstand ist der Wert vom letzten Öffnen, die Hochrechnung darunter schätzt, wie viel die Extraktoren seitdem dazugeliefert haben.": "EVE only updates planet data when you open the colony in game (“as of” per planet). Extractor run times are fixed – the storage level is the value from the last opening, the projection below estimates how much the extractors have added since.",
     "Aktive Implantate: keine": "Active implants: none",
     "Keine Sprungklone.": "No jump clones.",
+    "Intel-Kanäle (wie RIFT)": "Intel channels (like RIFT)", "Intel-Kanäle mitlesen": "Read intel channels", "Kanäle": "Channels", "Kanäle suchen": "Find channels", "Chat-Log-Ordner (leer = Dokumente\\EVE\\logs\\Chatlogs)": "Chat log folder (empty = Documents\\EVE\\logs\\Chatlogs)", "Ton für Intel": "Sound for intel", "Intel-Kanäle gehen nur im Programm (die Seite darf keine Dateien lesen).": "Intel channels only work in the app (the page may not read files).", "Noch kein Kanal gewählt – „Kanäle suchen“.": "No channel chosen yet – „Find channels“.", "Alert ist aus – oben einschalten.": "Alert is off – switch it on above.", "Keine Chat-Logs der letzten 30 Tage gefunden.": "No chat logs from the last 30 days found.", "Ordner nicht gefunden.": "Folder not found.", "Intel": "Intel",
     "Skills, Implantate, Klone": "Skills, implants, clones", "alle aufklappen": "expand all", "alle zuklappen": "collapse all", "Skills: noch nicht geladen": "Skills: not loaded yet", "Klone: noch nicht geladen": "Clones: not loaded yet", "Skill-Warteschlange leer": "Skill queue empty", "Skills: Berechtigung fehlt – einmal neu einloggen": "Skills: permission missing – log in again once", "Aktive Implantate:": "Active implants:", "Heimatstation:": "Home station:", "Letzter Klonsprung:": "Last clone jump:", "Skill:": "Skill:", "danach:": "then:", "jetzt möglich": "possible now", "(ohne Skill-Bonus gerechnet)": "(calculated without skill bonus)", "Skills, Implantate und Klone bei allen Charakteren auf- bzw. zuklappen": "Expand or collapse skills, implants and clones for all characters",
     "Jita-Preise laden": "Load Jita prices",
     "Maus auf eine Ware: Linien zu Zutaten und Produkten · Klick: Kette festhalten + Planer": "Hover a commodity: lines to inputs and products · click: pin chain + planner",
@@ -4955,7 +4964,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     [/^Konkurrenz (ruhig|mittel|heiß): (\d+) \/ (\d+) \/ (\d+) Orders nah am besten Preis in 1 \/ 6 \/ 24 Std\. geändert(?: · bester Preis (\d+)× gewechselt \(eigene Beobachtung, 6 Std\.\))?$/, function(m, l, a, b, c, o){ return "Competition " + COMP[l] + ": " + a + " / " + b + " / " + c + " orders near the best price changed in 1 / 6 / 24 h" + (o ? " · best price changed " + o + "× (own observation, 6 h)" : ""); }],
     [/^Laufender Auftrag Nr\. (\d+)$/, "Running order no. $1"], [/^Order läuft ab (.+)$/, "Order expires $1"], [/^Kills der letzten (\d+) Std\. \(scannt neu\)$/, "Kills of the last $1 h (rescans)"],
     [/^Stufe (\d) gelernt, Ziel (\d) \((\d+) % der Stufe\)$/, "Level $1 trained, target $2 ($3 % of the level)"], [/^Kopieren: (.+)$/, "Copy: $1"], [/^Sicherheit (\S+) – auf der Karte zeigen$/, "Security $1 – show on map"],
-    [/^Ziel erreicht: (.+)\.$/, "Destination reached: $1."], [/^Route verlassen – neu berechnet ab (.+?)\. (.*)$/, function(m, a, b){ return "Off route – recalculated from " + a + ". " + (tr(b) || b); }], [/^Mein Standort eintragen \((.+): (.+)\)$/, "Enter my location ($1: $2)"], [/^Warteschlange: (\d+) Skills?, leer in$/, function(m, n){ return "Queue: " + n + " skill" + (n > 1 ? "s" : "") + ", empty in"; }], [/^· offen (\d+)$/, "· open $1"], [/^(\d+) \/ (\d+) \((\d+) frei\)$/, "$1 / $2 ($3 free)"],
+    [/^Ziel erreicht: (.+)\.$/, "Destination reached: $1."], [/^Lese mit: (.+)\.$/, "Reading: $1."], [/^Ordner nicht gefunden: (.+?) – .*$/, "Folder not found: $1 – switch on „Log chat to file“ in EVE or enter the folder."], [/^Intel · (.+)$/, "Intel · $1"], [/^Intel \((.+?)\): (.+?) – (in deinem System|\d+ Sprünge?) – (.+)$/, function(m, c, n, d, t){ return "Intel (" + c + "): " + n + " – " + (d === "in deinem System" ? "in your system" : d.replace("Sprünge", "jumps").replace("Sprung", "jump")) + " – " + t; }], [/^Route verlassen – neu berechnet ab (.+?)\. (.*)$/, function(m, a, b){ return "Off route – recalculated from " + a + ". " + (tr(b) || b); }], [/^Mein Standort eintragen \((.+): (.+)\)$/, "Enter my location ($1: $2)"], [/^Warteschlange: (\d+) Skills?, leer in$/, function(m, n){ return "Queue: " + n + " skill" + (n > 1 ? "s" : "") + ", empty in"; }], [/^· offen (\d+)$/, "· open $1"], [/^(\d+) \/ (\d+) \((\d+) frei\)$/, "$1 / $2 ($3 free)"],
     [/^gekauft (.+?) · verkauft (.+?)(?: · Lager (.+))?$/, function(m, a, b, c){ return "bought " + a + " · sold " + b + (c ? " · stock " + c : ""); }], [/^Aus (\d+) Buchungen von (\d+) Wallets?$/, "From $1 entries of $2 wallet(s)"],
     [/^(Wochenbericht|Monatsbericht) (.+)$/, function(m, a, b){ return (a === "Wochenbericht" ? "Weekly report " : "Monthly report ") + b; }], [/^geladen (\d\d:\d\d)$/, "loaded $1"], [/^Notiz (\d+)$/, "Note $1"],
     [/^Gank: (knapp|riskant|sicher) (.+) ISK\/EHP$/, function(m, a, b){ return "Gank: " + (a === "sicher" ? "safe" : "risky") + " " + b + " ISK/EHP"; }], [/^(.+) wird gemeldet – Klick: nicht melden$/, "$1 is reported – click: don't report"], [/^(.+) wird nicht gemeldet – Klick: melden$/, "$1 is not reported – click: report"],
@@ -5773,6 +5782,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     Object.keys((opts && opts.headers) || {}).forEach(function(k){ h[k] = opts.headers[k]; });
     h["X-Compatibility-Date"] = ESI_COMPAT_DATE;
     o.headers = h;
+    if (esiPauseUntil > Date.now()) await esiSleep(Math.min(60000, esiPauseUntil - Date.now()));   // ESI-Fehlerkonto leer: alle warten, statt weitere Fehler zu sammeln
     var res;
     try{ res = await window.fetch(u, o); }
     catch(e){
@@ -5784,8 +5794,17 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       try{ ra = parseInt(res.headers.get("retry-after") || "5", 10) || 5; }catch(e){}
       if (ra <= 30){ await esiSleep(ra * 1000); res = await window.fetch(u, o); }
     }
+    // ESI zählt Fehler (4xx/5xx) je Verbindung, ab 100 pro Minute kommt 420 „error limited“ für ALLE Abfragen.
+    // Wenig übrig oder 420 → bis zum Zurücksetzen pausieren; bei 420 danach einmal neu versuchen.
+    var left = esiHdrNum(res, "x-esi-error-limit-remain"), reset = esiHdrNum(res, "x-esi-error-limit-reset");
+    if (res && res.status >= 400 && (res.status === 420 || (left !== null && left < 10)) && reset !== null) esiPauseUntil = Math.max(esiPauseUntil, Date.now() + (reset + 1) * 1000);
+    if (res && res.status === 420 && (reset === null || reset <= 60)){
+      await esiSleep(((reset === null ? 10 : reset) + 1) * 1000); res = await window.fetch(u, o);
+    }
     return res;
   }
+  var esiPauseUntil = 0;
+  function esiHdrNum(res, k){ try{ var v = res && res.headers && res.headers.get(k); return v == null || v === "" ? null : (isFinite(Number(v)) ? Number(v) : null); }catch(e){ return null; } }
   // Alle fetch()-Aufrufe in EVE Omni gehen ueber esiFetch (fremde Adressen werden unveraendert durchgereicht).
   function fetch(url, opts){ return esiFetch(url, opts); }
   var FORGE = 10000002;
@@ -15122,13 +15141,13 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       }
       if (!esiLegacyMode){
         if (res && res.status === 404) return null;
-        throw new Error("Route nicht berechenbar (ESI " + (res ? res.status : "?") + ")");
+        throw new Error(res && res.status === 420 ? "EVE bremst gerade (zu viele ESI-Fehler in der letzten Minute) – in einer Minute nochmal versuchen" : "Route nicht berechenbar (ESI " + (res ? res.status : "?") + ")");
       }
     }
     var q = "?datasource=tranquility&flag=" + (pref || "shortest") + (avoidIds.length ? "&avoid=" + avoidIds.join(",") : "");
     var r2 = await fetch(ESI_LEGACY + "/route/" + fromId + "/" + toId + "/" + q);
     if (r2.status === 404) return null;
-    if (!r2.ok) throw new Error("Route nicht berechenbar (ESI " + r2.status + ")");
+    if (!r2.ok) throw new Error(r2.status === 420 ? "EVE bremst gerade (zu viele ESI-Fehler in der letzten Minute) – in einer Minute nochmal versuchen" : "Route nicht berechenbar (ESI " + r2.status + ")");
     return r2.json();
   }
 
@@ -19269,7 +19288,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "4.0.71";
+  var EVECORE_VERSION = "4.0.72";
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   function setShow(k){
     var panes = document.querySelectorAll("#panel-settings .set-pane");
@@ -19480,6 +19499,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     else if (cmd.type === "dscanPaste") dsFromText(cmd.text, true);   // AA11
     else if (cmd.type === "music") jbxCommand(String(cmd.cmd || ""));
     else if (cmd.type === "kill") gaOnKill(cmd.data);
+    else if (cmd.type === "intel") gaOnIntel(cmd);   // HZ23
     else if (cmd.type === "killfeed"){ gaState.feed = String(cmd.status || ""); gaStatus(); }
     else if (cmd.type === "backupRequest"){
       if (EVH && EVH.writeBackup) EVH.writeBackup(dxBuildJson(!!cmd.includeLogins), cmd.reason || "auto").then(function(){ hsRender(); }, function(){});
@@ -22092,13 +22112,18 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     try{ await rtSystems([k.sys]); }catch(e){}
     var sx = rtSysLoad().sys[k.sys] || { n: "#" + k.sys };
     var wn = al.who ? gaCharName(al.who) : "dir";
-    var msg = (al.rt !== undefined ? "⚠ Gank auf deiner Route (" + (al.rt === 0 ? "hier" : al.rt + " Spr. voraus") + ") – " : "") + al.att + " Piloten in " + sx.n + " – " + (dist === 0 ? "im System von " + wn : dist + (dist === 1 ? " Sprung" : " Sprünge") + " von " + wn) + (al.ships.length ? ": " + al.ships.slice(0, 4).map(function(x){ return rfNameCache[x] || ""; }).filter(Boolean).join(", ") : "");
+    var msg0 = (al.rt !== undefined ? "⚠ Gank auf deiner Route (" + (al.rt === 0 ? "hier" : al.rt + " Spr. voraus") + ") – " : "") + al.att + " Piloten in " + sx.n + " – " + (dist === 0 ? "im System von " + wn : dist + (dist === 1 ? " Sprung" : " Sprünge") + " von " + wn) + (al.ships.length ? ": " + al.ships.slice(0, 4).map(function(x){ return rfNameCache[x] || ""; }).filter(Boolean).join(", ") : "");
+    gaRaise(al, msg0, d.tone || "beep");
+    return true;
+  }
+  // Alarm melden (Kill oder HZ23-Intel): Popup, Ton, Desktop-Meldung, Gang-Report, Neocom-Blinken
+  function gaRaise(al, msg, tone){
+    var d = gaLoad();
     if (d.popup && EVH && EVH.showView) gaPopup();
-    if (d.sound || true){ var ov = ovLoad(); if (d.sound) gaTone(d.tone || "beep"); if (d.desk){ if (EVH && EVH.notify){ try{ EVH.notify("EVE Omni: Alert", msg); }catch(e){} } else if (typeof Notification !== "undefined" && Notification.permission === "granted"){ try{ new Notification("EVE Omni: Alert", { body: msg, silent: true }); }catch(e){} } } }
+    if (d.sound || true){ var ov = ovLoad(); if (d.sound) gaTone(tone); if (d.desk){ if (EVH && EVH.notify){ try{ EVH.notify("EVE Omni: Alert", msg); }catch(e){} } else if (typeof Notification !== "undefined" && Notification.permission === "granted"){ try{ new Notification("EVE Omni: Alert", { body: msg, silent: true }); }catch(e){} } } }
     grPut(al);
     if (d.blink !== false){ var bs = Number(d.blinkSecs) || 5; gaBlinkUntil = Date.now() + bs * 1000; ovPublishSatellites(); setTimeout(ovPublishSatellites, bs * 1000 + 50); }   // S14
     gaRenderList(); ovRender(); gaStatus();
-    return true;
   }
   // Alarm-Fenster: aufgehen, ein paar Sekunden zeigen, wieder schliessen (nur wenn es vom Alarm geoeffnet wurde)
   var gaPopTimer = null, gaPopAuto = false;
@@ -22123,7 +22148,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     var e = { key: key, sys: al.sys, n: sx.n || ("#" + al.sys), s: sx.s, dist: al.dist, who: al.who ? gaCharName(al.who) : "", att: al.att, kills: al.kills, first: al.first, last: al.last,
       ships: al.ships.slice(0, 8).map(function(x){ return rfNameCache[x] || ""; }).filter(Boolean),
       rt: al.rt, orgs: al.orgs.slice(0, 4).map(function(o){ return ltTk(o) ? (o >= 99000000 && o < 100000000 ? "<" + ltTk(o) + ">" : "[" + ltTk(o) + "]") : (rfNameCache[o] || ""); }).filter(Boolean), test: !!al.test,
-      whoId: al.who ? String(al.who) : "",
+      whoId: al.who ? String(al.who) : "", intel: al.intel ? al.intel.chan + " – " + al.intel.by + ": " + al.intel.text : "",
       p: (al.pilots || []).slice(0, 20).map(function(x){ return { i: x.i, n: rfNameCache[x.i] || "", s: x.s || 0, sn: rfNameCache[x.s] || "", c: x.c || 0, t: gaTkOf(x) }; }),
       v: (al.vict || []).slice(-10).map(function(x){ return { k: x.k > 0 ? x.k : 0, i: x.i || 0, c: x.c || 0, n: rfNameCache[x.i] || "", s: x.s || 0, sn: rfNameCache[x.s] || "", t: gaTkOf(x) }; }),
       sh: Object.keys(al.shipN || {}).sort(function(a, b){ return al.shipN[b] - al.shipN[a]; }).slice(0, 8).map(function(id){ return { s: Number(id), n: rfNameCache[id] || "", c: al.shipN[id] }; }) };
@@ -22157,6 +22182,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     });
     (e.sh || []).slice(0, open ? 8 : 4).forEach(function(x){ h += chip(gaImg("t", x.s, 32), (x.n || "Schiff") + (x.c > 1 ? " ×" + x.c : ""), ""); });
     if (open) (e.p || []).forEach(function(p){ h += chip(gaImg("c", p.i, 32) + gaImg("t", p.s, 32), p.n || "#" + p.i, p.t || p.sn || ""); });
+    if (e.intel) h += chip("", "Intel", e.intel, "intel");   // HZ23
     h += chip("", e.att + " Feinde", e.orgs.join(" ") + (e.test ? " · TEST" : ""), "host") +
       '<a class="grx-c gr-zk" href="' + grZkUrl(e) + '" target="_blank" rel="noopener" title="Diesen Kampf auf zKillboard öffnen"><span class="ga-rn"><b>zKill</b><small>' + e.kills + (e.kills === 1 ? " Kill" : " Kills") + "</small></span></a>";
     return h + "</div>";
@@ -22382,7 +22408,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     var h = '<div class="gh ' + (al.dist <= 1 ? "hot" : "") + '"><div class="gh-top">' +
       '<div class="gh-c"><span class="gh-sys" style="border-color:' + col + ";color:" + col + '">' + (sx.s !== undefined ? rtSecText(sx.s) : "?") + '</span><span class="ga-rn"><b' + sysA(al.sys) + ' style="color:' + col + '">' + escapeHtml(sx.n) + "</b><small>" + escapeHtml(where) + "</small></span></div>" +
       (al.who ? '<div class="gh-c">' + gaImg("c", al.who, 64) + '<span class="ga-rn"><b>' + escapeHtml(gaCharName(al.who)) + "</b><small>Dein Charakter" + (function(){ var o = (gaState.origins || {})[al.who], x = o ? rtSysLoad().sys[o] : null; return x ? " · " + escapeHtml(x.n) : ""; })() + "</small></span></div>" : "") +
-      "</div>" + (al.rt !== undefined ? '<div class="gh-sub" style="color:var(--loss)"><b>⚠ Gank auf deiner Route</b> – ' + (al.rt === 0 ? "in deinem Routen-System" : al.rt + (al.rt === 1 ? " Sprung" : " Sprünge") + " voraus") + "</div>" : "") + '<div class="gh-sub">' + al.att + " Piloten · " + al.kills + (al.kills === 1 ? " Kill" : " Kills") + " · " + gaAgo(al.last) + (al.test ? " · TEST" : "") + "</div>";
+      "</div>" + (al.intel ? '<div class="gh-sub gh-intel"><b>Intel · ' + escapeHtml(al.intel.chan) + "</b> – " + escapeHtml(al.intel.by) + ": " + escapeHtml(al.intel.text) + "</div>" : "") + (al.rt !== undefined ? '<div class="gh-sub" style="color:var(--loss)"><b>⚠ Gank auf deiner Route</b> – ' + (al.rt === 0 ? "in deinem Routen-System" : al.rt + (al.rt === 1 ? " Sprung" : " Sprünge") + " voraus") + "</div>" : "") + '<div class="gh-sub">' + al.att + " Piloten · " + al.kills + (al.kills === 1 ? " Kill" : " Kills") + " · " + gaAgo(al.last) + (al.test ? " · TEST" : "") + "</div>";
     (al.vict || []).slice(-3).reverse().forEach(function(v){
       h += gaKillRow(v, '<span class="gh-kill">&#x2620;&#xFE0E;</span>' + gaImg("t", v.s, 32) + (v.i ? gaImg("c", v.i, 32) : "") + (v.c ? gaImg("o", v.c, 32) : "") + '<span class="ga-rn"><b>Kill</b><small>' + escapeHtml((rfNameCache[v.s] || "") + (v.i && rfNameCache[v.i] ? " · " + rfNameCache[v.i] : "") + (gaTkOf(v) ? " " + gaTkOf(v) : "")) + "</small></span>");
     });
@@ -22469,7 +22495,70 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     if (EVH && EVH.killfeed){ try{ EVH.killfeed(!!d.on); }catch(e){} }
     else { gaBrowser.on = !!d.on; clearTimeout(gaBrowser.timer); if (d.on){ gaBrowser.seq = null; gaBrowserLoop(); } }
     if (d.on) gaUpdateNear(true);
+    gaIntelApply();   // HZ23
     gaStatus(); ovRender();
+  }
+  /* HZ23: Intel-Kanäle (Chat-Logs, main.js liest mit) → Alarm über den Alert wie ein Kill.
+     Format (zeronin.de/intel-channel): „System Pilot Schiff“, „+3“ weitere, „nv“ = Schiff unbekannt, „System clr“ = frei. */
+  var gaIntelLow = null;
+  function gaIntelSys(text){
+    if (!sysNames) return null;
+    if (!gaIntelLow){ gaIntelLow = {}; sysNames.forEach(function(n){ gaIntelLow[n.toLowerCase()] = n; }); }
+    var w = String(text).replace(/https?:\/\/\S+/g, " ").split(/[\s,;:!?()]+/).filter(Boolean);
+    for (var i = 0; i < w.length; i++){ var n = gaIntelLow[w[i].replace(/[*.]+$/, "").toLowerCase()]; if (n) return n; }
+    return null;
+  }
+  function gaIntelParse(text){
+    var t = String(text || ""), plus = /(?:^|\s)\+(\d{1,3})(?=\s|$)/.exec(t);
+    return { sys: gaIntelSys(t), clr: /(?:^|\s)(clr|clear)(?=\s|$)/i.test(t), att: plus ? 1 + Number(plus[1]) : 1 };
+  }
+  async function gaOnIntel(m){
+    var d = gaLoad(); if (!d.on || !d.intelOn || !m || !m.text) return false;
+    if (!sysNames){ try{ await loadSystemNames(); }catch(e){ return false; } }
+    var p = gaIntelParse(m.text); if (!p.sys) return false;
+    var id = ((await rtResolve([p.sys]).catch(function(){ return {}; }))[p.sys.toLowerCase()] || {}).id; if (!id) return false;
+    if (p.clr){ var n0 = gaState.alarms.length; gaState.alarms = gaState.alarms.filter(function(a){ return !(a.intel && a.sys === id); }); if (gaState.alarms.length !== n0){ gaRenderList(); ovRender(); } return false; }
+    if (!gaState.near) await gaUpdateNear(false);
+    var RL = rtLoad().last, ri = RL && RL.route ? RL.route.indexOf(id) : -1, rt = ri >= (RL ? RL.pos || 0 : 0) && ri >= 0 ? ri - (RL.pos || 0) : undefined;
+    var dist = gaState.near ? gaState.near[id] : undefined;
+    if (dist === undefined && rt === undefined) return false;
+    if (dist === undefined) dist = rt;
+    try{ await rtSystems([id]); }catch(e){}
+    if (d.sec && !gaSecOk(d, id)) return false;
+    var now = Date.now(), al = gaState.alarms.filter(function(x){ return x.intel && x.sys === id && now - x.last < 600000; })[0];
+    if (al){ al.att = Math.max(al.att, p.att); al.last = now; al.seen = now; al.intel = { text: m.text, by: m.who, chan: m.chan }; if (rt !== undefined) al.rt = rt; }
+    else { al = { sys: id, dist: dist, who: (gaState.nearBy || {})[id] || "", kills: 0, att: p.att, ships: [], orgs: [], first: now, last: now, seen: now, victims: [], pilots: [], vict: [], shipN: {}, rt: rt, intel: { text: m.text, by: m.who, chan: m.chan } }; gaState.alarms.unshift(al); }
+    gaState.alarms = gaState.alarms.filter(function(x){ return Date.now() - x.seen < 45 * 60000; }).slice(0, 30);
+    var sx = rtSysLoad().sys[id] || { n: p.sys };
+    gaRaise(al, "Intel (" + m.chan + "): " + sx.n + " – " + (dist === 0 ? "in deinem System" : dist + (dist === 1 ? " Sprung" : " Sprünge")) + " – " + m.text, d.intelTone || "ping");
+    return true;
+  }
+  function gaIntelApply(){
+    var d = gaLoad(), st = document.getElementById("ga-intel-st");
+    if (!(EVH && EVH.intelSet)){ if (st) st.textContent = "Intel-Kanäle gehen nur im Programm (die Seite darf keine Dateien lesen)."; return; }
+    EVH.intelSet({ on: !!(d.on && d.intelOn), chans: d.intelChans || [], dir: d.intelDir || "" }).then(function(r){
+      if (!st) return;
+      st.textContent = !r.ok ? "Ordner nicht gefunden: " + r.dir + " – in EVE „Chat in Datei protokollieren“ einschalten oder Ordner eintragen." :
+        !d.intelOn ? "" : !(d.intelChans || []).length ? "Noch kein Kanal gewählt – „Kanäle suchen“." : !d.on ? "Alert ist aus – oben einschalten." : "Lese mit: " + d.intelChans.join(", ") + ".";
+    }, function(){});
+  }
+  function gaIntelChans(){
+    var box = document.getElementById("ga-intel-chans"); if (!box) return;
+    if (!(EVH && EVH.intelList)){ gaIntelApply(); return; }
+    EVH.intelList().then(function(r){
+      var d = gaLoad(), sel = d.intelChans || [], list = r.chans.slice();
+      sel.forEach(function(c){ if (list.indexOf(c) < 0) list.push(c); });
+      if (!d.intelPicked){ sel = list.filter(function(c){ return /intel/i.test(c); }); d.intelChans = sel; gaSave(d); }   // Vorauswahl: Kanäle mit „intel“ im Namen
+      box.innerHTML = "";
+      list.forEach(function(c){
+        var lb = el("label", "chk", ""); lb.style.flex = "0 1 auto";
+        var cb = el("input"); cb.type = "checkbox"; cb.value = c; cb.checked = sel.indexOf(c) >= 0;
+        cb.onchange = function(){ var x = gaLoad(); x.intelPicked = true; x.intelChans = [].map.call(box.querySelectorAll("input:checked"), function(i){ return i.value; }); gaSave(x); gaIntelApply(); };
+        lb.appendChild(cb); lb.appendChild(document.createTextNode(" " + c)); box.appendChild(lb);
+      });
+      if (!list.length) box.appendChild(el("span", "item-sub", r.ok ? "Keine Chat-Logs der letzten 30 Tage gefunden." : "Ordner nicht gefunden."));
+      gaIntelApply();
+    }, function(){});
   }
   (function gaInit(){
     var box = document.getElementById("ga-box"); if (!box) return;
@@ -22516,6 +22605,17 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       gaOnKill({ killmail_id: -Date.now(), esi: { solar_system_id: sys, killmail_time: new Date().toISOString(), victim: { ship_type_id: 587 },
         attackers: [{ character_id: 1, corporation_id: 1000001, ship_type_id: 22456 }, { character_id: 2, corporation_id: 1000001, ship_type_id: 17738 }, { character_id: 3, corporation_id: 1000001, ship_type_id: 11379 }] }, zkb: {} }, { test: true });
     };
+    // HZ23: Intel-Kanäle
+    document.getElementById("ga-intel-on").checked = !!d.intelOn;
+    document.getElementById("ga-intel-on").onchange = function(){ var x = gaLoad(); x.intelOn = this.checked; gaSave(x); if (this.checked) gaIntelChans(); else gaIntelApply(); };
+    document.getElementById("ga-intel-dir").value = d.intelDir || "";
+    document.getElementById("ga-intel-dir").onchange = function(){ var x = gaLoad(); x.intelDir = this.value.trim(); gaSave(x); gaIntelChans(); };
+    document.getElementById("ga-intel-scan").onclick = gaIntelChans;
+    var its = document.getElementById("ga-intel-tone");
+    its.innerHTML = Object.keys(GA_TONES).filter(function(k){ return k !== "file"; }).map(function(k){ return '<option value="' + k + '">' + GA_TONES[k] + "</option>"; }).join("");
+    its.value = d.intelTone || "ping";
+    its.onchange = function(){ var x = gaLoad(); x.intelTone = this.value; gaSave(x); gaTone(this.value); };
+    if (d.intelOn) gaIntelChans();
     gaStatus();
     if (d.on) setTimeout(gaApply, 2000);
   })();

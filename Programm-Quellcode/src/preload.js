@@ -61,6 +61,8 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   mainState: () => ipcRenderer.invoke('evecore:mainState'),
   quitApp: () => ipcRenderer.send('evecore:quit'),
   killfeed: on => ipcRenderer.send('evecore:killfeed', !!on),
+  intelList: () => ipcRenderer.invoke('evecore:intelList'),   // HZ23
+  intelSet: o => ipcRenderer.invoke('evecore:intelSet', o),
   openExternal: url => ipcRenderer.send('evecore:openExternal', String(url)),
   activateClient: hwnd => ipcRenderer.invoke('evecore:activateClient', String(hwnd)),
   frontClient: () => ipcRenderer.invoke('evecore:frontClient'),
