@@ -423,7 +423,7 @@ function satCt(w){
   return !!S.clickThrough || !!(id && id !== 'neocom' && (S.windows[id] || {}).ct);
 }
 function openSat(id, show){
-  if (!VIEWS[id]) return null;
+  if (!VIEWS[id] || quitting) return null;   // 4.0.67: beim Beenden keine Fenster mehr oeffnen – sonst bricht app.quit ab
   if (sats[id] && !sats[id].isDestroyed()) return sats[id];
   const cfg = S.windows[id] || {};
   const b = visibleOnScreen(cfg.bounds) ? cfg.bounds : satDefaultBounds(id);
@@ -1078,6 +1078,7 @@ function pvOpen(c, i){
 // teilen sich ein Fenster („Stapel“), es zeigt den obersten; Klick holt ihn nach vorne, ist er schon vorne, kommt der naechste.
 let pvStackTop = null;
 function pvSync(){
+  if (quitting) return;   // 4.0.67: Helfer meldet beim Beenden weiter FG/EVES – neue Vorschau-Fenster hielten das Programm am Leben
   const p = pvCfg();
   const all = p.float && !demoOn() && (fg.status === 'ok' || TEST) ? fg.clients : [];   // V1: keine schwebende Vorschau in der Demo
   const unnamed = all.filter(c => !c.name), top = unnamed.find(c => c.hwnd === pvStackTop) || unnamed[0];
