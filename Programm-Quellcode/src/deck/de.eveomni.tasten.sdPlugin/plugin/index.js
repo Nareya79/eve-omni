@@ -206,7 +206,7 @@ function cmd(a){ return fetch(BASE + "/cmd" + Q, { method: "POST", headers: { "C
       sock.send(JSON.stringify({ event: "setSettings", context: k.ctx, payload: k.settings })); }
   }
   function push(k){
-    var a = k.kind === "dialJb" ? { type: "ov", arg: "musik" } : k.kind === "dialAlpha" ? { type: "ovAlpha", set: 1 } : k.kind === "dialOv" ? (st && st.cur ? { type: "ov", arg: st.cur.v } : null) :
+    var a = k.kind === "dialJb" ? { type: "jb", cmd: "toggle" } : k.kind === "dialAlpha" ? { type: "ovAlpha", set: 1 } : k.kind === "dialOv" ? (st && st.cur ? { type: "ov", arg: st.cur.v } : null) :
       { type: "timer", arg: dialMin(k), name: (k.settings || {}).name || "" };
     if (a) cmd(a).catch(function(){ if (sock) sock.send(JSON.stringify({ event: "showAlert", context: k.ctx })); });
   }
@@ -216,7 +216,7 @@ function cmd(a){ return fetch(BASE + "/cmd" + Q, { method: "POST", headers: { "C
   function kindOf(action){ return String(action || "").split(".").pop(); }
   function press(k){
     var s = k.settings || {};
-    var a = k.kind === "overlay" ? { type: "ov", arg: s.view || "trades" } : k.kind === "timer" ? { type: "timer", arg: s.min || 5, name: s.name || "" } : k.kind === "jukebox" ? { type: "jb", cmd: "toggle" } : { type: "ov", arg: "uhr" };   // Uhr-Taste öffnet das Uhr-Overlay (Timer, Alarme)
+    var a = k.kind === "overlay" ? { type: "ov", arg: s.view || "trades" } : k.kind === "timer" ? { type: "timer", arg: s.min || 5, name: s.name || "" } : k.kind === "jukebox" ? { type: "ov", arg: "musik" } : { type: "ov", arg: "uhr" };   // Uhr-Taste öffnet das Uhr-Overlay (Timer, Alarme)
     if (k.kind === "action" || (k.kind === "display" && s.act)){   // SD-C: Aktion bzw. Kombi (Anzeige + eigene Aktion beim Drücken)
       var id = s.act || "ov", A = ACTS[id];
       a = id === "ov" ? { type: "ov", arg: s.view || "trades" } : id === "timer" ? { type: "timer", arg: s.min || 5, name: s.name || "" } : A && A.c ? JSON.parse(JSON.stringify(A.c)) : null;

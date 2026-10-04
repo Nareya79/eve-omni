@@ -2,9 +2,9 @@
 (function(){
   "use strict";
   var HINT = { overlay: "Drücken blendet das gewählte Overlay-Fenster ein oder aus. Offen = Rahmen in der Symbolfarbe.", timer: "Drücken startet einen Timer in der EVE-Omni-Uhr. Die Taste zeigt den nächsten laufenden Timer.",
-    jukebox: "Drücken = Abspielen/Anhalten. Die Taste zeigt den Titel.", clock: "Zeigt die Uhrzeit (wie in EVE Omni eingestellt), deinen laufenden Timer bzw. den Countdown bis zur Downtime. Drücken öffnet das Uhr-Overlay.",
+    jukebox: "Drücken = Jukebox-Overlay öffnen/schließen. Die Taste zeigt Titel und läuft/Pause (Play/Pause liegt auf dem Drehknopf).", clock: "Zeigt die Uhrzeit (wie in EVE Omni eingestellt), deinen laufenden Timer bzw. den Countdown bis zur Downtime. Drücken öffnet das Uhr-Overlay.",
     action: "Drücken löst die gewählte Aktion in EVE Omni aus. Aktionen mit „Zwischenablage“: erst in EVE kopieren (Strg+A, Strg+C), dann die Taste drücken.",
-    dialJb: "Drehen = Lautstärke, drücken = Jukebox-Overlay öffnen bzw. schließen. Der Streifen zeigt den Titel, beim Drehen 1 s lang nur die Lautstärke.", dialAlpha: "Drehen = Deckkraft aller Overlays in 5-%-Schritten (eigene Werte einzelner Overlays gehen mit), drücken = alle 100 %.",
+    dialJb: "Drehen = Lautstärke, drücken = Play/Pause. Der Streifen zeigt den Titel, beim Drehen 1 s lang nur die Lautstärke.", dialAlpha: "Drehen = Deckkraft aller Overlays in 5-%-Schritten (eigene Werte einzelner Overlays gehen mit), drücken = alle 100 %.",
     dialOv: "Drehen = durch alle Overlays blättern, drücken = das gewählte öffnen bzw. (wenn schon offen) schließen.", dialTimer: "Drehen = Minuten (1–120), drücken = Timer starten. Der Streifen zeigt den laufenden Timer.",
     display: "Zeigt den gewählten Wert live. Rot = Achtung (blinkt bei überbotenen Trades und nahem Feind). Drücken öffnet das passende Overlay – oder die Aktion, die du darunter wählst (Kombi-Taste)." };
   var sock, uuid, kind = "", settings = {}, charSet = {};

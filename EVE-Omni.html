@@ -79,6 +79,7 @@ section.panel{display:none}
 #jp-history-table .jp-pin[aria-pressed="true"]{color:var(--accent)}
 #jp-history-table tr.jp-pinned td{background:color-mix(in srgb, var(--accent) 8%, transparent)}
 .sys-ac-host{position:relative}
+.sys-me{position:absolute;right:3px;bottom:3px;height:calc(100% - 6px);max-height:1.9rem;min-width:1.8rem;padding:0 5px;border:0;background:transparent;color:var(--accent2);cursor:pointer;font-size:.95rem;line-height:1}.sys-me:hover{background:var(--surface-2)}.sys-me:disabled{opacity:.5;cursor:wait}input.has-me{padding-right:2rem}
 .charbox{margin-bottom:16px}
 .charbox > summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px}
 .charbox > summary::-webkit-details-marker{display:none}
@@ -969,6 +970,8 @@ html.in-host.host-transparent body:not(.ov-mode) #host-grip{display:block}
 .ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:10px}
 .ch-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border-strong);padding:10px 12px;display:flex;flex-direction:column;gap:5px}
 .ch-card.on{border-left-color:var(--profit)}
+.ch-more summary{cursor:pointer;font-size:.82rem;color:var(--accent2);font-weight:600;margin-top:2px}.ch-more[open] summary{margin-bottom:4px}.ch-more .ch-line{margin-top:3px}
+#panel-chars .subtabs [hidden]{display:none !important}
 .ch-head{display:flex;align-items:center;gap:8px}
 .ch-head img{width:40px;height:40px;border-radius:2px}
 .ch-head .nm{font-weight:700;font-size:1rem;flex:1;min-width:0}
@@ -1924,7 +1927,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     <svg class="ic ic-intel" viewBox="0 0 24 24"></svg>
     <span class="neo-label">Local Report</span>
   </button>
-  <button class="neo-btn" id="neo-btn-chars" role="tab" aria-selected="false" title="Charaktere: Standort, online, Schiff, Planeten (PI), Klone &amp; Implantate" type="button">
+  <button class="neo-btn" id="neo-btn-chars" role="tab" aria-selected="false" title="Charaktere: Standort, online, Schiff – aufklappen: Skill-Warteschlange, Implantate, Klone" type="button">
     <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.8-3.4 3.2-5 6-5s5.2 1.6 6 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.4c2.6.2 4.4 1.8 5 4.6"/></svg>
     <span class="neo-label">Charak&shy;tere</span>
   </button>
@@ -3113,7 +3116,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       <select id="rt-loc-char"></select>
     </div>
     <button class="btn ghost" id="rt-loc-start" type="button" title="Start = aktuelles System dieses Charakters">&#x1F4CD;&#xFE0E; Start = mein Standort</button>
-    <label class="chk" style="flex:0 1 auto"><input type="checkbox" id="rt-loc-follow"> Standort mitverfolgen (&bdquo;hier bin ich&ldquo; automatisch)</label>
+    <label class="chk" style="flex:0 1 auto"><input type="checkbox" id="rt-loc-follow"> Standort mitverfolgen (&bdquo;hier bin ich&ldquo;, Start l&auml;uft mit, Route verlassen = neu berechnen)</label>
     <label class="chk" style="flex:0 1 auto"><input type="checkbox" id="rt-jb-on"> Jump Bridges benutzen</label>
     <span class="item-sub" id="rt-loc-info"></span>
   </div>
@@ -3501,8 +3504,8 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
 <section class="panel" id="panel-chars">
   <div class="subtabs" role="tablist" style="margin-bottom:12px">
     <button class="tab-btn" id="ch-sub-over" role="tab" aria-selected="true" type="button">&Uuml;bersicht</button>
+    <button class="btn ghost" id="ch-all-open" type="button" title="Skills, Implantate und Klone bei allen Charakteren auf- bzw. zuklappen">alle aufklappen</button>
     <button class="tab-btn" id="ch-sub-pi" role="tab" aria-selected="false" type="button">Planeten (PI)</button>
-    <button class="tab-btn" id="ch-sub-clones" role="tab" aria-selected="false" type="button">Klone &amp; Implantate</button>
     <button class="tab-btn" id="ch-sub-pp" role="tab" aria-selected="false" type="button">PI-Planer</button>
     <div class="spacer"></div>
     <button class="btn ghost" id="ch-refresh" type="button">Aktualisieren</button>
@@ -3520,7 +3523,6 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     <p class="note">EVE aktualisiert die Planetendaten nur, wenn du die Kolonie im Spiel &ouml;ffnest (&bdquo;Stand&ldquo; je Planet). Laufzeiten der Extraktoren sind fest &ndash;
       der Lagerf&uuml;llstand ist der Wert vom letzten &Ouml;ffnen, die Hochrechnung darunter sch&auml;tzt, wie viel die Extraktoren seitdem dazugeliefert haben.</p>
   </div>
-  <div id="ch-clones" hidden></div>
   <div id="ch-pp" hidden><div id="pp-page"></div></div>
 </section>
 
@@ -4065,7 +4067,9 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
 <h3 class="acc-h">Was EVE Omni kann</h3>
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – Karte auch als Universum-Schema wie im Atlas (Live-Ebenen Schiffe/Kapseln/NPC/Sprünge/Souveränität mit Top 20, Regionskarte mit Kästchen und Konstellationen, PNG speichern); Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, Jump Planner, Jump Bridges, Regionskarte mit Route, Kills und Charakteren.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, Neocom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), Neocom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, Deckkraft mit Strg + Mausrad, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen).</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
-<details class="skills-more" open><summary>Beta 4.0.69 · 04.10.2026</summary><ul class="about-list"><li>Gank-Sicherheit statt Haken: In Hub-Handel und Hauling (auch im Overlay unter „Suchoptionen“) wählst du vor der Suche <b>aus / vorsichtig (1500) / normal (2000) / an der Grenze (3000 ISK/EHP)</b>. Standard ist „normal“: Bisher kappte der Haken genau auf die Gank-Grenze (3000 ISK/EHP, ab da lohnt sich ein Gank) – z. B. 1,37 Mrd in der Charon mit 3× Bulkheads, also ohne jeden Abstand. „normal“ hält ein Drittel Abstand (ca. 913 Mio). Ein früher gesetzter Haken wird zu „normal“. Die automatische Schiffswahl rechnet mit der gewählten Stufe.</li><li>Ampel ehrlicher: grün „sicher“ bis 2000, gelb „riskant“ 2000–3000, rot „Gank-Ziel“ über 3000 ISK/EHP. „sicher (an der Grenze)“ aus 4.0.68 entfällt.</li></ul></details>
+<details class="skills-more" open><summary>Beta 4.0.71 · 04.10.2026</summary><ul class="about-list"><li>📍 in jedem Ortsfeld (Reiseroute, Jump Planner, Routenplaner, Hauling, Kartensuche): Klick trägt dein aktuelles System ein – wie „Standort ermitteln“ am Handy. Welcher Charakter: der im Feld gewählte (Route: „Standort von“, Hauling: Hauler), sonst der einzige laufende EVE-Client bzw. einzige Online-Charakter, sonst kleines Auswahlmenü. Nicht bei „Meiden“/Zwischenstopps.</li><li>Navigation folgt dir selbst: „Standort mitverfolgen“ ist jetzt ab Werk an (abschaltbar). Alle 30 s: „hier bin ich“ rückt weiter, das Start-Feld läuft mit, verlässt du die Route, wird sie ab deinem System automatisch neu berechnet, am Ziel steht „Ziel erreicht“.</li></ul></details>
+<details class="skills-more"><summary>Beta 4.0.70 · 04.10.2026</summary><ul class="about-list"><li>Charaktere: Jede Karte hat unten „Skills, Implantate, Klone“ zum Aufklappen – aktueller Skill mit Restzeit, die nächsten Skills, wann die Warteschlange leer ist, aktive Implantate, Heimatstation, Klonsprung-Sperre und Sprungklone. Knopf „alle aufklappen“. Auch im Charaktere-Overlay. Der Reiter „Klone &amp; Implantate“ entfällt.</li><li>Planeten haben eine eigene Seite (Neocom › Planeten) mit „Planeten (PI)“ und „PI-Planer“ – vorher öffnete das Symbol die Charakter-Seite mit denselben Reitern, darum sah beides gleich aus.</li><li>„Route ab hier“ aus der Charakterkarte entfernt – die Reiseroute hat dafür „📍 Start = mein Standort“ mit Charakterwahl.</li><li>Stream-Tasten/Mirabox: Drehknopf „Jukebox“ drücken = Play/Pause, Jukebox-Taste drücken = Jukebox-Overlay auf/zu (vorher umgekehrt). Die Taste zeigt weiter Titel und läuft/Pause. Dafür einmal Einstellungen › Programm › Stream-Tasten „Plugin installieren“ und die Stream-Dock-Software neu starten.</li></ul></details>
+<details class="skills-more"><summary>Beta 4.0.69 · 04.10.2026</summary><ul class="about-list"><li>Gank-Sicherheit statt Haken: In Hub-Handel und Hauling (auch im Overlay unter „Suchoptionen“) wählst du vor der Suche <b>aus / vorsichtig (1500) / normal (2000) / an der Grenze (3000 ISK/EHP)</b>. Standard ist „normal“: Bisher kappte der Haken genau auf die Gank-Grenze (3000 ISK/EHP, ab da lohnt sich ein Gank) – z. B. 1,37 Mrd in der Charon mit 3× Bulkheads, also ohne jeden Abstand. „normal“ hält ein Drittel Abstand (ca. 913 Mio). Ein früher gesetzter Haken wird zu „normal“. Die automatische Schiffswahl rechnet mit der gewählten Stufe.</li><li>Ampel ehrlicher: grün „sicher“ bis 2000, gelb „riskant“ 2000–3000, rot „Gank-Ziel“ über 3000 ISK/EHP. „sicher (an der Grenze)“ aus 4.0.68 entfällt.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.68 · 04.10.2026</summary><ul class="about-list"><li>Fehler behoben: Gank-Ampel fehlte im Handel- und Hauling-Overlay – jetzt steht sie in jeder Option. Konnte die Ampel nicht rechnen (kein Schiff erkannt, EHP nicht berechenbar), war sie einfach weg; jetzt steht der Grund da. Haken „nur gank-sichere Ladung“: meldet, wenn er nicht rechnen kann, statt still das volle Budget zu nehmen; im Hauling wurde ein sicheres Budget von 0 zum vollen Budget – jetzt Meldung „keine Ladung gank-sicher möglich“. Auf die Grenze gekappte Ladung heißt jetzt „Gank: sicher (an der Grenze)“ statt „knapp“. Rigs zählen nicht mehr zum Gank-Wert (droppen nie, laut zeronin.de).</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.67 · 04.10.2026</summary><ul class="about-list"><li>Fehler behoben: EVE Omni ließ sich über das Symbol unten rechts › „Beenden“ nicht richtig beenden – die Fenster gingen zu, aber die Clientvorschau und Overlays öffneten sich sofort neu (der Hintergrund-Helfer meldet weiter EVE-Fensterwechsel), das Programm lief weiter und Neocom-Knöpfe reagierten nicht mehr. Beim Beenden werden jetzt keine Fenster mehr geöffnet.</li><li>Fehler behoben: Rechtsklick auf das Symbol unten rechts › „Beenden“ tat nichts. Das Menü wurde laufend neu aufgebaut (z. B. wenn sich die EVE-Clients ändern) und hat den Klick verschluckt – jetzt nur noch, wenn sich wirklich etwas ändert.</li><li>Installer: fragt nicht mehr „nur für mich / für alle Benutzer“ und keinen Zielordner – EVE Omni wird immer ohne Admin-Rechte nach %LOCALAPPDATA%\Programs\EVE Omni installiert. Behebt „Fehler 5: Zugriff verweigert“ beim Ordner „C:\Program Files (x86)\EVE Omni“.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.66 · 04.10.2026</summary><ul class="about-list"><li>Soundtrack: ein Titel ist raus, der EVE Omni Soundtrack hat jetzt 23 Titel. Gespeicherte Favoriten und Playlists funktionieren weiter (der fehlende Titel wird einfach übersprungen). Neu: Soundtrack-Lizenz (soundtrack/LICENSE, Deutsch + Englisch) – du darfst die Musik in eigenen Videos und Streams nutzen, auch mit Werbeeinnahmen, mit Namensnennung. Englisch: Fußzeile der Overlays (EVE-Stand, nächste Aktualisierung), Local-Spalte Kills/Verluste, Thera-Knopf.</li></ul></details>
@@ -4491,6 +4495,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     "Gefährliche Systeme automatisch umfahren: ab": "Avoid dangerous systems automatically: from",
     "Keine Systeme gemieden.": "No systems avoided.",
     "Standort mitverfolgen („hier bin ich“ automatisch)": "Follow location (“I'm here” automatically)",
+    "Standort mitverfolgen („hier bin ich“, Start läuft mit, Route verlassen = neu berechnen)": "Follow location (“I'm here”, start follows, off route = recalculate)", "Mein Standort eintragen": "Enter my location", "Erst einloggen.": "Log in first.", "Lese Standort …": "Reading location …",
     "Start und Ziel eintragen und „Route berechnen“ klicken. Die Route rechnet EVE selbst (wie der Autopilot im Spiel), eine Karte wird nicht geladen.": "Enter start and destination and click “Calculate route”. EVE calculates the route itself (like the autopilot in game), no map is loaded.",
     "Kämpfe": "Fights",
     "◆ Kämpfe": "◆ Fights",
@@ -4513,6 +4518,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     "EVE aktualisiert die Planetendaten nur, wenn du die Kolonie im Spiel öffnest („Stand“ je Planet). Laufzeiten der Extraktoren sind fest – der Lagerfüllstand ist der Wert vom letzten Öffnen, die Hochrechnung darunter schätzt, wie viel die Extraktoren seitdem dazugeliefert haben.": "EVE only updates planet data when you open the colony in game (“as of” per planet). Extractor run times are fixed – the storage level is the value from the last opening, the projection below estimates how much the extractors have added since.",
     "Aktive Implantate: keine": "Active implants: none",
     "Keine Sprungklone.": "No jump clones.",
+    "Skills, Implantate, Klone": "Skills, implants, clones", "alle aufklappen": "expand all", "alle zuklappen": "collapse all", "Skills: noch nicht geladen": "Skills: not loaded yet", "Klone: noch nicht geladen": "Clones: not loaded yet", "Skill-Warteschlange leer": "Skill queue empty", "Skills: Berechtigung fehlt – einmal neu einloggen": "Skills: permission missing – log in again once", "Aktive Implantate:": "Active implants:", "Heimatstation:": "Home station:", "Letzter Klonsprung:": "Last clone jump:", "Skill:": "Skill:", "danach:": "then:", "jetzt möglich": "possible now", "(ohne Skill-Bonus gerechnet)": "(calculated without skill bonus)", "Skills, Implantate und Klone bei allen Charakteren auf- bzw. zuklappen": "Expand or collapse skills, implants and clones for all characters",
     "Jita-Preise laden": "Load Jita prices",
     "Maus auf eine Ware: Linien zu Zutaten und Produkten · Klick: Kette festhalten + Planer": "Hover a commodity: lines to inputs and products · click: pin chain + planner",
     "„Jita-Preise laden“ zeigt, was sich je Stufe lohnt.": "“Load Jita prices” shows what pays off per tier.",
@@ -4949,7 +4955,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     [/^Konkurrenz (ruhig|mittel|heiß): (\d+) \/ (\d+) \/ (\d+) Orders nah am besten Preis in 1 \/ 6 \/ 24 Std\. geändert(?: · bester Preis (\d+)× gewechselt \(eigene Beobachtung, 6 Std\.\))?$/, function(m, l, a, b, c, o){ return "Competition " + COMP[l] + ": " + a + " / " + b + " / " + c + " orders near the best price changed in 1 / 6 / 24 h" + (o ? " · best price changed " + o + "× (own observation, 6 h)" : ""); }],
     [/^Laufender Auftrag Nr\. (\d+)$/, "Running order no. $1"], [/^Order läuft ab (.+)$/, "Order expires $1"], [/^Kills der letzten (\d+) Std\. \(scannt neu\)$/, "Kills of the last $1 h (rescans)"],
     [/^Stufe (\d) gelernt, Ziel (\d) \((\d+) % der Stufe\)$/, "Level $1 trained, target $2 ($3 % of the level)"], [/^Kopieren: (.+)$/, "Copy: $1"], [/^Sicherheit (\S+) – auf der Karte zeigen$/, "Security $1 – show on map"],
-    [/^Warteschlange: (\d+) Skills?, leer in$/, function(m, n){ return "Queue: " + n + " skill" + (n > 1 ? "s" : "") + ", empty in"; }], [/^· offen (\d+)$/, "· open $1"], [/^(\d+) \/ (\d+) \((\d+) frei\)$/, "$1 / $2 ($3 free)"],
+    [/^Ziel erreicht: (.+)\.$/, "Destination reached: $1."], [/^Route verlassen – neu berechnet ab (.+?)\. (.*)$/, function(m, a, b){ return "Off route – recalculated from " + a + ". " + (tr(b) || b); }], [/^Mein Standort eintragen \((.+): (.+)\)$/, "Enter my location ($1: $2)"], [/^Warteschlange: (\d+) Skills?, leer in$/, function(m, n){ return "Queue: " + n + " skill" + (n > 1 ? "s" : "") + ", empty in"; }], [/^· offen (\d+)$/, "· open $1"], [/^(\d+) \/ (\d+) \((\d+) frei\)$/, "$1 / $2 ($3 free)"],
     [/^gekauft (.+?) · verkauft (.+?)(?: · Lager (.+))?$/, function(m, a, b, c){ return "bought " + a + " · sold " + b + (c ? " · stock " + c : ""); }], [/^Aus (\d+) Buchungen von (\d+) Wallets?$/, "From $1 entries of $2 wallet(s)"],
     [/^(Wochenbericht|Monatsbericht) (.+)$/, function(m, a, b){ return (a === "Wochenbericht" ? "Weekly report " : "Monthly report ") + b; }], [/^geladen (\d\d:\d\d)$/, "loaded $1"], [/^Notiz (\d+)$/, "Note $1"],
     [/^Gank: (knapp|riskant|sicher) (.+) ISK\/EHP$/, function(m, a, b){ return "Gank: " + (a === "sicher" ? "safe" : "risky") + " " + b + " ISK/EHP"; }], [/^(.+) wird gemeldet – Klick: nicht melden$/, "$1 is reported – click: don't report"], [/^(.+) wird nicht gemeldet – Klick: melden$/, "$1 is not reported – click: report"],
@@ -13458,7 +13464,53 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     return pre.sort(byLen).concat(mid.sort(byLen)).slice(0, limit || 12);
   }
   // multi=true: Feld mit mehreren Systemen, durch Komma getrennt - vervollstaendigt das letzte.
+  // HH5: wer ist „ich“? Charakter des Feldes (Route: Standort-Charakter, Hauling: Hauler) → einziger laufender EVE-Client → einziger Online-Charakter → Auswahl
+  // ponytail: „zuletzt vorne“ kennt nur main.js (fg.lastEve) – bei mehreren Clients fragt das Menü, statt main.js jedes Fensterwechsels die Seite neu zu schicken
+  function myLocChar(input){
+    var id = input && input.id || "", toks = loadAllTokens(), has = function(c){ return c && toks.some(function(t){ return String(t.character_id) === String(c); }); };
+    var own = /^rt-/.test(id) ? (document.getElementById("rt-loc-char") || {}).value : /^hl-/.test(id) ? getHaulerId() : "";
+    if (has(own)) return String(own);
+    var run = ((typeof cyLast !== "undefined" && cyLast && cyLast.eveClients) || []).map(function(x){ return String(x.name || "").toLowerCase(); }).filter(Boolean);
+    var byRun = toks.filter(function(t){ return run.indexOf(String(t.character_name || "").toLowerCase()) >= 0; });
+    if (byRun.length === 1) return String(byRun[0].character_id);
+    var on = toks.filter(function(t){ var c = chData[String(t.character_id)]; return c && c.online && c.online.online; });
+    if (on.length === 1) return String(on[0].character_id);
+    return toks.length === 1 ? String(toks[0].character_id) : null;
+  }
+  async function myLocSys(cid){
+    if (!rfScopeOk(cid, "esi-location.read_location.v1")) throw new Error("Für den Standort einmal neu einloggen (neue Berechtigung).");
+    var loc = await esiAuthGetJson("/characters/" + cid + "/location/", cid), c = chData[String(cid)] || (chData[String(cid)] = { id: String(cid), name: (rfTok(cid) || {}).character_name });
+    c.loc = loc; await rtSystems([loc.solar_system_id]);
+    var x = rtSysLoad().sys[loc.solar_system_id]; if (!x) throw new Error("System unbekannt"); return x.n;
+  }
+  function myLocBtn(input){
+    if (!input || /avoid/.test(input.id || "")) return;
+    var b = document.createElement("button"); b.type = "button"; b.className = "sys-me"; b.innerHTML = "&#x1F4CD;&#xFE0E;"; b.title = "Mein Standort eintragen";
+    var menu = null;
+    function fill(cid){
+      b.disabled = true; b.title = "Lese Standort …";
+      myLocSys(cid).then(function(n){ input.value = n; input.dispatchEvent(new Event("input")); input.dispatchEvent(new Event("change")); b.title = "Mein Standort eintragen (" + charNameById(cid) + ": " + n + ")"; },
+        function(e){ b.title = e.message; alert(e.message); }).then(function(){ b.disabled = false; });
+    }
+    b.onclick = function(ev){
+      ev.preventDefault();
+      if (menu){ menu.remove(); menu = null; return; }
+      var cid = myLocChar(input); if (cid){ fill(cid); return; }
+      var toks = loadAllTokens(); if (!toks.length){ alert("Erst einloggen."); return; }
+      menu = document.createElement("div"); menu.className = "sys-ac"; menu.setAttribute("role", "listbox");
+      toks.slice().sort(function(a, c){ var on = function(t){ var d = chData[String(t.character_id)]; return d && d.online && d.online.online ? 0 : 1; }; return on(a) - on(c); }).forEach(function(t){
+        var d = document.createElement("div"); d.className = "sys-ac-item"; d.setAttribute("role", "option");
+        var cd = chData[String(t.character_id)]; d.textContent = t.character_name + (cd && cd.online && cd.online.online ? " · online" : "");
+        d.onmousedown = function(e){ e.preventDefault(); menu.remove(); menu = null; fill(t.character_id); };
+        menu.appendChild(d);
+      });
+      input.parentNode.appendChild(menu);
+      setTimeout(function(){ document.addEventListener("mousedown", function off(e){ if (menu && !menu.contains(e.target) && e.target !== b){ menu.remove(); menu = null; } document.removeEventListener("mousedown", off); }); }, 0);
+    };
+    input.classList.add("has-me"); input.parentNode.appendChild(b);
+  }
   function attachSystemAutocomplete(input, multi){
+    if (!multi) myLocBtn(input);   // HH5
     var box = document.createElement("div");
     box.className = "sys-ac"; box.hidden = true; box.setAttribute("role", "listbox");
     input.parentNode.classList.add("sys-ac-host");
@@ -19217,7 +19269,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "4.0.69";
+  var EVECORE_VERSION = "4.0.71";
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   function setShow(k){
     var panes = document.querySelectorAll("#panel-settings .set-pane");
@@ -19902,12 +19954,15 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     return c.missing && c.missing.length ? '<div class="ch-line" style="color:var(--warn)">Einmal neu einloggen (Konto › + Charakter), damit die neuen Berechtigungen gelten.</div>' : "";
   }
   function chRender(){
-    var over = document.getElementById("ch-over"), piBox = document.getElementById("ch-pi-list"), cl = document.getElementById("ch-clones");
+    var over = document.getElementById("ch-over"), piBox = document.getElementById("ch-pi-list");
     if (!over) return;
-    ["over", "pi", "clones", "pp"].forEach(function(k){ document.getElementById("ch-" + k).hidden = chSub !== k; document.getElementById("ch-sub-" + k).setAttribute("aria-selected", chSub === k ? "true" : "false"); });
+    if (chSub === "clones") chSub = "over";   // HH3: Klone stehen jetzt in der Charakterkarte
+    var piMode = chSub === "pi" || chSub === "pp";   // HH2: Planeten = eigene Seite (eigenes Neocom-Symbol), Charaktere ohne PI-Reiter
+    ["over", "pi", "pp"].forEach(function(k){ document.getElementById("ch-" + k).hidden = chSub !== k; var b = document.getElementById("ch-sub-" + k); b.setAttribute("aria-selected", chSub === k ? "true" : "false"); b.hidden = (k === "over") === piMode; });
+    var ao = document.getElementById("ch-all-open"); if (ao){ ao.hidden = piMode; ao.textContent = chAllOpen() ? "alle zuklappen" : "alle aufklappen"; }
     ppPageRender();   // DD3
     var toks = sortList("chars", loadAllTokens(), CHAR_SORT);
-    over.innerHTML = ""; piBox.innerHTML = ""; cl.innerHTML = "";
+    over.innerHTML = ""; piBox.innerHTML = "";
     if (toks.length) over.appendChild(sortSel("chars"));
     toks.forEach(function(t){
       var c = chData[String(t.character_id)] || { id: String(t.character_id), name: t.character_name };
@@ -19918,14 +19973,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
         (c.loc ? '<div class="ch-line">Standort: ' + chSysHtml(c.loc.solar_system_id) + "</div>" + (c.locName ? '<div class="ch-line">' + (c.loc.station_id || c.loc.structure_id ? "angedockt: " : "") + escapeHtml(c.locName) + "</div>" : '<div class="ch-line">im Weltraum</div>') : "") +
         (c.ship ? '<div class="ch-line">Schiff: <b>' + escapeHtml(rfNameCache[c.ship.ship_type_id] || "?") + "</b> „" + escapeHtml(c.ship.ship_name || "") + "“</div>" : "") +
         (stdLoaded[c.id] ? '<div class="ch-line">Standings Jita: Caldari State ' + fmtNum(stdLoaded[c.id].map[500001] || 0, 2) + " · Caldari Navy " + fmtNum(stdLoaded[c.id].map[1000035] || 0, 2) + "</div>" : "") +
-        chMissingHtml(c);
-      var act = el("div", "ch-line");
-      if (c.loc){
-        var b1 = el("button", "btn ghost", "Route ab hier"); b1.type = "button"; b1.style.height = "1.8rem";
-        b1.onclick = function(){ var x = rtSysLoad().sys[c.loc.solar_system_id]; if (!x) return; switchTab("jump"); navShow("esi"); document.getElementById("rt-from").value = x.n; };
-        act.appendChild(b1);
-      }
-      card.appendChild(act);
+        chMissingHtml(c) + chMoreHtml(c);   // HH3; HH4: „Route ab hier“ entfällt (Reiseroute hat „📍 Start = mein Standort“)
       over.appendChild(card);
 
       // Planeten
@@ -19952,28 +20000,51 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
         piBox.appendChild(el("p", "note", escapeHtml(c.name) + ": Berechtigung für Planeten fehlt – einmal neu einloggen."));
       }
 
-      // Klone
-      var box2 = el("div", "ch-card");
-      var html = '<div class="ch-head"><img alt="" src="https://images.evetech.net/characters/' + c.id + '/portrait?size=64"><span class="nm">' + escapeHtml(c.name) + "</span></div>";
-      html += '<div class="ch-line">Aktive Implantate: ' + (c.implants ? (c.implants.length ? c.implants.map(function(i){ return escapeHtml(rfNameCache[i] || ("#" + i)); }).join(", ") : "keine") : "–") + "</div>";
-      if (c.clones){
-        html += '<div class="ch-line">Heimatstation: <b>' + escapeHtml(c.homeName || "–") + "</b></div>";
-        var last = c.clones.last_clone_jump_date ? Date.parse(c.clones.last_clone_jump_date) : null;
-        var lvl = chSkillLevel(c.id, 33399), cool = (24 - (lvl || 0)) * 3600000;
-        html += '<div class="ch-line">Letzter Klonsprung: ' + (last ? new Date(last).toLocaleString("de-DE") : "–") + (last ? (last + cool > Date.now() ? ' · wieder möglich in <b data-ov-until="' + (last + cool) + '" data-ov-long="1">' + fmtRemain(last + cool - Date.now()) + "</b>" : " · <b style=\"color:var(--profit)\">jetzt möglich</b>") : "") +
-          (lvl === null ? ' <span class="item-sub">(ohne Skill-Bonus gerechnet)</span>' : "") + "</div>";
-        (c.clones.jump_clones || []).forEach(function(j){
-          html += '<div class="ch-line">Sprungklon' + (j.name ? " „" + escapeHtml(j.name) + "“" : "") + ": <b>" + escapeHtml(j._name || "?") + "</b>" + ((j.implants || []).length ? " · " + j.implants.map(function(i){ return escapeHtml(rfNameCache[i] || ("#" + i)); }).join(", ") : " · ohne Implantate") + "</div>";
-        });
-        if (!(c.clones.jump_clones || []).length) html += '<div class="ch-line">Keine Sprungklone.</div>';
-      }
-      html += chMissingHtml(c);
-      box2.innerHTML = html;
-      cl.appendChild(box2);
     });
     if (!piBox.children.length) piBox.appendChild(el("p", "note", chFullT ? "Keine Planeten gefunden." : "Noch nicht geladen – „Aktualisieren“ klicken."));
-    cl.className = "ch-grid";
   }
+  // HH3: aufklappbarer Teil der Charakterkarte (Seite + Overlay) – Skill-Warteschlange, Implantate, Heimatstation, Klonsprung, Sprungklone
+  var chOpen = {};
+  function chAllOpen(){ var t = loadAllTokens(); return t.length > 0 && t.every(function(x){ return chOpen[x.character_id]; }); }
+  function chMoreHtml(c){
+    var now = Date.now(), sq = (typeof sqData !== "undefined" ? sqData : []).filter(function(x){ return String(x.id) === String(c.id); })[0], h = "", RN = ["", "I", "II", "III", "IV", "V"];
+    if (!sq) h += '<div class="ch-line item-sub">Skills: noch nicht geladen</div>';
+    else if (sq.scopeMissing) h += '<div class="ch-line" style="color:var(--warn)">Skills: Berechtigung fehlt – einmal neu einloggen</div>';
+    else {
+      var a = analyzeQueue(sq.queue, now);
+      if (a.state === "empty") h += '<div class="ch-line" style="color:var(--loss)">Skill-Warteschlange leer</div>';
+      else {
+        h += '<div class="ch-line">Skill: <b>' + escapeHtml(skillName(a.current.skill_id)) + " " + (RN[a.current.finished_level] || a.current.finished_level) + "</b>" +
+          (a.state === "paused" ? " · pausiert" : ' · noch <span data-ov-until="' + a.curEnd + '" data-ov-long="1">' + fmtRemain(a.curEnd - now) + "</span>") + "</div>";
+        var nx = a.open.slice(1, 4).map(function(e){ return escapeHtml(skillName(e.skill_id)) + " " + (RN[e.finished_level] || e.finished_level); });
+        if (nx.length) h += '<div class="ch-line item-sub">danach: ' + nx.join(", ") + (a.open.length > 4 ? " … (+" + (a.open.length - 4) + ")" : "") + "</div>";
+        if (a.queueEnd) h += '<div class="ch-line">Warteschlange: ' + a.open.length + " Skill" + (a.open.length > 1 ? "s" : "") + ', leer in <span data-ov-until="' + a.queueEnd + '" data-ov-long="1">' + fmtRemain(a.queueEnd - now) + "</span></div>";
+      }
+    }
+    h += '<div class="ch-line">Aktive Implantate: ' + (c.implants ? (c.implants.length ? c.implants.map(function(i){ return escapeHtml(rfNameCache[i] || ("#" + i)); }).join(", ") : "keine") : "–") + "</div>";
+    if (c.clones){
+      h += '<div class="ch-line">Heimatstation: <b>' + escapeHtml(c.homeName || "–") + "</b></div>";
+      var last = c.clones.last_clone_jump_date ? Date.parse(c.clones.last_clone_jump_date) : null;
+      var lvl = chSkillLevel(c.id, 33399), cool = (24 - (lvl || 0)) * 3600000;
+      h += '<div class="ch-line">Letzter Klonsprung: ' + (last ? new Date(last).toLocaleString("de-DE") : "–") + (last ? (last + cool > now ? ' · wieder möglich in <b data-ov-until="' + (last + cool) + '" data-ov-long="1">' + fmtRemain(last + cool - now) + "</b>" : " · <b style=\"color:var(--profit)\">jetzt möglich</b>") : "") +
+        (lvl === null ? ' <span class="item-sub">(ohne Skill-Bonus gerechnet)</span>' : "") + "</div>";
+      (c.clones.jump_clones || []).forEach(function(j){
+        h += '<div class="ch-line">Sprungklon' + (j.name ? " „" + escapeHtml(j.name) + "“" : "") + ": <b>" + escapeHtml(j._name || "?") + "</b>" + ((j.implants || []).length ? " · " + j.implants.map(function(i){ return escapeHtml(rfNameCache[i] || ("#" + i)); }).join(", ") : " · ohne Implantate") + "</div>";
+      });
+      if (!(c.clones.jump_clones || []).length) h += '<div class="ch-line">Keine Sprungklone.</div>';
+    } else h += '<div class="ch-line item-sub">Klone: noch nicht geladen</div>';
+    return '<details class="ch-more" data-chopen="' + escapeHtml(String(c.id)) + '"' + (chOpen[c.id] ? " open" : "") + "><summary>Skills, Implantate, Klone</summary>" + h + "</details>";
+  }
+  // Auf-/Zuklappen merken (Seite und Overlay zeichnen laufend neu); beim ersten Öffnen fehlende Daten nachladen
+  function chMoreLoad(){
+    if (!chFullT && typeof chRefresh === "function") chRefresh(true);
+    if (!(typeof sqData !== "undefined" && sqData.length) && typeof refreshSkills === "function" && !chMoreLoad.sk){ chMoreLoad.sk = true; Promise.resolve(refreshSkills()).then(null, function(){}).then(function(){ chRender(); if (typeof ovRender === "function") ovRender(); }); }
+  }
+  document.addEventListener("toggle", function(e){
+    var d = e.target; if (!d || !d.getAttribute || !d.hasAttribute("data-chopen")) return;
+    chOpen[d.getAttribute("data-chopen")] = d.open; if (d.open) chMoreLoad();
+    var ao = document.getElementById("ch-all-open"); if (ao) ao.textContent = chAllOpen() ? "alle zuklappen" : "alle aufklappen";
+  }, true);
   function chSkillLevel(cid, skillId){
     var c = (typeof sqData !== "undefined" ? sqData : []).filter(function(x){ return String(x.id) === String(cid); })[0];
     if (!c || !c.skills || !c.skills.skills) return null;
@@ -20006,6 +20077,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       var x = c.loc && rtSysLoad().sys[c.loc.solar_system_id];
       if (st || x) pc.card.appendChild(el("div", "chr-r", (st ? '<img class="ow-shp" alt="" src="https://images.evetech.net/types/' + Number(st) + '/icon?size=64">' : "") +
         (x ? '<b class="sys-link" data-gosys="' + Number(c.loc.solar_system_id) + '" style="color:' + rtSecColor(x.s) + '" title="Sicherheit ' + rtSecDisplay(x.s).toFixed(1) + ' – auf der Karte zeigen">' + escapeHtml(x.n) + "</b>" : "")));
+      card.appendChild(el("div", "ov-l txt", chMoreHtml(Object.assign({ id: String(t.character_id) }, c))));   // HH3
       body.appendChild(pc.card);
     });
   }
@@ -20478,7 +20550,8 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
   }
   (function chInit(){
     if (!document.getElementById("ch-over")) return;
-    ["over", "pi", "clones", "pp"].forEach(function(k){ document.getElementById("ch-sub-" + k).onclick = function(){ chSub = k; chRender(); if ((k === "pi" || k === "clones") && !chFullT) chRefresh(true); }; });
+    ["over", "pi", "pp"].forEach(function(k){ document.getElementById("ch-sub-" + k).onclick = function(){ chSub = k; chRender(); if (k === "pi" && !chFullT) chRefresh(true); }; });
+    document.getElementById("ch-all-open").onclick = function(){ var on = !chAllOpen(); loadAllTokens().forEach(function(t){ chOpen[t.character_id] = on; }); if (on) chMoreLoad(); chRender(); };   // HH3
     document.getElementById("ch-refresh").onclick = function(){ chRefresh(true); };
   })();
 
@@ -20554,19 +20627,33 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
   var rtFollowTimer = null;
   function rtLocFollowTick(){
     var s = rtLoad(), L = s.last;
-    if (!s.locFollow || !L || !L.route) return;
-    var c = chData[String(s.locChar || "")];
+    if (!rtFollowOn(s) || !L || !L.route) return;
+    var c = chData[String(rtFollowChar(s) || "")];
     if (!c || !c.loc) return;
-    var i = L.route.indexOf(c.loc.solar_system_id);
-    if (i >= 0 && i !== L.pos){ L.pos = i; rtSave(s); rtRender(); ovRender(); }
+    var sys = c.loc.solar_system_id, x = rtSysLoad().sys[sys], E = rtEls();
+    if (x && E.from && document.activeElement !== E.from) E.from.value = x.n;   // HH6: Von-Feld läuft mit
+    var i = L.route.indexOf(sys);
+    if (i >= 0){
+      if (i !== L.pos){ L.pos = i; rtSave(s); rtRender(); ovRender(); }
+      if (i === L.route.length - 1 && L.arrived !== L.time){ L.arrived = L.time; rtSave(s); if (E.status) E.status.textContent = "Ziel erreicht: " + (L.to && L.to.name || (x && x.n) || "") + "."; ovRender(); }
+      return;
+    }
+    // HH6: Route verlassen → ab hier automatisch neu rechnen (einmal je System, nicht nach Ankunft)
+    if (L.arrived === L.time || L.reroute === sys || rtRunning || !x || !L.to) return;
+    L.reroute = sys; rtSave(s);
+    if (E.from) E.from.value = x.n; if (E.to && !E.to.value.trim()) E.to.value = L.to.name;
+    rtGo().then(function(){ var E2 = rtEls(); if (E2.status && rtLoad().last && rtLoad().last.time !== L.time) E2.status.textContent = "Route verlassen – neu berechnet ab " + x.n + ". " + E2.status.textContent; });
   }
+  // HH6: „Standort mitverfolgen“ ist ab Werk an (abschaltbar); ohne gewählten Charakter wie beim 📍 (HH5)
+  function rtFollowOn(s){ return s.locFollow !== false; }
+  function rtFollowChar(s){ return s.locChar || myLocChar(document.getElementById("rt-from")); }
   async function rtFollowPoll(){
-    var s = rtLoad();
-    if (!s.locFollow || !s.locChar || !rfScopeOk(s.locChar, "esi-location.read_location.v1")) return;
+    var s = rtLoad(), cid = rtFollowChar(s);
+    if (!rtFollowOn(s) || !cid || !s.last || !s.last.route || !rfScopeOk(cid, "esi-location.read_location.v1")) return;
     try{
-      var loc = await esiAuthGetJson("/characters/" + s.locChar + "/location/", s.locChar);
-      var c = chData[String(s.locChar)] || (chData[String(s.locChar)] = { id: String(s.locChar), name: (rfTok(s.locChar) || {}).character_name });
-      c.loc = loc;
+      var loc = await esiAuthGetJson("/characters/" + cid + "/location/", cid);
+      var c = chData[String(cid)] || (chData[String(cid)] = { id: String(cid), name: (rfTok(cid) || {}).character_name });
+      c.loc = loc; await rtSystems([loc.solar_system_id]);
       rtLocFollowTick();
     }catch(e){}
   }
@@ -20599,7 +20686,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     if (!document.getElementById("rt-extra")) return;
     rtCharSelects();
     var s0 = rtLoad(), jb = jbrLoad();
-    document.getElementById("rt-loc-follow").checked = !!s0.locFollow;
+    document.getElementById("rt-loc-follow").checked = rtFollowOn(s0);
     document.getElementById("rt-jb-on").checked = !!jb.on;
     document.getElementById("rt-jb-text").value = jb.text || "";
     document.getElementById("rt-jb-count").textContent = jb.pairs.length ? "(" + jb.pairs.length + " Verbindungen" + (jb.on ? ", aktiv" : ", aus") + ")" : "";
@@ -22708,7 +22795,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       var b = document.getElementById("neo-btn-" + k); if (!b) return;
       b.onclick = function(){
         switchTab(k);
-        if (k === "chars"){ chRender(); if (!chLightT || Date.now() - chLightT > 60000) chRefresh(!chFullT); }
+        if (k === "chars"){ if (chSub === "pi" || chSub === "pp") chSub = "over"; chRender(); if (!chLightT || Date.now() - chLightT > 60000) chRefresh(!chFullT); }
         if (k === "radar") radarPageRender();
         if (k === "appraisal") apPageRender();
         if (k === "courier") coPageRender();   // AA1
@@ -22723,7 +22810,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     var v = ovMode === "compact" ? ovCurrentView() : null;
     var p = document.getElementById("panel-chars");
     var sh = mainShown();   // BB14: Seiten im versteckten Hauptfenster brauchen keine frischen Daten
-    return sh && ((p && p.classList.contains("active")) || v === "chars" || v === "pi" || (document.getElementById("nav-map-wrap") && !document.getElementById("nav-map-wrap").hidden)) || ovSatOpen.chars || ovSatOpen.pi || (rtLoad().locFollow);
+    return sh && ((p && p.classList.contains("active")) || v === "chars" || v === "pi" || (document.getElementById("nav-map-wrap") && !document.getElementById("nav-map-wrap").hidden)) || ovSatOpen.chars || ovSatOpen.pi;   // HH6: Standort folgen fragt selbst nur den einen Charakter ab (rtFollowPoll)
   }
   setInterval(function(){
     if (!loadAllTokens().length) return;
@@ -22732,7 +22819,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     var needPi = ovSatOpen.pi || (ovMode === "compact" && ovCurrentView() === "pi") || (document.getElementById("pi-alarm") && document.getElementById("pi-alarm").checked && chFullT);
     if (needPi && Date.now() - chFullT > 10 * 60000) chRefresh(true);
     else if (rfNeedsChars() && Date.now() - chLightT > 60000) chRefresh(false);
-    else if (rtLoad().locFollow) rtFollowPoll();
+    else if (rtFollowOn(rtLoad())) rtFollowPoll();
     if (chFullT) piCheckAlarms();
   }, 30000);
   if (loadAllTokens().length) setTimeout(function(){ stdImport(); }, 2500);
