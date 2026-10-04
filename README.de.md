@@ -4,7 +4,8 @@
 
 <p align="center">
   <b>Kostenloses All-in-One-Programm für EVE Online</b><br>
-  Multi-Client-Vorschau · Overlay im Spiel · Stream Deck · Markt-Scanner · Handel · Hauling · Industrie · Assets · Skills · Navigation
+  Handel, Hauling, Mining, PvP-Intel, Navigation & Wurmlöcher, Industrie, PI und Skills<br>
+  Multi-Client-Vorschau · Overlay im Spiel · Stream Deck
 </p>
 
 <p align="center">
@@ -29,7 +30,7 @@
 
 ### 🪟 Overlay im Spiel – deine Werkzeuge direkt über EVE
 - Kleine, durchsichtige Fenster, die über dem Spiel schweben – nur solange EVE vorne ist.
-- Ansichten: Trades · Watchlist · Handel · Wallet · Assets · Charaktere · Skills · Route · Karte · Local · Gang-Alarm · Jukebox
+- Ansichten: Trades · Watchlist · Handel · Wallet · Assets · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
 - Ein kompaktes Fenster oder jede Ansicht als eigenes Fenster, rastet am Bildschirmrand ein; Deckkraft je Fenster, Position sperren, automatisch ausblenden.
 - Mit einem Klick exakte Preise kopieren, das Marktfenster eines Items in EVE öffnen oder das Autopilot-Ziel setzen.
 - Local mit Strg+C kopieren und das Overlay zeigt, wer da ist; bei gemeldeten Feinden springt ein Live-Alarm auf.
@@ -42,11 +43,13 @@
 | **Hauling & Watchlist** | Läufe planen, sehen was gekauft, unterwegs oder im Verkauf ist |
 | **Orders, Verträge & Verkaufs-Check** | Orders im Blick, unterboten-Hinweis, besten Verkaufsort finden |
 | **Wallet & Assets** | Alle Charaktere, ISK, Journal und Items in jeder Station |
-| **Industrie & Blueprints** | Jobs, Blueprints und Planeten-Industrie |
+| **Mining** | Mining-Tagebuch je Tag und Charakter, Erz-/Eis-/Gas-/Mond-Werte pro m³ mit deiner Raffinier-Ausbeute, bester Verkaufsort, Mond-Extraktionen deiner Corp |
+| **Industrie & Blueprints** | Jobs und Blueprints |
+| **Planeten-Industrie (PI)** | Deine Kolonien mit Alarm, wenn Extraktoren auslaufen |
 | **Skills** | Skill-Warteschlange und Handels-Skills – Gebühren mit deinen echten Skills berechnet |
-| **Navigation & Karte** | Routenplaner, Sprungplaner, Karte, Autopilot-Ziel mit einem Klick |
-| **Intel & Local-Report** | Local einfügen und sehen, wer da ist – mit Killboard-Infos |
-| **Gang-Alarm & Report** | Live-Warnungen vom Killboard im „Feind gemeldet“-Fenster |
+| **Navigation & Wurmlöcher** | Routenplaner, Sprungplaner, Karte mit Jump Bridges, Thera- & Turnur-Verbindungen über EVE-Scout, Wurmloch-Infos, Autopilot-Ziel mit einem Klick |
+| **PvP & Intel** | Local-Check mit zKillboard-Infos, Kills und Sprünge je System, gefährliche Systeme, Gang-Alarm mit Live-Fenster „Feind gemeldet“ |
+| **Fittings, Klone & Implantate** | Fittings im EFT-Format kopieren, Sprungklone und Implantate aller Charaktere |
 | **Mehrere Charaktere & Settings-Sync** | Alle Charaktere gleichzeitig, EVE-Client-Einstellungen übertragen |
 | **Soundtrack** | Der EVE-Omni-Soundtrack von Nareya79 ist eingebaut |
 | **Stream Deck & Stream Dock** | Plugin für Elgato Stream Deck (auch Stream Deck +) und MiraBox Stream Dock (N4 & Co.) – Overlay-Tasten, Live-Werte, Timer, Jukebox, Drehknöpfe |
@@ -93,7 +96,7 @@ Kein Entwicklerkonto und keine API-Schlüssel nötig.
 - **Nur offizieller EVE-Login.** Du loggst dich auf der Seite von CCP ein (EVE SSO mit PKCE). EVE Omni sieht dein Passwort nie.
 - **Deine Daten bleiben auf deinem PC.** Logins, Trades und Einstellungen liegen nur lokal – kein Konto, keine Cloud, kein Tracking.
 - **Keine Automatisierung.** EVE Omni liest oder verändert nichts im Spiel-Speicher und sendet nie Eingaben ans Spiel.
-- **Netzwerk:** CCPs ESI (deine Daten und öffentliche Marktdaten), zKillboard und DOTLAN (öffentliche Daten) und einmal am Tag eine Update-Prüfung bei GitHub (abschaltbar). An den Entwickler wird nichts gesendet.
+- **Netzwerk:** CCPs ESI und Bild-Server (deine Daten und öffentliche Marktdaten), zKillboard, DOTLAN (eingebetteter Routen-/Sprungplaner) und EVE-Scout (`api.eve-scout.com`, öffentliche Thera/Turnur-Signaturen) – alles öffentliche Daten –, Google Fonts (Schriften) und einmal am Tag eine Update-Prüfung bei GitHub (abschaltbar). An den Entwickler wird nichts gesendet.
 
 ### Warum fragt der Login nach diesen Berechtigungen?
 Jeder Bereich braucht Lesezugriff auf seine Daten. Nur zwei Berechtigungen *bewirken* etwas im Spiel – und nur, wenn du auf den Knopf klickst: Autopilot-Ziel setzen und ein Info-/Marktfenster öffnen.

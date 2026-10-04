@@ -4,7 +4,8 @@
 
 <p align="center">
   <b>Free all-in-one desktop companion for EVE Online</b><br>
-  Multi-client preview · in-game overlay · Stream Deck · market scanner · trading · hauling · industry · assets · skills · navigation
+  Trading, hauling, mining, PvP intel, navigation & wormholes, industry, PI and skills<br>
+  Multi-client preview · in-game overlay · Stream Deck
 </p>
 
 <p align="center">
@@ -29,7 +30,7 @@
 
 ### 🪟 In-game overlay – your tools right over EVE
 - Small see-through windows that float over the game – only while EVE is in front.
-- Views: Trades · Watchlist · Market · Wallet · Assets · Characters · Skills · Route · Map · Local · Gang alarm · Jukebox
+- Views: Trades · Watchlist · Market · Wallet · Assets · Characters · Skills · Mining · Industry · Wormholes · Route · Map · Local · Gang alarm · Jukebox
 - One compact window or each view as its own window, snapped to the screen edge; transparency per window, lock position, auto-hide.
 - One click to copy exact prices, open an item's market window in EVE or set your autopilot destination.
 - Copy local with Ctrl+C and the overlay shows who is there; a live alarm pops up when hostiles are reported.
@@ -42,11 +43,13 @@
 | **Hauling & watchlist** | Plan runs, see what is bought, in transit or selling |
 | **Orders, contracts & sell check** | Watch your orders, see when you are undercut, find the best place to sell |
 | **Wallet & assets** | All characters, ISK, journal and items in every station |
-| **Industry & blueprints** | Jobs, blueprints and planetary industry |
+| **Mining** | Mining log per day and character, ore/ice/gas/moon values per m³ with your refine yield, best place to sell, moon extractions of your corp |
+| **Industry & blueprints** | Jobs and blueprints |
+| **Planetary industry (PI)** | Your colonies with an alarm when extractors run out |
 | **Skills** | Skill queue and trading skills – fees are calculated from your real skills |
-| **Navigation & map** | Route planner, jump planner, map, autopilot destination in one click |
-| **Intel & local report** | Paste local, see who is around with killboard info |
-| **Gang alarm & report** | Live killboard alerts in a “Hostile reported” window |
+| **Navigation & wormholes** | Route planner, jump planner, map with jump bridges, Thera & Turnur connections via EVE-Scout, wormhole info, autopilot destination in one click |
+| **PvP & intel** | Local check with zKillboard info, kills and jumps per system, dangerous systems, gang alarm with live “Hostile reported” window |
+| **Fittings, clones & implants** | Copy fittings in EFT format, jump clones and implants of all characters |
 | **Multi-character & settings sync** | All characters at once, copy EVE client settings between them |
 | **Soundtrack** | The EVE Omni soundtrack by Nareya79 is built in |
 | **Stream Deck & Stream Dock** | Plugin for Elgato Stream Deck (incl. Stream Deck +) and MiraBox Stream Dock (N4 & co.) – overlay keys, live values, timer, jukebox, dials |
@@ -93,7 +96,7 @@ No developer account and no API keys needed.
 - **Official EVE login only.** You log in on CCP's own page (EVE SSO with PKCE). EVE Omni never sees your password.
 - **Your data stays on your PC.** Logins, trades and settings are stored locally only – no account, no cloud, no tracking.
 - **No automation.** EVE Omni does not read or change game memory and never sends input to the game.
-- **Network access:** CCP's ESI (your data and public market data), zKillboard and DOTLAN (public data), and one update check per day on GitHub (can be turned off). Nothing is sent to the developer.
+- **Network access:** CCP's ESI and image server (your data and public market data), zKillboard, DOTLAN (embedded route/jump planner) and EVE-Scout (`api.eve-scout.com`, public Thera/Turnur signatures) – all public data –, Google Fonts (fonts), and one update check per day on GitHub (can be turned off). Nothing is sent to the developer.
 
 ### Why does the login ask for these permissions?
 Each area of the app needs read access to its own data. Only two permissions can *do* something in the game, and only when you click the button: setting an autopilot destination and opening an info/market window.
