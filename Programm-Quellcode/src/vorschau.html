@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; media-src mediastream: blob:">
+<title>EVE Omni – Vorschau</title>
+<style>
+  /* Client-Vorschau Stufe 3: ein EVE-Client live, Klick = nach vorne holen, Ziehen = verschieben */
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;user-select:none;cursor:pointer}
+  video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  body.full video{object-fit:contain}
+  #m{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#6b7885;font:12px "Segoe UI",system-ui,sans-serif}
+  body::after{content:"";position:absolute;inset:0;border:var(--bwi, 1px) solid #243140;pointer-events:none}
+  body.active::after{border:var(--bwa, 2px) solid var(--act, #e0b84a)}
+  body.drag{cursor:move}
+  /* J5 Spiegelbild: Windows zeichnet das Bild selbst ins Fenster, die Seite macht nur den Rand (N2: ohne Namensleiste) */
+  body.dwm{background:#0b0f14}
+  body.dwm video, body.dwm #m{display:none}
+</style>
+</head>
+<body>
+  <video id="v" autoplay muted></video>
+  <div id="m">Bild wird geholt …</div>
+<script>
+  var P = window.previewHost, v = document.getElementById("v"), cur = null, stream = null, gen = 0;
+  function msg(t){ document.getElementById("m").textContent = t; }
+  function stop(){ if (stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; } v.srcObject = null; }
+  // H5: beim 16:9-Ausschnitt wird nur die Mitte gezeigt – dafuer breiter aufnehmen (Client 5540 breit → Mitte 2560)
+  function capWidth(info){ return Math.min(3840, Math.round(Math.max(info.width, window.innerWidth) * (window.devicePixelRatio || 1) * (info.fit === "full" ? 1 : 2.2))); }
+  var capW = 0;
+  function start(info){
+    stop();
+    capW = capWidth(info);
+    var my = ++gen;
+    function retry(ms){ setTimeout(function(){ if (my === gen && cur) start(cur); }, ms); }
+    P.pick().then(function(){
+      return navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { max: info.fps }, width: { max: capWidth(info) } }, audio: false });
+    }).then(function(s){
+      if (my !== gen){ s.getTracks().forEach(function(t){ t.stop(); }); return; }
+      stream = s; v.srcObject = s; msg("");
+      s.getVideoTracks()[0].onended = function(){ msg("Bild weg …"); retry(2000); };
+    }).catch(function(){ if (my === gen){ msg("Kein Bild – neuer Versuch …"); retry(5000); } });
+  }
+  P.onInfo(function(info){
+    // O1: der Name steht jetzt in einem eigenen Mini-Fenster oben mittig (main.js pvName)
+    document.body.classList.toggle("active", !!info.active);
+    document.body.classList.toggle("full", info.fit === "full");
+    document.body.style.setProperty("--act", info.border || "#e0b84a");
+    document.body.style.setProperty("--bwa", (info.bwAct === undefined ? 2 : info.bwAct) + "px");   // T7
+    document.body.style.setProperty("--bwi", (info.bwIdle === undefined ? 1 : info.bwIdle) + "px");
+    document.body.classList.toggle("dwm", !!info.dwm);
+    if (info.dwm){ cur = info; stop(); gen++; return; }
+    var re = !cur || cur.hwnd !== info.hwnd || cur.fps !== info.fps || cur.width !== info.width || cur.fit !== info.fit;
+    cur = info;
+    if (re) start(info);
+    else sendAspect();
+  });
+  function sendAspect(){ if (cur && cur.fit === "full" && v.videoWidth && v.videoHeight) P.aspect(v.videoWidth / v.videoHeight); }
+  v.addEventListener("loadedmetadata", sendAspect);
+  v.addEventListener("resize", sendAspect);
+  // Groesser gezogen: schaerferes Bild holen (erst wenn deutlich groesser, sonst flackert es beim Ziehen)
+  var rt = null;
+  window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(function(){ if (cur && capWidth(cur) > capW * 1.3) start(cur); }, 500); });
+  // Klick = Client nach vorne; mit gedrueckter Maus mehr als 4 px bewegen = Fenster ziehen
+  var down = null, dragging = false;
+  document.addEventListener("pointerdown", function(ev){
+    if (ev.button !== 0) return;
+    down = { x: ev.screenX, y: ev.screenY }; dragging = false;
+    try{ document.body.setPointerCapture(ev.pointerId); }catch(e){}
+  });
+  document.addEventListener("pointermove", function(ev){
+    if (!down || dragging) return;
+    if (Math.abs(ev.screenX - down.x) + Math.abs(ev.screenY - down.y) > 4){ dragging = true; document.body.classList.add("drag"); P.drag("start"); }
+  });
+  document.addEventListener("pointerup", function(ev){
+    if (!down || ev.button !== 0) return;
+    down = null;
+    if (dragging){ dragging = false; document.body.classList.remove("drag"); P.drag("end"); }
+    else P.activate();
+  });
+  // J2: Doppelklick = zwischen „klein“ und „groß“ umschalten (der erste Klick hat den Client schon nach vorne geholt)
+  document.addEventListener("dblclick", function(ev){ if (ev.button === 0 && P.big) P.big(); });
+  document.addEventListener("contextmenu", function(ev){ ev.preventDefault(); if (P.menu) P.menu(); });
+</script>
+</body>
+</html>

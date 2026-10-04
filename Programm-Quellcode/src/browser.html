@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>EVE Omni – Browser</title>
+<style>
+  /* E1: Leiste des Browser-Fensters (90 px hoch, darunter liegt die Webseite). An der Leiste ziehen = Fenster verschieben. CC7: oben die Tabs. */
+  *{box-sizing:border-box}
+  html,body{margin:0;height:90px;overflow:hidden;background:#0b0f14;color:#c8d2dc;font:13px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
+  .row{display:flex;align-items:center;gap:4px;padding:0 6px}
+  .r0{height:26px;gap:2px;padding:3px 6px 0;align-items:flex-end;overflow:hidden;background:#070a0e}
+  .tab{-webkit-app-region:no-drag;display:inline-flex;align-items:center;gap:6px;flex:0 1 180px;min-width:46px;height:23px;padding:0 6px 0 10px;border:1px solid #1c2630;border-bottom:none;border-radius:5px 5px 0 0;background:#0e141b;color:#8fa0b0;cursor:pointer;overflow:hidden}
+  .tab.on{background:#0b0f14;color:#e6edf3;border-color:#2d3d4e;box-shadow:inset 0 2px 0 #4fa3d1}
+  .tab .tt{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .tab .tx{flex:none;width:16px;height:16px;min-width:0;padding:0;border:none;background:none;font-size:11px;line-height:16px;color:#6b7885}
+  .tab .tx:hover{color:#fff;background:#7a1f1f;border-radius:3px}
+  .tab.ld .tt::before{content:"⟳ ";color:#4fa3d1}
+  #newtab{-webkit-app-region:no-drag;height:21px;min-width:22px;margin-bottom:1px;padding:0 5px}
+  #lock.on{color:#e0b84a;border-color:#e0b84a}
+  .r1{height:34px;border-bottom:1px solid #1c2630}
+  .r2{height:30px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none}
+  button,input,.bm{-webkit-app-region:no-drag}
+  button{background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:24px;min-width:26px;padding:0 6px;cursor:pointer;font:inherit}
+  button:hover:not(:disabled){border-color:#4fa3d1;color:#fff}
+  button:disabled{opacity:.35;cursor:default}
+  #star.on{color:#e0b84a;border-color:#e0b84a}
+  #close:hover{background:#7a1f1f;border-color:#b33}
+  #url{flex:1;min-width:60px;height:24px;background:#05070a;color:#e6edf3;border:1px solid #243140;border-radius:3px;padding:0 8px;font:inherit;user-select:text}
+  #url:focus{outline:none;border-color:#4fa3d1}
+  .bm{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border:1px solid #243140;border-radius:11px;background:#131a22;cursor:pointer;flex:none}
+  .bm:hover{border-color:#4fa3d1;color:#fff}
+  .bm .x{opacity:0;font-size:11px;color:#c66}
+  .bm:hover .x{opacity:1}
+  .bm.ed{border-color:#4fa3d1;background:#05070a;user-select:text;outline:none;cursor:text}
+  .hint{color:#6b7885;font-size:12px}
+</style>
+</head>
+<body>
+  <div class="row r0" id="tabs"></div>
+  <div class="row r1">
+    <button id="back" title="Zurück" disabled>◀</button>
+    <button id="fwd" title="Vor" disabled>▶</button>
+    <button id="reload" title="Neu laden">⟳</button>
+    <input id="url" spellcheck="false" placeholder="Adresse oder Suchbegriff">
+    <button id="star" title="Lesezeichen setzen / entfernen">☆</button>
+    <button id="ext" title="Im normalen Browser öffnen">↗</button>
+    <button id="ov" title="Einstellungen: Startseite, neuer Tab, Zoom, Suchmaschine – und wie ein Overlay: Deckkraft, sperren, durchklicken, Vordergrund">⚙</button>
+    <button id="close" title="Schließen">✕</button>
+  </div>
+  <div class="row r2" id="bms"></div>
+<script>
+  var H = window.browserHost, $ = function(id){ return document.getElementById(id); }, st = null;
+  function render(s){
+    st = s;
+    $("back").disabled = !s.back; $("fwd").disabled = !s.fwd;
+    $("reload").textContent = s.loading ? "✕" : "⟳";
+    $("reload").title = s.loading ? "Laden abbrechen" : "Neu laden";
+    if (document.activeElement !== $("url")) $("url").value = s.url;
+    document.title = (s.title || "Browser") + " – EVE Omni";
+    var marked = s.bookmarks.some(function(b){ return b.url === s.url; });
+    $("star").textContent = marked ? "★" : "☆"; $("star").classList.toggle("on", marked);
+    var box = $("bms"); box.textContent = "";
+    s.bookmarks.forEach(function(b){
+      var el = document.createElement("span"); el.className = "bm"; el.title = b.url + (s.home === b.url ? "\n⌂ Startseite" : "") + "\nRechtsklick: Startseite, verschieben, löschen · Doppelklick: umbenennen";
+      el.appendChild(document.createTextNode(b.name));
+      var x = document.createElement("span"); x.className = "x"; x.textContent = "✕"; x.title = "Lesezeichen entfernen";
+      x.onclick = function(ev){ ev.stopPropagation(); H.cmd("unmark", b.url); };
+      x.contentEditable = "false"; el.appendChild(x);
+      el.onclick = function(){ if (!el.isContentEditable) H.cmd("go", b.url); };
+      el.oncontextmenu = function(ev){ ev.preventDefault(); H.cmd("bmmenu", b.url); };   // FF1: Startseite, verschieben, löschen
+      el.ondblclick = function(){   // FF1: umbenennen
+        var t = el.firstChild, keep = t.textContent; el.contentEditable = "true"; el.classList.add("ed"); el.focus(); document.getSelection().selectAllChildren(el);
+        function done(ok){ el.onblur = null; var n = el.textContent.replace(/✕$/, "").trim(); el.contentEditable = "false"; el.classList.remove("ed"); if (ok && n && n !== keep) H.cmd("rename", b.url + "\n" + n); else H.cmd("rename", b.url + "\n" + keep); }
+        el.onkeydown = function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); done(true); } else if (ev.key === "Escape") done(false); };
+        el.onblur = function(){ done(true); };
+      };
+      box.appendChild(el);
+    });
+    // CC7: Tabs (Mittelklick oder ✕ schließt, + = neuer Tab)
+    var tb = $("tabs"); tb.textContent = "";
+    (s.tabs || []).forEach(function(t, i){
+      var e = document.createElement("span"); e.className = "tab" + (i === s.act ? " on" : "") + (t.l ? " ld" : ""); e.title = t.t;
+      var n = document.createElement("span"); n.className = "tt"; n.textContent = t.t; e.appendChild(n);
+      var x = document.createElement("button"); x.className = "tx"; x.textContent = "✕"; x.title = "Tab schließen";
+      x.onclick = function(ev){ ev.stopPropagation(); H.cmd("closetab", i); }; e.appendChild(x);
+      e.onclick = function(){ if (i !== s.act) H.cmd("tab", i); };
+      e.onauxclick = function(ev){ if (ev.button === 1) H.cmd("closetab", i); };
+      tb.appendChild(e);
+    });
+    var nt = document.createElement("button"); nt.id = "newtab"; nt.textContent = "+"; nt.title = "Neuer Tab (Strg+T)"; nt.onclick = function(){ H.cmd("newtab", ""); }; tb.appendChild(nt);
+    if (!s.bookmarks.length){ var h = document.createElement("span"); h.className = "hint"; h.textContent = "Keine Lesezeichen – ☆ merkt die aktuelle Seite"; box.appendChild(h); }
+  }
+  H.onState(render);
+  $("back").onclick = function(){ H.cmd("back"); };
+  $("fwd").onclick = function(){ H.cmd("fwd"); };
+  $("reload").onclick = function(){ H.cmd(st && st.loading ? "stop" : "reload"); };
+  $("star").onclick = function(){ H.cmd("mark"); };
+  $("ext").onclick = function(){ H.cmd("external"); };
+  $("ov").onclick = function(){ H.cmd("menu"); };
+  document.addEventListener("keydown", function(ev){   // CC7: Strg+T / Strg+W, solange die Leiste den Fokus hat
+    if (!ev.ctrlKey || !st) return;
+    if (ev.key === "t"){ ev.preventDefault(); H.cmd("newtab", ""); }
+    else if (ev.key === "w"){ ev.preventDefault(); H.cmd("closetab", st.act); }
+  });
+  $("close").onclick = function(){ H.cmd("close"); };
+  $("url").onkeydown = function(ev){
+    if (ev.key === "Enter"){ H.cmd("go", this.value); this.blur(); }
+    else if (ev.key === "Escape"){ this.value = st ? st.url : ""; this.blur(); }
+  };
+  $("url").onfocus = function(){ var u = this; setTimeout(function(){ u.select(); }, 0); };
+  $("bms").onwheel = function(ev){ this.scrollLeft += ev.deltaY; };
+</script>
+</body>
+</html>

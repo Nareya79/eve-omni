@@ -1,0 +1,238 @@
+{
+  "Actions": [
+    {
+      "UUID": "de.eveomni.tasten.overlay",
+      "Name": "Overlay ein/aus",
+      "Tooltip": "Ein EVE-Omni-Overlay-Fenster ein- oder ausblenden",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.timer",
+      "Name": "Timer starten",
+      "Tooltip": "Timer in der EVE-Omni-Uhr starten, zeigt den nächsten Timer",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.jukebox",
+      "Name": "Jukebox Play/Pause",
+      "Tooltip": "Jukebox abspielen/anhalten, zeigt den Titel",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.clock",
+      "Name": "Uhr / Downtime",
+      "Tooltip": "Uhrzeit, laufender Timer bzw. Countdown bis Downtime; drücken = Uhr-Overlay (Timer, Alarme)",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.action",
+      "Name": "Aktion",
+      "Tooltip": "Eine EVE-Omni-Aktion: Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox …",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.display",
+      "Name": "Anzeige",
+      "Tooltip": "Ein Live-Wert aus EVE Omni: Downtime, Timer, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server …",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "de.eveomni.tasten.dialJb",
+      "Name": "Knopf: Jukebox",
+      "Tooltip": "Drehen = Lautstärke, drücken = Jukebox-Overlay öffnen/schließen, Streifen zeigt den Titel",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key"
+        }
+      ],
+      "Controllers": [
+        "Encoder"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "$A0",
+        "TriggerDescription": {
+          "Rotate": "Lautstärke",
+          "Push": "Overlay öffnen / schließen",
+          "Touch": "Overlay öffnen / schließen"
+        }
+      }
+    },
+    {
+      "UUID": "de.eveomni.tasten.dialAlpha",
+      "Name": "Knopf: Deckkraft",
+      "Tooltip": "Drehen = Deckkraft aller Overlays, drücken = alle 100 %",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key"
+        }
+      ],
+      "Controllers": [
+        "Encoder"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "$A0",
+        "TriggerDescription": {
+          "Rotate": "Deckkraft ±5 %",
+          "Push": "100 %",
+          "Touch": "100 %"
+        }
+      }
+    },
+    {
+      "UUID": "de.eveomni.tasten.dialOv",
+      "Name": "Knopf: Overlays wechseln",
+      "Tooltip": "Drehen = durch alle Overlays blättern, drücken = öffnen bzw. schließen",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key"
+        }
+      ],
+      "Controllers": [
+        "Encoder"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "$A0",
+        "TriggerDescription": {
+          "Rotate": "Overlay wechseln",
+          "Push": "öffnen / schließen",
+          "Touch": "öffnen / schließen"
+        }
+      }
+    },
+    {
+      "UUID": "de.eveomni.tasten.dialTimer",
+      "Name": "Knopf: Timer",
+      "Tooltip": "Drehen = 1–120 Minuten, drücken = Timer starten, Streifen zeigt den Countdown",
+      "Icon": "static/action",
+      "PropertyInspectorPath": "pi/index.html",
+      "States": [
+        {
+          "Image": "static/key"
+        }
+      ],
+      "Controllers": [
+        "Encoder"
+      ],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "$A0",
+        "TriggerDescription": {
+          "Rotate": "Minuten 1–120",
+          "Push": "Timer starten",
+          "Touch": "Timer starten"
+        }
+      }
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "EVE Omni",
+  "Name": "EVE Omni",
+  "Description": "Tasten für EVE Omni: Overlays, Aktionen, Live-Anzeigen, Timer, Jukebox, Uhr. EVE Omni muss laufen (Einstellungen › Programm › Stream-Tasten an).",
+  "Icon": "static/plugin",
+  "Category": "EVE Omni",
+  "CategoryIcon": "static/category",
+  "CodePath": "plugin/index.html",
+  "Version": "0.3.0",
+  "URL": "https://github.com/",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "6.4"
+  },
+  "UUID": "de.eveomni.tasten"
+}

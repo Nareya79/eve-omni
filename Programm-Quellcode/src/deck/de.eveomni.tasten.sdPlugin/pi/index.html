@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>EVE Omni – Taste</title>
+<style>
+  body{margin:0;padding:10px 12px;background:#2d2d2d;color:#d8d8d8;font:13px "Segoe UI",Arial,sans-serif}
+  label{display:block;margin:8px 0 3px;color:#9a9a9a;font-size:12px}
+  select,input{width:100%;box-sizing:border-box;padding:4px 6px;background:#3d3d3d;color:#eee;border:1px solid #555;border-radius:3px;font:inherit}
+  .hint{margin-top:10px;color:#9a9a9a;font-size:11px;line-height:1.4}
+  [hidden]{display:none}
+</style></head>
+<body>
+  <div id="f-show" hidden><label for="show">Anzeige</label><select id="show"></select></div>
+  <div id="f-char" hidden><label for="char">Charakter</label><select id="char"><option value="">alle</option></select></div>
+  <div id="f-act" hidden><label for="act" id="l-act">Aktion</label><select id="act"></select></div>
+  <div id="f-view" hidden><label for="view">Overlay</label><select id="view"></select></div>
+  <div id="f-min" hidden><label for="min">Minuten</label><input id="min" type="number" min="1" max="10080" value="5"></div>
+  <div id="f-name" hidden><label for="name">Name des Timers (leer = „Stream-Taste … Min.“)</label><input id="name" maxlength="40"></div>
+  <p class="hint" id="hint"></p>
+  <script src="../plugin/config.js"></script>
+  <script src="../common.js"></script>
+  <script src="index.js"></script>
+</body></html>
