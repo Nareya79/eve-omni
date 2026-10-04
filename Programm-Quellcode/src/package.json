@@ -1,1 +1,1 @@
-{"name":"eve-omni","productName":"EVE Omni","version":"4.0.67","description":"EVE Omni (früher EVECore) – EVE Online Werkzeug mit Overlay","main":"main.js","author":"Nareya","license":"MIT","private":true,"dependencies":{"koffi":"3.3.1"}}
+{"name":"eve-omni","productName":"EVE Omni","version":"4.0.68","description":"EVE Omni (früher EVECore) – EVE Online Werkzeug mit Overlay","main":"main.js","author":"Nareya","license":"MIT","private":true,"dependencies":{"koffi":"3.3.1"}}
