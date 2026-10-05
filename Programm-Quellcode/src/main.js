@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const { execFile, execFileSync } = require('child_process');
 const sync = require('./sync');
+const evesave = require('./evesave');   // EVE-Client-Einstellungen sichern/Profile (04.10.2026)
 const umzug = require('./umzug');
 
 const APP_ID = 'de.eveomni.app', OLD_APP_ID = 'de.evecore.app';   // BB0
@@ -376,6 +377,51 @@ if (TEST) global.__evecoreTest = {
 /* ---------------- Einzelfenster (eine Ansicht je Fenster, frei platzierbar) ---------------- */
 const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Handel', track: 'Watchlist',
                 local: 'Local', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer' };
+/* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
+   Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
+const MAIN_EN = {
+  'Position und Größe sperren': 'Lock position and size', 'Deckkraft': 'Opacity', 'Durchklicken (nur Browser)': 'Click-through (browser only)',
+  'Ausschalten: Einstellungen › Programm › Durchklicken': 'Turn off: Settings › App › Click-through', 'Immer im Vordergrund': 'Always on top',
+  'Startseite': 'Home page', 'Aktuelle Seite als Startseite': 'Current page as home page', 'Startseite öffnen': 'Open home page',
+  'Zurücksetzen (erstes Lesezeichen)': 'Reset (first bookmark)', 'Neuer Tab öffnet': 'New tab opens', 'Leere Seite': 'Blank page',
+  'Zuletzt besuchte Seite': 'Last visited page', 'Zoom': 'Zoom', 'Suchmaschine (Adressleiste)': 'Search engine (address bar)',
+  'Als Startseite': 'As home page', 'In neuem Tab öffnen': 'Open in new tab', '◀ Nach links': '◀ Move left', 'Nach rechts ▶': 'Move right ▶',
+  'Umbenennen: Doppelklick auf das Lesezeichen': 'Rename: double-click the bookmark', 'Löschen': 'Delete',
+  'Alle beenden': 'Quit all', 'Abbrechen': 'Cancel', 'Wirklich den EVE-Client beenden?': 'Really quit the EVE client?',
+  'Erst normal schließen – was nach 5 Sekunden noch läuft, wird hart beendet. Der Launcher bleibt offen.': 'Closes normally first – whatever still runs after 5 seconds is killed. The launcher stays open.',
+  'Es läuft kein EVE-Client.': 'No EVE client is running.', 'Charakterauswahl': 'Character selection', 'Nicht eingeloggt': 'Not logged in',
+  'EVE Omni anzeigen / ausblenden': 'Show / hide EVE Omni', 'EVE starten (Launcher)': 'Start EVE (launcher)', 'Alle EVE-Clients beenden …': 'Quit all EVE clients …',
+  'Hauptfenster immer im Vordergrund': 'Main window always on top', 'Overlays immer im Vordergrund': 'Overlays always on top', 'Durchklicken': 'Click-through',
+  'Transparenter Hintergrund': 'Transparent background', 'Einrasten': 'Snap windows', 'Overlays': 'Overlays', 'Browser-Fenster': 'Browser window', 'Fensterposition zurücksetzen': 'Reset window position',
+  'Einstellungen …': 'Settings …', 'Neocom-Einstellungen …': 'Neocom settings …', 'Alle Einstellungen …': 'All settings …', 'Sicherungsordner öffnen': 'Open backup folder',
+  'Beenden': 'Quit', 'Schließen': 'Close', 'Hintergrund': 'Background', 'Durchsichtigkeit': 'Transparency',
+  'nie (immer offen)': 'never (always open)', '10 s nach der Maus': '10 s after the mouse', '30 s nach der Maus': '30 s after the mouse',
+  '1 Min nach der Maus': '1 min after the mouse', '2 Min nach der Maus': '2 min after the mouse', '5 Min nach der Maus': '5 min after the mouse',
+  'Musikordner hinzufügen': 'Add music folder', 'Ordner für Sicherungen': 'Folder for backups', 'EVE-Omni.html wählen': 'Choose EVE-Omni.html',
+  'EVE läuft noch – erst alle EVE-Clients schließen.': 'EVE is still running – close all EVE clients first.', 'EVECore läuft noch.': 'EVECore is still running.',
+  'EVECore heißt jetzt EVE Omni und übernimmt beim ersten Start alle Daten. Bitte EVECore zuerst beenden (Symbol unten rechts › Beenden) und EVE Omni dann neu starten.': 'EVECore is now called EVE Omni and takes over all data on the first start. Please quit EVECore first (icon bottom right › Quit) and then restart EVE Omni.',
+  // Overlay-Namen (Tray › Overlays)
+  'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Handel': 'Trade', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map',
+  'Wertschätzer': 'Appraisal', 'Kurier': 'Courier', 'PI-Planer': 'PI planner', 'Wurmlöcher': 'Wormholes', 'Industrie': 'Industry', 'Notizen': 'Notes',
+  'Leistung': 'Performance', 'Uhr & Timer': 'Clock & timers'
+};
+// Teilstücke in zusammengesetzten Texten (längste zuerst)
+const MAIN_EN_PH = [[/^Wirklich alle (\d+) EVE-Clients beenden\?$/, 'Really quit all $1 EVE clients?'], [/^EVE-Clients umschalten mit /, 'Cycle EVE clients with '],
+  [/ nicht eingeloggt$/, ' not logged in'], [/ – Durchklicken aktiv$/, ' – click-through active'], [/\bUmschalt\b/g, 'Shift'], [/\bStrg\b/g, 'Ctrl'], [/\bTaste$/, 'key']];
+function uiLang(){ return S.lang === 'en' || S.lang === 'de' ? S.lang : (/^de\b/i.test(app.getLocale() || '') ? 'de' : 'en'); }
+function T(x){
+  if (typeof x !== 'string' || uiLang() !== 'en') return x;
+  if (Object.prototype.hasOwnProperty.call(MAIN_EN, x)) return MAIN_EN[x];
+  return MAIN_EN_PH.reduce((r, p) => r.replace(p[0], p[1]), x);
+}
+function tMenu(tpl){ return (tpl || []).map(it => { if (!it || typeof it !== 'object') return it; const o = Object.assign({}, it);
+  if (o.label) o.label = T(o.label); if (o.sublabel) o.sublabel = T(o.sublabel); if (o.toolTip) o.toolTip = T(o.toolTip);
+  if (Array.isArray(o.submenu)) o.submenu = tMenu(o.submenu); return o; }); }
+function tDlg(o){ if (!o || typeof o !== 'object') return o; o = Object.assign({}, o); ['title', 'message', 'detail', 'buttonLabel'].forEach(k => { if (o[k]) o[k] = T(o[k]); });
+  if (Array.isArray(o.buttons)) o.buttons = o.buttons.map(T); return o; }
+try{ const bft = Menu.buildFromTemplate.bind(Menu); Menu.buildFromTemplate = tpl => bft(tMenu(tpl));
+  ['showMessageBox', 'showMessageBoxSync', 'showOpenDialog', 'showOpenDialogSync', 'showSaveDialog'].forEach(f => { const o = dialog[f].bind(dialog);
+    dialog[f] = (a, b) => b === undefined ? o(tDlg(a)) : o(a, tDlg(b)); }); }catch(e){ console.error('i18n main', e); }
 const SAT_MIN = id => id === 'neocom' ? [36, 60] : (id === 'musik' ? [180, 60] : [180, 100]);
 const JB_MINI_H = 84;   // Jukebox-Miniplayer: Startwert, danach meldet die Seite die echte Hoehe (BB12, satFitH)
 // Doppelklick auf die Titelleiste der Jukebox: Miniplayer an/aus (Breite bleibt, Hoehe wird klein)
@@ -476,7 +522,7 @@ let satSpare = null;
 function satSpareMake(){
   if (quitting || (satSpare && !satSpare.isDestroyed())) return;
   const w = satSpare = satWin({ x: -32000, y: -32000, width: 320, height: 380 }, true);
-  w.__key = effectiveHtml() + '|' + !!S.transparent + '|' + demoOn();
+  w.__key = effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang;
   w.setMenu(null);
   w.webContents.once('did-finish-load', () => { w.__ready = true; });
   w.on('closed', () => { if (satSpare === w) satSpare = null; });
@@ -486,7 +532,7 @@ function satSpareTake(){
   const w = satSpare;
   if (!w || w.isDestroyed() || !w.__ready) return null;
   satSpare = null;
-  if (w.__key !== effectiveHtml() + '|' + !!S.transparent + '|' + demoOn()){ w.destroy(); return null; }   // Einstellung geändert → frisch laden
+  if (w.__key !== effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang){ w.destroy(); return null; }   // Einstellung geändert → frisch laden
   return w;
 }
 function closeSat(id){ const w = sats[id]; if (w && !w.isDestroyed()) w.close(); }
@@ -1015,7 +1061,7 @@ function pvNamePos(w){
 }
 function pvNameFor(w, c){
   const p = pvCfg(), n = fg.clients.filter(x => !x.name).length;
-  const text = c.name || { count: n + ' nicht eingeloggt', select: 'Charakterauswahl', nolog: 'Nicht eingeloggt' }[p.stackLabel];
+  const text = c.name || T({ count: n + ' nicht eingeloggt', select: 'Charakterauswahl', nolog: 'Nicht eingeloggt' }[p.stackLabel]);
   pvName(w, text, fg.name === 'exefile' && fg.hwnd === c.hwnd ? p.nameAct : p.nameIdle);
 }
 function pvInfo(c){ const p = pvCfg(); return { hwnd: c.hwnd, name: c.name, fps: p.fps, width: p.width, fit: p.fit, border: p.border, bwAct: p.bwAct, bwIdle: p.bwIdle, active: fg.name === 'exefile' && fg.hwnd === c.hwnd, dwm: pvDwm() }; }
@@ -1349,7 +1395,7 @@ function registerHotkeys(){
 }
 
 /* ---------------- Taskleistensymbol ---------------- */
-function hk(id){ const a = S.hotkeys[id]; return a ? a.replace('CommandOrControl', 'Strg').replace('Shift', 'Umschalt') : ''; }
+function hk(id){ const a = S.hotkeys[id]; return a ? T(a.replace('CommandOrControl', 'Strg').replace('Shift', 'Umschalt')) : ''; }
 let trayKey = '';
 function updateTray(){
   if (!tray) return;
@@ -1359,6 +1405,7 @@ function updateTray(){
     { label: 'Alle EVE-Clients beenden …', click: quitEve },   // FF5
     { type: 'separator' },
     { label: 'Hauptfenster immer im Vordergrund', type: 'checkbox', checked: !!(S.alwaysOnTop && S.alwaysOnTopFull), click: m => { S.alwaysOnTopFull = m.checked; if (m.checked) S.alwaysOnTop = true; applyWindowState(); saveSettings(); pushSettings(); } },
+    { label: 'Einrasten', type: 'checkbox', checked: S.snap !== false, click: () => { S.snap = S.snap === false; saveSettings(); pushSettings(); updateTray(); } },   // II1
     { label: 'Overlays immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: m => { S.alwaysOnTop = m.checked; applyWindowState(); saveSettings(); pushSettings(); } },
     { label: 'Durchklicken', type: 'checkbox', checked: !!S.clickThrough || Object.keys(S.windows).some(k => (S.windows[k] || {}).ct), sublabel: hk('clickThrough'), click: () => HOTKEY_ACTIONS.clickThrough() },   // W12: aus = auch Hauptfenster wieder klickbar
     { label: 'Transparenter Hintergrund', type: 'checkbox', checked: !!S.transparent, click: m => { S.transparent = m.checked; saveSettings(true); recreateWindow(); updateTray(); } },
@@ -1378,7 +1425,7 @@ function updateTray(){
   // Menue nur bei Aenderung neu setzen: pushSettings kommt oft (EVE-Clients) – ein neues Menue, waehrend das alte offen ist, verschluckt den Klick (Beenden ging nicht)
   const key = JSON.stringify(tpl);
   if (key !== trayKey){ trayKey = key; tray.setContextMenu(Menu.buildFromTemplate(tpl)); }
-  tray.setToolTip('EVE Omni Beta ' + app.getVersion() + (S.clickThrough ? ' – Durchklicken aktiv' : ''));
+  tray.setToolTip(T('EVE Omni Beta ' + app.getVersion() + (S.clickThrough ? ' – Durchklicken aktiv' : '')));
 }
 function createTray(){
   try{
@@ -1437,6 +1484,7 @@ function checkEve(){
       eveRunning = running;
       if (running && S.eveAutoShow){ if (S.startMain !== false || (win && win.isVisible())) showWin(false); showSats(); }   // BB26: Hauptfenster bleibt zu, wenn es beim Start zu sein soll
       if (!running && S.eveAutoHide) hideSats();
+      if (running) eveSaveDaily();
       pushSettings();
     }
   });
@@ -1474,8 +1522,8 @@ ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSetting
 ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
-  const allowed = ['alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck'];
-  const before = { transparent: S.transparent, htmlPath: S.htmlPath };
+  const allowed = ['lang', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck'];
+  const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   Object.keys(patch).forEach(k => {
     if (allowed.indexOf(k) < 0) return;
     if (k === 'hotkeys' || k === 'backup' || k === 'windows' || k === 'cycle' || k === 'preview' || k === 'deck') S[k] = merge(S[k] || {}, patch[k] || {});
@@ -1490,6 +1538,8 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   if (patch.preview) pvSync();
   if (patch.deck){ if (patch.deck.newKey){ delete S.deck.newKey; S.deck.key = ''; } S.deck.port = Math.max(1024, Math.min(65535, Number(S.deck.port) || 51780)); deckStart(); }   // SD
   if ('autostart' in patch) applyAutostart();
+  if ('lang' in patch) trayKey = '';   // 4.0.73: Tray-Menü in der neuen Sprache
+  if ('lang' in patch && before.lang && S.lang !== before.lang){ if (satSpare && !satSpare.isDestroyed()) satSpare.destroy(); setTimeout(recreateSats, 300); }   // Overlays in der neuen Sprache (storage-Ereignis kommt unter file:// nicht an)
   applyWindowState();
   saveSettings();
   updateTray();
@@ -1592,6 +1642,7 @@ function satMenu(id){
     // Z1: Durchklicken (alle Overlays, wie Taskleistenmenue) + Immer im Vordergrund
     { label: 'Durchklicken', type: 'checkbox', checked: !!S.clickThrough, sublabel: hk('clickThrough'), click: () => HOTKEY_ACTIONS.clickThrough() },
     { label: 'Immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: () => { S.alwaysOnTop = !S.alwaysOnTop; applyWindowState(); saveSettings(); pushSettings(); } },
+    { label: 'Einrasten', type: 'checkbox', checked: S.snap !== false, click: () => { S.snap = S.snap === false; saveSettings(); pushSettings(); updateTray(); } },   // II1
     { label: 'Schließen', submenu: [[0, 'nie (immer offen)'], [10, '10 s nach der Maus'], [30, '30 s nach der Maus'], [60, '1 Min nach der Maus'], [120, '2 Min nach der Maus'], [300, '5 Min nach der Maus']]
       .map(x => ({ label: x[1], type: 'radio', checked: (Number(cfg.autoClose) || 0) === x[0], click: () => setWin({ autoClose: x[0] }) })) },
     { type: 'separator' },
@@ -1781,9 +1832,29 @@ ipcMain.handle('evecore:pickHtml', async () => {
   if (!r.canceled && r.filePaths[0]){ S.htmlPath = r.filePaths[0]; saveSettings(true); setTimeout(() => win && win.loadFile(effectiveHtml()), 150); }
   return publicSettings();
 });
-ipcMain.handle('evecore:sync', async (ev, opts) => {
-  const base = process.env.EVECORE_EVE_SETTINGS || path.join(process.env.LOCALAPPDATA || '', 'CCP', 'EVE', 'g_eve_online_tq_tranquility');
-  return sync.run(opts || {}, { base, eveRunning: isEveRunningNow });
+function eveSetBase(){ return process.env.EVECORE_EVE_SETTINGS || path.join(process.env.LOCALAPPDATA || '', 'CCP', 'EVE', 'g_eve_online_tq_tranquility'); }
+ipcMain.handle('evecore:sync', async (ev, opts) => sync.run(opts || {}, { base: eveSetBase(), eveRunning: isEveRunningNow }));
+/* EVE-Einstellungen sichern: automatisch beim ersten EVE-Start des Tages (abschaltbar), „Jetzt sichern“, Profile, Wiederherstellen (nur bei geschlossenem EVE) */
+function eveSaveDir(){ return path.join(backupDir(), 'EVE-Einstellungen'); }
+function eveSaveDaily(){
+  if (demoOn() || S.eveSaveAuto === false) return;
+  const day = new Date().toDateString(); if (S.eveSaveDay === day) return;
+  try{ evesave.save(eveSetBase(), eveSaveDir(), 'auto'); S.eveSaveDay = day; saveSettings(); }catch(e){}
+}
+ipcMain.handle('evecore:eveSave', async (ev, o) => {
+  o = o || {};
+  const base = eveSetBase(), dest = eveSaveDir();
+  try{
+    if (o.op === 'save') return Object.assign(evesave.list(base, dest), { done: evesave.save(base, dest, 'auto') });
+    if (o.op === 'profil') return Object.assign(evesave.list(base, dest), { done: evesave.save(base, dest, 'profil', o.name) });
+    if (o.op === 'remove'){ evesave.remove(dest, String(o.name)); return evesave.list(base, dest); }
+    if (o.op === 'restore'){
+      if (await isEveRunningNow()) return Object.assign(evesave.list(base, dest), { error: 'EVE läuft noch – erst alle EVE-Clients schließen.' });
+      return Object.assign(evesave.list(base, dest), { done: evesave.restore(base, dest, String(o.name), o.chars || null) });
+    }
+    if (o.op === 'open'){ fs.mkdirSync(dest, { recursive: true }); shell.openPath(dest); }
+    return evesave.list(base, dest);
+  }catch(e){ return Object.assign(evesave.list(base, dest), { error: e.message }); }
 });
 
 /* ---------------- Start ---------------- */

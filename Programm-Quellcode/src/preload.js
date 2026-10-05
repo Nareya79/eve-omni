@@ -63,6 +63,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   killfeed: on => ipcRenderer.send('evecore:killfeed', !!on),
   intelList: () => ipcRenderer.invoke('evecore:intelList'),   // HZ23
   intelSet: o => ipcRenderer.invoke('evecore:intelSet', o),
+  eveSave: o => ipcRenderer.invoke('evecore:eveSave', o),   // EVE-Einstellungen sichern/Profile
   openExternal: url => ipcRenderer.send('evecore:openExternal', String(url)),
   activateClient: hwnd => ipcRenderer.invoke('evecore:activateClient', String(hwnd)),
   frontClient: () => ipcRenderer.invoke('evecore:frontClient'),
