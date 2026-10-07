@@ -6865,7 +6865,9 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     "Frachterpilot": "Hauler pilot",
     "Sprungpilot": "Jump pilot",
     // Nachtrag 04.10.2026 (Programm-Quellcode/i18n-en.py)
-    "Anmeldung": "Login"
+    "Anmeldung": "Login",
+    // Nachtrag 04.10.2026 (Programm-Quellcode/i18n-en.py)
+    "Kaufe in": "Buy in"
   };
   var ATTR = ["title", "placeholder", "aria-label"];
   /* Nachtrag 04.10.2026: Muster für Texte mit Zahlen/Namen (ganzer Text muss passen) + Teilsätze, die in vielen Statuszeilen vorkommen */
@@ -7595,11 +7597,14 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       });
       body.addEventListener("pointerup", neoMoveEnd); body.addEventListener("pointercancel", neoMoveEnd); body.addEventListener("lostpointercapture", neoMoveEnd);
       // 07.10.: Linksklick kam manchmal nicht an (Rechtsklick + Tooltip gingen) – Symbol reagiert schon beim Loslassen auf demselben Symbol, der folgende click wird übersprungen
-      var lpB = null;
-      body.addEventListener("pointerdown", function(ev){ lpB = ev.button === 0 && ev.target.closest ? ev.target.closest("[data-neo]") : null; }, true);
+      // 07.10. abends (Log): Windows schluckt manchmal das Drücken (kein pointerdown/mousedown), nur das Loslassen kommt an → dann zählt das Loslassen allein
+      var lpB = null, lpT = 0, neoNoDown = [];
+      body.addEventListener("pointerdown", function(ev){ lpB = ev.button === 0 && ev.target.closest ? ev.target.closest("[data-neo]") : null; lpT = Date.now(); }, true);
       body.addEventListener("pointerup", function(ev){
-        var b = lpB; lpB = null;
-        if (!b || ev.button !== 0 || (nd && nd.on) || !ev.target.closest || ev.target.closest("[data-neo]") !== b) return;
+        var b = lpB, up = ev.target.closest ? ev.target.closest("[data-neo]") : null, noDown = Date.now() - lpT > 2000; lpB = null;
+        if (ev.button !== 0 || (nd && nd.on) || !up || (b ? up !== b : !noDown)) return;
+        b = up; if (noDown){ neoLogAdd("nur Loslassen angekommen – trotzdem ausgelöst"); neoNoDown.push(Date.now()); neoNoDown = neoNoDown.filter(function(t){ return Date.now() - t < 30000; });
+          if (neoNoDown.length >= 2){ neoNoDown = []; neoLogAdd("Neocom-Fenster wird neu aufgebaut"); setTimeout(function(){ H.satAction({ type: "neoHeal" }); }, 400); } }   // wie „Demo beenden“: frisches Fenster nimmt das Drücken wieder an
         neoUpAt = Date.now(); neoLogAdd("aktion " + b.getAttribute("data-neo"));
         H.satAction({ type: "neo", target: b.getAttribute("data-neo"), big: false });
       }, true);
@@ -20870,7 +20875,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     else if (id === "mining") ovRenderMining(body, false);   // MI1
     else if (id === "dscan") ovRenderDscan(body);   // AA11
     else if (id === "wurmloch") ovRenderWormhole(body);   // EE3
-    else if (id === "home") homeView(body);   // JJ8
+    else if (id === "home"){ homeView(body); if (!ovHomeLd){ ovHomeLd = true; homeLoad(); setTimeout(function(){ ovHomeLd = false; }, 60000); } }   // JJ8
     else if (id === "piplan") ppView(body, false);   // DD3
     else if (id === "uhr") ovRenderTimer(body);   // Z7
     else if (id === "assets") ovRenderAssets(body);
@@ -21367,6 +21372,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
       return;
     }
     if (a.type === "mirrorSet"){ ovMirrorApply(a.form || {}); ovRender(); ovPublishSatellites(); return; }
+    if (a.type === "neoHeal" && view === "neocom" && EVH && EVH.setSettings){ EVH.setSettings({ windows: { neocom: { open: false } } }).then(function(){ setTimeout(function(){ EVH.setSettings({ windows: { neocom: { open: true } } }); }, 400); }); return; }   // KK11
     if (a.type === "kkd"){ if (a.form) ovMirrorApply(a.form); kkwAct(a.arg); ovRender(); return; }   // KK6
     if (a.type === "sb"){ var sp = String(a.arg || "").split(":"); if (a.form) ovMirrorApply(a.form); if (SB[sp[0]]) sbAct(sp[0], sp[1]); ovRender(); return; }   // KK7
     if (a.type === "mirrorRun" && OV_MIRROR[a.arg]){ ovMirrorApply(a.form || {}); ovAct(a.arg); return; }
@@ -22428,7 +22434,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     return msgs;
   }
   // JJ8: Übersicht – 6 Kacheln aus vorhandenen Daten (nichts wird extra geladen), Klick = passende Seite
-  var HOME_KEY = "eve-zentrale-home-start-v1";   // "1" = Übersicht ist Startseite (nur Neuinstallation)
+  var HOME_KEY = "eve-zentrale-home-start-v1", ovHomeLd = false;   // "1" = Übersicht ist Startseite (nur Neuinstallation)
   function homeTiles(){
     var now = Date.now(), T = [], x;
     x = 0; var wl = ovWallet && ovWallet.list ? ovWallet.list.filter(function(w){ return w.bal != null; }) : [];
@@ -22459,8 +22465,10 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
     if (a.type !== "homeGo") return;
     if (a.arg === "uhr") neoOverlayAction("timer", true, false); else ovOpenMainView(a.arg, true);
   }
+  function homeLoad(){ if (!loadAllTokens().length) return; ["wallet", "skills", "pi"].forEach(function(v){ try{ ovEnsureDataFor(v); }catch(e){} }); [3000, 8000].forEach(function(ms){ setTimeout(function(){ homePageRender(); ovRender(); }, ms); }); }   // Kacheln sollen nicht „noch nicht geladen“ zeigen
   function homePageRender(){
     var box = document.getElementById("home-page"), p = document.getElementById("panel-home"); if (!box || !p || !p.classList.contains("active")) return;
+    if (!box.__ld){ box.__ld = true; homeLoad(); setTimeout(function(){ box.__ld = false; }, 60000); }
     if (!box.__w){ box.__w = true; ovFormWire(box, homeAction); }
     ovFormKeep(box, function(){ box.innerHTML = ""; homeView(box); });
   }
