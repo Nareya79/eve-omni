@@ -47,6 +47,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   satFitH: h => ipcRenderer.send('evecore:satFitH', Number(h) || 0),
   satMenu: () => ipcRenderer.send('evecore:satMenu'),
   satDrag: phase => ipcRenderer.send('evecore:satDrag', String(phase)),
+  neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose Neocom-Linksklick (07.10.)
   pickMusicDir: () => ipcRenderer.invoke('evecore:pickMusicDir'),
   listMusic: () => ipcRenderer.invoke('evecore:listMusic'),
   removeMusicDir: d => ipcRenderer.invoke('evecore:removeMusicDir', d),

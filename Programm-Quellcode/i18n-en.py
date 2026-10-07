@@ -12,7 +12,7 @@ T = {
 "ab, unabhängig von den Haken oben (die filtern nur Transaktionen/Journal/Diagramme) – Kontostand plus, bei aktivierter Checkbox „Asset-Werte einbeziehen“ (standardmäßig an), geschätzte Asset-Werte zum aktuell höchsten Jita-Kaufgebot ohne Gebühren – das braucht pro Artikel eine eigene Marktabfrage und dauert bei vielen Charakteren entsprechend länger. Neue Transaktionen seit dem letzten Abruf in diesem Browser sind grün markiert und mit „NEU“ gekennzeichnet.":
   ", regardless of the checkboxes above (they only filter transactions/journal/charts) – balance plus, with “Include asset values” ticked (on by default), estimated asset values at the current highest Jita buy order without fees. That needs one market request per item and takes longer with many characters. New transactions since the last fetch in this browser are marked green and with “NEW”.",
 "Route ab hier": "Route from here", "Nicht unter": "Not below", "nicht unter": "not below", "· auf Lager": "· in stock", "Menge im Hangar": "Quantity in hangar", "· wenn alles verkauft": "· when all sold", "alles": "all",
-"Login nötig (Einstellungen › Charaktere), um deine echten Industrie-/Mining-Daten zu laden.": "Login needed (Settings › Characters) to load your real industry/mining data.",
+"Login nötig (Einstellungen › Konto), um deine echten Industrie-/Mining-Daten zu laden.": "Login needed (Settings › Account) to load your real industry/mining data.",
 "Jobs zeigt laufende und kürzlich abgeschlossene Fertigungs-/Forschungs-/Erfindungsjobs. Mining Ledger zeigt deine täglich abgebauten Erzmengen pro System (nur relevant, wenn der Charakter aktiv mint). Benötigt die Scopes":
   "Jobs shows running and recently finished manufacturing/research/invention jobs. Mining Ledger shows the ore you mined per day and system (only relevant if the character mines). Requires the scopes",
 "und für Blueprints": "and for blueprints", "Sprünge": "Jumps", "Min. volume / day (units)": "Min. volume / day (units)",
@@ -28,7 +28,7 @@ T = {
 "Im Umkreis": "In radius", "Alle": "All",
 "„Aktiv“ zeigt deine derzeit offenen Kauf-/Verkaufsaufträge, „Verlauf“ die letzten abgelaufenen, erfüllten oder stornierten Orders (von der EVE-API begrenzt geliefert). Benötigt den Scope":
   "“Active” shows your open buy/sell orders, “History” the latest expired, filled or cancelled orders (limited by the EVE API). Requires the scope",
-"Login nötig (Einstellungen › Charaktere), um deine echten Verträge zu laden.": "Login needed (Settings › Characters) to load your real contracts.",
+"Login nötig (Einstellungen › Konto), um deine echten Verträge zu laden.": "Login needed (Settings › Account) to load your real contracts.",
 "Die Verträge sind pro Charakter gruppiert (Bildchen und Name als Abschnittsüberschrift, absteigend nach Ausstellungsdatum sortiert innerhalb jeder Gruppe). „Laufend“ zeigt offene und in Bearbeitung befindliche Verträge, „Abgeschlossen“ alle erledigten, abgelaufenen, stornierten, abgelehnten, fehlgeschlagenen oder rückabgewickelten. Die Spalte „Quelle“ zeigt, ob es dein":
   "Contracts are grouped per character (portrait and name as heading, newest first within each group). “Running” shows open and in-progress contracts, “Finished” all completed, expired, cancelled, rejected, failed or reversed ones. The “Source” column shows whether it is your",
 "persönlicher": "personal", "Vertrag ist oder ein Vertrag deiner": "contract or a contract of your",
@@ -103,7 +103,7 @@ T = {
 "ISK-Bewegungen, nicht nur Markt-Käufe/-Verkäufe.": "ISK movements, not just market buys/sells.", "↻ Laden": "↻ Load", "Vermögen": "Net worth", "Erst ein Tag gespeichert – die Kurve wächst ab morgen.": "Only one day saved – the curve grows from tomorrow.",
 "Ware in Läufen": "Goods in runs", "Woche": "Week", "Erledigte Trades/Läufe": "Finished trades/runs", "Vermögensänderung": "Change in net worth", "– (noch kein Verlauf)": "– (no history yet)", "Beste Waren": "Best items", "Schlechteste Waren": "Worst items",
 "Wochenbericht als Meldung: aus": "Weekly report as notification: off", "Gewinn aus den Wallet-Transaktionen (Einkauf zuerst, wie „Gewinn & Verlust“); Stand wird einmal am Tag gespeichert.": "Profit from wallet transactions (purchase first, like “Profit & loss”); saved once a day.",
-"Schätzwerte (Jita-Kaufgebot) laden – deutlich langsamer": "Load estimates (Jita buy order) – much slower", "Login nötig (Einstellungen › Charaktere), um deine echten Assets zu laden.": "Login needed (Settings › Characters) to load your real assets.",
+"Schätzwerte (Jita-Kaufgebot) laden – deutlich langsamer": "Load estimates (Jita buy order) – much slower", "Login nötig (Einstellungen › Konto), um deine echten Assets zu laden.": "Login needed (Settings › Account) to load your real assets.",
 "Wie das Assets-Fenster in EVE: Reiter „Besitzer“ wählt einen, mehrere oder alle Charaktere, Reiter „Assets“ zeigt die Orte (aufklappen für die Items, Schiffe weiter aufklappen für Slots und „Fit kopieren“). Inhalte von Containern stehen beim Ort, Inhalte von Schiffen beim Schiff. Structures, auf die dein Charakter keinen Zugriff hat (z. B. fremde Null-Sec-Citadels), erscheinen als „Unbekannter Ort“. Die optionalen Schätzwerte nutzen das aktuell höchste Kaufgebot in Jita pro Artikel – ohne Broker-Gebühr/Steuer abgezogen und ohne Berücksichtigung, ob am Zielort überhaupt jemand in der Menge kauft.":
   "Like the Assets window in EVE: the “Owner” tab picks one, several or all characters, the “Assets” tab shows the locations (expand for items, expand ships further for slots and “Copy fit”). Container contents are listed at the location, ship contents at the ship. Structures your character can't access (e.g. foreign null-sec citadels) appear as “Unknown location”. The optional estimates use the current highest Jita buy order per item – without broker fee/tax and regardless of whether anyone buys that quantity.",
 "EVE Omni schlägt je Aufgabe den Charakter mit den besten Industrie-Skills vor. Du kannst jede Rolle selbst festlegen (wird gemerkt).": "EVE Omni suggests the character with the best industry skills for each task. You can set each role yourself (remembered).",
@@ -378,6 +378,9 @@ T = {
 "Papierkorb": "Bin",
 "Erledigt": "Done",
 }
+# 4.0.73: Vollständig-Englisch (Meldung „almost 50% German“) – Einträge aus i18n-en-4073-*.json, greifen auch als Stücke mitten im Text (frag())
+for f in sorted((R / 'Programm-Quellcode').glob('i18n-en-4073-*.json')):
+    for k, v in json.load(open(f, encoding='utf-8')).items(): T.setdefault(k, v)
 p = R / 'EVE-Omni.html'
 h = open(p, encoding='utf-8', newline='').read()
 i = h.index('  var EN = { "Kurier"'); j = h.index('\n  };\n  var ATTR = ', i)

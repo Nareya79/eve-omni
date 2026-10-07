@@ -536,13 +536,15 @@ function satSpareTake(){
   return w;
 }
 function closeSat(id){ const w = sats[id]; if (w && !w.isDestroyed()) w.close(); }
-function syncSats(show){
+// front: vom Nutzer geoeffnet (Neocom-Klick, Einstellungen) -> nach vorne, auch wenn EVE gerade nicht vorne ist
+// (sonst legt „nur ueber EVE“ es hinter das aktive Programm – Fenster scheint nicht aufzugehen; Nutzer 06.10.2026)
+function syncSats(show, front){
   // O2: Hauling + Hub-Handel sind jetzt ein Fenster „Handel“
   ['hauling', 'hubhandel'].forEach(o => { if (S.windows[o]){ if (S.windows[o].open && !S.windows.handel) S.windows.handel = { open: true }; delete S.windows[o]; } });
   Object.keys(VIEWS).forEach(id => {
     const want = !!(S.windows[id] && S.windows[id].open);
     const has = !!(sats[id] && !sats[id].isDestroyed());
-    if (want && !has) openSat(id, show !== false);
+    if (want && !has){ const w = openSat(id, show !== false); if (front && w) w.once('show', () => setTimeout(() => { if (!w.isDestroyed()) w.moveTop(); }, 150)); }   // nach dem BELOW des Helfers
     if (!want && has){ satClosingAll = true; sats[id].close(); satClosingAll = false; }
   });
 }
@@ -1412,7 +1414,7 @@ function updateTray(){
     { label: 'EVE-Clients umschalten mit ' + ((cycleCfg().fwd.label) || 'Taste'), type: 'checkbox', checked: !!(S.cycle && S.cycle.on),
       click: m => { S.cycle = Object.assign(cycleCfg(), { on: m.checked }); cycleSend(); saveSettings(); pushSettings(); } },
     { label: 'Overlays', submenu: Object.keys(VIEWS).map(id => ({ label: VIEWS[id], type: 'checkbox', checked: !!(S.windows[id] && S.windows[id].open),
-        click: m => { S.windows[id] = Object.assign({}, S.windows[id], { open: m.checked }); saveSettings(); syncSats(); pushSettings(); } })) },
+        click: m => { S.windows[id] = Object.assign({}, S.windows[id], { open: m.checked }); saveSettings(); syncSats(undefined, true); pushSettings(); } })) },
     { label: 'Browser-Fenster', click: () => openBrowser() },
     { label: 'Fensterposition zurücksetzen', click: () => resetBounds() },
     { type: 'separator' },
@@ -1522,6 +1524,7 @@ ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSetting
 ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
+  if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
   const allowed = ['lang', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   Object.keys(patch).forEach(k => {
@@ -1543,7 +1546,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   applyWindowState();
   saveSettings();
   updateTray();
-  if (patch.windows) syncSats();
+  if (patch.windows) syncSats(undefined, true);
   if (S.transparent !== before.transparent) setTimeout(() => { recreateWindow(); recreateSats(); }, 150);
   else if (S.htmlPath !== before.htmlPath) setTimeout(() => { if (win) win.loadFile(effectiveHtml()); recreateSats(); }, 150);
   pushSettings();
@@ -1625,8 +1628,11 @@ ipcMain.on('evecore:ready', ev => {
 ipcMain.on('evecore:publishView', (ev, id, data) => { const w = sats[id]; if (w && !w.isDestroyed()) w.webContents.send('evecore:cmd', { type: 'view', data }); });
 // U2: Kopieren aus Overlay-Fenstern (nicht fokussierbar -> navigator.clipboard schlaegt fehl)
 ipcMain.handle('evecore:copyText', (ev, t) => { clipboard.writeText(String(t || '')); return true; });
+const neoTrace = [];   // Diagnose 07.10.: was das Programm nach einem Klick tut (geht mit nach neocom-log.txt)
+function neoTraceAdd(s){ const d = new Date(); neoTrace.push(d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0') + ' ' + s); if (neoTrace.length > 40) neoTrace.shift(); }
 ipcMain.on('evecore:satAction', (ev, action) => {
   const sid = satIdOf(ev.sender); if (!sid) return;
+  if (action && sid === 'neocom') neoTraceAdd('satAction ' + action.type + ' ' + (action.target || '') + (action.big ? ' gross' : '') + ' → Hauptfenster ' + (win && !win.isDestroyed() ? (win.webContents.isCrashed() ? 'abgestürzt' : 'da') : 'fehlt'));
   if (action && (action.type === 'openMain' || action.type === 'openSettings' || (action.type === 'jb' && /^st:/.test(action.cmd || '')))) showWin(true);   // BB1: Streaming-Player spielt in der grossen Ansicht
   send({ type: 'satAction', view: sid, action });
 });
@@ -1681,6 +1687,14 @@ function satDrag(w, phase){
   selfDrags.set(w, st);
 }
 ipcMain.on('evecore:satDrag', (ev, phase) => { const sid = satIdOf(ev.sender); if (sid) satDrag(sats[sid], phase); });
+// Diagnose Neocom-Linksklick (07.10.): letzte Maus-Ereignisse des Neocom-Overlays + Zustand im Programm nach neocom-log.txt (Einstellungsordner)
+ipcMain.on('evecore:neoLog', (ev, text) => {
+  if (satIdOf(ev.sender) !== 'neocom') return;
+  const w = sats.neocom, st = w && !w.isDestroyed() ? { drag: selfDrags.has(w), ignore: satCt(w), top: w.isAlwaysOnTop(), focusable: w.isFocusable(), visible: w.isVisible(), locked: winLocked(w) } : null;
+  const m = win && !win.isDestroyed() ? { visible: win.isVisible(), locked: winLocked(win), drags: drags.size, selfDrags: selfDrags.size, demo: demoOn() } : null;
+  const open = Object.keys(sats).filter(k => sats[k] && !sats[k].isDestroyed() && sats[k].isVisible());
+  try{ fs.writeFileSync(path.join(app.getPath('userData'), 'neocom-log.txt'), 'Neocom-Fenster: ' + JSON.stringify(st) + '\nHauptfenster: ' + JSON.stringify(m) + '\nOffene Overlays: ' + open.join(', ') + '\n\n--- Programm ---\n' + neoTrace.join('\n') + '\n\n--- Neocom-Overlay ---\n' + String(text)); }catch(e){}
+});
 ipcMain.on('evecore:hide', () => hideMain());
 ipcMain.on('evecore:minimize', () => { if (win) win.minimize(); });
 ipcMain.on('evecore:toggleMaximize', () => { if (!win) return; if (win.isMaximized()) win.unmaximize(); else win.maximize(); });
