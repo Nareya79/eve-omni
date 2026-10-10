@@ -24,16 +24,42 @@
   button{background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:24px;min-width:26px;padding:0 6px;cursor:pointer;font:inherit}
   button:hover:not(:disabled){border-color:#4fa3d1;color:#fff}
   button:disabled{opacity:.35;cursor:default}
-  #star.on{color:#e0b84a;border-color:#e0b84a}
+  #star.on, #mgb.on{color:#e0b84a;border-color:#e0b84a}
   #close:hover{background:#7a1f1f;border-color:#b33}
   #url{flex:1;min-width:60px;height:24px;background:#05070a;color:#e6edf3;border:1px solid #243140;border-radius:3px;padding:0 8px;font:inherit;user-select:text}
   #url:focus{outline:none;border-color:#4fa3d1}
   .bm{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border:1px solid #243140;border-radius:11px;background:#131a22;cursor:pointer;flex:none}
   .bm:hover{border-color:#4fa3d1;color:#fff}
+  .bm.fd{border-radius:4px;color:var(--ic, #e0b84a)}
+  .fdi{flex:none;color:var(--ic, #e0b84a);filter:drop-shadow(0 0 3px color-mix(in srgb, var(--ic, #e0b84a) 60%, transparent));vertical-align:-3px}   /* MM3: Ordner wie im Menü */
+  .mr .ic .fdi{vertical-align:-3px}
   .bm .x{opacity:0;font-size:11px;color:#c66}
   .bm:hover .x{opacity:1}
   .bm.ed{border-color:#4fa3d1;background:#05070a;user-select:text;outline:none;cursor:text}
+  .bm.dl{box-shadow:inset 3px 0 0 #4fa3d1} .bm.dr{box-shadow:inset -3px 0 0 #4fa3d1} .bm.di{background:#1d3446;border-color:#4fa3d1}
   .hint{color:#6b7885;font-size:12px}
+  /* BM: Lesezeichen verwalten – Liste statt Webseite */
+  html.mg, html.mg body{height:100%}
+  #mg{position:absolute;top:90px;left:0;right:0;bottom:0;display:flex;flex-direction:column;-webkit-app-region:no-drag;user-select:none}
+  #mg[hidden]{display:none}
+  .mgh{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #1c2630;flex-wrap:wrap}
+  .mgh b{font-size:14px;color:#e6edf3;margin-right:6px}
+  .mgh input{flex:1;min-width:120px;height:24px;background:#05070a;color:#e6edf3;border:1px solid #243140;border-radius:3px;padding:0 8px;font:inherit;user-select:text}
+  #mgl{flex:1;overflow:auto;padding:4px 0 20px}
+  .mr{display:flex;align-items:center;gap:6px;height:28px;padding-right:8px;border-top:2px solid transparent;border-bottom:2px solid transparent;cursor:default}
+  .mr:hover{background:#111922}
+  .mr.db{border-top-color:#4fa3d1} .mr.da{border-bottom-color:#4fa3d1} .mr.di{background:#1d3446}
+  .mr .tg{width:16px;text-align:center;color:#8fa0b0;cursor:pointer;flex:none}
+  .mr .ic{flex:none;width:18px;text-align:center}
+  .mr .nm{flex:0 1 auto;min-width:40px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer}
+  .mr.f .nm{color:var(--ic, #e0b84a);font-weight:600}
+  .mr .ur{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#6b7885;font-size:12px}
+  .mr .ac{flex:none;display:flex;gap:3px;opacity:.25}
+  .mr:hover .ac{opacity:1}
+  .mr .ac button{height:22px;min-width:24px;padding:0 4px}
+  .mr input{height:22px;background:#05070a;color:#e6edf3;border:1px solid #4fa3d1;border-radius:3px;padding:0 6px;font:inherit;user-select:text}
+  .mr input.n{flex:0 1 220px} .mr input.u{flex:1;min-width:80px}
+  .mgf{color:#6b7885;font-size:12px;padding:6px 12px}
 </style>
 </head>
 <body>
@@ -44,61 +70,171 @@
     <button id="reload" title="Neu laden">⟳</button>
     <input id="url" spellcheck="false" placeholder="Adresse oder Suchbegriff">
     <button id="star" title="Lesezeichen setzen / entfernen">☆</button>
+    <button id="mgb" title="Lesezeichen verwalten: Ordner, sortieren, importieren">📑</button>
     <button id="ext" title="Im normalen Browser öffnen">↗</button>
     <button id="ov" title="Einstellungen: Startseite, neuer Tab, Zoom, Suchmaschine – und wie ein Overlay: Deckkraft, sperren, durchklicken, Vordergrund">⚙</button>
     <button id="close" title="Schließen">✕</button>
   </div>
   <div class="row r2" id="bms"></div>
+  <div id="mg" hidden>
+    <div class="mgh"><b id="mgt">Lesezeichen verwalten</b>
+      <input id="mgq" spellcheck="false" placeholder="Suchen …">
+      <button id="mgnew">Neuer Ordner</button>
+      <button id="mgimp">⤓ Importieren …</button>
+      <button id="mgdone">Fertig</button>
+    </div>
+    <div id="mgl"></div>
+  </div>
 <script>
-  var H = window.browserHost, $ = function(id){ return document.getElementById(id); }, st = null;
+  var H = window.browserHost, $ = function(id){ return document.getElementById(id); }, st = null, mgOpen = {}, mgEdit = "", mgQ = "", drag = null;
+  // BM: neue Texte zweisprachig (Sprache kommt mit dem Zustand)
+  var EN = { "Zurück": "Back", "Vor": "Forward", "Neu laden": "Reload", "Laden abbrechen": "Stop loading", "Adresse oder Suchbegriff": "Address or search term",
+    "Lesezeichen setzen / entfernen": "Add / remove bookmark", "Lesezeichen verwalten: Ordner, sortieren, importieren": "Manage bookmarks: folders, sorting, import",
+    "Im normalen Browser öffnen": "Open in your normal browser", "Schließen": "Close", "Tab schließen": "Close tab", "Neuer Tab (Strg+T)": "New tab (Ctrl+T)", "Neuer Tab": "New tab",
+    "Lesezeichen verwalten": "Manage bookmarks", "Suchen …": "Search …", "Neuer Ordner": "New folder", "⤓ Importieren …": "⤓ Import …", "Fertig": "Done",
+    "Keine Lesezeichen – ☆ merkt die aktuelle Seite": "No bookmarks – ☆ saves the current page", "Lesezeichen entfernen": "Remove bookmark",
+    "Umbenennen": "Rename", "Löschen": "Delete", "Öffnen": "Open", "Ordner auf/zu": "Open/close folder", "Adresse": "Address", "Name": "Name",
+    "Ziehen: sortieren oder in einen Ordner legen · Doppelklick: umbenennen · ✎: Name und Adresse ändern": "Drag: sort or drop into a folder · Double-click: rename · ✎: edit name and address",
+    "Nichts gefunden.": "Nothing found.", "Noch keine Lesezeichen. ☆ in der Adresszeile merkt eine Seite, „Importieren“ holt sie aus Chrome oder Edge.": "No bookmarks yet. ☆ in the address bar saves a page, „Import“ fetches them from Chrome or Edge.",
+    "Ordner – Klick: aufklappen · Rechtsklick: Menü · Ziehen: sortieren": "Folder – click: open · right-click: menu · drag: sort",
+    "Rechtsklick: Menü · Doppelklick: umbenennen · Ziehen: sortieren oder in einen Ordner legen": "Right-click: menu · double-click: rename · drag: sort or drop into a folder" };
+  function L(x){ return st && st.en && EN.hasOwnProperty(x) ? EN[x] : x; }
+  function texts(){
+    document.documentElement.lang = st && st.en ? "en" : "de";
+    [["back", "Zurück"], ["fwd", "Vor"], ["star", "Lesezeichen setzen / entfernen"], ["mgb", "Lesezeichen verwalten: Ordner, sortieren, importieren"], ["ext", "Im normalen Browser öffnen"], ["close", "Schließen"]]
+      .forEach(function(x){ $(x[0]).title = L(x[1]); });
+    $("url").placeholder = L("Adresse oder Suchbegriff"); $("mgq").placeholder = L("Suchen …");
+    $("mgt").textContent = L("Lesezeichen verwalten"); $("mgnew").innerHTML = FOLDER_SVG + " "; $("mgnew").appendChild(document.createTextNode(L("Neuer Ordner"))); $("mgimp").textContent = L("⤓ Importieren …"); $("mgdone").textContent = L("Fertig");
+  }
+  function at(p){ var n = null, list = st.bookmarks; String(p).split("/").forEach(function(i){ n = list && list[Number(i)]; list = n && n.kids; }); return n; }
+  // Ziehen: Ordner in der Mitte = hinein, sonst davor/danach (Leiste waagerecht, Liste senkrecht)
+  function dropMode(ev, el, folder, horiz){
+    var r = el.getBoundingClientRect(), f = horiz ? (ev.clientX - r.left) / r.width : (ev.clientY - r.top) / r.height;
+    return folder && f > 0.25 && f < 0.75 ? "into" : f < 0.5 ? "before" : "after";
+  }
+  function dropWire(el, p, folder, horiz, cls){
+    el.draggable = true;
+    el.ondragstart = function(ev){ drag = p; ev.dataTransfer.setData("text/plain", p); ev.dataTransfer.effectAllowed = "move"; };
+    el.ondragend = function(){ drag = null; };
+    el.ondragover = function(ev){ if (drag === null || (p + "/").indexOf(drag + "/") === 0) return; ev.preventDefault(); var m = dropMode(ev, el, folder, horiz);
+      el.classList.remove(cls[0], cls[1], cls[2]); el.classList.add(cls[m === "before" ? 0 : m === "after" ? 1 : 2]); };
+    el.ondragleave = function(){ el.classList.remove(cls[0], cls[1], cls[2]); };
+    el.ondrop = function(ev){ ev.preventDefault(); el.classList.remove(cls[0], cls[1], cls[2]); if (drag === null) return;
+      var m = dropMode(ev, el, folder, horiz); if (m === "into") mgOpen[p] = true;
+      H.cmd("bmmove", JSON.stringify({ from: drag, to: p, mode: m })); drag = null; };
+  }
+  var FOLDER_SVG = "<svg class=\"fdi\" viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linejoin=\"round\"><path d=\"M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.2h8.5A1.5 1.5 0 0 1 21 8.7v9.8A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z\" fill=\"currentColor\" fill-opacity=\".18\"/></svg>";
+  function renameInline(el, p, keep){
+    var t = [].filter.call(el.childNodes, function(n){ return n.nodeType === 3; })[0]; el.contentEditable = "true"; el.classList.add("ed"); el.focus(); document.getSelection().selectAllChildren(t || el);
+    function done(ok){ el.onblur = null; var n = el.textContent.replace(/[✕▾]$/, "").trim(); el.contentEditable = "false"; el.classList.remove("ed"); H.cmd("rename", p + "\n" + (ok && n ? n : keep)); }
+    el.onkeydown = function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); done(true); } else if (ev.key === "Escape") done(false); };
+    el.onblur = function(){ done(true); };
+  }
+  function renderBar(s){
+    var box = $("bms"); box.textContent = "";
+    s.bookmarks.forEach(function(b, i){
+      var p = String(i), el = document.createElement("span"), fd = !!b.kids;
+      el.className = "bm" + (fd ? " fd" : "");
+      el.title = fd ? b.name + "\n" + L("Ordner – Klick: aufklappen · Rechtsklick: Menü · Ziehen: sortieren") : b.url + (s.home === b.url ? "\n⌂" : "") + "\n" + L("Rechtsklick: Menü · Doppelklick: umbenennen · Ziehen: sortieren oder in einen Ordner legen");
+      if (fd){ var fi = document.createElement("span"); fi.innerHTML = FOLDER_SVG; fi.contentEditable = "false"; el.appendChild(fi.firstChild); }   // MM3: Ordner-Symbol im EVE-Omni-Stil statt Emoji
+      el.appendChild(document.createTextNode(b.name));
+      if (fd){ var a = document.createElement("span"); a.textContent = "▾"; a.contentEditable = "false"; el.appendChild(a); }
+      else { var x = document.createElement("span"); x.className = "x"; x.textContent = "✕"; x.title = L("Lesezeichen entfernen"); x.contentEditable = "false";
+        x.onclick = function(ev){ ev.stopPropagation(); H.cmd("unmark", b.url); }; el.appendChild(x); }
+      el.onclick = function(){ if (!el.isContentEditable) H.cmd(fd ? "bmfolder" : "go", fd ? p : b.url); };
+      el.oncontextmenu = function(ev){ ev.preventDefault(); ev.stopPropagation(); H.cmd("bmmenu", p); };
+      el.ondblclick = function(){ if (!fd) renameInline(el, p, b.name); };
+      dropWire(el, p, fd, true, ["dl", "dr", "di"]);
+      box.appendChild(el);
+      if (s.edit === p && !s.manage){ s.edit = ""; setTimeout(function(){ renameInline(el, p, b.name); }, 0); }
+    });
+    if (!s.bookmarks.length){ var h = document.createElement("span"); h.className = "hint"; h.textContent = L("Keine Lesezeichen – ☆ merkt die aktuelle Seite"); box.appendChild(h); }
+  }
+  // BM: Liste zum Verwalten (Ordner auf/zu, ziehen, umbenennen, Adresse ändern, löschen, suchen)
+  function renderManage(s){
+    var box = $("mgl"); box.textContent = ""; var q = mgQ.toLowerCase(), n = 0;
+    if (s.edit && s.manage){ mgEdit = s.edit; s.edit = ""; String(s.edit).split("/").reduce(function(a, i){ if (a) mgOpen[a] = true; return a ? a + "/" + i : i; }, ""); }
+    function row(b, p, depth, trail){
+      var fd = !!b.kids, r = document.createElement("div"); r.className = "mr" + (fd ? " f" : ""); r.style.paddingLeft = (8 + depth * 18) + "px";
+      var tg = document.createElement("span"); tg.className = "tg"; tg.textContent = fd ? (mgOpen[p] || q ? "▾" : "▸") : ""; if (fd){ tg.title = L("Ordner auf/zu"); tg.onclick = function(){ mgOpen[p] = !mgOpen[p]; renderManage(st); }; }
+      var ic = document.createElement("span"); ic.className = "ic"; if (fd) ic.innerHTML = FOLDER_SVG; else ic.textContent = "🔗";
+      r.appendChild(tg); r.appendChild(ic);
+      if (mgEdit === p){
+        var ni = document.createElement("input"); ni.className = "n"; ni.value = b.name; ni.placeholder = L("Name"); r.appendChild(ni);
+        var ui = null; if (!fd){ ui = document.createElement("input"); ui.className = "u"; ui.value = b.url; ui.placeholder = L("Adresse"); r.appendChild(ui); }
+        var save = function(ok){ mgEdit = ""; if (ok) H.cmd("bmedit", JSON.stringify({ p: p, name: ni.value, url: ui ? ui.value : "" })); else renderManage(st); };
+        [ni, ui].forEach(function(e){ if (e) e.onkeydown = function(ev){ if (ev.key === "Enter") save(true); else if (ev.key === "Escape") save(false); }; });
+        setTimeout(function(){ ni.focus(); ni.select(); }, 0);
+      } else {
+        var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = b.name; nm.title = fd ? b.name : L("Öffnen") + ": " + b.url;
+        nm.onclick = function(){ if (fd){ mgOpen[p] = !mgOpen[p]; renderManage(st); } else H.cmd("bmopen", p); };
+        nm.ondblclick = function(){ mgEdit = p; renderManage(st); };
+        r.appendChild(nm);
+        var ur = document.createElement("span"); ur.className = "ur"; ur.textContent = fd ? "(" + b.kids.length + ")" : (trail ? trail + " · " : "") + b.url; r.appendChild(ur);
+        var ac = document.createElement("span"); ac.className = "ac";
+        [["✎", "Umbenennen", function(){ mgEdit = p; renderManage(st); }], ["🗑", "Löschen", function(){ H.cmd("bmdel", p); }]].forEach(function(x){
+          var bt = document.createElement("button"); bt.textContent = x[0]; bt.title = L(x[1]); bt.onclick = function(ev){ ev.stopPropagation(); x[2](); }; ac.appendChild(bt); });
+        r.appendChild(ac);
+        if (!q) dropWire(r, p, fd, false, ["db", "da", "di"]);
+      }
+      r.oncontextmenu = function(ev){ ev.preventDefault(); H.cmd("bmmenu", p); };
+      box.appendChild(r); n++;
+    }
+    function walk(list, pre, depth, trail){
+      (list || []).forEach(function(b, i){
+        var p = (pre ? pre + "/" : "") + i;
+        if (q){ if (b.url && (b.name + " " + b.url).toLowerCase().indexOf(q) >= 0) row(b, p, 0, trail); if (b.kids) walk(b.kids, p, 0, (trail ? trail + " › " : "") + b.name); return; }
+        row(b, p, depth, "");
+        if (b.kids && mgOpen[p]) walk(b.kids, p, depth + 1, "");
+      });
+    }
+    walk(s.bookmarks, "", 0, "");
+    var f = document.createElement("div"); f.className = "mgf";
+    f.textContent = !s.bookmarks.length ? L("Noch keine Lesezeichen. ☆ in der Adresszeile merkt eine Seite, „Importieren“ holt sie aus Chrome oder Edge.") : q && !n ? L("Nichts gefunden.") : L("Ziehen: sortieren oder in einen Ordner legen · Doppelklick: umbenennen · ✎: Name und Adresse ändern");
+    box.appendChild(f);
+  }
   function render(s){
-    st = s;
+    st = s; texts(); if (s.ic) document.documentElement.style.setProperty("--ic", s.ic); else document.documentElement.style.removeProperty("--ic");   // MM3: Ordner in der Symbolfarbe von EVE Omni
     $("back").disabled = !s.back; $("fwd").disabled = !s.fwd;
     $("reload").textContent = s.loading ? "✕" : "⟳";
-    $("reload").title = s.loading ? "Laden abbrechen" : "Neu laden";
+    $("reload").title = L(s.loading ? "Laden abbrechen" : "Neu laden");
     if (document.activeElement !== $("url")) $("url").value = s.url;
     document.title = (s.title || "Browser") + " – EVE Omni";
-    var marked = s.bookmarks.some(function(b){ return b.url === s.url; });
+    var marked = s.marked !== undefined ? s.marked : s.bookmarks.some(function(b){ return b.url === s.url; });
     $("star").textContent = marked ? "★" : "☆"; $("star").classList.toggle("on", marked);
-    var box = $("bms"); box.textContent = "";
-    s.bookmarks.forEach(function(b){
-      var el = document.createElement("span"); el.className = "bm"; el.title = b.url + (s.home === b.url ? "\n⌂ Startseite" : "") + "\nRechtsklick: Startseite, verschieben, löschen · Doppelklick: umbenennen";
-      el.appendChild(document.createTextNode(b.name));
-      var x = document.createElement("span"); x.className = "x"; x.textContent = "✕"; x.title = "Lesezeichen entfernen";
-      x.onclick = function(ev){ ev.stopPropagation(); H.cmd("unmark", b.url); };
-      x.contentEditable = "false"; el.appendChild(x);
-      el.onclick = function(){ if (!el.isContentEditable) H.cmd("go", b.url); };
-      el.oncontextmenu = function(ev){ ev.preventDefault(); H.cmd("bmmenu", b.url); };   // FF1: Startseite, verschieben, löschen
-      el.ondblclick = function(){   // FF1: umbenennen
-        var t = el.firstChild, keep = t.textContent; el.contentEditable = "true"; el.classList.add("ed"); el.focus(); document.getSelection().selectAllChildren(el);
-        function done(ok){ el.onblur = null; var n = el.textContent.replace(/✕$/, "").trim(); el.contentEditable = "false"; el.classList.remove("ed"); if (ok && n && n !== keep) H.cmd("rename", b.url + "\n" + n); else H.cmd("rename", b.url + "\n" + keep); }
-        el.onkeydown = function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); done(true); } else if (ev.key === "Escape") done(false); };
-        el.onblur = function(){ done(true); };
-      };
-      box.appendChild(el);
-    });
+    renderBar(s);
+    document.documentElement.classList.toggle("mg", !!s.manage); $("mg").hidden = !s.manage; $("mgb").classList.toggle("on", !!s.manage);
+    if (s.manage) renderManage(s);
     // CC7: Tabs (Mittelklick oder ✕ schließt, + = neuer Tab)
     var tb = $("tabs"); tb.textContent = "";
     (s.tabs || []).forEach(function(t, i){
       var e = document.createElement("span"); e.className = "tab" + (i === s.act ? " on" : "") + (t.l ? " ld" : ""); e.title = t.t;
-      var n = document.createElement("span"); n.className = "tt"; n.textContent = t.t; e.appendChild(n);
-      var x = document.createElement("button"); x.className = "tx"; x.textContent = "✕"; x.title = "Tab schließen";
+      var n = document.createElement("span"); n.className = "tt"; n.textContent = t.t === "Neuer Tab" ? L(t.t) : t.t; e.appendChild(n);
+      var x = document.createElement("button"); x.className = "tx"; x.textContent = "✕"; x.title = L("Tab schließen");
       x.onclick = function(ev){ ev.stopPropagation(); H.cmd("closetab", i); }; e.appendChild(x);
       e.onclick = function(){ if (i !== s.act) H.cmd("tab", i); };
       e.onauxclick = function(ev){ if (ev.button === 1) H.cmd("closetab", i); };
       tb.appendChild(e);
     });
-    var nt = document.createElement("button"); nt.id = "newtab"; nt.textContent = "+"; nt.title = "Neuer Tab (Strg+T)"; nt.onclick = function(){ H.cmd("newtab", ""); }; tb.appendChild(nt);
-    if (!s.bookmarks.length){ var h = document.createElement("span"); h.className = "hint"; h.textContent = "Keine Lesezeichen – ☆ merkt die aktuelle Seite"; box.appendChild(h); }
+    var nt = document.createElement("button"); nt.id = "newtab"; nt.textContent = "+"; nt.title = L("Neuer Tab (Strg+T)"); nt.onclick = function(){ H.cmd("newtab", ""); }; tb.appendChild(nt);
   }
   H.onState(render);
   $("back").onclick = function(){ H.cmd("back"); };
   $("fwd").onclick = function(){ H.cmd("fwd"); };
   $("reload").onclick = function(){ H.cmd(st && st.loading ? "stop" : "reload"); };
   $("star").onclick = function(){ H.cmd("mark"); };
+  $("mgb").onclick = function(){ H.cmd("manage", st && st.manage ? "0" : "1"); };
+  $("mgdone").onclick = function(){ H.cmd("manage", "0"); };
+  $("mgnew").onclick = function(){ H.cmd("bmnew", ""); };
+  $("mgimp").onclick = function(){ H.cmd("import"); };
+  $("mgq").oninput = function(){ mgQ = this.value.trim(); if (st) renderManage(st); };
   $("ext").onclick = function(){ H.cmd("external"); };
   $("ov").onclick = function(){ H.cmd("menu"); };
+  $("bms").oncontextmenu = function(ev){ ev.preventDefault(); H.cmd("bmmenu", ""); };   // BM: freie Fläche – Neuer Ordner, verwalten, importieren
+  $("bms").ondragover = function(ev){ if (drag !== null && ev.target === this) ev.preventDefault(); };
+  $("bms").ondrop = function(ev){ if (drag === null || ev.target !== this) return; ev.preventDefault(); H.cmd("bmmove", JSON.stringify({ from: drag, to: "", mode: "into" })); drag = null; };   // ans Ende der Leiste
   document.addEventListener("keydown", function(ev){   // CC7: Strg+T / Strg+W, solange die Leiste den Fokus hat
+    if (ev.key === "Escape" && st && st.manage && !mgEdit && document.activeElement !== $("url")){ H.cmd("manage", "0"); return; }
     if (!ev.ctrlKey || !st) return;
     if (ev.key === "t"){ ev.preventDefault(); H.cmd("newtab", ""); }
     else if (ev.key === "w"){ ev.preventDefault(); H.cmd("closetab", st.act); }

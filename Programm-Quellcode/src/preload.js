@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   resetBounds: () => ipcRenderer.send('evecore:resetBounds'),
   attention: () => ipcRenderer.send('evecore:attention'),
   notify: (title, body) => ipcRenderer.send('evecore:notify', String(title), String(body)),
+  jbToast: t => ipcRenderer.send('evecore:jbToast', { title: String(t && t.title || ''), sub: String(t && t.sub || ''), cover: String(t && t.cover || '') }),   // JB5
   writeBackup: (json, reason) => ipcRenderer.invoke('evecore:writeBackup', String(json), String(reason || '')),
   backupNow: () => ipcRenderer.invoke('evecore:backupNow'),
   pickBackupDir: () => ipcRenderer.invoke('evecore:pickBackupDir'),
@@ -52,6 +53,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   listMusic: () => ipcRenderer.invoke('evecore:listMusic'),
   removeMusicDir: d => ipcRenderer.invoke('evecore:removeMusicDir', d),
   readClipboard: () => ipcRenderer.invoke('evecore:readClipboard'),
+  resolveLink: u => ipcRenderer.invoke('evecore:resolveLink', String(u || '')),   // LL1
   perf: () => ipcRenderer.invoke('evecore:perf'),   // T20
   showView: id => ipcRenderer.send('evecore:showView', String(id)),
   openBrowser: url => ipcRenderer.send('evecore:openBrowser', url ? String(url) : ''),

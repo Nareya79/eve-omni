@@ -10,6 +10,7 @@
 //   OV <hwnd> 0|1|2                 Overlay-Fenster soll ueber EVE liegen (1, 2 = zuletzt heben: Namen ueber der Vorschau) – der Helfer holt es selbst nach oben, sobald EVE vorne ist
 //   CYCLE <an 0|1> <vorVk> <vorMods> <zurueckVk> <zurueckMods> <charakterauswahl-ueberspringen 0|1>
 //   ORDER <name>\t<name>...        gewuenschte Reihenfolge (Charakternamen)
+//   SKIP <name>\t<name>...         LL6: diese Clients beim Umschalten auslassen (Vorschau-Haken aus)
 //   ACTIVATE <hwnd>                 diesen EVE-Client nach vorne holen (nur bekannte EVE-Fenster)
 // Mods: 1 = Strg, 2 = Umschalt, 4 = Alt, 8 = Win
 using System;
@@ -52,7 +53,7 @@ public static class EcFg {
   static readonly object L = new object();
   static bool cycOn = false, skipLogin = true;
   static int fwdVk = 9, fwdMods = 0, backVk = 9, backMods = 2;
-  static string[] order = new string[0];
+  static string[] order = new string[0], skipNames = new string[0];
   static List<Client> clients = new List<Client>();   // alle gefundenen EVE-Fenster (unsortiert)
   static List<Client> ring = new List<Client>();      // Reihenfolge zum Durchschalten
   static readonly Dictionary<uint, bool> swallowed = new Dictionary<uint, bool>();   // kein HashSet: liegt in System.Core, das Add-Type evtl. nicht einbindet
@@ -78,11 +79,14 @@ public static class EcFg {
   }
   // Reihenfolge: zuerst die Namen aus der Liste (in dieser Reihenfolge), dann die uebrigen alphabetisch,
   // Fenster in der Charakterauswahl (ohne Namen) am Ende oder gar nicht.
-  public static List<Client> Arrange(List<Client> all, string[] ord, bool skip){
+  public static List<Client> Arrange(List<Client> all, string[] ord, bool skip, string[] off){
     List<Client> known = new List<Client>(), rest = new List<Client>(), login = new List<Client>();
     Dictionary<string, int> idx = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
     for (int i = 0; i < ord.Length; i++) if (ord[i] != null && ord[i].Length > 0 && !idx.ContainsKey(ord[i])) idx[ord[i]] = i;
+    Dictionary<string, bool> offs = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);   // kein HashSet (System.Core)
+    foreach (string o in off ?? new string[0]) offs[o] = true;
     foreach (Client c in all){
+      if (c.Name.Length > 0 && offs.ContainsKey(c.Name)) continue;   // LL6
       if (c.Name.Length == 0) login.Add(c);
       else if (idx.ContainsKey(c.Name)) known.Add(c);
       else rest.Add(c);
@@ -112,7 +116,7 @@ public static class EcFg {
     return 0;
   }
   public static string[] ParseOrder(string line){
-    string rest = line.Length > 6 ? line.Substring(6) : "";
+    int sp = line.IndexOf(' '); string rest = sp >= 0 ? line.Substring(sp + 1) : "";   // ORDER / SKIP
     List<string> o = new List<string>();
     foreach (string s in rest.Split('\t')){ string t = s.Trim(); if (t.Length > 0) o.Add(t); }
     return o.ToArray();
@@ -209,7 +213,7 @@ public static class EcFg {
     found.Sort(delegate(Client a, Client b){ return a.Hwnd.CompareTo(b.Hwnd); });
     StringBuilder sig = new StringBuilder();
     foreach (Client c in found){ if (sig.Length > 0) sig.Append('\t'); sig.Append(c.Hwnd).Append('=').Append(c.Title.Replace('\t', ' ')); }
-    lock (L){ clients = found; ring = Arrange(clients, order, skipLogin); }
+    lock (L){ clients = found; ring = Arrange(clients, order, skipLogin, skipNames); }
     string s = sig.ToString();
     if (s != lastSig){ lastSig = s; Out("EVES " + s); }
   }
@@ -225,13 +229,14 @@ public static class EcFg {
         cycOn = p[1] == "1";
         fwdVk = int.Parse(p[2]); fwdMods = int.Parse(p[3]); backVk = int.Parse(p[4]); backMods = int.Parse(p[5]);
         skipLogin = p[6] != "0";
-        ring = Arrange(clients, order, skipLogin);
+        ring = Arrange(clients, order, skipLogin, skipNames);
       }
       if (cycOn && hook == IntPtr.Zero) StartHook();
       Out("CYCLE " + (cycOn ? "an" : "aus") + " " + (hook != IntPtr.Zero ? "hook" : "ohnehook"));
       return;
     }
-    if (p[0] == "ORDER"){ string[] o = ParseOrder(l); lock (L){ order = o; ring = Arrange(clients, order, skipLogin); } return; }
+    if (p[0] == "ORDER"){ string[] o = ParseOrder(l); lock (L){ order = o; ring = Arrange(clients, order, skipLogin, skipNames); } return; }
+    if (p[0] == "SKIP"){ string[] o = ParseOrder(l); lock (L){ skipNames = o; ring = Arrange(clients, order, skipLogin, skipNames); } return; }   // LL6
     if (p.Length == 2 && p[0] == "ACTIVATE"){
       long h; if (!long.TryParse(p[1], out h)) return;
       QueueActivate(h);

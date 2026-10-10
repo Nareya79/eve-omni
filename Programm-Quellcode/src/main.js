@@ -241,15 +241,14 @@ function snapSize(w, b){
   if (out.x + out.width > wa.x + wa.width) out.width = Math.max(36, wa.x + wa.width - out.x);
   return out;
 }
-// D1: Nach dem Loslassen: liegt das Fenster links/rechts buendig an einem anderen, uebernimmt es dessen Hoehe (und Oberkante),
-// liegt es darueber/darunter, dessen Breite (und linke Kante).
+// D1: Nach dem Loslassen: liegt das Fenster darueber/darunter buendig an einem anderen, uebernimmt es dessen Breite (und linke Kante).
+// LL4 (10.10.2026): links/rechts daneben wird die Hoehe NICHT mehr uebernommen (Nutzer: Fenster sprang auf die Hoehe des Nachbarn).
 function snapMatchBounds(w, b){
   if (S.snap === false || S.snapMatch === false) return null;
   for (const o of overlayWindowsExcept(w)){
     const t = o.getBounds();
     const side = (b.x === t.x + t.width || b.x + b.width === t.x) && b.y < t.y + t.height && b.y + b.height > t.y;
     const stack = (b.y === t.y + t.height || b.y + b.height === t.y) && b.x < t.x + t.width && b.x + b.width > t.x;
-    if (side && (b.y !== t.y || b.height !== t.height)) return { x: b.x, y: t.y, width: b.width, height: t.height };
     if (!side && stack && (b.x !== t.x || b.width !== t.width)) return { x: t.x, y: b.y, width: t.width, height: b.height };
   }
   return null;
@@ -403,11 +402,17 @@ const MAIN_EN = {
   // Overlay-Namen (Tray › Overlays)
   'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Handel': 'Trade', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map',
   'Wertschätzer': 'Appraisal', 'Kurier': 'Courier', 'PI-Planer': 'PI planner', 'Wurmlöcher': 'Wormholes', 'Industrie': 'Industry', 'Notizen': 'Notes',
-  'Leistung': 'Performance', 'Uhr & Timer': 'Clock & timers'
+  'Leistung': 'Performance', 'Uhr & Timer': 'Clock & timers',
+  'Neuer Ordner': 'New folder', 'Neuer Ordner darin': 'New folder inside', 'Lesezeichen verwalten …': 'Manage bookmarks …', 'Lesezeichen importieren': 'Import bookmarks',
+  'Kein Chrome, Edge oder Brave gefunden': 'No Chrome, Edge or Brave found', 'Keine Lesezeichen in Chrome, Edge oder Brave gefunden': 'No bookmarks found in Chrome, Edge or Brave', 'Alle in Tabs öffnen': 'Open all in tabs', 'Verschieben nach': 'Move to', 'Umbenennen': 'Rename',
+  'Leiste (oben)': 'Bar (top level)', '(kein Ordner – „Neuer Ordner“ anlegen)': '(no folder – create a „New folder“)', '(leer)': '(empty)', 'Ersetzen': 'Replace', 'Zusätzlich': 'Add as well',
+  'Lesezeichen konnten nicht gelesen werden.': 'Could not read the bookmarks.', 'Ersetzen = alten Import-Ordner durch den neuen ersetzen · Zusätzlich = zweiten Ordner anlegen': 'Replace = swap the old import folder for the new one · Add as well = create a second folder'
 };
 // Teilstücke in zusammengesetzten Texten (längste zuerst)
 const MAIN_EN_PH = [[/^Wirklich alle (\d+) EVE-Clients beenden\?$/, 'Really quit all $1 EVE clients?'], [/^EVE-Clients umschalten mit /, 'Cycle EVE clients with '],
-  [/ nicht eingeloggt$/, ' not logged in'], [/ – Durchklicken aktiv$/, ' – click-through active'], [/\bUmschalt\b/g, 'Shift'], [/\bStrg\b/g, 'Ctrl'], [/\bTaste$/, 'key']];
+  [/ nicht eingeloggt$/, ' not logged in'], [/ \(Konto\)$/, ' (account)'], [/^Alle (\d+) in Tabs öffnen$/, 'Open all $1 in tabs'], [/^In (.+) sind keine Lesezeichen\.$/, 'There are no bookmarks in $1.'],
+  [/^Ordner „(.+)“ mit (\d+) Lesezeichen löschen\?$/, 'Delete folder „$1“ with $2 bookmarks?'], [/^Ordner „(.+)“ gibt es schon\.$/, 'Folder „$1“ already exists.'],
+  [/^(\d+) Lesezeichen importiert\.$/, '$1 bookmarks imported.'], [/^Ordner „(.+)“ in der Lesezeichen-Leiste – sortieren unter „Lesezeichen verwalten“\.$/, 'Folder „$1“ in the bookmark bar – sort it under „Manage bookmarks“.'], [/ – Durchklicken aktiv$/, ' – click-through active'], [/\bUmschalt\b/g, 'Shift'], [/\bStrg\b/g, 'Ctrl'], [/\bTaste$/, 'key']];
 function uiLang(){ return S.lang === 'en' || S.lang === 'de' ? S.lang : (/^de\b/i.test(app.getLocale() || '') ? 'de' : 'en'); }
 function T(x){
   if (typeof x !== 'string' || uiLang() !== 'en') return x;
@@ -459,10 +464,12 @@ function satDefaultBounds(id){
 }
 function applySatState(w){
   if (!w || w.isDestroyed()) return;
-  zSet(w, !!S.alwaysOnTop);
+  zSet(w, satTop(Object.keys(sats).find(k => sats[k] === w)));
   w.setOpacity(Math.max(0.3, Math.min(1, Number(S.opacity) || 1)));
   w.setIgnoreMouseEvents(satCt(w), satCt(w) ? { forward: true } : undefined);
 }
+// 09.10.: Vordergrund je Overlay merken (S.windows[id].top) – ohne eigenen Wert gilt der allgemeine Schalter
+function satTop(id){ const t = id && (S.windows[id] || {}).top; return typeof t === 'boolean' ? t : !!S.alwaysOnTop; }
 // S2: Durchklicken fuer alle Overlays oder nur fuer einzelne (S.windows[id].ct). Das Neocom bleibt klickbar – dort schaltet man es um.
 function satCt(w){
   const id = Object.keys(sats).find(k => sats[k] === w);
@@ -558,6 +565,104 @@ function satsVisible(){ return Object.keys(sats).some(id => sats[id] && !sats[id
 function showSats(){ Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) w.showInactive(); }); }
 function hideSats(){ Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) w.hide(); }); }
 
+/* MM3 (10.10.2026): Klappmenüs und Rückfragen im EVE-Omni-Stil statt Windows-Menü/-Dialog (Browser-Fenster).
+   Ein durchsichtiges Fenster so groß wie das Elternfenster liegt über der Webseite; Klick daneben, Esc oder Fokusverlust = zu.
+   Vorlage wie bei den Windows-Menüs (label, sublabel, type checkbox/radio/separator, checked, enabled, submenu, click, folder). */
+const EO_FOLDER = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.2h8.5A1.5 1.5 0 0 1 21 8.7v9.8A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z" fill="currentColor" fill-opacity=".18"/></svg>';
+const EO_POP_JS = `
+var P = JSON.parse(decodeURIComponent(location.hash.slice(1))), R = document.getElementById("r"), open = [], done = false;
+if (P.ic) document.documentElement.style.setProperty("--ic", P.ic);
+function pick(v){ if (done) return; done = true; document.title = "eo:" + v + ":" + Date.now(); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function panel(items, x, y, lvl, flip){
+  open.slice(lvl).forEach(function(p){ p.remove(); }); open.length = lvl;
+  var p = document.createElement("div"); p.className = "m"; p.tabIndex = -1;
+  items.forEach(function(it){
+    if (it.sep){ p.appendChild(document.createElement("hr")); return; }
+    var r = document.createElement("div"); r.className = "i" + (it.en === false ? " off" : "") + (it.kids ? " sub" : ""); r.__it = it;
+    r.innerHTML = '<span class="c">' + (it.chk ? (it.radio ? "●" : "✓") : it.folder ? P.folder : "") + '</span><span class="t">' + esc(it.label) + (it.sl ? '<small>' + esc(it.sl) + "</small>" : "") + '</span><span class="a">' + (it.kids ? "›" : "") + "</span>";
+    r.onmouseenter = function(){ hover(p, r, lvl); };
+    r.onclick = function(ev){ ev.stopPropagation(); act(p, r, lvl); };
+    p.appendChild(r);
+  });
+  R.appendChild(p); open.push(p);
+  var W = innerWidth, H = innerHeight, w = p.offsetWidth, h = Math.min(p.offsetHeight, H - 8);
+  p.style.maxHeight = (H - 8) + "px";
+  var left = Math.max(4, Math.min(x, W - w - 4));
+  p.style.left = left + "px"; p.style.top = Math.max(4, Math.min(H - h - 4, y)) + "px";
+  return p;
+}
+function rows(p){ return [].slice.call(p.querySelectorAll(".i:not(.off)")); }
+function sel(p, r){ [].forEach.call(p.querySelectorAll(".i.on"), function(x){ x.classList.remove("on"); }); if (r){ r.classList.add("on"); r.scrollIntoView({ block: "nearest" }); } }
+function hover(p, r, lvl){ sel(p, r); clearTimeout(hover.t); hover.t = setTimeout(function(){ if (r.__it.kids && !r.classList.contains("off")) subOpen(p, r, lvl); else { open.slice(lvl + 1).forEach(function(x){ x.remove(); }); open.length = lvl + 1; } }, 120); }
+function subOpen(p, r, lvl){ var b = r.getBoundingClientRect(), q = panel(r.__it.kids, b.right - 2, b.top - 5, lvl + 1, false); if (q.getBoundingClientRect().left < b.right - 10){ q.style.left = Math.max(4, b.left - q.offsetWidth + 2) + "px"; } return q; }
+function act(p, r, lvl){ var it = r.__it; if (it.en === false) return; if (it.kids){ var q = subOpen(p, r, lvl); sel(q, rows(q)[0]); return; } pick(it.id); }
+if (P.ask){
+  var a = P.ask, d = document.createElement("div"); d.className = "m ask";
+  d.innerHTML = '<div class="q">' + esc(a.message) + "</div>" + (a.detail ? '<div class="dt">' + esc(a.detail) + "</div>" : "") + '<div class="bs">' + a.buttons.map(function(b, i){ return '<button data-i="' + i + '"' + (i === a.def ? ' class="def"' : "") + ">" + esc(b) + "</button>"; }).join("") + "</div>";
+  R.appendChild(d); d.style.left = Math.max(4, (innerWidth - d.offsetWidth) / 2) + "px"; d.style.top = Math.max(4, (innerHeight - d.offsetHeight) / 3) + "px";
+  [].forEach.call(d.querySelectorAll("button"), function(b){ b.onclick = function(ev){ ev.stopPropagation(); pick(b.getAttribute("data-i")); }; });
+  var df = d.querySelector("button.def") || d.querySelector("button"); df.focus();
+} else { var m0 = panel(P.items, P.x, P.y, 0, false); }
+document.addEventListener("mousedown", function(ev){ if (!ev.target.closest(".m")) pick(P.ask ? P.ask.cancel : "x"); });
+document.addEventListener("contextmenu", function(ev){ ev.preventDefault(); });
+document.addEventListener("keydown", function(ev){
+  if (ev.key === "Escape"){ if (!P.ask && open.length > 1){ open.pop().remove(); return; } pick(P.ask ? P.ask.cancel : "x"); return; }
+  if (P.ask){ if (ev.key === "ArrowLeft" || ev.key === "ArrowRight"){ var bs = [].slice.call(document.querySelectorAll(".bs button")), i = bs.indexOf(document.activeElement); bs[(i + (ev.key === "ArrowRight" ? 1 : bs.length - 1)) % bs.length].focus(); } return; }
+  var p = open[open.length - 1], rs = rows(p), cur = p.querySelector(".i.on"), i = rs.indexOf(cur);
+  if (ev.key === "ArrowDown" || ev.key === "ArrowUp"){ ev.preventDefault(); sel(p, rs[(i + (ev.key === "ArrowDown" ? 1 : rs.length - 1) + (i < 0 && ev.key === "ArrowUp" ? 1 : 0)) % rs.length]); }
+  else if (ev.key === "ArrowRight" && cur && cur.__it.kids){ act(p, cur, open.length - 1); }
+  else if (ev.key === "ArrowLeft" && open.length > 1){ open.pop().remove(); }
+  else if (ev.key === "Enter" && cur){ act(p, cur, open.length - 1); }
+});`;
+const EO_POP_HTML = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' +
+  'html,body{margin:0;height:100%;background:transparent;overflow:hidden;font:13px "Segoe UI",system-ui,sans-serif;color:#c8d2dc;user-select:none}#r{position:fixed;inset:0}' +
+  '.m{position:absolute;min-width:190px;max-width:420px;overflow-y:auto;padding:4px;background:rgba(9,12,16,.97);border:1px solid #2d3d4e;border-radius:4px;box-shadow:0 0 0 1px rgba(79,163,209,.12),0 10px 28px rgba(0,0,0,.65),0 0 14px rgba(79,163,209,.10);outline:none;scrollbar-width:thin}' +
+  '.i{display:flex;align-items:center;gap:8px;min-height:26px;padding:3px 10px 3px 6px;border-radius:3px;cursor:pointer;white-space:nowrap}' +
+  '.i.on{background:#16324a;color:#fff;box-shadow:inset 2px 0 0 #4fa3d1}.i.off{opacity:.4;cursor:default}' +
+  '.i .c{flex:none;width:18px;display:inline-flex;justify-content:center;color:var(--ic, #e0b84a);font-size:12px}.i .c svg{color:var(--ic, #e0b84a);filter:drop-shadow(0 0 3px color-mix(in srgb, var(--ic, #e0b84a) 60%, transparent))}' +
+  '.i .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:pre}.i small{display:block;font-size:11px;color:#6b7885;overflow:hidden;text-overflow:ellipsis}' +
+  '.i .a{flex:none;width:10px;color:#4fa3d1;font-size:15px}hr{border:0;border-top:1px solid #1c2630;margin:4px 6px}' +
+  '.ask{min-width:300px;max-width:440px;padding:16px 18px 14px;border-color:#4fa3d1}.q{font-size:14px;color:#e6edf3;font-weight:600;white-space:normal}.dt{margin-top:8px;color:#8fa0b0;white-space:normal;line-height:1.4}' +
+  '.bs{display:flex;justify-content:flex-end;gap:6px;margin-top:16px}button{background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:26px;min-width:80px;padding:0 12px;cursor:pointer;font:inherit}' +
+  'button:hover,button:focus{border-color:#4fa3d1;color:#fff;outline:none}button.def{border-color:#4fa3d1}' +
+  '</style></head><body><div id="r"></div><script>' + EO_POP_JS + '</script></body></html>';
+let eoPopWin = null;
+function eoPop(parent, payload, onPick){
+  if (!parent || parent.isDestroyed()) return;
+  if (eoPopWin && !eoPopWin.isDestroyed()) eoPopWin.destroy();
+  const cb = parent.getContentBounds();
+  const w = eoPopWin = new BrowserWindow({ parent, x: cb.x, y: cb.y, width: cb.width, height: cb.height, frame: false, transparent: true, backgroundColor: '#00000000',
+    resizable: false, movable: false, minimizable: false, maximizable: false, skipTaskbar: true, hasShadow: false, show: false, webPreferences: { sandbox: true, contextIsolation: true, spellcheck: false } });
+  w.setMenu(null);
+  let fired = false;
+  const finish = v => { if (fired) return; fired = true; if (!w.isDestroyed()) w.destroy(); if (eoPopWin === w) eoPopWin = null; onPick(v); };
+  w.webContents.on('page-title-updated', (ev, t) => { ev.preventDefault(); const m = /^eo:([^:]*):/.exec(t); if (m) finish(m[1]); });
+  w.on('blur', () => setTimeout(() => finish(null), 50));
+  w.on('closed', () => finish(null));
+  payload.folder = EO_FOLDER; payload.ic = S.icColor || '';
+  w.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(EO_POP_HTML) + '#' + encodeURIComponent(JSON.stringify(payload)));
+  w.once('ready-to-show', () => { if (!w.isDestroyed()){ w.show(); w.focus(); } });
+}
+// Menü an der Mausposition (Vorlage wie bei den Windows-Menüs)
+function eoMenu(parent, tpl){
+  const fns = {}; let n = 0;
+  const conv = list => (list || []).map(it => {
+    if (it.type === 'separator') return { sep: true };
+    const id = String(n++); if (it.click) fns[id] = it.click;
+    return { id, label: it.label, sl: it.sublabel, chk: !!it.checked && (it.type === 'checkbox' || it.type === 'radio'), radio: it.type === 'radio', en: it.enabled !== false, folder: !!it.folder,
+      kids: Array.isArray(it.submenu) ? conv(it.submenu) : undefined };
+  });
+  const items = conv(tMenu(tpl)), cb = parent.getContentBounds(), c = screen.getCursorScreenPoint();
+  eoPop(parent, { items, x: c.x - cb.x, y: c.y - cb.y }, v => { const f = v != null && fns[v]; if (f) try{ f(); }catch(e){ console.error('eoMenu', e); } });
+}
+// Rückfrage/Meldung wie der Windows-Dialog – liefert Promise mit { response }
+function eoAsk(parent, o){
+  o = tDlg(o);
+  const buttons = o.buttons && o.buttons.length ? o.buttons : ['OK'], cancel = o.cancelId != null ? o.cancelId : buttons.length - 1;
+  return new Promise(res => eoPop(parent, { ask: { message: o.message || '', detail: o.detail || '', buttons, def: o.defaultId != null ? o.defaultId : 0, cancel } },
+    v => res({ response: v == null || v === 'x' ? cancel : Number(v) })));
+}
 /* ---------------- E1: eigenes Browser-Fenster (Adresszeile, Zurueck/Vor, Lesezeichen) ----------------
    Oben die Leiste aus browser.html (kleine eigene Bruecke browser-preload.js), darunter die Webseite in einem
    WebContentsView ohne Zugriff aufs Programm (eigene Sitzung "persist:browser"). Schwebt wie die Overlays ueber EVE und rastet ein. */
@@ -573,12 +678,13 @@ function browserUrl(s){
 }
 // FF1: Einstellungen im Zahnrad des Browsers – Startseite, neuer Tab, Zoom, Suchmaschine
 const BROWSER_SEARCH = { ddg: ['DuckDuckGo', 'https://duckduckgo.com/?q='], google: ['Google', 'https://www.google.com/search?q='], bing: ['Bing', 'https://www.bing.com/search?q='], startpage: ['Startpage', 'https://www.startpage.com/do/search?q='] };
-function browserHome(){ return S.browser.home || (S.browser.bookmarks[0] && S.browser.bookmarks[0].url) || 'https://evemaps.dotlan.net/'; }
+function browserHome(){ let f = ''; bmWalk(S.browser.bookmarks, n => { if (!f && n.url) f = n.url; }); return S.browser.home || f || 'https://evemaps.dotlan.net/'; }
 function browserZoom(wc){ const z = Number(S.browser.zoom) || 1; if (Math.abs(wc.getZoomFactor() - z) > 0.001) wc.setZoomFactor(z); }
 function browserState(){
   const wc = bview.webContents, h = wc.navigationHistory, c = S.windows.browser || {};
   return { url: wc.getURL(), title: wc.getTitle(), back: h.canGoBack(), fwd: h.canGoForward(), loading: wc.isLoading(), bookmarks: S.browser.bookmarks,
-    tabs: btabs.map(v => ({ t: v.webContents.getTitle() || v.webContents.getURL() || 'Neuer Tab', l: v.webContents.isLoading() })), act: bact, lock: !!c.lock, home: browserHome() };
+    tabs: btabs.map(v => ({ t: v.webContents.getTitle() || v.webContents.getURL() || 'Neuer Tab', l: v.webContents.isLoading() })), act: bact, lock: !!c.lock, home: browserHome(),
+    marked: !!bmFind(wc.getURL()), manage: bmanage, edit: bedit, en: uiLang() === 'en', ic: S.icColor || '' };
 }
 // CC7: Tabs merken (nach Neustart wieder offen)
 function browserSaveTabs(){
@@ -618,7 +724,7 @@ function browserCloseTab(i){
 function browserLook(){
   if (!bwin || bwin.isDestroyed()) return;
   const c = S.windows.browser || {}, ct = !!S.clickThrough || !!c.ct;
-  zSet(bwin, !!S.alwaysOnTop);
+  zSet(bwin, satTop('browser'));
   bwin.setOpacity(Math.max(0.3, Math.min(1, Number(c.alpha) || 1)));
   bwin.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
   bwin.setResizable(!c.lock);
@@ -626,11 +732,11 @@ function browserLook(){
 function browserMenu(){
   if (!bwin || bwin.isDestroyed()) return;
   const c = S.windows.browser || {}, set = p => { S.windows = merge(S.windows || {}, { browser: p }); saveSettings(); browserLook(); browserPush(); pushSettings(); };
-  Menu.buildFromTemplate([
+  eoMenu(bwin, [
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!c.lock, click: () => set({ lock: !c.lock }) },
     { label: 'Deckkraft', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3].map(a => ({ label: Math.round(a * 100) + ' %', type: 'radio', checked: Math.abs((Number(c.alpha) || 1) - a) < 0.01, click: () => set({ alpha: a }) })) },
     { label: 'Durchklicken (nur Browser)', type: 'checkbox', checked: !!c.ct, sublabel: 'Ausschalten: Einstellungen › Programm › Durchklicken', click: () => set({ ct: !c.ct }) },
-    { label: 'Immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: () => { S.alwaysOnTop = !S.alwaysOnTop; applyWindowState(); saveSettings(); pushSettings(); } },
+    { label: 'Immer im Vordergrund', type: 'checkbox', checked: satTop('browser'), click: () => set({ top: !satTop('browser') }) },
     { type: 'separator' },   // FF1
     { label: 'Startseite', sublabel: browserHome(), submenu: [
       { label: 'Aktuelle Seite als Startseite', click: () => { const u = bview && bview.webContents.getURL(); if (/^https?:\/\//.test(u)){ bset({ home: u }); } } },
@@ -639,31 +745,135 @@ function browserMenu(){
     { label: 'Neuer Tab öffnet', submenu: [['home', 'Startseite'], ['blank', 'Leere Seite'], ['last', 'Zuletzt besuchte Seite']].map(x => ({ label: x[1], type: 'radio', checked: (S.browser.newtab || 'home') === x[0], click: () => bset({ newtab: x[0] }) })) },
     { label: 'Zoom', submenu: [0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5].map(z => ({ label: Math.round(z * 100) + ' %', type: 'radio', checked: Math.abs((Number(S.browser.zoom) || 1) - z) < 0.001, click: () => { bset({ zoom: z }); btabs.forEach(v => browserZoom(v.webContents)); } })) },
     { label: 'Suchmaschine (Adressleiste)', submenu: Object.keys(BROWSER_SEARCH).map(k => ({ label: BROWSER_SEARCH[k][0], type: 'radio', checked: (S.browser.search || 'ddg') === k, click: () => bset({ search: k }) })) }
-  ]).popup({ window: bwin });
+  ]);
   function bset(p){ Object.assign(S.browser, p); saveSettings(); browserPush(); }
 }
-// FF1: Rechtsklick auf ein Lesezeichen – Startseite, verschieben, löschen (umbenennen: Doppelklick in der Leiste)
-function browserBmMenu(url){
-  const bm = S.browser.bookmarks, i = bm.findIndex(x => x.url === url); if (i < 0) return;
-  const mv = d => { const j = i + d; if (j < 0 || j >= bm.length) return; const x = bm.splice(i, 1)[0]; bm.splice(j, 0, x); saveSettings(); browserPush(); };
-  Menu.buildFromTemplate([
-    { label: 'Als Startseite', type: 'checkbox', checked: browserHome() === url, click: () => { S.browser.home = url; saveSettings(); browserPush(); } },
-    { label: 'In neuem Tab öffnen', click: () => browserTab(url) },
+/* BM (09.10.2026): Lesezeichen als Baum – Lesezeichen {name, url} oder Ordner {name, kids: []}; Pfad = Indizes "0/3/1".
+   Leiste = oberste Ebene; Ordner klappen als Menü auf; Verwalten = Liste mit Ziehen; Import aus Chrome/Edge/Brave. */
+let bmanage = false, bedit = '';
+function bmWalk(list, f, pre){ (list || []).forEach((n, i) => { const p = (pre ? pre + '/' : '') + i; f(n, p); if (n.kids) bmWalk(n.kids, f, p); }); }
+function bmAt(p){
+  const ix = String(p).split('/').filter(x => x !== '').map(Number); let list = S.browser.bookmarks, node = null, parent = null;
+  for (const i of ix){ if (!list || !list[i]) return null; parent = list; node = list[i]; list = node.kids; }
+  return node ? { node, list: parent, i: ix[ix.length - 1] } : null;
+}
+function bmFind(url){ let r = ''; if (/^https?:\/\//.test(url)) bmWalk(S.browser.bookmarks, (n, p) => { if (!r && n.url === url) r = p; }); return r; }
+function bmUrls(list){ const o = []; bmWalk(list, n => { if (n.url) o.push(n.url); }); return o; }
+// from verschieben: into = ans Ende des Ordners (to '' = Leiste), before/after = neben das Element to
+function bmMove(from, to, mode){
+  if (from === '' || (to + '/').startsWith(from + '/')) return false;   // nicht in sich selbst
+  const a = bmAt(from), b = to === '' ? null : bmAt(to);
+  if (!a || (to !== '' && !b) || (mode !== 'into' && !b)) return false;
+  const tlist = mode === 'into' ? (b ? b.node.kids : S.browser.bookmarks) : b.list;
+  if (!tlist) return false;
+  const tnode = b && b.node;
+  a.list.splice(a.i, 1);
+  tlist.splice(mode === 'into' ? tlist.length : tlist.indexOf(tnode) + (mode === 'after' ? 1 : 0), 0, a.node);
+  return true;
+}
+function bmDone(){ saveSettings(); browserPush(); }
+function bmOpenAll(list){ bmUrls(list).slice(0, 20).forEach(u => browserTab(u)); }
+function bmMenuItems(list, pre){
+  const it = (list || []).map((n, i) => n.kids ? { label: String(n.name), folder: true, submenu: bmMenuItems(n.kids, pre + i + '/') }
+    : { label: String(n.name), click: () => { bmanage = false; if (bview) bview.webContents.loadURL(n.url); browserLayout(); browserPush(); } });
+  const n = bmUrls(list).length;
+  if (n > 1) it.push({ type: 'separator' }, { label: 'Alle ' + Math.min(n, 20) + ' in Tabs öffnen', click: () => { bmanage = false; bmOpenAll(list); } });
+  if (!it.length) it.push({ label: '(leer)', enabled: false });
+  return it;
+}
+// Ziele für „Verschieben nach“: Leiste + alle Ordner außer sich selbst/darunter
+function bmTargets(p){
+  const own = bmAt(p), it = [];
+  if (String(p).indexOf('/') >= 0) it.push({ label: 'Leiste (oben)', click: () => { if (bmMove(p, '', 'into')) bmDone(); } });
+  bmWalk(S.browser.bookmarks, (n, q) => {
+    if (!n.kids || (q + '/').startsWith(p + '/') || (own && own.list === n.kids)) return;
+    it.push({ label: '    '.repeat(q.split('/').length - 1) + String(n.name), folder: true, click: () => { if (bmMove(p, q, 'into')) bmDone(); } });
+  });
+  return it.length ? it : [{ label: '(kein Ordner – „Neuer Ordner“ anlegen)', enabled: false }];
+}
+function bmImportItems(){
+  const src = bmSources();
+  return src.length ? src.map(x => ({ label: String(x.label), click: () => bmImport(x) })) : [{ label: 'Keine Lesezeichen in Chrome, Edge oder Brave gefunden', enabled: false }];
+}
+function bmCommon(){
+  return [{ label: 'Neuer Ordner', click: () => bmNewFolder('') },
+    { label: 'Lesezeichen verwalten …', click: () => browserCmd('manage', '1') },
+    { label: 'Lesezeichen importieren', submenu: bmImportItems() }];
+}
+function bmNewFolder(parent){
+  const b = parent === '' ? null : bmAt(parent), list = b ? b.node.kids : S.browser.bookmarks; if (!list) return;
+  list.push({ name: uiLang() === 'en' ? 'New folder' : 'Neuer Ordner', kids: [] });
+  bedit = (parent ? parent + '/' : '') + (list.length - 1); bmDone();
+}
+function bmDelete(p){
+  const a = bmAt(p); if (!a) return;
+  const n = a.node.kids ? bmUrls(a.node.kids).length : 0;
+  const del = () => { const b = bmAt(p); if (b && b.node === a.node){ b.list.splice(b.i, 1); bmDone(); } };
+  if (!n){ del(); return; }
+  eoAsk(bwin, { buttons: ['Löschen', 'Abbrechen'], defaultId: 1, cancelId: 1, message: 'Ordner „' + a.node.name + '“ mit ' + n + ' Lesezeichen löschen?' }).then(r => { if (r.response === 0) del(); });
+}
+// Rechtsklick auf Lesezeichen/Ordner in der Leiste (p = Pfad) oder auf freie Fläche (p = '')
+function browserBmMenu(p){
+  const a = p === '' ? null : bmAt(p);
+  if (!a){ eoMenu(bwin, bmCommon()); return; }
+  const n = a.node, mv = d => { const j = a.i + d; if (j < 0 || j >= a.list.length) return; a.list.splice(a.i, 1); a.list.splice(j, 0, n); bmDone(); };
+  eoMenu(bwin, [
+    ...(n.kids ? [{ label: 'Alle in Tabs öffnen', enabled: bmUrls(n.kids).length > 0, click: () => bmOpenAll(n.kids) }, { label: 'Neuer Ordner darin', click: () => bmNewFolder(p) }]
+      : [{ label: 'Als Startseite', type: 'checkbox', checked: browserHome() === n.url, click: () => { S.browser.home = n.url; bmDone(); } },
+         { label: 'In neuem Tab öffnen', click: () => browserTab(n.url) }]),
     { type: 'separator' },
-    { label: '◀ Nach links', enabled: i > 0, click: () => mv(-1) },
-    { label: 'Nach rechts ▶', enabled: i < bm.length - 1, click: () => mv(1) },
-    { label: 'Umbenennen: Doppelklick auf das Lesezeichen', enabled: false },
+    { label: '◀ Nach links', enabled: a.i > 0, click: () => mv(-1) },
+    { label: 'Nach rechts ▶', enabled: a.i < a.list.length - 1, click: () => mv(1) },
+    { label: 'Verschieben nach', submenu: bmTargets(p) },
+    { label: 'Umbenennen', click: () => { bedit = p; browserPush(); } },
+    { label: 'Löschen', click: () => bmDelete(p) },
     { type: 'separator' },
-    { label: 'Löschen', click: () => { bm.splice(i, 1); saveSettings(); browserPush(); } }
-  ]).popup({ window: bwin });
+    ...bmCommon()
+  ]);
+}
+// Import: Lesezeichen-Datei von Chrome/Edge/Brave (alle Profile) lesen – nur lesen, nichts am anderen Browser ändern
+function bmSources(){
+  const L = process.env.LOCALAPPDATA || '', out = [];
+  [['Chrome', 'Google/Chrome'], ['Edge', 'Microsoft/Edge'], ['Brave', 'BraveSoftware/Brave-Browser']].forEach(([b, d]) => {
+    const root = path.join(L, d, 'User Data'); let names = {}, dirs = [];
+    try{ names = ((JSON.parse(fs.readFileSync(path.join(root, 'Local State'), 'utf8')).profile || {}).info_cache) || {}; }catch(e){}
+    try{ dirs = fs.readdirSync(root); }catch(e){}
+    // Chrome mit Google-Konto: Lesezeichen in „AccountBookmarks“, die lokale „Bookmarks“ ist dann oft leer – beide anbieten
+    dirs.forEach(x => [['Bookmarks', ''], ['AccountBookmarks', ' (Konto)']].forEach(([fn, tag]) => { const f = path.join(root, x, fn); if (fs.existsSync(f)) out.push({ browser: b, file: f, label: b + ' – ' + ((names[x] && names[x].name) || x) + tag }); }));
+  });
+  return out.filter(x => { try{ const r = JSON.parse(fs.readFileSync(x.file, 'utf8')).roots || {}; return bmUrls(['bookmark_bar', 'other', 'synced'].map(k => bmConv(r[k])).filter(Boolean)).length > 0; }catch(e){ return false; } });   // leere Dateien nicht anbieten
+}
+function bmConv(n){
+  if (!n) return null;
+  if (n.type === 'url') return /^https?:\/\//i.test(n.url || '') ? { name: String(n.name || n.url).slice(0, 80), url: n.url } : null;
+  return { name: String(n.name || 'Ordner').slice(0, 80), kids: (n.children || []).map(bmConv).filter(Boolean) };
+}
+async function bmImport(src){
+  let r;
+  try{ r = JSON.parse(fs.readFileSync(src.file, 'utf8')).roots || {}; }
+  catch(e){ eoAsk(bwin, { message: 'Lesezeichen konnten nicht gelesen werden.', detail: String(e.message) }); return; }
+  const kids = ((r.bookmark_bar || {}).children || []).map(bmConv).filter(Boolean);
+  const other = ((r.other || {}).children || []).concat((r.synced || {}).children || []).map(bmConv).filter(Boolean);   // „Mobile Lesezeichen“ mit dazu
+  if (other.length) kids.push({ name: uiLang() === 'en' ? 'Other bookmarks' : 'Weitere Lesezeichen', kids: other });
+  const n = bmUrls(kids).length;
+  if (!n){ eoAsk(bwin, { message: 'In ' + src.label + ' sind keine Lesezeichen.' }); return; }
+  const name = (uiLang() === 'en' ? 'From ' : 'Aus ') + src.browser, bm = S.browser.bookmarks, old = bm.findIndex(x => x.kids && x.name === name);
+  let mode = 1;
+  if (old >= 0) mode = (await eoAsk(bwin, { buttons: ['Ersetzen', 'Zusätzlich', 'Abbrechen'], defaultId: 0, cancelId: 2,
+    message: 'Ordner „' + name + '“ gibt es schon.', detail: 'Ersetzen = alten Import-Ordner durch den neuen ersetzen · Zusätzlich = zweiten Ordner anlegen' })).response;
+  if (mode === 2) return;
+  const o2 = bm.findIndex(x => x.kids && x.name === name);   // während der Rückfrage kann sich die Leiste geändert haben
+  if (o2 >= 0 && mode === 0) bm[o2] = { name, kids }; else bm.push({ name, kids });
+  bmDone();
+  eoAsk(bwin, { message: n + ' Lesezeichen importiert.', detail: 'Ordner „' + name + '“ in der Lesezeichen-Leiste – sortieren unter „Lesezeichen verwalten“.' });
 }
 // P2: Hauptfenster erfaehrt, ob das Browser-Fenster offen ist (Markierung im Neocom-Overlay)
 function browserOpenPush(){ send({ type: 'browserOpen', open: !!(bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) }); }
-function browserPush(){ if (bwin && !bwin.isDestroyed() && bview) bwin.webContents.send('browser:state', browserState()); }
+function browserPush(){ if (bwin && !bwin.isDestroyed() && bview){ bwin.webContents.send('browser:state', browserState()); bedit = ''; } }   // BM: „bearbeiten“ nur einmal schicken
 function browserLayout(){
   if (!bwin || bwin.isDestroyed() || !bview) return;
   const [w, h] = bwin.getContentSize();
-  bview.setBounds({ x: 0, y: BROWSER_BAR_H, width: w, height: Math.max(0, h - BROWSER_BAR_H) });
+  bview.setBounds(bmanage ? { x: 0, y: h, width: 0, height: 0 } : { x: 0, y: BROWSER_BAR_H, width: w, height: Math.max(0, h - BROWSER_BAR_H) });   // BM: Verwaltung zeigt die Liste statt der Seite
 }
 // DD5: offiziellen EVE-Launcher öffnen (Anmeldung bleibt bei CCP); fehlt er, Download-Seite
 function launchEve(){
@@ -724,26 +934,39 @@ function openBrowser(url){
 function browserCmd(type, arg){
   if (!bwin || bwin.isDestroyed() || !bview) return;
   const wc = bview.webContents, h = wc.navigationHistory, bm = S.browser.bookmarks;
+  if (type === 'go' || type === 'tab' || type === 'newtab'){ if (bmanage){ bmanage = false; browserLayout(); } }   // BM: Seite aufrufen beendet die Verwaltung
   if (type === 'go'){ const u = browserUrl(arg); if (u) wc.loadURL(u); }
   else if (type === 'back'){ if (h.canGoBack()) h.goBack(); }
   else if (type === 'fwd'){ if (h.canGoForward()) h.goForward(); }
   else if (type === 'reload') wc.reload();
   else if (type === 'stop') wc.stop();
   else if (type === 'external'){ const u = wc.getURL(); if (/^https?:\/\//.test(u)) shell.openExternal(u); }
-  else if (type === 'mark'){   // Stern: aktuelle Seite merken oder wieder entfernen
-    const u = wc.getURL(), i = bm.findIndex(x => x.url === u);
-    if (i >= 0) bm.splice(i, 1);
+  else if (type === 'mark'){   // Stern: aktuelle Seite merken (Leiste) oder wieder entfernen (egal in welchem Ordner)
+    const u = wc.getURL(), f = bmFind(u);
+    if (f){ const a = bmAt(f); a.list.splice(a.i, 1); }
     else if (/^https?:\/\//.test(u)) bm.push({ name: (wc.getTitle() || u).slice(0, 30), url: u });
     saveSettings();
   }
-  else if (type === 'unmark'){ const i = bm.findIndex(x => x.url === arg); if (i >= 0){ bm.splice(i, 1); saveSettings(); } }
+  else if (type === 'unmark'){ const f = bmFind(arg); if (f){ const a = bmAt(f); a.list.splice(a.i, 1); saveSettings(); } }
   else if (type === 'close'){ bwin.close(); return; }
   else if (type === 'newtab'){ browserTab(arg); return; }   // CC7
   else if (type === 'tab'){ browserSwitch(Number(arg) || 0); return; }
   else if (type === 'closetab'){ browserCloseTab(Number(arg) || 0); return; }
   else if (type === 'menu'){ browserMenu(); return; }
   else if (type === 'bmmenu'){ browserBmMenu(arg); return; }   // FF1
-  else if (type === 'rename'){ const p = String(arg).split('\n'), x = bm.find(b => b.url === p[0]), n = (p[1] || '').trim().slice(0, 40); if (x && n){ x.name = n; saveSettings(); } }
+  else if (type === 'rename'){ const p = String(arg).split('\n'), a = bmAt(p[0]), n = (p[1] || '').trim().slice(0, 80); bedit = ''; if (a && n){ a.node.name = n; saveSettings(); } }   // BM: Pfad statt Adresse
+  else if (type === 'bmfolder'){ const a = arg === '' ? null : bmAt(arg); if (a && a.node.kids) eoMenu(bwin, bmMenuItems(a.node.kids, arg + '/')); return; }
+  else if (type === 'manage'){ bmanage = arg === '1'; browserLayout(); }
+  else if (type === 'import'){ eoMenu(bwin, bmImportItems()); return; }
+  else if (type === 'bmnew'){ bmNewFolder(arg); return; }
+  else if (type === 'bmdel'){ bmDelete(arg); return; }
+  else if (type === 'bmopen'){ const a = bmAt(arg); if (a && a.node.url){ bmanage = false; wc.loadURL(a.node.url); browserLayout(); } }
+  else if (type === 'bmmove' || type === 'bmedit'){
+    let o = {}; try{ o = JSON.parse(arg); }catch(e){}
+    if (type === 'bmmove'){ if (bmMove(String(o.from), String(o.to), o.mode === 'before' || o.mode === 'after' ? o.mode : 'into')) saveSettings(); }
+    else { const a = bmAt(o.p), n = String(o.name || '').trim().slice(0, 80), u = String(o.url || '').trim(); bedit = '';
+      if (a){ if (n) a.node.name = n; if (a.node.url && /^https?:\/\//i.test(u)) a.node.url = u; saveSettings(); } }
+  }
   browserPush();
 }
 
@@ -971,7 +1194,8 @@ function cleanKey(k, def){
 function cycleCfg(){
   const c = S.cycle || {};
   return { on: !!c.on && !demoOn(), fwd: cleanKey(c.fwd, DEFAULTS.cycle.fwd), back: cleanKey(c.back, DEFAULTS.cycle.back), skipLogin: c.skipLogin !== false,   // V1: in der Demo kein Client-Umschalten
-           order: (Array.isArray(c.order) ? c.order : []).map(n => String(n || '').replace(/[\t\r\n]/g, ' ').trim()).filter(Boolean).slice(0, 60) };
+           order: (Array.isArray(c.order) ? c.order : []).map(n => String(n || '').replace(/[\t\r\n]/g, ' ').trim()).filter(Boolean).slice(0, 60),
+           skip: (Array.isArray(c.skip) ? c.skip : []).map(n => String(n || '').replace(/[\t\r\n]/g, ' ').trim()).filter(Boolean).slice(0, 60) };   // LL6: Clients ohne Haken
 }
 function fgWrite(line){
   if (TEST){ fg.sent.push(line); if (fg.sent.length > 50) fg.sent.shift(); return; }
@@ -980,7 +1204,7 @@ function fgWrite(line){
 let lastCycleLines = '';
 function cycleSend(onlyIfChanged){
   const c = cycleCfg();
-  const lines = 'CYCLE ' + (c.on ? 1 : 0) + ' ' + c.fwd.vk + ' ' + c.fwd.mods + ' ' + c.back.vk + ' ' + c.back.mods + ' ' + (c.skipLogin ? 1 : 0) + '\n' + 'ORDER ' + c.order.join('\t');
+  const lines = 'CYCLE ' + (c.on ? 1 : 0) + ' ' + c.fwd.vk + ' ' + c.fwd.mods + ' ' + c.back.vk + ' ' + c.back.mods + ' ' + (c.skipLogin ? 1 : 0) + '\n' + 'ORDER ' + c.order.join('\t') + '\n' + 'SKIP ' + c.skip.join('\t');
   if (onlyIfChanged && lines === lastCycleLines) return;
   lastCycleLines = lines;
   lines.split('\n').forEach(fgWrite);
@@ -1061,7 +1285,44 @@ function pvNamePos(w){
   if (!n || n.isDestroyed()) return;
   const b = w.getBounds(); n.setBounds({ x: b.x, y: b.y, width: b.width, height: PV_NAME_H });
 }
+// LL6: Haken oben rechts in der Vorschau – an = Client per Umschalt-Taste erreichbar, aus = übersprungen (S.cycle.skip, gilt vor + zurück).
+// Eigenes Mini-Fenster wie der Name (das Spiegelbild würde HTML im Vorschaufenster überdecken); Klick meldet sich über den Seitentitel.
+const PV_CHK = 18;
+const PV_CHK_HTML = 'data:text/html;charset=utf-8,' + encodeURIComponent('<!DOCTYPE html><html><body style="margin:0;overflow:hidden;background:transparent;cursor:pointer">' +
+  '<div id="b" style="box-sizing:border-box;width:18px;height:18px;border:2px solid #e0b84a;border-radius:3px;background:rgba(0,0,0,.65);color:#e0b84a;font:900 13px/14px Segoe UI,sans-serif;text-align:center"></div>' +
+  '<script>var on=true;function set(v){on=v;var b=document.getElementById("b");b.textContent=on?"✓":"";b.style.opacity=on?"1":".75";}' +
+  'document.addEventListener("mousedown",function(e){e.preventDefault();set(!on);document.title=(on?"1":"0")+"-"+Date.now();});set(true);</script></body></html>');
+function pvSkipOn(name){ return cycleCfg().skip.some(n => n.toLowerCase() === String(name || '').toLowerCase()); }
+function pvSkipSet(name, on){
+  const skip = cycleCfg().skip.filter(x => x.toLowerCase() !== String(name).toLowerCase());
+  if (!on) skip.push(String(name));
+  S.cycle = Object.assign({}, S.cycle, { skip }); cycleSend(); saveSettings(); pushSettings();
+}
+function pvChk(w, c){
+  if (!w || w.isDestroyed()) return;
+  let k = w.__chk;
+  if (!c.name){ if (k && !k.isDestroyed()) k.hide(); return; }   // Stapel der nicht eingeloggten: kein Haken
+  if (!k || k.isDestroyed()){
+    k = w.__chk = new BrowserWindow({ parent: w, frame: false, transparent: true, backgroundColor: '#00000000', resizable: false, focusable: false, skipTaskbar: true, show: false, hasShadow: false,
+      width: PV_CHK, height: PV_CHK, webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: false } });
+    k.setMenu(null);
+    k.webContents.on('will-navigate', ev => ev.preventDefault());
+    k.webContents.on('did-finish-load', () => pvChkApply(k));
+    k.webContents.on('page-title-updated', (ev, t) => { if (/^[01]-/.test(t)) pvSkipSet(k.__name, t[0] === '1'); });
+    k.loadURL(PV_CHK_HTML);
+    zSet(k, true, true);
+  }
+  k.__name = c.name; pvChkApply(k); pvChkPos(w);
+  if (!k.isVisible()) k.showInactive();
+}
+function pvChkApply(k){ if (!k.isDestroyed()) k.webContents.executeJavaScript('set(' + !pvSkipOn(k.__name) + ')').catch(() => {}); }
+function pvChkPos(w){
+  const k = w && !w.isDestroyed() ? w.__chk : null;
+  if (!k || k.isDestroyed()) return;
+  const b = w.getBounds(); k.setBounds({ x: b.x + b.width - PV_CHK - 4, y: b.y + 4, width: PV_CHK, height: PV_CHK });
+}
 function pvNameFor(w, c){
+  pvChk(w, c);
   const p = pvCfg(), n = fg.clients.filter(x => !x.name).length;
   const text = c.name || T({ count: n + ' nicht eingeloggt', select: 'Charakterauswahl', nolog: 'Nicht eingeloggt' }[p.stackLabel]);
   pvName(w, text, fg.name === 'exefile' && fg.hwnd === c.hwnd ? p.nameAct : p.nameIdle);
@@ -1114,8 +1375,8 @@ function pvOpen(c, i){
   let t = null;
   // Position und Breite je Charakter merken (sofort im Speicher, damit pvSync nicht zurueckspringt; Datei verzoegert)
   const remember = () => { if (w.isDestroyed()) return; const bb = w.getBounds(); S.preview.pos = Object.assign({}, S.preview.pos, { [pvKey(c)]: { x: bb.x, y: bb.y, w: bb.width } }); clearTimeout(t); t = setTimeout(saveSettings, 300); };
-  w.on('move', () => { remember(); pvNamePos(w); });
-  w.on('resize', () => { remember(); pvThumb(w); pvNamePos(w); });
+  w.on('move', () => { remember(); pvNamePos(w); pvChkPos(w); });
+  w.on('resize', () => { remember(); pvThumb(w); pvNamePos(w); pvChkPos(w); });
   w.on('resized', () => { if (!w.__dwm || w.isDestroyed()) return; const bb = w.getBounds(), H = Math.round(bb.width / w.__pvAspect) + PV_BAR; if (Math.abs(bb.height - H) > 2) w.setBounds({ x: bb.x, y: bb.y, width: bb.width, height: H }); });
   w.webContents.on('did-finish-load', () => { const cc = fg.clients.find(x => x.hwnd === c.hwnd); if (cc) w.webContents.send('preview:info', pvInfo(cc)); });
   w.once('ready-to-show', () => { w.showInactive(); pvThumb(w); const cc = fg.clients.find(x => x.hwnd === c.hwnd); if (cc) pvNameFor(w, cc); });
@@ -1408,7 +1669,7 @@ function updateTray(){
     { type: 'separator' },
     { label: 'Hauptfenster immer im Vordergrund', type: 'checkbox', checked: !!(S.alwaysOnTop && S.alwaysOnTopFull), click: m => { S.alwaysOnTopFull = m.checked; if (m.checked) S.alwaysOnTop = true; applyWindowState(); saveSettings(); pushSettings(); } },
     { label: 'Einrasten', type: 'checkbox', checked: S.snap !== false, click: () => { S.snap = S.snap === false; saveSettings(); pushSettings(); updateTray(); } },   // II1
-    { label: 'Overlays immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: m => { S.alwaysOnTop = m.checked; applyWindowState(); saveSettings(); pushSettings(); } },
+    { label: 'Overlays immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: m => { S.alwaysOnTop = m.checked; Object.keys(S.windows).forEach(k => { if (S.windows[k]) delete S.windows[k].top; }); applyWindowState(); saveSettings(); pushSettings(); } },   // 09.10.: gilt wieder für alle
     { label: 'Durchklicken', type: 'checkbox', checked: !!S.clickThrough || Object.keys(S.windows).some(k => (S.windows[k] || {}).ct), sublabel: hk('clickThrough'), click: () => HOTKEY_ACTIONS.clickThrough() },   // W12: aus = auch Hauptfenster wieder klickbar
     { label: 'Transparenter Hintergrund', type: 'checkbox', checked: !!S.transparent, click: m => { S.transparent = m.checked; saveSettings(true); recreateWindow(); updateTray(); } },
     { label: 'EVE-Clients umschalten mit ' + ((cycleCfg().fwd.label) || 'Taste'), type: 'checkbox', checked: !!(S.cycle && S.cycle.on),
@@ -1525,7 +1786,7 @@ ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
-  const allowed = ['lang', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck'];
+  const allowed = ['lang', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck', 'icColor'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   Object.keys(patch).forEach(k => {
     if (allowed.indexOf(k) < 0) return;
@@ -1533,10 +1794,11 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
     else S[k] = patch[k];
   });
   if (S.backup) { delete S.backup.dirEffective; }
+  if ('icColor' in patch){ S.icColor = /^#[0-9a-f]{6}$/i.test(String(S.icColor)) ? S.icColor : ''; browserPush(); }   // MM3: Ordner-Farbe im Browser
   if ('opacity' in patch) S.opacity = Math.max(0.3, Math.min(1, Number(S.opacity) || 1));
   if ('opacityFull' in patch) S.opacityFull = Math.max(0.3, Math.min(1, Number(S.opacityFull) || 1));
   if (patch.hotkeys) registerHotkeys();
-  if (patch.cycle){ S.cycle = cycleCfg(); cycleSend(); }
+  if (patch.cycle){ S.cycle = cycleCfg(); cycleSend(); pvSync(); }   // LL6: Haken in den Vorschauen nachziehen
   if (patch.preview && 'width' in patch.preview) Object.keys(S.preview.pos || {}).forEach(k => { if (k.indexOf('#gross') < 0) delete S.preview.pos[k].w; });   // neue Groesse gilt fuer alle (nicht fuer „groß“)
   if (patch.preview) pvSync();
   if (patch.deck){ if (patch.deck.newKey){ delete S.deck.newKey; S.deck.key = ''; } S.deck.port = Math.max(1024, Math.min(65535, Number(S.deck.port) || 51780)); deckStart(); }   // SD
@@ -1647,7 +1909,7 @@ function satMenu(id){
     { label: 'Hintergrund', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2].map(a => ({ label: Math.round(a * 100) + ' %', click: () => act({ type: 'alpha', v: a }) })) },
     // Z1: Durchklicken (alle Overlays, wie Taskleistenmenue) + Immer im Vordergrund
     { label: 'Durchklicken', type: 'checkbox', checked: !!S.clickThrough, sublabel: hk('clickThrough'), click: () => HOTKEY_ACTIONS.clickThrough() },
-    { label: 'Immer im Vordergrund', type: 'checkbox', checked: !!S.alwaysOnTop, click: () => { S.alwaysOnTop = !S.alwaysOnTop; applyWindowState(); saveSettings(); pushSettings(); } },
+    { label: 'Immer im Vordergrund', type: 'checkbox', checked: satTop(id), click: () => { setWin({ top: !satTop(id) }); applySatState(w); } },   // 09.10.: nur dieses Fenster
     { label: 'Einrasten', type: 'checkbox', checked: S.snap !== false, click: () => { S.snap = S.snap === false; saveSettings(); pushSettings(); updateTray(); } },   // II1
     { label: 'Schließen', submenu: [[0, 'nie (immer offen)'], [10, '10 s nach der Maus'], [30, '30 s nach der Maus'], [60, '1 Min nach der Maus'], [120, '2 Min nach der Maus'], [300, '5 Min nach der Maus']]
       .map(x => ({ label: x[1], type: 'radio', checked: (Number(cfg.autoClose) || 0) === x[0], click: () => setWin({ autoClose: x[0] }) })) },
@@ -1666,6 +1928,7 @@ ipcMain.on('evecore:satFitH', (ev, h) => {
   const nh = Math.max(40, Math.min(240, Math.round(Number(h) * ev.sender.getZoomFactor()))), b = w.getBounds();
   if (Math.abs(nh - b.height) < 2) return;
   st.miniH = nh; w.setBounds({ x: b.x, y: b.y, width: b.width, height: nh }); st.bounds = w.getBounds(); saveSettings();
+  setTimeout(() => { if (!w.isDestroyed()) w.webContents.invalidate(); }, 60);   // durchsichtiges Fenster: nach dem Schrumpfen neu malen, sonst bleibt das alte Bild (doppelter Player) stehen
 });
 // Einzelfenster selbst ziehen (Jukebox): solange die Maustaste unten ist, folgt das Fenster dem Mauszeiger – mit Einrasten
 const selfDrags = new Map();
@@ -1719,6 +1982,32 @@ ipcMain.on('evecore:notify', (ev, title, body) => {
     if (Notification.isSupported()){ new Notification({ title: String(title), body: String(body), icon: iconPath(), silent: true }).show(); return; }
   }catch(e){}
   try{ if (tray && tray.displayBalloon) tray.displayBalloon({ title: String(title), content: String(body), iconType: 'info' }); }catch(e){}
+});
+/* JB5: Jukebox-Titel kurz über EVE einblenden – kleines Fenster oben mittig auf dem Bildschirm unter der Maus, nicht klickbar, 3,5 s */
+let jbToastWin = null, jbToastT = null;
+ipcMain.on('evecore:jbToast', (ev, t) => {
+  try{
+    t = t || {}; const esc = x => String(x || '').slice(0, 200).replace(/[&<>"]/g, c => '&#' + c.charCodeAt(0) + ';');
+    let cover = '';
+    try{ if (/^file:/.test(t.cover || '')){ const fp = require('url').fileURLToPath(t.cover); if (fs.statSync(fp).size < 2e6) cover = 'data:image/' + (/\.png$/i.test(fp) ? 'png' : 'jpeg') + ';base64,' + fs.readFileSync(fp).toString('base64'); } }catch(e){}
+    const wa = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea, W = 380, H = 66;
+    if (!jbToastWin || jbToastWin.isDestroyed()){
+      jbToastWin = new BrowserWindow({ width: W, height: H, frame: false, transparent: true, resizable: false, movable: false, focusable: false, skipTaskbar: true, show: false,
+        type: 'toolbar', alwaysOnTop: true, hasShadow: false, webPreferences: { contextIsolation: true, sandbox: true, javascript: false } });
+      jbToastWin.setIgnoreMouseEvents(true);
+    }
+    jbToastWin.setBounds({ x: wa.x + Math.round((wa.width - W) / 2), y: wa.y + 36, width: W, height: H });
+    const html = '<!doctype html><meta charset="utf-8"><body style="margin:0;font:13px Segoe UI,sans-serif;color:#dff4fb;overflow:hidden">' +
+      '<div style="display:flex;align-items:center;gap:10px;height:' + (H - 2) + 'px;box-sizing:border-box;padding:6px 12px;background:rgba(8,14,20,.88);border:1px solid #4cb2d4;border-radius:4px">' +
+      (cover ? '<img src="' + cover + '" style="width:48px;height:48px;object-fit:cover;border-radius:3px;border:1px solid #4cb2d4">' : '<div style="font-size:26px;color:#4cb2d4">&#9835;</div>') +
+      '<div style="min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(t.title) + '</div>' +
+      '<div style="font-size:11px;color:#8fb3c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(t.sub) + '</div></div></div>';
+    jbToastWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html)).then(() => {
+      if (!jbToastWin || jbToastWin.isDestroyed()) return;
+      jbToastWin.showInactive(); zSet(jbToastWin, true);
+      clearTimeout(jbToastT); jbToastT = setTimeout(() => { if (jbToastWin && !jbToastWin.isDestroyed()) jbToastWin.hide(); }, 3500);
+    }, () => {});
+  }catch(e){}
 });
 /* Jukebox: Musikdateien aus dem gewaehlten Ordner (nur dieser Ordner und Unterordner, hoechstens 3 Ebenen / 2000 Dateien) */
 const MUSIC_EXT = /\.(mp3|ogg|oga|flac|wav|m4a|aac|opus|webm)$/i;
@@ -1777,6 +2066,18 @@ ipcMain.handle('evecore:pickMusicDir', async ev => {
 ipcMain.handle('evecore:removeMusicDir', (ev, d) => { S.musicDirs = musicDirs().filter(x => x !== d); saveSettings(); return musicAll(); });
 ipcMain.handle('evecore:listMusic', () => musicAll());
 ipcMain.handle('evecore:readClipboard', () => readClip());
+// LL1: geteilte Kurzlinks (Deezer „Teilen“, Spotify-App) zur echten Adresse auflösen – nur diese Hosts, damit hier keine beliebigen Adressen abgerufen werden
+ipcMain.handle('evecore:resolveLink', async (ev, u) => {
+  let x; try{ x = new URL(String(u || '')); }catch(e){ return ''; }
+  if (x.protocol !== 'https:' || !/^(link\.deezer\.com|deezer\.page\.link|dzr\.page\.link|spotify\.link|spoti\.fi)$/i.test(x.hostname)) return '';
+  try{
+    const r = await fetch(x.href, { redirect: 'follow', signal: AbortSignal.timeout(8000) });
+    const ok = /https:\/\/(?:www\.)?(?:deezer\.com|open\.spotify\.com)\/(?:[a-z-]+\/)?(?:album|playlist|track)\/[A-Za-z0-9]+/;
+    let m = ok.exec(r.url);
+    if (!m) m = ok.exec((await r.text()).replace(/\\\//g, '/'));   // Seite mit Weiterleitung per Skript
+    return m ? m[0] : '';
+  }catch(e){ return ''; }
+});
 // T20: Leistungs-Overlay – CPU seit dem letzten Aufruf, RAM, Ping = TCP-Verbindungsaufbau zum EVE-Server (Tranquility)
 let cpuPrev = null;
 function cpuPct(){
