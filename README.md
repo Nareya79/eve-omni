@@ -9,14 +9,23 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Nareya79/eve-omni/releases/latest"><img src="https://img.shields.io/github/v/release/Nareya79/eve-omni?label=latest%20beta&color=2ea6c8" alt="Latest beta"></a>
+  <a href="https://github.com/Nareya79/eve-omni/releases"><img src="https://img.shields.io/github/downloads/Nareya79/eve-omni/total?color=c8902e" alt="Downloads"></a>
+  <a href="https://discord.gg/Tyxt6J8yPR"><img src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+</p>
+
+<p align="center">
   <a href="https://omni.nareya79.com">Website</a> ·
-  <a href="#download">Download</a> ·
+  <a href="https://github.com/Nareya79/eve-omni/releases/latest"><b>⬇ Download</b></a> ·
+  <a href="https://discord.gg/Tyxt6J8yPR">Discord</a> ·
+  <a href="https://www.youtube.com/@EVEOmni">YouTube</a> ·
   <a href="#installation">Installation</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="README.de.md">Deutsch</a>
 </p>
 
-> **Status: Beta.** The first public release is in preparation. Follow the [YouTube channel](https://www.youtube.com/@EVEOmni) to get notified.
+> **Status: public beta.** EVE Omni is free and under active development. New versions come out often, and the app tells you when one is available. Found a bug or have an idea? Tell us on [Discord](https://discord.gg/Tyxt6J8yPR) or open an [issue](../../issues).
 
 ---
 
@@ -68,24 +77,29 @@ All values you type into EVE come with a copy button.
 
 ## Download
 
-The first public beta is coming soon. It will be available on the [Releases page](../../releases):
+### **[⬇ Download the latest version](https://github.com/Nareya79/eve-omni/releases/latest)**
+
+Windows 10/11, 64-bit. Free, no account and no API keys needed.
 
 | File | |
 |---|---|
-| `EVE-Omni-Setup-<version>.exe` | Installer (no admin rights needed) |
-| `EVE-Omni-<version>-portable.zip` | Portable version, no installation |
-| `EVE-Omni-Soundtrack.zip` | Music |
-| `SHA256SUMS.txt` | Checksums to verify your download |
+| `EVE-Omni-Setup-x.y.z.exe` | **Installer (recommended).** No admin rights needed. |
+| `EVE-Omni-x.y.z-portable.zip` | Portable version: unzip and run `EVE-Omni.exe`. |
+| `EVE-Omni-Soundtrack.zip` | Optional: the EVE Omni soundtrack (23 tracks, MP3). |
+| `SHA256SUMS.txt` | Checksums to verify your download. |
 
-Requirements: Windows 10/11, 64-bit. A browser version (single HTML file) is included for other systems, with some limits.
+`x.y.z` is the current version number. The release notes of every version list the SHA256 checksums and a **VirusTotal scan** of the installer. Older versions: [all releases](../../releases).
+
+A browser version (single HTML file) is included in this repository for other systems, with some limits.
 
 ## Installation
 
-1. **Download** `EVE-Omni-Setup-<version>.exe` from the Releases page.
+1. **Download** `EVE-Omni-Setup-x.y.z.exe` from the [latest release](https://github.com/Nareya79/eve-omni/releases/latest).
 2. **Start the installer.** If Windows shows *“Windows protected your PC”*, click **More info → Run anyway**.
    > Why? EVE Omni is a free hobby project and is not code-signed (a certificate costs money every year). Every release lists SHA256 checksums and a VirusTotal scan so you can verify the file.
 3. **Log in with EVE** – click “Log in with EVE”, pick your character on CCP's login page and confirm. Add more characters any time.
 4. **Fly.** Pick your trade hub, open the market scanner and go. o7
+5. **Updates:** EVE Omni checks once a day whether a new version is out and shows you the download link (you can turn this off in the settings). Just install the new version over the old one, your data stays.
 
 No developer account and no API keys needed.
 
@@ -122,7 +136,16 @@ It uses only CCP's official public interfaces (ESI and EVE SSO), like other thir
 No. Free, with every feature, forever – no premium version.
 
 **I found a bug / have an idea.**
-Open an [issue](../../issues) (please include your EVE Omni version and Windows version). **Never post login tokens or codes.**
+Post it in our [Discord](https://discord.gg/Tyxt6J8yPR) (#fehler-bugs or #ideen-ideas) or open an [issue](../../issues). Please include your EVE Omni version and your Windows version. **Never post login tokens or codes.**
+
+---
+
+## Community
+
+- 💬 **Discord:** [discord.gg/Tyxt6J8yPR](https://discord.gg/Tyxt6J8yPR) – help, bug reports, ideas (English + German)
+- 🎮 **In-game channel:** join **EVEOmni** in EVE
+- ▶ **YouTube:** [@EVEOmni](https://www.youtube.com/@EVEOmni) – trailer, tutorials, patch notes
+- 🌐 **Website:** [omni.nareya79.com](https://omni.nareya79.com)
 
 ---
 
