@@ -73,6 +73,7 @@
     <button id="mgb" title="Lesezeichen verwalten: Ordner, sortieren, importieren">📑</button>
     <button id="ext" title="Im normalen Browser öffnen">↗</button>
     <button id="ov" title="Einstellungen: Startseite, neuer Tab, Zoom, Suchmaschine – und wie ein Overlay: Deckkraft, sperren, durchklicken, Vordergrund">⚙</button>
+    <button id="min" title="Minimieren">–</button>
     <button id="close" title="Schließen">✕</button>
   </div>
   <div class="row r2" id="bms"></div>
@@ -90,7 +91,7 @@
   // BM: neue Texte zweisprachig (Sprache kommt mit dem Zustand)
   var EN = { "Zurück": "Back", "Vor": "Forward", "Neu laden": "Reload", "Laden abbrechen": "Stop loading", "Adresse oder Suchbegriff": "Address or search term",
     "Lesezeichen setzen / entfernen": "Add / remove bookmark", "Lesezeichen verwalten: Ordner, sortieren, importieren": "Manage bookmarks: folders, sorting, import",
-    "Im normalen Browser öffnen": "Open in your normal browser", "Schließen": "Close", "Tab schließen": "Close tab", "Neuer Tab (Strg+T)": "New tab (Ctrl+T)", "Neuer Tab": "New tab",
+    "Im normalen Browser öffnen": "Open in your normal browser", "Schließen": "Close", "Minimieren": "Minimize", "Tab schließen": "Close tab", "Neuer Tab (Strg+T)": "New tab (Ctrl+T)", "Neuer Tab": "New tab",
     "Lesezeichen verwalten": "Manage bookmarks", "Suchen …": "Search …", "Neuer Ordner": "New folder", "⤓ Importieren …": "⤓ Import …", "Fertig": "Done",
     "Keine Lesezeichen – ☆ merkt die aktuelle Seite": "No bookmarks – ☆ saves the current page", "Lesezeichen entfernen": "Remove bookmark",
     "Umbenennen": "Rename", "Löschen": "Delete", "Öffnen": "Open", "Ordner auf/zu": "Open/close folder", "Adresse": "Address", "Name": "Name",
@@ -101,7 +102,7 @@
   function L(x){ return st && st.en && EN.hasOwnProperty(x) ? EN[x] : x; }
   function texts(){
     document.documentElement.lang = st && st.en ? "en" : "de";
-    [["back", "Zurück"], ["fwd", "Vor"], ["star", "Lesezeichen setzen / entfernen"], ["mgb", "Lesezeichen verwalten: Ordner, sortieren, importieren"], ["ext", "Im normalen Browser öffnen"], ["close", "Schließen"]]
+    [["back", "Zurück"], ["fwd", "Vor"], ["star", "Lesezeichen setzen / entfernen"], ["mgb", "Lesezeichen verwalten: Ordner, sortieren, importieren"], ["ext", "Im normalen Browser öffnen"], ["min", "Minimieren"], ["close", "Schließen"]]
       .forEach(function(x){ $(x[0]).title = L(x[1]); });
     $("url").placeholder = L("Adresse oder Suchbegriff"); $("mgq").placeholder = L("Suchen …");
     $("mgt").textContent = L("Lesezeichen verwalten"); $("mgnew").innerHTML = FOLDER_SVG + " "; $("mgnew").appendChild(document.createTextNode(L("Neuer Ordner"))); $("mgimp").textContent = L("⤓ Importieren …"); $("mgdone").textContent = L("Fertig");
@@ -240,6 +241,7 @@
     else if (ev.key === "w"){ ev.preventDefault(); H.cmd("closetab", st.act); }
   });
   $("close").onclick = function(){ H.cmd("close"); };
+  $("min").onclick = function(){ H.cmd("min"); };   // PR4
   $("url").onkeydown = function(ev){
     if (ev.key === "Enter"){ H.cmd("go", this.value); this.blur(); }
     else if (ev.key === "Escape"){ this.value = st ? st.url : ""; this.blur(); }

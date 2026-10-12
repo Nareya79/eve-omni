@@ -2,7 +2,7 @@
 // Das Programm steuert nur das eigene Fenster (Overlay, Transparenz, Durchklicken, Tastenkuerzel, Taskleistensymbol,
 // Sicherungen, Einstellungs-Sync). Es liest nichts aus EVE aus und sendet nichts an EVE.
 'use strict';
-const { app, BrowserWindow, WebContentsView, session, desktopCapturer, ipcMain, globalShortcut, Tray, Menu, nativeImage, shell, dialog, screen, Notification, clipboard } = require('electron');
+const { app, BrowserWindow, WebContentsView, session, desktopCapturer, ipcMain, globalShortcut, Tray, Menu, nativeImage, shell, dialog, screen, Notification, clipboard, nativeTheme } = require('electron');
 const { pathToFileURL } = require('url');
 const path = require('path');
 const fs = require('fs');
@@ -384,7 +384,7 @@ const MAIN_EN = {
   'Ausschalten: Einstellungen › Programm › Durchklicken': 'Turn off: Settings › App › Click-through', 'Immer im Vordergrund': 'Always on top',
   'Startseite': 'Home page', 'Aktuelle Seite als Startseite': 'Current page as home page', 'Startseite öffnen': 'Open home page',
   'Zurücksetzen (erstes Lesezeichen)': 'Reset (first bookmark)', 'Neuer Tab öffnet': 'New tab opens', 'Leere Seite': 'Blank page',
-  'Zuletzt besuchte Seite': 'Last visited page', 'Zoom': 'Zoom', 'Suchmaschine (Adressleiste)': 'Search engine (address bar)',
+  'Zuletzt besuchte Seite': 'Last visited page', 'Dunkle Seiten': 'Dark pages', 'Seiten mit eigenem Dunkelmodus': 'pages with their own dark mode', 'Zoom': 'Zoom', 'Suchmaschine (Adressleiste)': 'Search engine (address bar)',
   'Als Startseite': 'As home page', 'In neuem Tab öffnen': 'Open in new tab', '◀ Nach links': '◀ Move left', 'Nach rechts ▶': 'Move right ▶',
   'Umbenennen: Doppelklick auf das Lesezeichen': 'Rename: double-click the bookmark', 'Löschen': 'Delete',
   'Alle beenden': 'Quit all', 'Abbrechen': 'Cancel', 'Wirklich den EVE-Client beenden?': 'Really quit the EVE client?',
@@ -448,6 +448,14 @@ function satMiniToggle(id, barH){
   st.bounds = w.getBounds();
   saveSettings(); pushSettings();
 }
+// PQ3: Jukebox-Taste – zu: als Miniplayer öffnen (Seite öffnet, hier nur auf Mini stellen), offen + Mini: aufklappen, offen + groß: Seite schließt
+function jbDeckStep(){
+  const w = sats.musik, st = S.windows.musik = Object.assign({}, S.windows.musik);
+  if (w && !w.isDestroyed() && st.open){ if (!st.mini) return false; satMiniToggle('musik'); return true; }
+  if (!st.mini && st.bounds){ st.normalH = st.bounds.height; st.mini = true; st.bounds = Object.assign({}, st.bounds, { height: st.miniH || JB_MINI_H }); const pk = satParked.musik; if (pk && !pk.isDestroyed()) pk.setBounds(st.bounds); }
+  else st.mini = true;
+  return false;
+}
 // Z5: eingeklappt = kleine Mindesthoehe und nicht mit der Maus aufziehbar (sonst leere Flaeche unter der Leiste)
 function satRollApply(w, id, st){
   const r = !!(st && st.rolled && !SAT_NOROLL.includes(id) && id !== 'musik');
@@ -497,6 +505,7 @@ function openSat(id, show){
   w.__key = satKey();   // NW2: geparkt nur mit gleichen Einstellungen wiederverwenden
   w.setMinimumSize(SAT_MIN(id)[0], SAT_MIN(id)[1]);
   sats[id] = w;
+  if (!w.__zf){ w.__zf = true; w.on('focus', () => satZTouch(w)); w.once('closed', () => satZTouch(w)); }   // Stapel merken
   w.setMenu(null);
   if (cfg.rolled){ satRollApply(w, id, cfg); w.setBounds({ x: b.x, y: b.y, width: b.width, height: cfg.rollH }); }
   if (id === 'neocom') w.on('system-context-menu', ev => { ev.preventDefault(); satMenu(id); });   // T8: Rechtsklick auf den Ziehbereich (Windows)
@@ -531,7 +540,12 @@ function openSat(id, show){
 // Programmfenster“; ohne Besitzer holte jedes neu gebaute Overlay (bei laufender Vorschau) die Taskleiste über EVE.
 let satOwner = null;
 function satKey(){ return effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang; }   // Reserve/geparkte Overlays nur mit diesen Einstellungen wiederverwenden
-function ownedResync(){ Object.keys(sats).forEach(id => applySatState(sats[id])); Object.keys(pvWins).forEach(h => zSet(pvWins[h], true)); }
+// Overlay-Stapel: das zuletzt angeklickte Overlay zuletzt einordnen (= oben). Vorher entschied die feste Liste, welches oben
+// landete – ein Overlay genau über einem anderen rutschte so beim nächsten Neu-Einordnen wieder darunter.
+const satZ = [];
+function satZTouch(w){ const i = satZ.indexOf(w); if (i >= 0) satZ.splice(i, 1); if (!w.isDestroyed()) satZ.push(w); }
+function satIdsByZ(){ return Object.keys(sats).sort((a, b) => satZ.indexOf(sats[a]) - satZ.indexOf(sats[b])); }
+function ownedResync(){ satIdsByZ().forEach(id => applySatState(sats[id])); Object.keys(pvWins).forEach(h => zSet(pvWins[h], true)); }
 function satOwnerGet(){
   if (!satOwner || satOwner.isDestroyed()){ satOwner = new BrowserWindow({ show: false, width: 1, height: 1, frame: false, skipTaskbar: true, focusable: false, type: 'toolbar', webPreferences: { sandbox: true } }); satOwner.loadURL('about:blank'); }   // ohne Seite hängen DevTools-Werkzeuge
   return satOwner;
@@ -765,6 +779,7 @@ function browserLook(){
   bwin.setOpacity(Math.max(0.3, Math.min(1, Number(c.alpha) || 1)));
   bwin.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
   bwin.setResizable(!c.lock);
+  nativeTheme.themeSource = S.browser.dark === false ? 'system' : 'dark';   // PR4: Seiten mit eigenem Dunkelmodus zeigen ihn (EVE Omni selbst ist immer dunkel)
 }
 function browserMenu(){
   if (!bwin || bwin.isDestroyed()) return;
@@ -781,6 +796,7 @@ function browserMenu(){
       { label: 'Zurücksetzen (erstes Lesezeichen)', enabled: !!S.browser.home, click: () => bset({ home: '' }) }] },
     { label: 'Neuer Tab öffnet', submenu: [['home', 'Startseite'], ['blank', 'Leere Seite'], ['last', 'Zuletzt besuchte Seite']].map(x => ({ label: x[1], type: 'radio', checked: (S.browser.newtab || 'home') === x[0], click: () => bset({ newtab: x[0] }) })) },
     { label: 'Zoom', submenu: [0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5].map(z => ({ label: Math.round(z * 100) + ' %', type: 'radio', checked: Math.abs((Number(S.browser.zoom) || 1) - z) < 0.001, click: () => { bset({ zoom: z }); btabs.forEach(v => browserZoom(v.webContents)); } })) },
+    { label: 'Dunkle Seiten', type: 'checkbox', checked: S.browser.dark !== false, sublabel: 'Seiten mit eigenem Dunkelmodus', click: () => { bset({ dark: S.browser.dark === false }); browserLook(); } },   // PR4
     { label: 'Suchmaschine (Adressleiste)', submenu: Object.keys(BROWSER_SEARCH).map(k => ({ label: BROWSER_SEARCH[k][0], type: 'radio', checked: (S.browser.search || 'ddg') === k, click: () => bset({ search: k }) })) }
   ]);
   function bset(p){ Object.assign(S.browser, p); saveSettings(); browserPush(); }
@@ -936,6 +952,7 @@ function openBrowser(url){
   url = browserUrl(url);
   if (bwin && !bwin.isDestroyed()){
     if (url) browserTab(url);   // CC7: neuer Tab statt die offene Seite zu ersetzen
+    if (bwin.isMinimized()) bwin.restore();   // PR4
     bwin.show(); bwin.focus();
     return bwin;
   }
@@ -986,6 +1003,7 @@ function browserCmd(type, arg){
   }
   else if (type === 'unmark'){ const f = bmFind(arg); if (f){ const a = bmAt(f); a.list.splice(a.i, 1); saveSettings(); } }
   else if (type === 'close'){ bwin.close(); return; }
+  else if (type === 'min'){ bwin.minimize(); return; }   // PR4
   else if (type === 'newtab'){ browserTab(arg); return; }   // CC7
   else if (type === 'tab'){ browserSwitch(Number(arg) || 0); return; }
   else if (type === 'closetab'){ browserCloseTab(Number(arg) || 0); return; }
@@ -1016,7 +1034,7 @@ function applyWindowState(){
   if (top) win.setVisibleOnAllWorkspaces(false);
   win.setOpacity(Math.max(0.3, Math.min(1, Number(S.opacityFull) || 1)));
   win.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
-  Object.keys(sats).forEach(id => applySatState(sats[id]));
+  satIdsByZ().forEach(id => applySatState(sats[id]));   // in Stapel-Reihenfolge, oben bleibt oben
   browserLook();   // CC7
   Object.keys(pvWins).forEach(h => zSet(pvWins[h], true));
 }
@@ -1889,6 +1907,7 @@ function deckStart(){
         if (a.type === 'showMain') toggleMainFromDeck();
         else if (a.type === 'toggleAll') toggleShow();
         else if (a.type === 'front'){ const w = sats[String(a.arg || '')]; if (w && !w.isDestroyed()){ w.showInactive(); w.moveTop(); } }   // SD-D: Knopf 3 drücken
+        else if (a.type === 'ov' && a.arg === 'musik' && jbDeckStep()){}   // PQ3: Jukebox-Taste zu → Mini → groß → zu
         else if (a.type === 'clickThrough'){ S.clickThrough = !S.clickThrough; applyWindowState(); saveSettings(); pushSettings(); }
         else send({ type: 'satAction', view: 'deck', action: a });
         res.writeHead(204, cors); res.end();

@@ -646,6 +646,7 @@ select.ss-hide{display:none}.ss-wrap{position:relative;display:block}.ss-btn{dis
 .ov-l.mi-hub{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:4px 0;border-bottom:1px solid var(--hairline)}.mi-top{border-left:2px solid var(--profit);padding-left:6px}.mi-hub .pos{color:var(--profit)}.mi-hub .neg{color:var(--loss)}.mi-view{margin-bottom:6px}
 .ov-l.mi-row{flex:none;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:8px;font-size:.78rem}.mi-n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} /* MI1 */.co-form .ovn-l{width:auto;padding:0 2px 0 6px}.co-form .ovn-l:first-child{padding-left:0}.co-form input{min-width:0;flex:1}.co-reg{flex-wrap:wrap}.ovn-mode.co-reg button{flex:0 0 auto;font-size:.7rem;padding:1px 5px;white-space:nowrap}
 .ov-l.co-row{flex:none;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;padding:4px 0;border-bottom:1px solid var(--hairline)}.co-row .neg{color:var(--loss)}.co-row .co-w{font-size:.74rem}.co-row .co-n{color:var(--text)} /* AA1 */
+.vc-fold{min-width:0;padding:2px 8px}
 .vc-head{all:unset;cursor:pointer;font-size:.78rem;color:var(--text-dim,inherit)} .vc-head:hover{text-decoration:underline}
 .vc-box .pos{color:var(--profit)} .vc-box .neg{color:var(--loss);font-weight:600}
 .vc-dot{display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--profit);margin-right:4px;vertical-align:middle}
@@ -841,6 +842,7 @@ html.in-host .not-host{display:none !important}.set-pane[hidden]{display:none !i
 .neo-grp[aria-expanded="false"]::before{content:"\25B8";font-size:.7rem}
 .neo-grp:hover{color:var(--text)}
 .neo-grp.neo-drag-over{box-shadow:inset 0 2px var(--accent)}
+#neocom.neo-drop-bar{box-shadow:inset 0 0 0 1px var(--accent)}
 #mb-page .mb-form{display:flex;gap:6px;align-items:center;flex-wrap:wrap}#mb-page .mb-form input[type=search]{flex:1 1 320px;min-width:200px}   /* MB */
 .mb-recent{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:6px 0;font-size:.78rem;color:var(--text-muted)}.mb-recent button{font:inherit;background:none;border:1px solid var(--border);color:var(--text);padding:1px 7px;border-radius:2px;cursor:pointer}.mb-recent button:hover{border-color:var(--accent)}
 .mb-wrap{display:grid;grid-template-columns:minmax(220px,280px) 1fr;gap:12px;margin-top:8px;align-items:start}
@@ -1676,6 +1678,12 @@ body.ob-standalone{margin:0; padding:14px; background:#020305; min-height:100vh}
 .ob-field .ob-stat{background:#0f141b;padding:.4cqw .9cqw;border-left-width:2px}
 .ob-field .ob-stat small{font-size:clamp(6px,1.9cqw,10px);letter-spacing:0;overflow:hidden}
 .ob-field .ob-stat b{font-size:clamp(8px,3cqw,16px);text-overflow:clip}
+.ob-field .ob-s-level b{font-size:clamp(12px,5cqw,26px)}   /* PR5: Level im Overlay größer */
+/* PQ8: Anzeigen oben mittig, je Wert eine eigene leuchtende Farbe */
+.ob-root .ob-stat{text-align:center;border-left-color:var(--ob-c,#ff9a1f);box-shadow:inset 0 0 10px -4px var(--ob-c,#ff9a1f)}
+.ob-root .ob-stat b{color:var(--ob-c,#ff9a1f);text-shadow:0 0 6px var(--ob-c,#ff9a1f),0 0 14px color-mix(in srgb,var(--ob-c,#ff9a1f) 55%,transparent)}
+.ob-root .ob-s-score{--ob-c:#ffc94a}.ob-root .ob-s-balls{--ob-c:#4cc3ff}.ob-root .ob-s-targets{--ob-c:#ff9a1f}
+.ob-root .ob-s-mult{--ob-c:#ff6bd6}.ob-root .ob-s-level{--ob-c:#6dffa8}.ob-root .ob-s-combo{--ob-c:#b46bff}
 .ob-field .ob-close,.ob-field .ob-menu-btn{position:absolute;top:46px;right:6px;z-index:5;width:28px;height:28px;border:1px solid #26303c;border-radius:4px;background:rgba(15,20,27,.85);color:#d7dde6;font-size:15px;line-height:1;cursor:pointer;padding:0}
 .ob-field .ob-stage.ob-sm .ob-close,.ob-field .ob-stage.ob-sm .ob-menu-btn{top:34px;width:26px;height:26px;font-size:13px}
 /* 12.10.: im Zielmodus feuert jeder Klick aufs Feld – knapp daneben traf man nie das Menü. Unsichtbarer Rand fängt Klicks rund um ☰/✕ ab */
@@ -1689,6 +1697,10 @@ body.ob-standalone{margin:0; padding:14px; background:#020305; min-height:100vh}
 .ob-field .ob-menu .ob-side{display:block;border:0;background:none;padding:0}
 /* Overlay-Fenster „spiel“: nur das hochkante Feld, wächst und schrumpft mit dem Fenster */
 .sat-v-spiel #ov-body{overflow:hidden;padding:0}
+.ob-ww-on{display:flex;align-items:center;gap:6px;margin:4px 0}.ob-ww-who,.ob-ww-st{margin:2px 0 6px;font-size:12px;color:var(--ob-dim)}.ob-ww-row{display:flex;gap:6px;margin-bottom:6px}.ob-ww-row select{flex:1;min-width:0}
+.ob-bga{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ob-dim)}.ob-bga input{width:110px;accent-color:#ff9a1f}.ob-bga em{font-style:normal;min-width:3em;color:var(--ob-text)}
+.ob-root.ob-see .ob-stage canvas,.ob-see .ob-root .ob-stage canvas{background:transparent}
+html.ob-see.sat-v-spiel #ov-root{background:transparent}   /* PQ6: Overlay-Fenster durchsichtig, Leiste bleibt */
 .sat-v-spiel #ov-full,.sat-v-spiel #ov-refresh{display:none}
 .sat-v-spiel #ov-body .ob-field{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 </style>
@@ -1703,25 +1715,31 @@ body.ob-standalone{margin:0; padding:14px; background:#020305; min-height:100vh}
 /* ---------- Einstellungen ---------- */
 var CFG = {
   W: 720, H: 900,
-  ballR: 8, pegR: 12,
+  ballR: 7.2, pegR: 10.8,   // PQ5: alle Teile 10 % kleiner = mehr Platz und größere Lücken
   gravity: 900, launchSpeed: 820, restPeg: 0.75, restWall: 0.85, maxSpeed: 1500,
   sub: 1 / 240,
-  balls: 10, pegCount: 76, targets: 22, bonusPegs: 1, greenPegs: 2, boomR: 110,
+  balls: 10, pegCount: 84, targets: 22, bonusPegs: 1, greenPegs: 2, boomR: 110,
   pts: { n: 10, z: 100, b: 500, g: 50 },
   catchPts: 250, restBonus: 1000, multEvery: 6, multMax: 8,
   aimMax: 1.35, launcherX: 360, launcherY: 52, muzzle: 34,
-  bucketW: 120, bucketY: 872, bucketSpeed: 150,
+  bucketW: 108, bucketY: 872, bucketSpeed: 150,
   stuckCheck: 1.0, stuckDist: 14, shotMax: 30,
-  wreckR: 20, restWreck: 1.05, gateR: 22, gateTrigger: 14, gateCd: 0.6,
+  wreckR: 18, restWreck: 1.05, gateR: 20, gateTrigger: 14, gateCd: 0.6,
   swarmMax: 6, plasmaHits: 6, tractorK: 6, tractorMax: 900, tractorMinY: 450,
   volleySpread: 0.13,
   comboMin: 5, comboStep: 5, comboK: 10,
   wellMinD: 4, chainN: 6, laserBand: 18, megaScale: 1.7, netSpeed: 780, netMax: 2,
+  railHalf: 4, railRest: 0.92, railSpeed: 980, railAcc: 1600, railCd: 0.5, railRides: 3,   // PQ4: Rampen (Abprall) + Beschleunigerbahnen (Drohne fährt mit)
+  stoneHalf: 6.5, stoneLen: 26, stoneStep: 22, restRail: 0.2, railFriction: 0.08,   // Rollbahn: Steindicke/-länge, Rückprall, Reibung (Anteil je Sekunde Rollen)
   stasisT: 8, slowF: 0.5, magnetR: 260, magnetK: 1500, splitN: 6, splitR: 62, gravR: 170, gravK: 2600
 };
 /* EN (12.10.2026): Sprache der App (eve-zentrale-lang-v1); Umschalten lädt die Seite neu, daher einmal beim Laden lesen */
 var OB_EN = (function () { try { return typeof localStorage !== 'undefined' && localStorage.getItem('eve-zentrale-lang-v1') === 'en'; } catch (e) { return false; } })();
-function tt(de, en) { return OB_EN ? en : de; }
+var obF = false;                                                   // true, solange Spielfeld-Texte entstehen: dann immer Englisch
+function obIsEn() { return OB_EN || obF; }
+function obMenu(fn) { return function () { var o = obF; obF = false; try { return fn.apply(this, arguments); } finally { obF = o; } }; }   // Menü: Sprache von EVE Omni
+function obField(fn) { return function () { var o = obF; obF = true; try { return fn.apply(this, arguments); } finally { obF = o; } }; }
+function tt(de, en) { return obIsEn() ? en : de; }
 var OB_DICT = {
   'Punkte': 'Score', 'Drohnen': 'Drones', 'Erzadern': 'Ore veins', 'Faktor': 'Factor', 'Übung': 'Practice', 'Zufall': 'Random',
   'Neue Kampagne': 'New campaign', 'Level neu starten': 'Restart level', 'Pause': 'Pause', 'Weiter': 'Resume', 'Weiterspielen': 'Continue',
@@ -1749,9 +1767,10 @@ var OB_DICT = {
   'Kampagne abgeschlossen!': 'Campaign complete!', 'Kampagne beendet': 'Campaign over', 'Game over': 'Game over', 'Übung geschafft': 'Practice cleared', 'Übung vorbei': 'Practice over',
   'Übungsmodus: kein Highscore-Eintrag.': 'Practice mode: no high score entry.', 'Nochmal': 'Again', 'Nächstes Level (Übung)': 'Next level (practice)',
   'Punkte jetzt eintragen': 'Submit score now', 'Top-10-Platz! Trag deinen Namen ein:': 'Top 10! Enter your name:', 'Eintragen': 'Submit', 'Diesmal kein Top-10-Platz.': 'No top 10 this time.',
-  'Level neu versuchen': 'Retry level', 'Gespeichert.': 'Saved.', 'Klicken, Leertaste oder P zum Weiterspielen.': 'Click, Space or P to resume.', 'Ton: an': 'Sound: on', 'Ton: aus': 'Sound: off',
+  'Level neu versuchen': 'Retry level', 'Gespeichert.': 'Saved.', 'Klicken, Leertaste oder P zum Weiterspielen.': 'Click, Space or P to resume.', 'Hintergrund': 'Background', 'Weltweite Bestenliste': 'Worldwide leaderboard', 'Punkte hochladen': 'Upload scores', 'Kampagne': 'Campaign', 'Anzeigen': 'Show', 'Lade …': 'Loading …', 'Noch keine Einträge.': 'No entries yet.', 'Bestenliste gerade nicht erreichbar.': 'Leaderboard not reachable right now.', 'Kein EVE-Charakter eingeloggt – Hochladen geht erst nach dem Login.': 'No EVE character logged in – uploading works after login.', 'Ton: an': 'Sound: on', 'Ton: aus': 'Sound: off',
   'Name für den Highscore': 'Name for the high score', 'OmniBreaker – Minispiel': 'OmniBreaker – minigame', 'Den OmniBreaker-Highscore wirklich leeren?': 'Really clear the OmniBreaker high score?',
   'SALVE BEREIT': 'VOLLEY READY', 'SALVE!': 'VOLLEY!', 'ÜBUNG': 'PRACTICE', 'Gerettet!': 'Saved!', 'Panzer geknackt!': 'Armor cracked!', 'Frachter! +1 Drohne': 'Freighter! +1 drone',
+  'Rampe: die Drohne prallt ab': 'Ramp: the drone bounces off', 'Rollbahn: Drohne rollt darauf, jeder Stein leuchtet beim Berühren – abgebaute Steine lassen sie durch': 'Rolling track: the drone rolls along it, every stone lights up when touched – cleared stones let it pass', 'Beschleunigerbahn: die Drohne fährt mit und wird am Ende rausgeschossen': 'Accelerator rail: the drone rides along and is fired out at the end',
   ' · Übung (kein Highscore)': ' · practice (no high score)', 'Übungsmodus: Level wählen': 'Practice mode: pick a level'
 };
 /* Level-Namen und -Beschreibungen werden zusammengesetzt – Teile einzeln übersetzen */
@@ -1767,22 +1786,22 @@ var OB_WORD_EN = {
   'Lockeres Feld mit wandernden Kräften': 'Loose field with wandering forces', 'Das ganze Feld schlägt Wellen': 'The whole field makes waves', 'Ringe atmen ein und aus': 'Rings breathe in and out',
   'Brocken-Gruppen fliegen Achten': 'Rock groups fly figure eights', 'Lockeres Feld mit Nestern': 'Loose field with nests', 'Gekreuzte Gürtel': 'Crossed belts', 'Ein Stern um einen Kern': 'A star around a core', 'Stehende Säulen': 'Standing pillars', 'Eine ruhende Blüte': 'A resting bloom', 'Ringe um ein Zentrum': 'Rings around a center', 'Panzergitter mit ruhendem Kern': 'Armored grid with a resting core', 'Ruhende Spiralarme': 'Resting spiral arms', 'Stehende Reihen und Wellen': 'Standing rows and waves', 'Stille Ringe': 'Still rings',
   'Kleine Nester im Feld': 'Small nests in the field', 'Wellenmuster': 'Wave pattern', 'Ringe in Ruhe': 'Rings at rest', 'Brocken-Gruppen': 'Rock groups',
-  'Tore': 'gates', 'Wracks': 'wrecks', 'fahrende Wracks': 'moving wrecks', 'Schwerkraftfelder': 'gravity fields', 'wandernde Felder': 'wandering fields', 'ruhendes Feld': 'resting field',
+  'Tore': 'gates', 'Rollbahn': 'rolling track', 'Rampen': 'ramps', 'Beschleunigerbahnen': 'accelerator rails', 'Wracks': 'wrecks', 'fahrende Wracks': 'moving wrecks', 'Schwerkraftfelder': 'gravity fields', 'wandernde Felder': 'wandering fields', 'ruhendes Feld': 'resting field',
   'Höhepunkt: zwei Ringe um ein Nest': 'Highlight: two rings around a nest', 'Höhepunkt: vier Tore um drehende Ringe': 'Highlight: four gates around spinning rings',
   'Höhepunkt: ein Titan-Rumpf, fahrende Wracks': 'Highlight: a titan hull, moving wrecks', 'Höhepunkt: Spiralarme stürzen in ein Schwarzes Loch': 'Highlight: spiral arms plunge into a black hole',
   'Höhepunkt: sechs Ringe kreisen, Abstoßer wandern': 'Highlight: six rings orbit, repulsors wander', 'Höhepunkt: Panzergitter, zwei Kernringe, wandernde Felder': 'Highlight: armored grid, two core rings, wandering fields',
   'Höhepunkt: Wellen, Gleiter, drei wandernde Felder': 'Highlight: waves, gliders, three wandering fields', 'Höhepunkt: atmende Ringe, fahrende Tore': 'Highlight: breathing rings, moving gates',
   'Höhepunkt: alles bewegt sich': 'Highlight: everything moves', 'Finale: das Herz von EVE Omni': 'Finale: the heart of EVE Omni'
 };
-function obT(x) { if (!OB_EN || x == null) return x; x = String(x); return OB_DICT[x] || OB_WORD_EN[x] || x; }
+function obT(x) { if (!obIsEn() || x == null) return x; x = String(x); return OB_DICT[x] || OB_WORD_EN[x] || x; }
 function obLvName(n) {
-  if (!OB_EN || !n) return n;
+  if (!obIsEn() || !n) return n;
   if (OB_WORD_EN[n]) return OB_WORD_EN[n];
   var m = /^([^-]+)-(.+?)( II)?$/.exec(n);
   return m ? (OB_ORE_EN[m[1]] || m[1]) + ' ' + (OB_WORD_EN[m[2]] || m[2]) + (m[3] || '') : obT(n);
 }
 function obLvDesc(d) {
-  if (!OB_EN || !d) return d;
+  if (!obIsEn() || !d) return d;
   return String(d).split(' · ').map(function (part, i) {
     if (OB_WORD_EN[part] || OB_DICT[part]) return OB_WORD_EN[part] || OB_DICT[part];
     return part.split(', ').map(function (w) { var nw = /^neu: (.+)$/.exec(w); return nw ? 'new: ' + obT(nw[1]) : (OB_WORD_EN[w] || OB_DICT[w] || w); }).join(', ');
@@ -1791,7 +1810,9 @@ function obLvDesc(d) {
 var HS_KEY = 'eve-zentrale-omnibreaker-highscores';
 var NAME_KEY = 'eve-zentrale-omnibreaker-name';
 var SOUND_KEY = 'eve-zentrale-omnibreaker-sound';
+var BGA_KEY = 'eve-zentrale-omnibreaker-bg';   // PQ6: Deckkraft des Hintergrunds 0–100 (0 = EVE scheint durch)
 var PROGRESS_KEY = 'eve-zentrale-omnibreaker-progress';
+var ONLINE_KEY = 'eve-zentrale-omnibreaker-online';   // PQ7: '1' = Punkte in die weltweite Bestenliste hochladen (Standard aus)
 var BEST_KEY = 'eve-zentrale-omnibreaker-best';   // OB5: { level: beste Level-Punkte }
 var HS_MAX = 10;
 var POWER_NAMES = { bomb: 'Smartbombe', swarm: 'Drohnenschwarm', plasma: 'Plasma-Drohne', tractor: 'Traktorstrahl', extra: 'Zusatzdrohne', volley: 'Salve',
@@ -1833,7 +1854,7 @@ function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
 function fmtScore(n) {
   n = Math.floor(Number(n) || 0);
   function de(x, d) { return x.toFixed(d).replace('.', ','); }
-  if (OB_EN) { if (n >= 1e9) return (n / 1e9).toFixed(2) + ' bn'; if (n >= 1e6) return (n / 1e6).toFixed(2) + ' M'; return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  if (obIsEn()) { if (n >= 1e9) return (n / 1e9).toFixed(2) + ' bn'; if (n >= 1e6) return (n / 1e6).toFixed(2) + ' M'; return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
   if (n >= 1e9) return de(n / 1e9, 2) + ' Mrd.';
   if (n >= 1e6) return de(n / 1e6, 2) + ' Mio.';
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -2237,7 +2258,7 @@ var LEVELS = [];
 (function () {
   var j = 0, names = {};
   for (var L = 1; L <= 100; L++) {
-    if (L % 10 === 0) { LEVELS.push(OB_PEAKS[L / 10 - 1]); continue; }
+    if (L % 10 === 0) { LEVELS.push(Object.assign({}, OB_PEAKS[L / 10 - 1], { ramps: L >= 20 ? 2 : 0, tracks: L >= 40 ? 1 + (L >= 70 ? 1 : 0) : 0 })); continue; }   // PQ4: Höhepunkte mit beidem
     var cyc = Math.floor(j / OB_PATTERNS.length), order = shuffle(OB_PATTERNS.map(function (_, i) { return i; }), mulberry32(0xB0B + cyc));
     var pat = OB_PATTERNS[order[j % OB_PATTERNS.length]], ore = OB_ORES[j % OB_ORES.length];
     var r = mulberry32((0x51ED + L * 7919) >>> 0), m = (L - 1) / 98, sp = 0.35 + 1.15 * m;
@@ -2245,17 +2266,21 @@ var LEVELS = [];
       wells: L < 11 ? 0 : Math.max(pat.wellsMin || 0, r() < 0.35 + 0.4 * m ? 1 + (m > 0.5 ? 1 : 0) + (m > 0.85 ? 1 : 0) : 0),
       gates: L >= 6 && r() < 0.3 + 0.35 * m ? 1 + (m > 0.6 && r() < 0.5 ? 1 : 0) : 0,
       wrecks: L < 3 ? 0 : Math.floor(m * 4 + r() * 2.5) };
+    plan.ramps = L >= 11 && r() < 0.35 + 0.4 * m ? 1 + (m > 0.45 ? 1 : 0) : 0;   // PQ4: Rampen ab 11, Bahnen ab 31
+    plan.tracks = L >= 31 && r() < 0.3 + 0.4 * m ? 1 + (m > 0.8 ? 1 : 0) : 0;
     plan.still = L % 10 === 3 || L % 10 === 7;                      // ab und zu ein ruhendes Feld zum Durchatmen
+    plan.lane = L % 10 === 3 || L % 10 === 6 || L % 10 === 9 ? obLaneDef(L) : null;   // Rollbahn aus Steinen (Höhepunkte nie)
     plan.wellsMove = plan.wells && L >= 35 && !plan.still; plan.wrecksMove = plan.wrecks && L >= 45 && !plan.still;
     var name = ore + '-' + pat.noun; if (names[name]) name += ' II'; names[name] = 1;
     var feat = [];
+    if (plan.lane) feat.push('Rollbahn'); if (plan.ramps) feat.push('Rampen'); if (plan.tracks) feat.push('Beschleunigerbahnen');
     if (plan.gates) feat.push('Tore'); if (plan.wrecks) feat.push(plan.wrecksMove ? 'fahrende Wracks' : 'Wracks');
     if (plan.wells) feat.push(plan.wellsMove ? 'wandernde Felder' : 'Schwerkraftfelder');
     if (plan.still) feat.unshift('ruhendes Feld');
     Object.keys(POWER_UNLOCK).forEach(function (k) { if (POWER_UNLOCK[k] === L) feat.push('neu: ' + POWER_NAMES[k]); });
     (function (L, pat, plan, sp, desc) {
       var seed = 2100 + L, pr = mulberry32(seed ^ 0x3C6EF372);
-      LEVELS.push({ name: name, desc: desc, seed: seed, still: plan.still, targets: Math.round(14 + 18 * plan.m),
+      LEVELS.push({ name: name, desc: desc, seed: seed, still: plan.still, ramps: plan.ramps, tracks: plan.tracks, lanes: plan.lane ? [plan.lane] : null, targets: Math.round(14 + 18 * plan.m),
         armor: L < 8 ? 0 : Math.round(4 + 20 * plan.m) + (pat.armorAdd || 0), armor3: L >= 30 ? Math.round(10 * plan.m) : 0,
         powers: obPowersFor(L, pr, 2 + Math.floor(plan.m * 6) + (pr() < 0.5 ? 1 : 0)),
         build: function () { var rr = mulberry32(seed ^ 0x2B992DDF); return obExtras(pat.make(rr, plan.m, sp), plan, rr); } });
@@ -2264,23 +2289,159 @@ var LEVELS = [];
   }
 })();
 
+/* PQ4: Schienen – Rampe = Strecke zum Abprallen, Bahn = 3-Punkt-Linie, auf der die Drohne mitfährt. Nur auf Plätzen, wo nie ein Brocken hinkommt */
+function segNear(px, py, x1, y1, x2, y2) {
+  var vx = x2 - x1, vy = y2 - y1, l2 = vx * vx + vy * vy || 1, u = clamp(((px - x1) * vx + (py - y1) * vy) / l2, 0, 1), qx = x1 + vx * u, qy = y1 + vy * u;
+  return { d: Math.hypot(px - qx, py - qy), u: u, x: qx, y: qy };
+}
+function railPath(pts) { var len = [0]; for (var i = 1; i < pts.length; i++) len.push(len[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y)); return { pts: pts, len: len, total: len[len.length - 1] }; }
+function railAt(tr, s, o) {
+  s = clamp(s, 0, tr.total); var i = 1; while (i < tr.pts.length - 1 && tr.len[i] < s) i++;
+  var a = tr.pts[i - 1], b = tr.pts[i], sl = (tr.len[i] - tr.len[i - 1]) || 1, u = (s - tr.len[i - 1]) / sl;
+  o.x = a.x + (b.x - a.x) * u; o.y = a.y + (b.y - a.y) * u; o.tx = (b.x - a.x) / sl; o.ty = (b.y - a.y) / sl; return o;
+}
+function obRails(pegs, gates, nRamp, nTrack, rnd) {
+  var out = { ramps: [], tracks: [] };
+  if (!nRamp && !nTrack) return out;
+  var occ = occGrid(pegs.concat(gates).map(function (p) { return { x: p.x, y: p.y, mv: p.mv }; }), CFG.pegR + CFG.railHalf + 2 * CFG.ballR + 2), cand = [], x, y;   // Drohne passt zwischen Brocken und Schiene
+  for (y = 200; y <= 820; y += 15) for (x = 60; x <= CFG.W - 60; x += 15) cand.push({ x: x, y: y });
+  shuffle(cand, rnd);
+  function free(pts) {
+    for (var i = 1; i < pts.length; i++) {
+      var a = pts[i - 1], b = pts[i], n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 5);
+      for (var k = 0; k <= n; k++) { var px = a.x + (b.x - a.x) * k / n, py = a.y + (b.y - a.y) * k / n; if (px < 24 || px > CFG.W - 24 || py < 180 || py > 830 || occ.hit(px, py)) return false; }
+    }
+    return true;
+  }
+  function mark(pts) { for (var i = 1; i < pts.length; i++) { var a = pts[i - 1], b = pts[i], n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 5); for (var k = 0; k <= n; k++) occ.add(a.x + (b.x - a.x) * k / n, a.y + (b.y - a.y) * k / n); } }
+  for (var i = 0; i < cand.length && (out.ramps.length < nRamp || out.tracks.length < nTrack); i++) {
+    var c = cand[i], pts, wantT = out.tracks.length < nTrack && (out.ramps.length >= nRamp || i % 2), sc = [1, 0.75, 0.55][i % 3];   // wenig Platz: kürzer
+    if (wantT) {
+      var L = (150 + rnd() * 60) * sc, a = (rnd() < 0.5 ? 0 : Math.PI) + (rnd() - 0.5) * 1.1, bend = (rnd() < 0.5 ? -1 : 1) * (18 + rnd() * 16) * sc;
+      var dx = Math.cos(a) * L / 2, dy = Math.sin(a) * L / 2, nx = -Math.sin(a), ny = Math.cos(a);
+      pts = [{ x: c.x - dx, y: c.y - dy }, { x: c.x + nx * bend, y: c.y + ny * bend }, { x: c.x + dx, y: c.y + dy }];
+    } else {
+      var Lr = (80 + rnd() * 40) * Math.max(0.7, sc), ar = (rnd() - 0.5) * 1.3;
+      pts = [{ x: c.x - Math.cos(ar) * Lr / 2, y: c.y - Math.sin(ar) * Lr / 2 }, { x: c.x + Math.cos(ar) * Lr / 2, y: c.y + Math.sin(ar) * Lr / 2 }];
+    }
+    if (!free(pts)) continue;
+    mark(pts);
+    if (wantT) out.tracks.push(railPath(pts)); else out.ramps.push({ x1: pts[0].x, y1: pts[0].y, x2: pts[1].x, y2: pts[1].y });
+  }
+  return out;
+}
+
+/* Rollbahn (Peggle-Stil): Kurve aus einzelnen Steinen, die Drohne rollt darauf, jeder berührte Stein leuchtet.
+   Form je Stelle im 10er-Block: 3 = Bogen/Schanze, 6 = Welle, 9 = Acht (zwei Ringe). Ab dem 2. Block größer und mit mehr Orange.
+   Mulden (Wellental, Ring innen unten) bekommen eine Lücke – sonst bliebe die Drohne darin liegen. */
+function obLaneDef(L) {
+  var blk = Math.floor((L - 1) / 10), pos = L % 10, g = Math.min(1, blk / 9), r = mulberry32((L * 0x9E3779B1 + 0x7F4A) >>> 0);
+  var dfn = { blk: blk, g: g, cx: 230 + r() * 260, cy: 360 + r() * 240, flip: r() < 0.5 };
+  if (pos === 3) { dfn.shape = blk % 2 ? 'jump' : 'arc'; dfn.w = 200 + 150 * g + r() * 40; }
+  else if (pos === 6) { dfn.shape = 'wave'; dfn.w = 340 + 240 * g + r() * 40; dfn.amp = 24 + 18 * g; dfn.waves = 1.5 + Math.floor(r() * 2) * 0.5 + g; dfn.ph = r() * 6.2832; dfn.cx = 300 + r() * 120; }
+  else { dfn.shape = 'eight'; dfn.R = 52 + 26 * g + r() * 8; dfn.cx = 280 + r() * 160; }
+  return dfn;
+}
+function obLanePieces(dfn) {
+  var out = [], i, a, P = Math.PI;
+  function arcPts(cx, cy, R, a0, a1) { var n = Math.max(2, Math.ceil(Math.abs(a1 - a0) * R / 3)), o = []; for (i = 0; i <= n; i++) { a = a0 + (a1 - a0) * i / n; o.push({ x: cx + Math.cos(a) * R, y: cy + Math.sin(a) * R }); } return o; }
+  if (dfn.shape === 'arc') {                                         // Bogen (Kuppel): Drohne rollt links oder rechts ab
+    var sp = 2.2, R = dfn.w / (2 * Math.sin(sp / 2));
+    out.push(arcPts(dfn.cx, dfn.cy + R, R, -P / 2 - sp / 2, -P / 2 + sp / 2));
+  } else if (dfn.shape === 'jump') {                                 // Schanze: Viertel-Schale, tiefster Punkt am Ende – wirft die Drohne seitlich raus
+    var a0 = 100 * P / 180, a1 = 175 * P / 180, Rj = dfn.w / (Math.cos(a0) - Math.cos(a1)), pts = arcPts(0, 0, Rj, a0, a1), mx = 0, my = 0;
+    pts.forEach(function (q) { mx += q.x / pts.length; my += q.y / pts.length; });
+    out.push(pts.map(function (q) { return { x: dfn.cx + (dfn.flip ? -1 : 1) * (q.x - mx), y: dfn.cy + q.y - my }; }));
+  } else if (dfn.shape === 'wave') {                                 // Welle: in jedem Tal eine Lücke
+    var x0 = dfn.cx - dfn.w / 2, k = 2 * P * dfn.waves / dfn.w, cur = [], gap = 26;
+    for (var x = x0; x <= x0 + dfn.w + 0.01; x += 3) {
+      var ph = k * (x - x0) + dfn.ph, y = dfn.cy + dfn.amp * Math.sin(ph), tr = ((ph - P / 2) % (2 * P) + 2 * P) % (2 * P);   // tr = 0 im Tal (sin = 1, unten)
+      var dx = Math.min(tr, 2 * P - tr) / k;
+      if (dx < gap) { if (cur.length > 1) out.push(cur); cur = []; continue; }
+      cur.push({ x: x, y: y });
+    }
+    if (cur.length > 1) out.push(cur);
+  } else {                                                           // Acht: zwei Ringe, oben Einlass, unten Auslass
+    var Rr = dfn.R, ga = Math.asin(Math.min(0.9, 24 / Rr)), off = Rr + 24;
+    [-1, 1].forEach(function (s) {
+      var cx = dfn.cx + s * off;
+      out.push(arcPts(cx, dfn.cy, Rr, -P / 2 + ga, P / 2 - ga)); out.push(arcPts(cx, dfn.cy, Rr, P / 2 + ga, 3 * P / 2 - ga));
+    });
+  }
+  return out.filter(function (q) { return q.length > 1; });
+}
+function buildLane(dfn, rnd, powers) {
+  var st = [], L = CFG.stoneLen, o1 = {}, o2 = {};
+  obLanePieces(dfn).forEach(function (pts) {
+    var tr = railPath(pts), n = tr.total <= L ? 1 : Math.max(2, Math.round((tr.total - L) / CFG.stoneStep) + 1), len = Math.min(L, tr.total), step = n > 1 ? (tr.total - len) / (n - 1) : 0;
+    for (var i = 0; i < n; i++) {
+      railAt(tr, i * step, o1); railAt(tr, i * step + len, o2);
+      st.push({ x1: o1.x, y1: o1.y, x2: o2.x, y2: o2.y, dl: Math.min(len, step || len) - 5 });   // gezeichnet etwas kürzer: sichtbare Fugen wie bei einzelnen Steinen
+    }
+  });
+  var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;                        // ganz ins Feld schieben
+  st.forEach(function (s) { x0 = Math.min(x0, s.x1, s.x2); x1 = Math.max(x1, s.x1, s.x2); y0 = Math.min(y0, s.y1, s.y2); y1 = Math.max(y1, s.y1, s.y2); });
+  var sx = x0 < 30 ? 30 - x0 : x1 > CFG.W - 30 ? CFG.W - 30 - x1 : 0, sy = y0 < 190 ? 190 - y0 : y1 > 790 ? 790 - y1 : 0;
+  st.forEach(function (s) { s.x1 += sx; s.x2 += sx; s.y1 += sy; s.y2 += sy; s.x = (s.x1 + s.x2) / 2; s.y = (s.y1 + s.y2) / 2; s.a = Math.atan2(s.y2 - s.y1, s.x2 - s.x1); });
+  var n = st.length, ord = shuffle(st.map(function (_, i) { return i; }), rnd), k = 0;   // Rollen: Orange = Ziel, Grün = Item, Violett = Bonus, sonst Blau
+  var open = function (i) { var s = st[i]; return Math.abs(Math.sin(s.a)) < 0.8 && !st.some(function (o) { return o !== s && o.y < s.y - 4 && s.y - o.y < 160 && s.x >= Math.min(o.x1, o.x2) - 4 && s.x <= Math.max(o.x1, o.x2) + 4; }); };
+  ord = ord.filter(open).concat(ord.filter(function (i) { return !open(i); }));
+  var nz = Math.max(2, Math.round(n * (0.12 + 0.18 * dfn.g))), ng = dfn.shape === 'arc' || dfn.shape === 'jump' ? (dfn.blk ? 1 : 0) : 1, nb = dfn.shape === 'eight' ? 1 : 0;
+  st.forEach(function (s) { s.t = 'n'; s.sh = dfn.shape === 'arc' || dfn.shape === 'jump' ? CFG.H : 240; });   // ohne Lücke: alles darunter liegt im Schatten
+  for (; k < nz && k < n; k++) st[ord[k]].t = 'z';
+  for (var j = 0; j < ng && k < n; j++, k++) { st[ord[k]].t = 'g'; st[ord[k]].power = powers && powers.length ? powers[Math.floor(rnd() * powers.length)] : 'bomb'; }
+  for (j = 0; j < nb && k < n; j++, k++) st[ord[k]].t = 'b';
+  return st;
+}
+/* Abstand eines Punkts zur nächsten Stein-Kante (Kapsel-Mittellinie) */
+function laneDist(st, x, y) { var m = 1e9; for (var i = 0; i < st.length; i++) m = Math.min(m, segNear(x, y, st[i].x1, st[i].y1, st[i].x2, st[i].y2).d); return m; }
+function laneShade(st, x, y) {                                     // liegt der Punkt im Schatten unter einem Stein? (Bogen/Schanze: ganz nach unten, sonst 240 px)
+  for (var i = 0; i < st.length; i++) { var s = st[i]; if (x >= Math.min(s.x1, s.x2) - CFG.ballR && x <= Math.max(s.x1, s.x2) + CFG.ballR && y > s.y && y - s.y < (s.sh || 240)) return true; }
+  return false;
+}
+function laneFree(st, q, clear, shade) {
+  if (!q.mv) return laneDist(st, q.x, q.y) >= clear && !(shade && laneShade(st, q.x, q.y));
+  var o = { x: 0, y: 0 }; for (var t = 0; t <= 90; t += 0.25) { mvAt(q.mv, t, o); if (laneDist(st, o.x, o.y) < clear || (shade && laneShade(st, o.x, o.y))) return false; } return true;
+}
+/* Brocken, Wracks, Tore und Felder aus der Bahnzone nehmen; fehlende Brocken an freien Plätzen ersetzen (gleiche Zielanzahl) */
+function laneClear(b, st, rnd) {
+  var cP = CFG.pegR + CFG.stoneHalf + 2 * CFG.ballR + 2, before = b.specs.length;
+  b.specs = b.specs.filter(function (q) { return laneFree(st, q, cP, true); });
+  b.wrecks = (b.wrecks || []).filter(function (q) { return laneFree(st, q, (q.r || CFG.wreckR) + CFG.stoneHalf + 2 * CFG.ballR + 2); });
+  var gs = b.gates || [], keep = gs.map(function (q) { return laneFree(st, q, CFG.gateR + CFG.stoneHalf + 2 * CFG.ballR + 2); });
+  if (gs.length) { var map = {}, ng = []; gs.forEach(function (q, i) { if (keep[i] && keep[q.link]) { map[i] = ng.length; ng.push(q); } }); b.gates = ng.map(function (q) { return { x: q.x, y: q.y, link: map[q.link], mv: q.mv }; }); }
+  b.wells = (b.wells || []).filter(function (q) { return laneFree(st, q, 30 + CFG.stoneHalf + 2 * CFG.ballR); });
+  var miss = before - b.specs.length; if (!miss) return;
+  var occ = occGrid(b.specs.concat(b.wrecks).concat(b.gates || []), 2 * CFG.pegR + 2 * CFG.ballR + 2), cand = [], x, y;
+  for (y = 200; y <= 780; y += 15) for (x = 50; x <= CFG.W - 50; x += 15) cand.push({ x: x, y: y });
+  shuffle(cand, rnd);
+  for (var i = 0; i < cand.length && miss > 0; i++) { var c = cand[i]; if (occ.hit(c.x, c.y) || !laneFree(st, c, cP, true)) continue; b.specs.push({ x: c.x, y: c.y }); occ.add(c.x, c.y); miss--; }
+}
+
 function buildLevel(def) {
   var b = def.build(), rnd = mulberry32(def.seed ^ 0x9e3779b1);
   if (def.still) {                                                 // ruhendes Level: alles bleibt, wo es bei t = 0 steht
     [b.specs, b.wrecks || [], b.gates || [], b.wells || []].forEach(function (l) { l.forEach(function (q) { if (q.mv) { mvAt(q.mv, 0, q); delete q.mv; } }); });
   }
+  var lr = mulberry32((def.seed ^ 0x1B873593) >>> 0), stones = [];   // Rollbahn: eigener Zufall, Level ohne Bahn bleiben gleich
+  (def.lanes || []).forEach(function (dfn) { var s = buildLane(dfn, lr, def.powers); laneClear(b, stones.concat(s), lr); stones = stones.concat(s); });
   var pegs = assignPegs(b.specs, rnd, Math.min(def.targets, Math.ceil(b.specs.length * 0.5)), def.bonus == null ? 1 : def.bonus, def.powers || []);
   (b.wrecks || []).forEach(function (w) {
     pegs.push({ id: pegs.length, x: w.x, y: w.y, r: w.r || CFG.wreckR, t: 'w', lit: false, gone: false, rot: rnd() * 6.283, shape: [1, 0.82, 1.08, 0.88, 1, 0.8, 1.1, 0.9], mv: w.mv });
   });
   var gates = (b.gates || []).map(function (g) { return { x: g.x, y: g.y, link: g.link, r: CFG.gateR, mv: g.mv }; });
+  stones.forEach(function (s) {
+    var q = { id: pegs.length, x: s.x, y: s.y, r: CFG.stoneHalf, t: s.t, lit: false, gone: false, rot: 0, shape: [1, 1, 1, 1, 1, 1, 1, 1], st: 1, x1: s.x1, y1: s.y1, x2: s.x2, y2: s.y2, a: s.a, dl: s.dl };
+    if (s.power) q.power = s.power; pegs.push(q);
+  });
   if (def.armor) {                                                  // Panzer-Brocken: mehrere Treffer nötig
-    var ar = mulberry32((def.seed ^ 0x7f4a7c15) >>> 0), cand = pegs.filter(function (q) { return q.t === 'n' || q.t === 'z'; });
+    var ar = mulberry32((def.seed ^ 0x7f4a7c15) >>> 0), cand = pegs.filter(function (q) { return (q.t === 'n' || q.t === 'z') && !q.st; });
     shuffle(cand, ar);
     for (var k = 0; k < def.armor && k < cand.length; k++) { cand[k].hp = (def.armor3 && k < def.armor3) ? 3 : 2; cand[k].hpMax = cand[k].hp; }
   }
   var wells = (b.wells || []).map(function (w) { return { x: w.x, y: w.y, r: w.r, k: w.k, mv: w.mv }; });
-  return { pegs: pegs, gates: gates, wells: wells };
+  var rails = obRails(pegs, gates, def.ramps || 0, def.tracks || 0, mulberry32((def.seed ^ 0x6A09E667) >>> 0));
+  return { pegs: pegs, gates: gates, wells: wells, ramps: rails.ramps, tracks: rails.tracks };
 }
 
 /* ---------- Spiel-Logik (ohne Bildschirm, deshalb testbar) ---------- */
@@ -2298,13 +2459,13 @@ Game.prototype._load = function (level, seed) {
   if (level >= 1 && level <= LEVELS.length) {
     def = LEVELS[level - 1]; this.level = level; this.seed = def.seed;
     this.levelName = def.name; this.levelDesc = def.desc;
-    built = buildLevel(def); this.pegs = built.pegs; this.gates = built.gates; this.wells = built.wells;
+    built = buildLevel(def); this.pegs = built.pegs; this.gates = built.gates; this.wells = built.wells; this.ramps = built.ramps; this.tracks = built.tracks;
     this.ballsLeft = def.balls || CFG.balls;
   } else {
     this.level = 0;
     if (seed == null) seed = Math.floor(Math.random() * 4294967294) + 1;
     this.seed = seed >>> 0; this.levelName = 'Zufallsfeld'; this.levelDesc = 'Zufällige Anordnung';
-    this.pegs = makeLayout(this.seed); this.gates = []; this.wells = []; this.ballsLeft = CFG.balls;
+    this.pegs = makeLayout(this.seed); this.gates = []; this.wells = []; this.ramps = []; this.tracks = []; this.ballsLeft = CFG.balls;
   }
   this.rs = (this.seed ^ 0x5bd1e995) | 0;
   this.shotScore = 0; this.shotHits = 0; this.hitsTotal = 0; this.bonus = 0; this.caught = 0; this.bestCombo = 0; this.comboTotal = 0;
@@ -2500,6 +2661,7 @@ Game.prototype._sub = function (h) {
 };
 Game.prototype._subBall = function (b, h, idx) {
   var W = CFG.W, H = CFG.H, i, p, bk = this.bucket;
+  if (b.rail && this._ride(b, h)) return;
   if (b.tractor && b.vy > 0 && b.y > CFG.tractorMinY) {
     b.vx += clamp((bk.x - b.x) * CFG.tractorK, -CFG.tractorMax, CFG.tractorMax) * h;
   }
@@ -2517,9 +2679,26 @@ Game.prototype._subBall = function (b, h, idx) {
   if (b.y < b.r) { b.y = b.r; if (b.vy < 0) b.vy = -b.vy * CFG.restWall; }
   var sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
   if (sp > CFG.maxSpeed) { b.vx *= CFG.maxSpeed / sp; b.vy *= CFG.maxSpeed / sp; }
+  b.pl = (b.pl || 0) + Math.min(sp, CFG.maxSpeed) * h;                // zurückgelegter Weg (Rollbahn: langsames Rollen ist kein Festhänger)
   for (i = 0; i < this.pegs.length; i++) {
     p = this.pegs[i];
     if (p.gone) continue;
+    if (p.st) {                                    // Rollbahn-Stein: Kapsel; kleiner Rückprall, Tempo entlang der Bahn bleibt (wenig Reibung)
+      if (p.used) continue;                        // abgebaut: durchlässig
+      var sq = segNear(b.x, b.y, p.x1, p.y1, p.x2, p.y2), sr = b.r + p.r;
+      if (sq.d >= sr) continue;
+      var snx, sny;
+      if (sq.d > 0.0001) { snx = (b.x - sq.x) / sq.d; sny = (b.y - sq.y) / sq.d; } else { snx = Math.sin(p.a); sny = -Math.cos(p.a); if (sny > 0) { snx = -snx; sny = -sny; } }
+      b.x = sq.x + snx * sr; b.y = sq.y + sny * sr; b.onSt = true;
+      var svn = b.vx * snx + b.vy * sny;
+      if (svn < 0) {
+        b.vx -= (1 + CFG.restRail) * svn * snx; b.vy -= (1 + CFG.restRail) * svn * sny;
+        var stx = -sny, sty = snx, svt = b.vx * stx + b.vy * sty, sf = svt * CFG.railFriction * h;
+        b.vx -= sf * stx; b.vy -= sf * sty;
+      }
+      this._lightPeg(p, true, b);
+      continue;
+    }
     var dx = b.x - p.x, dy = b.y - p.y, rr = b.r + p.r, d2 = dx * dx + dy * dy;
     if (d2 >= rr * rr) continue;
     if (p.t !== 'w' && b.pierce > 0) {            // Plasma: durchschlägt statt abzuprallen
@@ -2545,6 +2724,7 @@ Game.prototype._subBall = function (b, h, idx) {
       b.x = o.x; b.y = o.y; b.cx = o.x; b.cy = o.y; b.cpT = 0; b.gateCd = CFG.gateCd;
     }
   }
+  this._rails(b, h);
   if (b.vy > 0 && b.y >= bk.y && Math.abs(b.x - bk.x) <= bk.w / 2) { this._removeBall(idx, 'catch'); return; }
   if (b.y - b.r > H) {
     if (this.net > 0 && b.vy > 0) {                                   // Rettungsnetz fängt die Drohne auf
@@ -2554,10 +2734,44 @@ Game.prototype._subBall = function (b, h, idx) {
   }
   if (b.cpT >= CFG.stuckCheck) {
     var mx = b.x - b.cx, my = b.y - b.cy;
-    if (Math.sqrt(mx * mx + my * my) < CFG.stuckDist) this._unstick(b);
-    b.cx = b.x; b.cy = b.y; b.cpT = 0;
+    if (Math.sqrt(mx * mx + my * my) < CFG.stuckDist && !(b.onSt && b.pl > 2 * CFG.stuckDist)) this._unstick(b);
+    b.cx = b.x; b.cy = b.y; b.cpT = 0; b.pl = 0; b.onSt = false;
   }
   if (b.t > CFG.shotMax) this._removeBall(idx, 'timeout');
+};
+/* PQ4: Rampen werfen zurück, Bahnen nehmen die Drohne mit */
+Game.prototype._rails = function (b, h) {
+  var i, q, rr = b.r + CFG.railHalf;
+  for (i = 0; i < (this.ramps || []).length; i++) {
+    var rp = this.ramps[i]; q = segNear(b.x, b.y, rp.x1, rp.y1, rp.x2, rp.y2);
+    if (q.d >= rr) continue;
+    var nx, ny;
+    if (q.d > 0.001) { nx = (b.x - q.x) / q.d; ny = (b.y - q.y) / q.d; } else { var nl = Math.hypot(rp.x2 - rp.x1, rp.y2 - rp.y1) || 1; nx = -(rp.y2 - rp.y1) / nl; ny = (rp.x2 - rp.x1) / nl; }
+    b.x = q.x + nx * rr; b.y = q.y + ny * rr;
+    var vn = b.vx * nx + b.vy * ny;
+    if (vn < 0) { b.vx -= (1 + CFG.railRest) * vn * nx; b.vy -= (1 + CFG.railRest) * vn * ny; if (vn < -80) this.events.push({ type: 'ramp', x: q.x, y: q.y }); }
+  }
+  if (b.railCd > 0) { b.railCd -= h; return; }
+  if ((b.rides || 0) >= CFG.railRides) return;                        // keine Endlosschleife aus Bahnen, Rampen und Toren
+  for (i = 0; i < (this.tracks || []).length; i++) {
+    var tr = this.tracks[i], best = null, k;
+    for (k = 1; k < tr.pts.length; k++) { q = segNear(b.x, b.y, tr.pts[k - 1].x, tr.pts[k - 1].y, tr.pts[k].x, tr.pts[k].y); if (!best || q.d < best.d) { best = q; best.s = tr.len[k - 1] + q.u * (tr.len[k] - tr.len[k - 1]); } }
+    if (best.d >= rr) continue;
+    var o = railAt(tr, best.s, {}), dir = (b.vx * o.tx + b.vy * o.ty) >= 0 ? 1 : -1;
+    b.rail = { k: i, s: best.s, dir: dir, v: Math.max(350, Math.hypot(b.vx, b.vy)) }; b.rides = (b.rides || 0) + 1;
+    this.events.push({ type: 'rail', x: o.x, y: o.y });
+    return;
+  }
+};
+Game.prototype._ride = function (b, h) {
+  var R = b.rail, tr = this.tracks && this.tracks[R.k];
+  if (!tr) { delete b.rail; return false; }
+  R.v = Math.min(CFG.railSpeed, R.v + CFG.railAcc * h); R.s += R.dir * R.v * h;
+  var o = railAt(tr, R.s, {});
+  b.x = o.x; b.y = o.y; b.vx = o.tx * R.dir * R.v; b.vy = o.ty * R.dir * R.v;
+  b.t += h; b.cx = b.x; b.cy = b.y; b.cpT = 0;
+  if (R.s <= 0 || R.s >= tr.total) { delete b.rail; b.railCd = CFG.railCd; this.events.push({ type: 'railOut', x: b.x, y: b.y }); }
+  return true;
 };
 Game.prototype._removeBall = function (idx, reason) {
   this.balls.splice(idx, 1);
@@ -2574,7 +2788,7 @@ Game.prototype._unstick = function (b) {
   var removed = 0;
   for (var i = 0; i < this.pegs.length; i++) {
     var p = this.pegs[i];
-    if (p.gone || !p.lit) continue;
+    if (p.gone || !p.lit || p.st) continue;                          // Rollbahn-Steine bleiben immer
     var dx = p.x - b.x, dy = p.y - b.y, lim = b.r + p.r + 14;
     if (dx * dx + dy * dy <= lim * lim) { p.gone = true; removed++; this.events.push({ type: 'gone', x: p.x, y: p.y, t: p.t }); }
   }
@@ -2591,7 +2805,7 @@ Game.prototype._endShot = function (reason) {
   if (cb > 0) { this.score += cb; this.shotScore += cb; this.comboTotal += cb; this.events.push({ type: 'comboBonus', hits: this.shotHits, pts: cb }); }
   for (i = 0; i < this.pegs.length; i++) {
     p = this.pegs[i];
-    if (p.lit && !p.gone) { p.gone = true; this.events.push({ type: 'gone', x: p.x, y: p.y, t: p.t }); }
+    if (p.lit && !p.gone) { if (p.st) { p.used = true; continue; } p.gone = true; this.events.push({ type: 'gone', x: p.x, y: p.y, t: p.t }); }   // Steine: verbraucht, bleiben fest
   }
   this.slow = false; this.dbl = false; this.wells = (this.wells || []).filter(function (w) { return !w.tmp; });
   this.events.push({ type: 'shotEnd', reason: reason, shotScore: this.shotScore });
@@ -2608,6 +2822,12 @@ Game.prototype._endShot = function (reason) {
     this.status = 'aiming';
   }
 };
+Game.prototype._railTouch = function (x, y, rr) {
+  var i, k, l = this.ramps || [], t = this.tracks || [];
+  for (i = 0; i < l.length; i++) if (segNear(x, y, l[i].x1, l[i].y1, l[i].x2, l[i].y2).d < rr) return true;
+  for (i = 0; i < t.length; i++) for (k = 1; k < t[i].pts.length; k++) if (segNear(x, y, t[i].pts[k - 1].x, t[i].pts[k - 1].y, t[i].pts[k].x, t[i].pts[k].y).d < rr) return true;
+  return false;
+};
 /* Zielhilfe: Flugbahn bis zum ersten Treffer */
 Game.prototype.predict = function (angle) {
   var a = angle == null ? this.aim : angle, s = Math.sin(a), c = Math.cos(a), h = 1 / 240;
@@ -2623,9 +2843,11 @@ Game.prototype.predict = function (angle) {
     for (var k = 0; k < this.pegs.length; k++) {
       var p = this.pegs[k];
       if (p.gone) continue;
+      if (p.st) { if (!p.used && segNear(x, y, p.x1, p.y1, p.x2, p.y2).d < CFG.ballR + p.r) { hit = true; break; } continue; }   // Rollbahn (abgebaut: durchlässig)
       var dx = x - p.x, dy = y - p.y, rr = CFG.ballR + p.r;
       if (dx * dx + dy * dy < rr * rr) { hit = true; break; }
     }
+    if (!hit) hit = this._railTouch(x, y, CFG.ballR + CFG.railHalf);
     if (hit) { pts.push({ x: x, y: y, hit: true }); break; }
     if (i % 4 === 0) pts.push({ x: x, y: y });
     if (y > CFG.H) break;
@@ -2868,6 +3090,16 @@ function createSound(o) {
       else if (kind === 'double') { [0, 4, 7, 12, 16, 19].forEach(function (st, i) { tone(523 * Math.pow(2, st / 12), 0.25, 'square', 0.18, 0, i * 0.045, false, { lp: 6000, rev: 0.5, pan: pan }); }); }
       else if (kind === 'mega') { tone(55, 0.9, 'sine', 0.8, 28); tone(110, 0.8, 'sawtooth', 0.4, 300, 0, true, { lp: 500, lpTo: 2500, q: 3, det: 10, pan: pan, rev: 0.4 }); noise(0.5, 0.3, 500, 0, { to: 3000, q: 1, up: true, rev: 0.3 }); }
       else { [523, 784, 1047, 1568].forEach(function (f, i) { tone(f, 0.3, 'triangle', 0.42, 0, i * 0.11, false, { pan: pan, rev: 0.55 }); bell(f, 0.22, i * 0.11, pan, 0.55, 0.5); }); }
+    },
+    comboTier: function (tier) {                              // PR5: neue Combo-Stufe – Aufwärts-Wusch + Akkord, je Stufe höher und voller
+      var base = 262 * Math.pow(2, (tier - 1) * 3 / 12);
+      noise(0.5, 0.24, 400, 0, { to: 6000 + tier * 1500, type: 'bandpass', q: 2, up: true, rev: 0.5 });
+      kick(70, 0.6, 0.9, 0.42);
+      [0, 4, 7, 12, 16, 19, 24].slice(0, 3 + tier).forEach(function (s, i) {
+        var f = base * Math.pow(2, s / 12);
+        tone(f, 0.9, 'sawtooth', 0.16, 0, 0.42 + i * 0.03, true, { lp: 2400, lpTo: 900, det: 9, rev: 0.7, pan: (i - 2) * 0.2 });
+        bell(f * 2, 0.24, 0.42 + i * 0.05, (i - 2) * 0.2, 0.8, 0.9);
+      });
     },
     combo: function (n) { var i = Math.min(8, Math.floor(n / 5)); for (var k = 0; k < 3; k++) { tone(note(5 + i + k * 2), 0.4, 'triangle', 0.4, 0, k * 0.06, false, { rev: 0.6 }); bell(note(5 + i + k * 2), 0.3, k * 0.06, 0, 0.6, 0.6); } kick(150, 0.2, 0.6); },
     comboBonus: function (n) { var big = n >= 15; kick(90, 0.5, 0.9); [0, 4, 7, 12, 16].slice(0, big ? 5 : 3).forEach(function (st, i) { tone(262 * Math.pow(2, st / 12), 0.7, 'triangle', 0.4, 0, 0.08 + i * 0.07, false, { rev: 0.7, det: 6 }); bell(262 * Math.pow(2, st / 12) * 2, 0.25, 0.08 + i * 0.07, 0, 0.7, 0.8); }); noise(0.3, 0.2, 7000, 0.05, { type: 'highpass', rev: 0.4 }); },
@@ -3160,9 +3392,11 @@ function mount(container, opts) {
   var main = el('div', 'ob-main'), side = el('div', 'ob-side');
   var title = el('div', 'ob-title'); title.appendChild(makeLogo()); title.appendChild(el('b', null, 'OMNIBREAKER')); title.appendChild(el('span', null, tt('Mining-Laser · ' + LEVELS.length + ' Level · Power-Items', 'Mining laser · ' + LEVELS.length + ' levels · power-ups')));
   var hud = el('div', 'ob-hud'), statEls = {};
+  obF = true;   // Spielfeld: Anzeigen oben immer Englisch
   [['score', 'Punkte'], ['balls', 'Drohnen'], ['targets', 'Erzadern'], ['mult', 'Faktor'], ['level', 'Level'], ['combo', 'Combo']].forEach(function (d) {
-    var s = el('div', 'ob-stat'); var sm = el('small', null, d[1]); s.appendChild(sm); var b = el('b', null, '–'); b.__lbl = sm; s.appendChild(b); hud.appendChild(s); statEls[d[0]] = b;
+    var s = el('div', 'ob-stat ob-s-' + d[0]); var sm = el('small', null, d[1]); s.appendChild(sm); var b = el('b', null, '–'); b.__lbl = sm; s.appendChild(b); hud.appendChild(s); statEls[d[0]] = b;
   });
+  obF = false;
   var stage = el('div', 'ob-stage'), canvas = el('canvas'), msg = el('div', 'ob-msg');
   stage.appendChild(canvas); stage.appendChild(msg);
   var bar = el('div', 'ob-bar');
@@ -3177,13 +3411,58 @@ function mount(container, opts) {
   });
   btnNew.type = btnRestart.type = btnPause.type = btnSound.type = btnContinue.type = 'button';
   var hint = el('div', 'ob-hint', 'Zielen: Maus bewegen · Schießen: Klick · Handy: ziehen und loslassen · Tastatur: ← → Leertaste · P Pause · M Ton');
-  bar.appendChild(btnContinue); bar.appendChild(btnNew); bar.appendChild(btnRestart); bar.appendChild(lvBox); bar.appendChild(btnPause); bar.appendChild(btnSound); bar.appendChild(hint);
+  // PQ6: Hintergrund-Regler – 0 % = nur Brocken, Drohne und Frachter, EVE dahinter sichtbar (im Overlay-Fenster)
+  var bgA = (function () { var v = Number(store.getItem ? store.getItem(BGA_KEY) : NaN); return isFinite(v) && v >= 0 && v <= 100 && store.getItem(BGA_KEY) !== null ? v : 100; })();
+  var bgBox = el('label', 'ob-bga'), bgIn = el('input'), bgV = el('em', null, bgA + ' %');
+  bgIn.type = 'range'; bgIn.min = '0'; bgIn.max = '100'; bgIn.step = '5'; bgIn.value = String(bgA);
+  bgBox.appendChild(el('span', null, 'Hintergrund')); bgBox.appendChild(bgIn); bgBox.appendChild(bgV);
+  bgApply();
+  function bgApply() { var de = container.ownerDocument && container.ownerDocument.documentElement; if (de) de.classList.toggle('ob-see', bgA < 100); rootEl.classList.toggle('ob-see', bgA < 100); }
+  bgIn.addEventListener('input', function () { bgA = Number(bgIn.value); bgV.textContent = bgA + ' %'; try { store.setItem(BGA_KEY, String(bgA)); } catch (e) {} bgApply(); });
+  bar.appendChild(btnContinue); bar.appendChild(btnNew); bar.appendChild(btnRestart); bar.appendChild(lvBox); bar.appendChild(btnPause); bar.appendChild(btnSound); bar.appendChild(bgBox); bar.appendChild(hint);
   main.appendChild(title); main.appendChild(hud); main.appendChild(stage); main.appendChild(bar);
 
   side.appendChild(el('h3', null, 'Highscore · Top 10'));
   var scoreList = el('ol', 'ob-scores'); side.appendChild(scoreList);
   var btnClear = el('button', 'ob-btn', 'Highscore leeren'); btnClear.type = 'button';
   side.appendChild(btnClear);
+  // PQ7: weltweite Bestenliste – lädt erst auf Klick, hochgeladen wird nur mit Haken
+  var online = opts.online || null, wwOn = false, wwSel = null, wwList = null, wwSt = null;
+  if (online) {
+    try { wwOn = store.getItem(ONLINE_KEY) === '1'; } catch (e) { }
+    side.appendChild(el('h3', null, 'Weltweite Bestenliste')).style.marginTop = '14px';
+    var wwLbl = el('label', 'ob-ww-on'), wwChk = el('input'); wwChk.type = 'checkbox'; wwChk.checked = wwOn;
+    wwLbl.appendChild(wwChk); wwLbl.appendChild(el('span', null, 'Punkte hochladen')); side.appendChild(wwLbl);
+    var wwWho = el('p', 'ob-ww-who'); side.appendChild(wwWho);
+    var wwRow = el('div', 'ob-ww-row'); wwSel = el('select'); wwSel.appendChild(el('option', null, 'Kampagne')).value = '0';
+    for (var wl = 1; wl <= LEVELS.length; wl++) wwSel.appendChild(el('option', null, 'Level ' + wl)).value = String(wl);
+    var wwBtn = el('button', 'ob-btn', 'Anzeigen'); wwBtn.type = 'button';
+    wwRow.appendChild(wwSel); wwRow.appendChild(wwBtn); side.appendChild(wwRow);
+    wwSt = el('p', 'ob-ww-st'); side.appendChild(wwSt);
+    wwList = el('ol', 'ob-scores'); side.appendChild(wwList);
+    var wwWhoTxt = function () { var me = online.me(); wwWho.textContent = me ? tt('Name: ', 'Name: ') + me.n : obT('Kein EVE-Charakter eingeloggt – Hochladen geht erst nach dem Login.'); };
+    wwWhoTxt();
+    wwChk.addEventListener('change', function () { wwOn = wwChk.checked; try { store.setItem(ONLINE_KEY, wwOn ? '1' : '0'); } catch (e) { } wwWhoTxt(); });
+    wwBtn.addEventListener('click', function () { wwShow(Number(wwSel.value)); });
+  }
+  function wwShow(l) {
+    if (!online) return;
+    wwSt.textContent = obT('Lade …'); wwList.textContent = '';
+    online.top(l).then(function (list) {
+      wwSt.textContent = list.length ? '' : obT('Noch keine Einträge.');
+      list.slice(0, 20).forEach(function (s, i) {
+        var li = el('li'); li.appendChild(el('span', 'ob-rk', String(i + 1))); var nm = el('span', 'ob-nm'); nm.textContent = s.n; li.appendChild(nm);
+        li.appendChild(el('span', 'ob-sc', fmtScore(s.s))); if (l === 0 && s.lv) li.appendChild(el('span', 'ob-dt', 'Level ' + s.lv + '/' + LEVELS.length));
+        wwList.appendChild(li);
+      });
+    }, function () { wwSt.textContent = obT('Bestenliste gerade nicht erreichbar.'); });
+  }
+  function wwSend(e) {
+    if (!online || !wwOn) return;
+    var me = online.me(); if (!me) return;
+    e.cid = me.cid; e.n = me.n;
+    online.send(e).then(function (r) { if (r && r.rank && wwSt) wwSt.textContent = tt('Weltweit: Platz ', 'Worldwide: rank ') + r.rank + (e.l ? ' · Level ' + e.l : tt(' · Kampagne', ' · campaign')); }, function () { });
+  }
   var hLegend = el('h3', null, 'Erze & Hindernisse'); hLegend.style.marginTop = '14px'; side.appendChild(hLegend);
   var legend = el('ul', 'ob-legend'); side.appendChild(legend);
   var hPow = el('h3', null, 'Power-Items'); side.appendChild(hPow);
@@ -3196,6 +3475,7 @@ function mount(container, opts) {
   var ctx = canvas.getContext('2d');
   var scale = 1, dpr = 1, bg = null, bgLevel = -1, paused = false, destroyed = false, raf = 0, last = 0;
   var texts = [], parts = [], rings = [], bolts = [], hbeams = [], newRank = 0, entered = false, flash = 0, laserT = 0, catchT = 0, beamPts = null, bannerT = 0, bumpT = {};
+  var shake = 0, shakeA = 0, flashC = '255,200,120', calm = !!(win.matchMedia && win.matchMedia('(prefers-reduced-motion: reduce)').matches);   // PR5: Wackeln (nicht bei „weniger Bewegung“)
   var sound = createSound({ AudioContext: opts.AudioContext || win.AudioContext || win.webkitAudioContext, store: store, key: opts.soundKey || SOUND_KEY });
   var stars = [], srnd = mulberry32(7);
   for (var si = 0; si < 170; si++) stars.push({ x: srnd() * W, y: srnd() * H, r: 0.4 + srnd() * 1.3, ph: 0.5 + srnd() * 2.5, c: ['#cfe3ff', '#ffe8c8', '#c8d8ff', '#ffd0d0'][Math.floor(srnd() * 4)], big: si % 17 === 0 });
@@ -3237,7 +3517,25 @@ function mount(container, opts) {
     c.beginPath(); c.arc(r * 0.55, -r * 0.35, 2.4, 0, 6.2832); c.fill();
     c.restore();
   }
+  /* Rollbahn-Stein: abgerundete Platte mit heller Kante; blau/orange/grün/violett, leuchtet getroffen, gedimmt wenn verbraucht */
+  var STONE_COL = { n: { base: '#2a5fae', hi: '#a9d0ff', glow: '#4ca0ff' } };
+  function drawStoneOn(c, p, t) {
+    var col = p.t === 'g' ? PCOL[p.power || 'bomb'] : STONE_COL[p.t] || COL[p.t], hl = (p.dl || 20) / 2, r = p.r, on = p.lit && !p.used;
+    c.save(); c.translate(p.x, p.y); c.rotate(p.a || 0);
+    if (p.used) c.globalAlpha = 0.22;                                // abgebaut: nur noch als Schatten, durchlässig
+    function plate(e) { var x = -hl - r + e, y = -r + e, w = 2 * (hl + r - e), hh = 2 * (r - e), rr = r - e; c.beginPath(); c.moveTo(x + rr, y); c.lineTo(x + w - rr, y); c.arcTo(x + w, y, x + w, y + rr, rr); c.arcTo(x + w, y + hh, x + w - rr, y + hh, rr); c.lineTo(x + rr, y + hh); c.arcTo(x, y + hh, x, y + hh - rr, rr); c.arcTo(x, y, x + rr, y, rr); c.closePath(); }
+    var gr = c.createLinearGradient(0, -r, 0, r);
+    if (on) { gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.45, col.hi); gr.addColorStop(1, col.glow); c.shadowColor = col.glow; c.shadowBlur = 18; }
+    else if (p.used) { gr.addColorStop(0, '#5a6576'); gr.addColorStop(1, '#232a35'); }
+    else { gr.addColorStop(0, col.hi); gr.addColorStop(0.4, col.base); gr.addColorStop(1, '#0a0e15'); if (p.t !== 'n') { c.shadowColor = col.glow; c.shadowBlur = 6 + 4 * Math.sin((t || 0) * 3 + (p.id || 0)); } }
+    plate(0); c.fillStyle = gr; c.fill(); c.shadowBlur = 0;
+    c.lineWidth = 1; c.strokeStyle = on ? 'rgba(255,255,255,.9)' : p.used ? 'rgba(150,165,185,.5)' : col.hi; plate(0.5); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,' + (on ? 0.9 : 0.35) + ')'; c.beginPath(); c.moveTo(-hl, -r + 2.2); c.lineTo(hl, -r + 2.2); c.stroke();   // Glanzkante
+    if (p.t === 'g' && !p.used) { c.save(); c.rotate(-(p.a || 0)); c.scale(0.6, 0.6); drawPowerIcon(c, p.power || 'bomb', 10); c.restore(); }
+    c.restore();
+  }
   function drawPegOn(c, p, t) {
+    if (p.st) { drawStoneOn(c, p, t); return; }
     if (p.t === 'w') { drawWreckOn(c, p, t); return; }
     var col = p.t === 'g' ? PCOL[p.power || 'bomb'] : COL[p.t], r = p.r, id = p.id || 0, i, pulse = 0.5 + 0.5 * Math.sin((t || 0) * 3 + id);
     if (p.t === 'g') {                                              // Power-Item: leuchtende Energiekugel
@@ -3297,6 +3595,31 @@ function mount(container, opts) {
     }
     c.restore();
   }
+  /* PQ4: Rampe = Panzerplatte mit Leuchtkante, Bahn = Doppelschiene mit laufenden Pfeilen (EVE-Beschleunigungstor-Look) */
+  function drawRampOn(c, r) {
+    c.save(); c.lineCap = 'round';
+    c.strokeStyle = 'rgba(20,28,40,.95)'; c.lineWidth = CFG.railHalf * 2 + 4; c.beginPath(); c.moveTo(r.x1, r.y1); c.lineTo(r.x2, r.y2); c.stroke();
+    var g = c.createLinearGradient(r.x1, r.y1, r.x2, r.y2); g.addColorStop(0, '#5d6c80'); g.addColorStop(0.5, '#9aa9bc'); g.addColorStop(1, '#5d6c80');
+    c.strokeStyle = g; c.lineWidth = CFG.railHalf * 2; c.beginPath(); c.moveTo(r.x1, r.y1); c.lineTo(r.x2, r.y2); c.stroke();
+    c.strokeStyle = '#9fe0ff'; c.shadowColor = '#4cc3ff'; c.shadowBlur = 10; c.lineWidth = 1.2; c.beginPath(); c.moveTo(r.x1, r.y1); c.lineTo(r.x2, r.y2); c.stroke();
+    c.shadowBlur = 0; c.fillStyle = '#ffb347'; [[r.x1, r.y1], [r.x2, r.y2]].forEach(function (p) { c.beginPath(); c.arc(p[0], p[1], 2.4, 0, 6.2832); c.fill(); });
+    c.restore();
+  }
+  function drawTrackOn(c, tr, t) {
+    var P = tr.pts, i, o = {};
+    c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
+    function path(off) { c.beginPath(); for (var k = 0; k < P.length; k++) { var a = P[Math.max(0, k - 1)], b = P[Math.min(P.length - 1, k + 1)], l = Math.hypot(b.x - a.x, b.y - a.y) || 1, nx = -(b.y - a.y) / l, ny = (b.x - a.x) / l; if (k) c.lineTo(P[k].x + nx * off, P[k].y + ny * off); else c.moveTo(P[k].x + nx * off, P[k].y + ny * off); } c.stroke(); }
+    c.strokeStyle = 'rgba(10,20,34,.85)'; c.lineWidth = 14; path(0);
+    c.strokeStyle = '#4cc3ff'; c.shadowColor = '#4cc3ff'; c.shadowBlur = 8; c.lineWidth = 1.8; path(-5); path(5); c.shadowBlur = 0;
+    for (i = 0; i < 7; i++) {                                        // laufende Pfeile zeigen die Bahn an
+      var s = ((i / 7 + t * 0.35) % 1) * tr.total; railAt(tr, s, o);
+      c.save(); c.translate(o.x, o.y); c.rotate(Math.atan2(o.ty, o.tx)); c.globalAlpha = 0.35 + 0.5 * Math.sin(Math.PI * s / tr.total);
+      c.strokeStyle = '#e8f6ff'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-3, -4); c.lineTo(2, 0); c.lineTo(-3, 4); c.stroke(); c.restore();
+    }
+    c.fillStyle = '#ffb347'; c.shadowColor = '#ffb347'; c.shadowBlur = 8;
+    [P[0], P[P.length - 1]].forEach(function (p) { c.beginPath(); for (var k = 0; k < 6; k++) { var a = k * 1.0472; if (k) c.lineTo(p.x + Math.cos(a) * 5, p.y + Math.sin(a) * 5); else c.moveTo(p.x + 5, p.y); } c.closePath(); c.fill(); });
+    c.restore();
+  }
   function drawGateOn(c, g, t, idx) {
     var hue = (Math.floor(idx / 2) % 2) ? '#b46bff' : '#4cc3ff', i;
     c.save(); c.translate(g.x, g.y);
@@ -3331,6 +3654,9 @@ function mount(container, opts) {
   legendRow(legend, function (c) { drawPegOn(c, fakePeg('w', { r: 12 }), 0); }, 'Wrack: unzerstörbar, prallt stark ab');
   legendRow(legend, function (c) { drawGateOn(c, { x: 0, y: 0, r: 12 }, 0, 0); }, 'Warp-Tor: bringt die Drohne zum Partner-Tor');
   legendRow(legend, function (c) { drawPegOn(c, fakePeg('n', { hp: 3, hpMax: 3 }), 0); }, 'Panzer-Brocken: brauchen 2 bis 3 Treffer');
+  legendRow(legend, function (c) { [[-7, 'n'], [7, 'z']].forEach(function (s, i) { drawStoneOn(c, fakePeg(s[1], { st: 1, x: s[0], y: 2 - i * 4, r: 4.5, a: -0.28, dl: 9, id: i }), 0); }); }, 'Rollbahn: Drohne rollt darauf, jeder Stein leuchtet beim Berühren – abgebaute Steine lassen sie durch');
+  legendRow(legend, function (c) { drawRampOn(c, { x1: -10, y1: 5, x2: 10, y2: -5 }); }, 'Rampe: die Drohne prallt ab');
+  legendRow(legend, function (c) { drawTrackOn(c, railPath([{ x: -11, y: 6 }, { x: 0, y: -2 }, { x: 11, y: 6 }]), 0.3); }, 'Beschleunigerbahn: die Drohne fährt mit und wird am Ende rausgeschossen');
   legendRow(legend, function (c) { c.strokeStyle = 'rgba(160,190,230,.5)'; c.setLineDash([3, 4]); c.beginPath(); c.moveTo(-13, 0); c.lineTo(13, 0); c.stroke(); c.setLineDash([]); drawPegOn(c, fakePeg('n'), 0); }, 'Gleiter: gleiten, kreisen, pulsieren, schlagen Wellen oder fliegen Achten – Wracks, Tore und Felder wandern ab höheren Leveln mit');
   legendRow(legend, function (c) { drawWell(c, { x: 0, y: 0, r: 13, k: 1 }, 0.3); }, 'Gravitationsfeld (blau): zieht die Drohne an');
   legendRow(legend, function (c) { drawWell(c, { x: 0, y: 0, r: 13, k: -1 }, 0.3); }, 'Abstoßfeld (rot): stößt die Drohne weg');
@@ -3515,72 +3841,92 @@ function mount(container, opts) {
     c.fillStyle = 'rgba(255,255,255,.2)'; c.fillRect(x + 2, y + h * 0.38, w - 4, 1.5);
     c.strokeStyle = 'rgba(0,0,0,.4)'; c.beginPath(); for (var i = 1; i < 4; i++) { c.moveTo(x + i * w / 4, y + 2); c.lineTo(x + i * w / 4, y + h - 2); } c.stroke();
   }
-  function drawFreighter(t) {
-    var bk = game.bucket, hw = bk.w / 2, dir = bk.dir || 1, fl = catchT > 0 ? catchT / 0.6 : 0, c = ctx, i, e;
-    var fk = 0.8 + 0.2 * Math.sin(t * 38) + 0.1 * Math.sin(t * 91), blink = Math.floor(t * 2) % 2, cols = ['#c7692a', '#4d8fa8', '#b8433a', '#d1a53a', '#5f8a5a'];
-    var SX = -hw - 54, BX = hw + 56;                                  // Heck / Bug
-    c.save(); c.translate(bk.x, bk.y); c.scale(dir, 1);
-    // --- Triebwerksflammen (Caldari-blau-weiß, additiv) ---
+  /* Neuer Frachter: Ansicht von hinten (dunkel, Sternzerstörer-Stil), 2 große Triebwerke.
+     c = Zeichenfläche, bk = game.bucket {x,y,w}, t = Zeit in s, fl = Fang-Blitz 0..1, thr = weiche Fahrtrichtung -1..1 (positiv = nach rechts) */
+  function drawFreighterNew(c, bk, t, fl, thr, hazard, drawCargo) {
+    var hw = bk.w / 2, i, e, pulse = 0.86 + 0.14 * Math.sin(t * 23) + 0.06 * Math.sin(t * 61), sp = Math.abs(thr);
+    var blink = Math.floor(t * 1.6) % 2, boost = 1 + fl * 0.7;
+    var cols = ['#7a4a2a', '#2f5a6a', '#6a2e2a', '#7a6428'];
+    c.save(); c.translate(bk.x, bk.y); c.rotate(thr * 0.02);
+    var mains = [[-88, 16.5, 10.5], [88, 16.5, 10.5]], smalls = [], BD = 19;
+    // --- Triebwerks-Schein (additiv, hinter dem Rumpf) ---
     c.save(); c.globalCompositeOperation = 'lighter';
-    [8, 14.5, 21, 27].forEach(function (ny, ei) {
-      var L = (34 + 10 * (ei % 2)) * fk, fg = c.createLinearGradient(SX - 8, 0, SX - 8 - L, 0);
-      fg.addColorStop(0, 'rgba(235,248,255,.95)'); fg.addColorStop(0.3, 'rgba(110,190,255,.8)'); fg.addColorStop(1, 'rgba(40,110,255,0)');
-      c.fillStyle = fg; c.beginPath(); c.moveTo(SX - 8, ny - 3); c.lineTo(SX - 8 - L, ny); c.lineTo(SX - 8, ny + 3); c.closePath(); c.fill();
+    mains.concat(smalls).forEach(function (n) {
+      var R = n[2] * 4.6 * boost * (0.95 + 0.2 * sp), g = c.createRadialGradient(n[0], n[1], 0, n[0], n[1], R);
+      g.addColorStop(0, 'rgba(150,205,255,' + (0.75 * pulse) + ')'); g.addColorStop(0.35, 'rgba(90,160,255,' + (0.3 * pulse) + ')'); g.addColorStop(1, 'rgba(40,110,255,0)');
+      c.fillStyle = g; c.beginPath(); c.arc(n[0], n[1], R, 0, 6.2832); c.fill();
     });
-    var eg = c.createRadialGradient(SX - 10, 17, 0, SX - 10, 17, 34); eg.addColorStop(0, 'rgba(120,190,255,.5)'); eg.addColorStop(1, 'rgba(40,110,255,0)');
-    c.fillStyle = eg; c.beginPath(); c.arc(SX - 10, 17, 34, 0, 6.2832); c.fill(); c.restore();
-    // --- Rumpfplatte (Unterbau) ---
-    var hg = c.createLinearGradient(0, 3, 0, 29); hg.addColorStop(0, '#6f8199'); hg.addColorStop(0.2, '#47576c'); hg.addColorStop(0.75, '#232c3a'); hg.addColorStop(1, '#0f141c');
-    c.fillStyle = hg; c.strokeStyle = '#a3bbd8'; c.lineWidth = 1.4;
-    c.beginPath(); c.moveTo(SX, 3); c.lineTo(SX, 24); c.lineTo(SX + 8, 29); c.lineTo(BX - 18, 29); c.lineTo(BX, 19); c.lineTo(BX, 9); c.lineTo(BX - 8, 3); c.closePath(); c.fill(); c.stroke();
-    c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = 1; c.beginPath();
-    for (i = SX + 14; i < BX - 4; i += 16) { c.moveTo(i, 4); c.lineTo(i, 28); }
-    c.moveTo(SX, 16); c.lineTo(BX, 16); c.stroke();
-    c.fillStyle = '#ff9a1f'; c.fillRect(SX + 6, 24, BX - SX - 28, 2); c.fillStyle = 'rgba(0,0,0,.45)'; for (i = SX + 14; i < BX - 24; i += 16) c.fillRect(i - 1, 24, 2, 2);   // Omni-Streifen
-    c.fillStyle = 'rgba(200,220,245,.5)'; for (i = SX + 8; i < BX - 10; i += 8) c.fillRect(i, 6, 1.4, 1.4);                                                       // Nieten
-    // --- Triebwerksblock am Heck ---
-    var ng = c.createLinearGradient(0, 0, 0, 30); ng.addColorStop(0, '#3a475a'); ng.addColorStop(1, '#10151d');
-    c.fillStyle = ng; c.strokeStyle = '#a3bbd8'; c.lineWidth = 1.2; c.fillRect(SX - 8, 1, 14, 28); c.strokeRect(SX - 8, 1, 14, 28);
-    [8, 14.5, 21, 27].forEach(function (ny) {
-      c.fillStyle = '#05080c'; c.strokeStyle = '#6ab8ff'; c.lineWidth = 1.3;
-      c.beginPath(); c.moveTo(SX - 5, ny - 3.6); c.lineTo(SX - 10, ny - 2.6); c.lineTo(SX - 10, ny + 2.6); c.lineTo(SX - 5, ny + 3.6); c.closePath(); c.fill(); c.stroke();
-    });
-    // --- Containerreihen links (Heck) und rechts (Bug) vom Schacht ---
-    for (i = 0; i < 3; i++)  drawCargo(c, -hw - 44 + i * 13, -19, 13, 22, cols[i]);
-    c.fillStyle = '#2a3544'; c.strokeStyle = '#8aa6c6'; c.lineWidth = 1; c.fillRect(-hw - 46, -22, 42, 4); c.strokeRect(-hw - 46, -22, 42, 4);       // Deckschiene
-    for (i = 0; i < 3; i++)  drawCargo(c, hw + 6 + i * 12, -15, 12, 18, cols[i + 2]);
-    c.fillStyle = '#2a3544'; c.strokeStyle = '#8aa6c6'; c.fillRect(hw + 5, -18, 38, 4); c.strokeRect(hw + 5, -18, 38, 4);
-    c.fillStyle = '#ff9a1f'; for (i = 0; i < 4; i++) c.fillRect(-hw - 42 + i * 10, -21, 5, 2);
-    // --- Brücke mit Hammerkopf ---
-    var bg2 = c.createLinearGradient(0, -34, 0, 4); bg2.addColorStop(0, '#7a8da6'); bg2.addColorStop(0.4, '#46566b'); bg2.addColorStop(1, '#222b38');
-    c.fillStyle = bg2; c.strokeStyle = '#b9cde6'; c.lineWidth = 1.4;
-    c.beginPath(); c.moveTo(hw + 44, 3); c.lineTo(hw + 44, -18); c.lineTo(hw + 40, -26); c.lineTo(hw + 50, -34); c.lineTo(hw + 70, -34); c.lineTo(hw + 76, -26); c.lineTo(hw + 66, -20); c.lineTo(hw + 58, -4); c.lineTo(BX - 4, 3); c.closePath(); c.fill(); c.stroke();
-    var wg = c.createLinearGradient(0, -31, 0, -23); wg.addColorStop(0, '#d2f4ff'); wg.addColorStop(1, '#2e86b8');
-    c.fillStyle = wg; c.shadowColor = '#4cc3ff'; c.shadowBlur = 9;
-    c.beginPath(); c.moveTo(hw + 52, -31); c.lineTo(hw + 69, -31); c.lineTo(hw + 73, -25); c.lineTo(hw + 46, -25); c.closePath(); c.fill(); c.shadowBlur = 0;      // Brückenfenster (Hammerkopf)
-    c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 1; c.beginPath(); for (i = 0; i < 4; i++) { c.moveTo(hw + 54 + i * 5, -31); c.lineTo(hw + 54 + i * 5, -25); } c.stroke();
-    c.strokeStyle = '#c3d3e8'; c.beginPath(); c.moveTo(hw + 60, -34); c.lineTo(hw + 60, -44); c.stroke();                                          // Antenne
-    c.fillStyle = blink ? '#ff5a4d' : '#552420'; c.shadowColor = '#ff3a2a'; c.shadowBlur = blink ? 8 : 0; c.beginPath(); c.arc(hw + 60, -45, 2, 0, 6.2832); c.fill(); c.shadowBlur = 0;
-    c.fillStyle = '#4cc3ff'; c.shadowColor = '#4cc3ff'; c.shadowBlur = 6; c.beginPath(); c.arc(hw + 69, -10, 2, 0, 6.2832); c.fill(); c.shadowBlur = 0;      // Bug-Sensor
-    for (i = 0; i < 3; i++) { c.fillStyle = 'rgba(160,225,255,.75)'; c.fillRect(hw + 49 + i * 5, -13, 3, 2.4); }
-    // --- Fensterreihe am Rumpf ---
-    for (i = 0; i < 6; i++) { c.fillStyle = (i + Math.floor(t)) % 3 === 0 ? '#ffe6a8' : 'rgba(255,200,110,.6)'; c.fillRect(SX + 12 + i * 7, 18, 3.6, 2.6); }
-    // --- Frachtschacht (offen nach oben, hier werden die Drohnen gefangen) ---
-    var wgr = c.createLinearGradient(0, 0, 0, 25); wgr.addColorStop(0, '#04070b'); wgr.addColorStop(1, fl > 0 ? 'rgba(70,224,138,' + (0.35 + 0.45 * fl) + ')' : '#13202e');
-    c.fillStyle = wgr; c.fillRect(-hw, -1, bk.w, 25);
-    c.strokeStyle = 'rgba(120,160,200,.22)'; c.lineWidth = 1; c.beginPath(); for (i = 1; i < 12; i++) { c.moveTo(-hw + i * bk.w / 12, 0); c.lineTo(-hw + i * bk.w / 12, 24); } c.stroke();
+    c.restore();
+    // --- Rumpfplatte (Heck) ---
+    var hg = c.createLinearGradient(0, 3, 0, 29); hg.addColorStop(0, '#3b4759'); hg.addColorStop(0.3, '#232b37'); hg.addColorStop(1, '#0b0f15');
+    c.fillStyle = hg; c.strokeStyle = '#5b6c84'; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(-114, 10); c.lineTo(-106, 3); c.lineTo(106, 3); c.lineTo(114, 10); c.lineTo(114, 22); c.lineTo(100, 29); c.lineTo(-100, 29); c.lineTo(-114, 22); c.closePath(); c.fill(); c.stroke();
+    c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 1; c.beginPath();
+    for (i = -96; i <= 96; i += 12) { c.moveTo(i, 4); c.lineTo(i, 28); }
+    c.moveTo(-112, 15); c.lineTo(112, 15); c.stroke();
+    c.strokeStyle = 'rgba(120,140,170,.18)'; c.beginPath(); for (i = -108; i <= 100; i += 24) { c.moveTo(i, 4); c.lineTo(i + 10, 28); } c.stroke();   // Panzerplatten
+    c.fillStyle = 'rgba(190,210,235,.35)'; for (i = -108; i <= 108; i += 8) c.fillRect(i, 5, 1.3, 1.3);   // Nieten
+    // --- Seitenflügel: Deck, Container (links, dann gespiegelt) ---
+    for (e = -1; e <= 1; e += 2) {
+      c.save(); c.scale(e, 1);
+      var dg = c.createLinearGradient(0, -16, 0, 3); dg.addColorStop(0, '#46546a'); dg.addColorStop(1, '#1b222d');
+      c.fillStyle = dg; c.strokeStyle = '#6a7d98'; c.lineWidth = 1.1;
+      c.beginPath(); c.moveTo(-112, 3); c.lineTo(-104, -6); c.lineTo(-hw - 8, -6); c.lineTo(-hw - 8, 3); c.closePath(); c.fill(); c.stroke();   // Deck
+      drawCargo(c, -hw - 7 + 0, -13, 11, 9, cols[0]); drawCargo(c, -hw - 7 + 12, -13, 11, 9, cols[1]);                                       // Container
+      c.fillStyle = '#1f2733'; c.fillRect(-hw - 8, -15, 25, 2.6);
+      for (i = 0; i < 4; i++) { c.fillStyle = (i + Math.floor(t * 0.8)) % 3 === 0 ? '#ffe6a8' : 'rgba(255,200,110,.55)'; c.fillRect(-108 + i * 3.6, -3, 2, 1.6); }   // Fensterreihe am Deck
+      c.fillStyle = '#ff9a1f'; c.fillRect(-110, 6, 38, 1.6);                                                                                      // Omni-Streifen
+      c.restore();
+    }
+    // --- Frachtschacht (offen nach oben) ---
+    var wgr = c.createLinearGradient(0, 0, 0, BD); wgr.addColorStop(0, '#03060a'); wgr.addColorStop(1, fl > 0 ? 'rgba(70,224,138,' + (0.35 + 0.45 * fl) + ')' : '#102030');
+    c.fillStyle = wgr; c.fillRect(-hw, -1, bk.w, BD + 1);
+    c.fillStyle = 'rgba(0,0,0,.45)'; c.beginPath(); c.moveTo(-hw, -1); c.lineTo(-hw + 7, 3); c.lineTo(-hw + 7, BD); c.lineTo(-hw, BD); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(hw, -1); c.lineTo(hw - 7, 3); c.lineTo(hw - 7, BD); c.lineTo(hw, BD); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(120,160,200,.2)'; c.lineWidth = 1; c.beginPath(); for (i = 1; i < 12; i++) { c.moveTo(-hw + i * bk.w / 12, 0); c.lineTo(-hw + i * bk.w / 12, BD - 1); } c.stroke();
     c.fillStyle = fl > 0 ? '#9bffc4' : '#ffb14a';
-    for (i = 0; i < 7; i++) { var on = (Math.floor(t * 7) % 7) === i; c.globalAlpha = fl > 0 ? 1 : (on ? 1 : 0.4); c.beginPath(); c.arc(-hw + 10 + i * (bk.w - 20) / 6, 21, 2.4, 0, 6.2832); c.fill(); } c.globalAlpha = 1;
-    if (fl > 0) { var fg2 = c.createRadialGradient(0, 0, 4, 0, 0, hw + 20); fg2.addColorStop(0, 'rgba(155,255,196,' + fl * 0.8 + ')'); fg2.addColorStop(1, 'rgba(70,224,138,0)'); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = fg2; c.fillRect(-hw - 20, -26, bk.w + 40, 40); c.restore(); }
-    for (e = -1; e <= 1; e += 2) {                                       // Schachtpfeiler mit Warnstreifen und Leuchten
+    for (i = 0; i < 7; i++) { var on = (Math.floor(t * 7) % 7) === i; c.globalAlpha = fl > 0 ? 1 : (on ? 1 : 0.4); c.beginPath(); c.arc(-hw + 10 + i * (bk.w - 20) / 6, BD - 4, 2.1, 0, 6.2832); c.fill(); } c.globalAlpha = 1;
+    if (fl > 0) { var f2 = c.createRadialGradient(0, 0, 4, 0, 0, hw + 20); f2.addColorStop(0, 'rgba(155,255,196,' + fl * 0.8 + ')'); f2.addColorStop(1, 'rgba(70,224,138,0)'); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = f2; c.fillRect(-hw - 20, -26, bk.w + 40, 50); c.restore(); }
+    for (e = -1; e <= 1; e += 2) {                                          // Schachtpfeiler
       var rx = e < 0 ? -hw - 6 : hw;
-      c.fillStyle = '#39465a'; c.strokeStyle = '#a3bbd8'; c.lineWidth = 1; c.fillRect(rx, -18, 6, 42); c.strokeRect(rx, -18, 6, 42);
-      hazard(c, rx, -18, 6, 9);
-      c.fillStyle = (Math.floor(t * 3) % 2) ? '#46e08a' : '#1f4a33'; c.shadowColor = '#46e08a'; c.shadowBlur = (Math.floor(t * 3) % 2) ? 8 : 0; c.beginPath(); c.arc(rx + 3, -22, 2.2, 0, 6.2832); c.fill(); c.shadowBlur = 0;
+      c.fillStyle = '#2b3646'; c.strokeStyle = '#7b90ad'; c.lineWidth = 1; c.fillRect(rx, -14, 6, 34); c.strokeRect(rx, -14, 6, 34);
+      hazard(c, rx, -14, 6, 8);
+      var gl = Math.floor(t * 3) % 2; c.fillStyle = gl ? '#46e08a' : '#1f4a33'; c.shadowColor = '#46e08a'; c.shadowBlur = gl ? 8 : 0; c.beginPath(); c.arc(rx + 3, -18, 2.1, 0, 6.2832); c.fill(); c.shadowBlur = 0;
     }
     c.strokeStyle = fl > 0 ? '#9bffc4' : 'rgba(255,177,74,.85)'; c.lineWidth = 1.6; c.shadowColor = c.strokeStyle; c.shadowBlur = 6;
-    c.beginPath(); c.moveTo(-hw, -1); c.lineTo(hw, -1); c.stroke(); c.shadowBlur = 0;                              // Fanglinie
+    c.beginPath(); c.moveTo(-hw, -1); c.lineTo(hw, -1); c.stroke(); c.shadowBlur = 0;                                                            // Fanglinie
+    // --- Haupt- und Hilfstriebwerke (Blick in die Düsen) ---
+    mains.concat(smalls).forEach(function (n, k) {
+      var x = n[0], y = n[1], r = n[2], big = true;
+      c.fillStyle = '#1b2230'; c.strokeStyle = '#6a7d98'; c.lineWidth = 1.2; c.beginPath(); c.arc(x, y, r + 2.4, 0, 6.2832); c.fill(); c.stroke();
+      c.fillStyle = '#04070b'; c.strokeStyle = '#6ab8ff'; c.lineWidth = 1.3; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); c.stroke();
+      var cg = c.createRadialGradient(x, y, 0, x, y, r * 1.05 * boost); cg.addColorStop(0, 'rgba(255,255,255,1)'); cg.addColorStop(0.4, 'rgba(170,220,255,' + Math.min(1, 0.95 * pulse) + ')'); cg.addColorStop(0.75, 'rgba(90,160,255,' + (0.7 * pulse) + ')'); cg.addColorStop(1, 'rgba(40,110,255,0)');
+      c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = cg; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill();
+      var hl = c.createRadialGradient(x, y, r * 0.8, x, y, r * 2.1 * boost); hl.addColorStop(0, 'rgba(120,190,255,' + (0.45 * pulse) + ')'); hl.addColorStop(1, 'rgba(40,110,255,0)'); c.fillStyle = hl; c.beginPath(); c.arc(x, y, r * 2.1 * boost, 0, 6.2832); c.fill(); c.restore();
+      c.strokeStyle = 'rgba(160,215,255,' + (0.35 * pulse) + ')'; c.lineWidth = 1; c.beginPath(); c.arc(x, y, r * 0.62, 0, 6.2832); c.stroke();   // heißer Innenring
+    });
+    // --- Seitendüsen (links/rechts): brennen je nach Fahrtrichtung ---
+    for (e = -1; e <= 1; e += 2) {
+      var push = e < 0 ? Math.max(0, thr) : Math.max(0, -thr);               // linke Düse schiebt nach rechts und umgekehrt
+      [8, 15].forEach(function (ny, ni) {
+        var bx = e * 114;
+        c.fillStyle = '#10151d'; c.strokeStyle = '#6ab8ff'; c.lineWidth = 1.1; c.fillRect(e < 0 ? bx - 5 : bx, ny - 3, 5, 6); c.strokeRect(e < 0 ? bx - 5 : bx, ny - 3, 5, 6);
+        var L = 3 + (27 + 7 * ni) * push * (0.9 + 0.1 * pulse), x0 = e * 114 + e * 0.5, x1 = x0 + e * L;
+        c.save(); c.globalCompositeOperation = 'lighter';
+        var fg = c.createLinearGradient(x0, 0, x1, 0); fg.addColorStop(0, 'rgba(235,247,255,.85)'); fg.addColorStop(0.3, 'rgba(120,195,255,.6)'); fg.addColorStop(1, 'rgba(40,110,255,0)');
+        c.fillStyle = fg; c.beginPath(); c.moveTo(x0, ny - 2.8); c.lineTo(x1, ny); c.lineTo(x0, ny + 2.8); c.closePath(); c.fill();
+        c.fillStyle = 'rgba(120,195,255,' + (0.25 + 0.5 * pulse * (1 - push)) + ')'; c.beginPath(); c.arc(x0, ny, 1.6, 0, 6.2832); c.fill();
+        if (push > 0.05) { var bl = c.createRadialGradient(x0 + e * 3, ny, 0, x0 + e * 3, ny, 11); bl.addColorStop(0, 'rgba(140,200,255,' + (0.38 * push) + ')'); bl.addColorStop(1, 'rgba(40,110,255,0)'); c.fillStyle = bl; c.beginPath(); c.arc(x0 + e * 3, ny, 11, 0, 6.2832); c.fill(); }
+        c.restore();
+      });
+    }
     c.restore();
+  }
+  var thrS = 0, thrT = 0;                                          // weiche Fahrtrichtung der Schubdüsen
+  function drawFreighter(t) {
+    var bk = game.bucket, dt = Math.max(0, Math.min(0.05, t - thrT)); thrT = t;
+    thrS += ((bk.dir || 1) * (paused ? 0 : 1) - thrS) * Math.min(1, dt * 5);
+    drawFreighterNew(ctx, bk, t, catchT > 0 ? catchT / 0.6 : 0, thrS, hazard, drawCargo);
   }
   function drawBall(b) {
     var tr = b.trail || [], i, hot = b.pierce > 0, col = hot ? '#ffb347' : '#4cc3ff', col2 = hot ? '255,150,40' : '76,195,255';
@@ -3606,17 +3952,18 @@ function mount(container, opts) {
   }
   function draw(t) {
     if (bgLevel !== game.level) renderBg();
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    var sk = shake > 0 && !calm ? shakeA * Math.min(1, shake / 0.3) : 0;   // PR5: Wackeln bei Combos
+    ctx.setTransform(scale, 0, 0, scale, sk ? (Math.random() * 2 - 1) * sk * scale : 0, sk ? (Math.random() * 2 - 1) * sk * scale : 0);
     ctx.clearRect(0, 0, W, H);
-    drawBg(t);
+    var ba = bgA / 100;
+    ctx.globalAlpha = ba; if (ba > 0) drawBg(t);
     var i;
-    for (i = 0; i < stars.length; i++) {
-      var s = stars[i], tw = 0.3 + 0.35 * Math.sin(t * s.ph + i); ctx.globalAlpha = tw;
+    for (i = 0; i < stars.length && ba > 0; i++) {
+      var s = stars[i], tw = (0.3 + 0.35 * Math.sin(t * s.ph + i)) * ba; ctx.globalAlpha = tw;
       ctx.fillStyle = s.c; ctx.fillRect(s.x, s.y, s.r, s.r);
       if (s.big) { ctx.globalAlpha = tw * 0.6; ctx.fillRect(s.x - 5, s.y + s.r / 2 - 0.4, 11 + s.r, 0.8); ctx.fillRect(s.x + s.r / 2 - 0.4, s.y - 5, 0.8, 11 + s.r); }
     }
-    ctx.globalAlpha = 1;
-    ctx.drawImage(frame, 0, 0, W, H);                                  // OB4: Raster, Vignette, Schienen bleiben fest
+    ctx.globalAlpha = ba; ctx.drawImage(frame, 0, 0, W, H); ctx.globalAlpha = 1;                                  // OB4: Raster, Vignette, Schienen bleiben fest
     // Bahnen der kreisenden Brocken
     var seen = {};
     game.pegs.forEach(function (p) {
@@ -3633,6 +3980,7 @@ function mount(container, opts) {
     });
     (game.wells || []).forEach(function (w) { drawWell(ctx, w, t); });
     if (game.net > 0) drawNet(t);
+    (game.tracks || []).forEach(function (tr) { drawTrackOn(ctx, tr, t); }); (game.ramps || []).forEach(function (r) { drawRampOn(ctx, r); });   // PQ4
     game.gates.forEach(function (g, gi) { drawGateOn(ctx, g, t, gi); });
     drawFreighter(t);
     for (i = 0; i < game.pegs.length; i++) if (!game.pegs[i].gone) drawPegOn(ctx, game.pegs[i], t);
@@ -3690,26 +4038,44 @@ function mount(container, opts) {
     ctx.globalAlpha = 1;
     ctx.textAlign = 'center';
     texts.forEach(function (tx) {
-      ctx.globalAlpha = Math.max(0, tx.life / tx.max); ctx.fillStyle = tx.c; ctx.font = '700 ' + tx.size + 'px "Segoe UI",sans-serif';
+      var age = tx.max - tx.life, sz = tx.pop ? tx.size * (1 + 0.6 * Math.max(0, 1 - age / 0.22)) : tx.size;   // PR5: groß aufploppen
+      ctx.globalAlpha = Math.max(0, tx.life / tx.max); ctx.font = '700 ' + Math.round(sz) + 'px "Segoe UI",sans-serif';
+      ctx.fillStyle = tx.c === 'rainbow' ? rainbow(tx.x, ctx.measureText(tx.s).width, t) : tx.c;
+      if (tx.glow) { ctx.shadowColor = tx.c === 'rainbow' ? 'hsl(' + Math.floor(t * 240 % 360) + ',100%,60%)' : tx.c; ctx.shadowBlur = 8 + sz / 3; }
       ctx.fillText(tx.s, tx.x, tx.y);
+      ctx.shadowBlur = 0;
     });
     ctx.globalAlpha = 1;
     // Levelname rechts oben
     ctx.textAlign = 'right'; ctx.fillStyle = 'rgba(215,221,230,.55)'; ctx.font = '600 13px "Segoe UI",sans-serif';
     ctx.fillText((game.level ? 'LEVEL ' + game.level + ' · ' : '') + obLvName(game.levelName).toUpperCase(), W - 16, 24);
-    if (flash > 0) { ctx.fillStyle = 'rgba(255,200,120,' + (flash * 0.35) + ')'; ctx.fillRect(0, 0, W, H); }
+    if (flash > 0) { ctx.fillStyle = 'rgba(' + flashC + ',' + (flash * 0.35) + ')'; ctx.fillRect(0, 0, W, H); }
     if (bannerT > 0) {
       var al = Math.min(1, bannerT / 0.6, (3.2 - bannerT) / 0.25 + 0.001);
       ctx.globalAlpha = Math.max(0, al) * 0.62; ctx.fillStyle = '#03050a'; ctx.fillRect(0, 350, W, 140);
       ctx.globalAlpha = Math.max(0, al); ctx.textAlign = 'center';
-      ctx.fillStyle = '#ff9a1f'; ctx.font = '700 16px "Segoe UI",sans-serif'; ctx.fillText(game.level ? 'LEVEL ' + game.level + ' / ' + LEVELS.length : obT('ÜBUNG'), W / 2, 385);
-      ctx.fillStyle = '#ffffff'; ctx.font = '700 38px "Segoe UI",sans-serif'; ctx.fillText(obLvName(game.levelName).toUpperCase(), W / 2, 432);
-      ctx.fillStyle = '#9fb0c4'; ctx.font = '15px "Segoe UI",sans-serif'; ctx.fillText(obLvDesc(game.levelDesc) + (game.practice ? obT(' · Übung (kein Highscore)') : ''), W / 2, 464);
+      // PR5: „LEVEL n“ groß, bunt und leuchtend, fliegt beim Start groß herein
+      var lt = game.level ? 'LEVEL ' + game.level : obT('ÜBUNG'), lz = Math.round(48 * (1 + 0.5 * Math.max(0, 1 - (3.2 - bannerT) / 0.3)));
+      ctx.font = '800 ' + lz + 'px "Segoe UI",sans-serif'; ctx.fillStyle = rainbow(W / 2, ctx.measureText(lt).width, t);
+      ctx.shadowColor = 'hsl(' + Math.floor(t * 240 % 360) + ',100%,60%)'; ctx.shadowBlur = 22; ctx.fillText(lt, W / 2, 398); ctx.shadowBlur = 0;
+      if (game.level) { ctx.fillStyle = 'rgba(255,154,31,.8)'; ctx.font = '700 13px "Segoe UI",sans-serif'; ctx.fillText('/ ' + LEVELS.length, W / 2, 416); }
+      ctx.fillStyle = '#ffffff'; ctx.font = '700 30px "Segoe UI",sans-serif'; ctx.fillText(obLvName(game.levelName).toUpperCase(), W / 2, 448);
+      ctx.fillStyle = '#9fb0c4'; ctx.font = '15px "Segoe UI",sans-serif'; ctx.fillText(obLvDesc(game.levelDesc) + (game.practice ? obT(' · Übung (kein Highscore)') : ''), W / 2, 474);
       ctx.globalAlpha = 1;
     }
   }
 
   /* --- Ereignisse (Texte, Funken, Töne) --- */
+  function rainbow(x, w, t) {   // PR5: wandernder Regenbogen über die Textbreite
+    var g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0), h0 = t * 240;
+    for (var i = 0; i <= 4; i++) g.addColorStop(i / 4, 'hsl(' + Math.floor((h0 + i * 70) % 360) + ',100%,66%)');
+    return g;
+  }
+  function levelFx() {          // PR5: Levelstart – Ton, Ringe und Funken um die Einblendung
+    sound.levelStart();
+    for (var k = 0; k < 4; k++) rings.push({ x: W / 2, y: 390, r: 140 + k * 60, t: 0, c: 'hsl(' + (k * 80 + 20) + ',100%,62%)', lw: 3 });
+    for (k = 0; k < 46; k++) { var a = Math.random() * 6.2832, v = 120 + Math.random() * 260; parts.push({ x: W / 2, y: 390, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.6, s: 2 + Math.random() * 2.5, life: 1.1, max: 1.1, c: 'hsl(' + Math.floor(Math.random() * 360) + ',100%,65%)' }); }
+  }
   function hitColor(e) { return e.t === 'g' ? PCOL[e.power || 'bomb'].hi : COL[e.t].hi; }
   function handleEvents() {
     var ev = game.events; game.events = [];
@@ -3735,6 +4101,10 @@ function mount(container, opts) {
         for (k = 0; k < 26; k++) { a = Math.random() * 6.2832; v = 80 + Math.random() * 220; parts.push({ x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, s: 2 + Math.random() * 3, life: 0.8, max: 0.8, c: Math.random() < 0.5 ? '#ffb070' : '#ff5a7a' }); }
       } else if (e.type === 'bump') {
         sound.bump(e.x); bumpT[e.id] = 0.15; rings.push({ x: e.x, y: e.y, r: 38, t: 0, c: '#ffffff', lw: 2 });
+      } else if (e.type === 'ramp') {
+        sound.bump(e.x); rings.push({ x: e.x, y: e.y, r: 26, t: 0, c: '#9fe0ff', lw: 2 });
+      } else if (e.type === 'rail' || e.type === 'railOut') {
+        sound.armor(e.x); rings.push({ x: e.x, y: e.y, r: e.type === 'rail' ? 30 : 46, t: 0, c: '#4cc3ff', lw: 2.5 });
       } else if (e.type === 'warp') {
         sound.warp(e.x);
         rings.push({ x: e.x, y: e.y, r: 60, t: 0, c: '#4cc3ff', lw: 3 }); rings.push({ x: e.x2, y: e.y2, r: 60, t: 0, c: '#b46bff', lw: 3 });
@@ -3742,9 +4112,17 @@ function mount(container, opts) {
         catchT = 0.6; sound.catchShip();
         texts.push({ x: e.x, y: e.y - 40, vy: -50, life: 1.3, max: 1.3, s: e.free ? obT('Frachter! +1 Drohne') : tt('Frachter! +', 'Freighter! +') + e.pts, c: '#ffd08a', size: 18 });
       } else if (e.type === 'combo') {
+        // PR5: Stufen 5/10/20/40 – große Regenbogen-Schrift, Wackeln, farbiger Blitz, Funkenregen; neue Stufe mit Akkord
+        var tier = e.n >= 40 ? 4 : e.n >= 20 ? 3 : e.n >= 10 ? 2 : 1, cw = ['COMBO', 'SUPER COMBO', 'MEGA COMBO', 'OMNI COMBO'][tier - 1];
         sound.combo(e.n);
-        texts.push({ x: e.x, y: e.y - 36, vy: -46, life: 1.2, max: 1.2, s: 'COMBO ' + e.n + '!', c: '#ffe14c', size: 24 });
+        if (e.n === 5 || e.n === 10 || e.n === 20 || e.n === 40) { sound.comboTier(tier); }
+        texts.push({ x: e.x, y: e.y - 36, vy: -46, life: 1.2, max: 1.2, s: 'COMBO ' + e.n + '!', c: '#ffe14c', size: 24, glow: 1 });
+        texts.push({ x: W / 2, y: 290, vy: -16, life: 1.3 + tier * 0.2, max: 1.3 + tier * 0.2, s: cw + ' ×' + e.n, c: 'rainbow', size: 30 + tier * 8, glow: 1, pop: 1 });
         rings.push({ x: e.x, y: e.y, r: 60 + e.n * 2, t: 0, c: '#ffe14c', lw: 3 });
+        if (tier >= 2) rings.push({ x: W / 2, y: 280, r: 120 + tier * 40, t: 0, c: 'hsl(' + (tier * 70) + ',100%,65%)', lw: 2 + tier });
+        for (k = 0; k < 10 + tier * 12; k++) { a = Math.random() * 6.2832; v = 90 + Math.random() * (120 + tier * 60); parts.push({ x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 60, s: 2 + Math.random() * 2.5, life: 0.9, max: 0.9, c: 'hsl(' + Math.floor(Math.random() * 360) + ',100%,65%)' }); }
+        shake = Math.max(shake, 0.2 + tier * 0.1); shakeA = Math.max(shakeA, 2 + tier * 2.5);
+        flash = Math.max(flash, 0.15 + tier * 0.1); flashC = ['255,225,76', '76,195,255', '255,107,214', '180,107,255'][tier - 1];
       } else if (e.type === 'comboBonus') {
         sound.comboBonus(e.hits);
         texts.push({ x: W / 2, y: 330, vy: -26, life: 2.0, max: 2.0, s: 'COMBO ×' + e.hits, c: '#ffe14c', size: 34 });
@@ -3764,7 +4142,7 @@ function mount(container, opts) {
         sound.net(e.x); rings.push({ x: e.x, y: e.y, r: 90, t: 0, c: '#5ed8ff', lw: 4 });
         texts.push({ x: e.x, y: e.y - 40, vy: -50, life: 1.1, max: 1.1, s: obT('Gerettet!'), c: '#8fe6ff', size: 18 });
       } else if (e.type === 'won') {
-        flash = 1; sound.won();
+        flash = 1; flashC = '255,200,120'; sound.won();
         if (!game.practice && game.level >= 1) { if (game.hasNextLevel()) saveProgress(game.level + 1, game.score); else clearProgress(); }
         showEnd();
       } else if (e.type === 'lost') {
@@ -3783,7 +4161,8 @@ function mount(container, opts) {
     rings = rings.filter(function (r) { return r.t < 0.5; });
     bolts.forEach(function (b) { b.life -= dt; }); bolts = bolts.filter(function (b) { return b.life > 0; });
     hbeams.forEach(function (b) { b.life -= dt; }); hbeams = hbeams.filter(function (b) { return b.life > 0; });
-    if (flash > 0) flash = Math.max(0, flash - dt * 1.6);
+    if (flash > 0) flash = Math.max(0, flash - dt * 1.6); else flashC = '255,200,120';
+    if (shake > 0) shake = Math.max(0, shake - dt); else shakeA = 0;   // PR5
     if (laserT > 0) laserT = Math.max(0, laserT - dt);
     if (catchT > 0) catchT = Math.max(0, catchT - dt);
     if (bannerT > 0) bannerT = Math.max(0, bannerT - dt);
@@ -3799,14 +4178,14 @@ function mount(container, opts) {
     setStat('balls', String(game.ballsLeft) + (game.volley ? ' · Salve' : ''));
     setStat('targets', (game.targetsTotal - game.targetsLeft) + ' / ' + game.targetsTotal);
     setStat('mult', 'x' + (game.status === 'flying' ? game.multiplier() : 1));
-    setStat('combo', game.status === 'flying' ? String(game.shotHits) : (game.bestCombo ? 'Beste ' + game.bestCombo : '–'));
+    setStat('combo', game.status === 'flying' ? String(game.shotHits) : (game.bestCombo ? tt('Beste ', 'Best ') + game.bestCombo : '–'));
     setStat('level', game.practice ? String(game.level || 'Zufall') : (game.level + '/' + LEVELS.length));
     statEls.level.__lbl.textContent = obT(game.practice ? 'Übung' : 'Level');   // OB5: „Übung 100“ passt nicht in die Box
   }
 
   /* --- Meldungen (Level geschafft, Ende, Pause) --- */
   function hideMsg() { msg.classList.remove('ob-show'); msg.textContent = ''; }
-  function resetFx() { texts = []; parts = []; rings = []; bolts = []; hbeams = []; flash = 0; shown = {}; newRank = 0; beamPts = null; laserT = 0; catchT = 0; bumpT = {}; renderScores(0); bannerT = 3.2; updateHud(); }
+  function resetFx() { texts = []; parts = []; rings = []; bolts = []; hbeams = []; flash = 0; shake = 0; shakeA = 0; shown = {}; newRank = 0; beamPts = null; laserT = 0; catchT = 0; bumpT = {}; renderScores(0); bannerT = 3.2; updateHud(); }
   /* --- Spielstand der Kampagne --- */
   var progress = Progress.load(store, progKey);
   var best = {}; try { best = JSON.parse(store.getItem(opts.bestKey || BEST_KEY) || '{}') || {}; } catch (e) { best = {}; }
@@ -3828,8 +4207,8 @@ function mount(container, opts) {
   function clearProgress() { Progress.clear(store, progKey); progress = null; updateContinue(); }
   function continueCampaign() { if (!progress) return; hideMsg(); setPausedSilent(false); game.resumeCampaign(progress.level, progress.score); resetFx(); sound.intro(); }
   function startCampaign() { hideMsg(); setPausedSilent(false); game.reset(undefined, 1); resetFx(); sound.intro(); }
-  function startPractice(n) { hideMsg(); setPausedSilent(false); game.reset(n ? undefined : undefined, n); game.practice = true; resetFx(); sound.levelStart(); }
-  function nextLevel() { hideMsg(); if (game.practice) { var n = game.level + 1; if (n <= LEVELS.length) startPractice(n); return; } game.nextLevel(); resetFx(); sound.levelStart(); }
+  function startPractice(n) { hideMsg(); setPausedSilent(false); game.reset(n ? undefined : undefined, n); game.practice = true; resetFx(); levelFx(); }
+  function nextLevel() { hideMsg(); if (game.practice) { var n = game.level + 1; if (n <= LEVELS.length) startPractice(n); return; } game.nextLevel(); resetFx(); levelFx(); }
   function restartLevel() { hideMsg(); setPausedSilent(false); game.restartLevel(); resetFx(); }
   function setPausedSilent(p) { paused = p; btnPause.textContent = obT(p ? 'Weiter' : 'Pause'); }
 
@@ -3843,6 +4222,8 @@ function mount(container, opts) {
     function btn(label, primary, fn) { var b = el('button', 'ob-btn' + (primary ? ' ob-primary' : ''), label); b.type = 'button'; b.addEventListener('click', fn); row.appendChild(b); return b; }
     var levelPts = game.score - game.levelStartScore;
     if (won) saveBest(game.level, levelPts);
+    if (won && game.level >= 1) wwSend({ l: game.level, s: Math.floor(levelPts), ms: Math.round(game.time * 1000) });   // PQ7: bester Wert je Level (auch Übung)
+    if (mode === 'final' && game.score > 0) wwSend({ l: 0, s: Math.floor(game.score), lv: game.levelsCleared });         // PQ7: Kampagne
     if (mode === 'practice') {
       card.appendChild(el('h2', null, won ? 'Übung geschafft' : 'Übung vorbei'));
       card.appendChild(el('div', 'ob-big', fmtScore(game.score)));
@@ -3890,7 +4271,7 @@ function mount(container, opts) {
         if (opts.onScore) { try { opts.onScore(res.entry, res.rank); } catch (e) { } }
       };
       if (btnSave) {
-        btnSave.addEventListener('click', doSave);
+        doSave = obField(doSave); btnSave.addEventListener('click', doSave);   // Ergebniskarte im Feld: Englisch
         input.addEventListener('keydown', function (ev) { ev.stopPropagation(); if (ev.key === 'Enter') doSave(); });
         setTimeout(function () { try { input.focus(); input.select(); } catch (e) { } }, 30);
       }
@@ -3960,6 +4341,9 @@ function mount(container, opts) {
   function onVis() { if (document.hidden) setPaused(true); }
   document.addEventListener('visibilitychange', onVis);
 
+  draw = obField(draw); handleEvents = obField(handleEvents); updateHud = obField(updateHud); showEnd = obField(showEnd); showPause = obField(showPause);   // Spielfeld immer Englisch
+  renderLv = obMenu(renderLv); renderScores = obMenu(renderScores); updateContinue = obMenu(updateContinue); setPausedSilent = obMenu(setPausedSilent); wwSend = obMenu(wwSend);   // Menü bleibt in der Programmsprache
+
   /* --- Hauptschleife --- */
   function loop(ts) {
     if (destroyed) return;
@@ -3996,9 +4380,9 @@ function mount(container, opts) {
 }
 
 root.OmniBreaker = {
-  version: '3.1',
+  version: '3.3',
   CFG: CFG, LEVELS: LEVELS, POWER_NAMES: POWER_NAMES, t: obT, en: OB_EN, lvName: obLvName, lvDesc: obLvDesc, Game: Game, Highscores: Highscores, Progress: Progress, createSound: createSound,
-  makeLayout: makeLayout, buildLevel: buildLevel, fmtScore: fmtScore, mount: mount
+  makeLayout: makeLayout, buildLevel: buildLevel, buildLane: buildLane, obLaneDef: obLaneDef, fmtScore: fmtScore, mount: mount
 };
 
 /* Alleinstehende Datei: automatisch ins Feld #omnibreaker setzen */
@@ -4025,7 +4409,7 @@ if (typeof document !== 'undefined') {
     x.addEventListener('click', close);
     ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
     host.className = 'ob-field'; host.lang = ov.lang;
-    ctrl = window.OmniBreaker.mount(host);
+    ctrl = window.OmniBreaker.mount(host, { online: obOnline() });
     fieldOnly(host, ctrl, x);
   }
   // Nur das Spielfeld: Anzeigen, ☰-Menü (Knöpfe, Highscore, Legende, Regeln) und ggf. ✕ wandern ins Feld; ☰ pausiert
@@ -4046,13 +4430,29 @@ if (typeof document !== 'undefined') {
   function mountWindow(box) {
     if (!window.OmniBreaker) return null;
     var host = document.createElement('div'); host.className = 'ob-field'; host.lang = window.OmniBreaker && OmniBreaker.en ? 'en' : 'de'; box.appendChild(host);
-    var c = window.OmniBreaker.mount(host); fieldOnly(host, c, null);
+    var c = window.OmniBreaker.mount(host, { online: obOnline() }); fieldOnly(host, c, null);
     if (c && c.intro) setTimeout(c.intro, 300);
     var stage = host.querySelector('.ob-stage');
     function fit() { var w = Math.max(120, Math.floor(Math.min(box.clientWidth, box.clientHeight * 0.8))); stage.style.width = w + 'px'; stage.classList.toggle('ob-sm', w < 380); }
     if (window.ResizeObserver) new ResizeObserver(fit).observe(box); else window.addEventListener('resize', fit);
     fit();
     return c;
+  }
+  // PQ7: weltweite Bestenliste auf dem Unraid-Server des Entwicklers (Tailscale Funnel, Port 8443 – 443 räumt das Unraid-Plugin weg). Name = aktiver EVE-Charakter, nie in der Demo
+  var OB_ONLINE_URL = 'https://fluxserver01.taileafff1.ts.net:8443/omni';
+  function obOnline() {
+    return {
+      me: function () {
+        if (window.EVE_DEMO && window.EVE_DEMO.on) return null;
+        try {
+          var id = localStorage.getItem('eve-zentrale-active-char'), list = JSON.parse(localStorage.getItem('eve-zentrale-characters') || '[]');
+          var c = list.filter(function (t) { return t && String(t.character_id) === String(id); })[0] || list[0];
+          return c && c.character_name ? { cid: String(c.character_id), n: String(c.character_name) } : null;
+        } catch (e) { return null; }
+      },
+      send: function (e) { return fetch(OB_ONLINE_URL + '/score', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(e) }).then(function (r) { return r.json(); }); },
+      top: function (l) { return fetch(OB_ONLINE_URL + '/top?l=' + Number(l)).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); }
+    };
   }
   function open() {
     if (!window.OmniBreaker) return;
@@ -6784,7 +7184,8 @@ if (typeof document !== 'undefined') {
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – Karte auch als Universum-Schema wie im Atlas (Live-Ebenen Schiffe/Kapseln/NPC/Sprünge/Souveränität mit Top 20, Regionskarte mit Kästchen und Konstellationen, PNG speichern); Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, Jump Planner, Jump Bridges, Regionskarte mit Route, Kills und Charakteren.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, Neocom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), Neocom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen), Equalizer, Lautstärke angleichen, Balken; Spotify, Deezer und Apple Music auch im Overlay.</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
 <p class="note pn-en">Patch notes are written in German. English summaries of every version: <a href="https://github.com/Nareya79/eve-omni/releases" target="_blank" rel="noopener">github.com/Nareya79/eve-omni/releases</a></p>
-<details class="skills-more" open><summary>Beta 4.0.76 · 11.10.2026</summary><ul class="about-list"><li>Neu: OmniBreaker, ein Minispiel im EVE-Stil (Peggle-Prinzip): Mining-Laser zielen, Erzadern leeren, Power-Items einsetzen. 100 Level mit einem Höhepunkt alle 10 Level, viel Bewegung in den hohen Leveln (kreisende, pulsierende und wandernde Brocken, fahrende Wracks und Tore, wandernde Schwerkraftfelder), Combo-Punkte, Highscore und Spielstand zum Weiterspielen; jedes Level auch als Übung wählbar (Level-Raster mit Bestwert). Öffnen unter Einstellungen › Allgemein › Minispiel; Esc schließt und pausiert. Eigene Töne und Grafik, nichts von außen geladen.</li><li>Installer: OmniBreaker und der Soundtrack lassen sich beim Installieren einzeln an- oder abwählen. Ohne OmniBreaker ist das Spiel im Programm ganz ausgeblendet (Neocom, Einstellungen, Overlay).</li><li>OmniBreaker 2.0: alle 100 Level neu gebaut, ab und zu ruhende Level zum Durchatmen, 8 neue Power-Items, die mit höheren Leveln dazukommen (Stasis-Netz, Magnet-Drohne, Doppelpunkte, Bohr-Drohne, Zeitlupe, Warp-Sprung, Gravitationsbombe, Splitter-Drohne), 12 neue Weltraum-Hintergründe in voller Auflösung mit sanfter Bewegung (Nebel, Gasriese, Sternentor, Asteroidengürtel, Wurmloch, Sonne, Station, Wrackfeld, Planet, Galaxie, Nebelsäulen, Schwarzes Loch), kleine Melodie beim Spielstart und ein neues Neocom-Symbol (Gamepad).</li><li>OmniBreaker auf Englisch: Folgt der Sprache von EVE Omni – Menüs, Level-Namen, Items, Anzeigen im Spielfeld, Ergebnisse und Regeln, Zahlen im englischen Format.</li><li>Handel-Overlay: Handelscharakter oben per Klappmenü wechseln (mit Wallet), „⟳ Schiffe neu erkennen“ (Hangar und Wallet sofort neu lesen), „■ Abbrechen“ für laufende Suchen (Markt-Scan, Hub-Handel, Hauling – auch auf der großen Seite), und im Trades-Overlay die Ergebnisse des Markt-Scans zum Aufklappen mit „＋ Merken“. Fehler behoben: Nach dem Wechsel des Handelscharakters rechneten Hauling und Hub-Handel noch mit Wallet und Schiffen des alten Charakters.</li><li>OmniBreaker: Das Menü ☰ lässt sich im Zielmodus wieder sicher anklicken (vorher löste ein Klick knapp daneben einen Schuss aus), der Knopf ist im kleinen Fenster größer, und Rechtsklick aufs Spielfeld öffnet das Menü.</li></ul></details>
+<details class="skills-more" open><summary>Beta 4.0.77 · 12.10.2026</summary><ul class="about-list"><li>OmniBreaker: Das Spielfeld (Anzeigen, Einblendungen, Ergebnisse) ist jetzt immer englisch; Menü, Legende, Regeln und Einstellungen bleiben in der Sprache von EVE Omni.</li><li>Fehler behoben: Ein Overlay, das genau über einem anderen lag, rutschte manchmal wieder darunter (z. B. nach einem Klick in EVE). Das zuletzt angeklickte Overlay bleibt jetzt oben.</li><li>Fehler behoben: Neue Nutzer kamen beim EVE-Login nicht rein (EVE meldete „invalid_scope“). Der Login fragt die Mail-Berechtigungen nicht mehr mit an; Mail wird auf der Mail-Seite über „Mail aktivieren“ freigeschaltet. Lehnt EVE das ab, erklärt EVE Omni es verständlich.</li><li>OmniBreaker: neue Rollbahnen aus Steinen – die Drohne rollt darauf, jeder berührte Stein leuchtet und gibt Punkte, nach dem Schuss sind getroffene Steine abgebaut und lassen die Drohne durch (in 3 von 10 Leveln).</li><li>Handel und Trades: Hinter den Warennamen gibt es keinen Kopier-Knopf mehr (Preisverlauf und „Markt in EVE öffnen“ bleiben), große Seite und Overlay.</li><li>Stream-Tasten: Die Jukebox-Taste schaltet in drei Stufen – 1. Druck öffnet die Jukebox als Miniplayer, 2. Druck klappt sie groß auf, 3. Druck schließt sie.</li><li>OmniBreaker: Brocken, Drohne und Frachter sind etwas kleiner – mehr Platz und größere Lücken im Feld.</li><li>OmniBreaker: Rampen (ab Level 11, die Drohne prallt ab) und Beschleunigerbahnen (ab Level 31, die Drohne fährt mit und wird am Ende rausgeschossen), Höhepunkt-Level mit beidem; Legende im Menü ☰.</li><li>OmniBreaker: Regler „Hintergrund“ im Menü ☰ – bei 0 % sieht man im Overlay-Fenster nur Brocken, Drohne und Frachter, EVE scheint durch.</li><li>OmniBreaker: Die Anzeigen oben (Punkte, Drohnen, Level …) stehen mittig und leuchten je in eigener Farbe.</li><li>OmniBreaker: Weltweite Bestenliste im Menü ☰ – Kampagne und bester Wert je Level von allen EVE-Omni-Spielern. Hochladen nur mit Haken „Punkte hochladen“ (Standard aus), Name = aktiver EVE-Charakter.</li><li>Neocom-Overlay: Symbol gedrückt halten und ziehen fügt es an der neuen Stelle ein, die anderen rücken weiter (vorher wurde getauscht und die Reihenfolge sprang durcheinander).</li><li>Neocom im Hauptfenster wie in EVE: Einträge aus dem Gruppenfeld auf die freie Leiste ziehen (ohne Gruppe) und zurück auf eine Gruppe; ganze Gruppen lassen sich verschieben.</li><li>Watchlist „Verkauf prüfen“: Klappknopf ▾/▸ direkt neben dem Knopf; nach einer Prüfung bleibt die Liste zu.</li><li>Browser: Knopf „–“ zum Minimieren; Seiten mit eigenem Dunkelmodus werden dunkel angezeigt (⚙ › „Dunkle Seiten“).</li><li>OmniBreaker: Combo-Stufen (Combo, Super, Mega, Omni) mit großer Regenbogen-Schrift, Wackeln, farbigem Blitz, Funkenregen und Akkord; bunte „LEVEL n“-Einblendung beim Start, Level-Anzeige im Overlay größer.</li></ul></details>
+<details class="skills-more"><summary>Beta 4.0.76 · 11.10.2026</summary><ul class="about-list"><li>Neu: OmniBreaker, ein Minispiel im EVE-Stil (Peggle-Prinzip): Mining-Laser zielen, Erzadern leeren, Power-Items einsetzen. 100 Level mit einem Höhepunkt alle 10 Level, viel Bewegung in den hohen Leveln (kreisende, pulsierende und wandernde Brocken, fahrende Wracks und Tore, wandernde Schwerkraftfelder), Combo-Punkte, Highscore und Spielstand zum Weiterspielen; jedes Level auch als Übung wählbar (Level-Raster mit Bestwert). Öffnen unter Einstellungen › Allgemein › Minispiel; Esc schließt und pausiert. Eigene Töne und Grafik, nichts von außen geladen.</li><li>Installer: OmniBreaker und der Soundtrack lassen sich beim Installieren einzeln an- oder abwählen. Ohne OmniBreaker ist das Spiel im Programm ganz ausgeblendet (Neocom, Einstellungen, Overlay).</li><li>OmniBreaker 2.0: alle 100 Level neu gebaut, ab und zu ruhende Level zum Durchatmen, 8 neue Power-Items, die mit höheren Leveln dazukommen (Stasis-Netz, Magnet-Drohne, Doppelpunkte, Bohr-Drohne, Zeitlupe, Warp-Sprung, Gravitationsbombe, Splitter-Drohne), 12 neue Weltraum-Hintergründe in voller Auflösung mit sanfter Bewegung (Nebel, Gasriese, Sternentor, Asteroidengürtel, Wurmloch, Sonne, Station, Wrackfeld, Planet, Galaxie, Nebelsäulen, Schwarzes Loch), kleine Melodie beim Spielstart und ein neues Neocom-Symbol (Gamepad).</li><li>OmniBreaker auf Englisch: Folgt der Sprache von EVE Omni – Menüs, Level-Namen, Items, Anzeigen im Spielfeld, Ergebnisse und Regeln, Zahlen im englischen Format.</li><li>Handel-Overlay: Handelscharakter oben per Klappmenü wechseln (mit Wallet), „⟳ Schiffe neu erkennen“ (Hangar und Wallet sofort neu lesen), „■ Abbrechen“ für laufende Suchen (Markt-Scan, Hub-Handel, Hauling – auch auf der großen Seite), und im Trades-Overlay die Ergebnisse des Markt-Scans zum Aufklappen mit „＋ Merken“. Fehler behoben: Nach dem Wechsel des Handelscharakters rechneten Hauling und Hub-Handel noch mit Wallet und Schiffen des alten Charakters.</li><li>OmniBreaker: Das Menü ☰ lässt sich im Zielmodus wieder sicher anklicken (vorher löste ein Klick knapp daneben einen Schuss aus), der Knopf ist im kleinen Fenster größer, und Rechtsklick aufs Spielfeld öffnet das Menü.</li></ul></details>
 <details class="skills-more" open><summary>Beta 4.0.75 · 10.10.2026</summary><ul class="about-list"><li>Neocom wie in EVE: Im Hauptfenster ist jede Gruppe (Handel, Besitz, Navi &amp; Intel, Charaktere, Sonstiges) ein leuchtendes Symbol in deiner Symbolfarbe, Klick öffnet daneben ein Feld mit ihren Ansichten. Abschaltbar unter Einstellungen › Neocom. Das Neocom-Overlay bleibt ohne Gruppen.</li><li>Neocom: Knöpfe per Ziehen in eine andere Gruppe oder nach „Ohne Gruppe“ (steht dann oben direkt in der Leiste) – in der Leiste und in Einstellungen › Neocom (Gruppen-Überschriften als Ziel).</li><li>Wallet › Auswertung (neu, auch im Wallet-Overlay): eine Zeitraum-Leiste (Heute bis Alles) mit Vergleich zum Vorzeitraum, Gewinn netto nach Quelle als Balken, Top/Flop-Waren, Kosten (Steuer, Broker), Orders (Füllquote, Liegezeit, gebundenes Kapital), Trades &amp; Läufe, Rendite und Wochentag × Uhrzeit.</li><li>Karte wie DOTLAN: Systeme als Kästchen mit Namen und Sicherheit, ruhige Linien, eine schmale Werkzeugleiste mit ☰ Ebenen, Karte fast volle Höhe; Overlay-Karte genauso (☰-Feld und Info-Kärtchen auf der Karte). Beim Herauszoomen nur wichtige Namen, beim Hineinzoomen gut lesbar mit Schriftrand.</li><li>Karte: „Schema“ heißt jetzt „Universum“, Ränder werden ganz gezeichnet. Fehler behoben: Overlay-Karte lud die Region nicht (nach 12 besuchten Regionen flog die gerade geladene wieder raus) – jetzt fliegt die älteste raus, bei Ladefehlern kommt ein Hinweis mit neuem Versuch.</li><li>Jukebox: Lautstärke angleichen, Equalizer, Musik bei Alarmen leiser, Titel-Einblendung über EVE, Balken zur Musik (auch im Miniplayer, ohne Flackern), Suche, Playlist-Reihenfolge per Ziehen, Windows-Medienanzeige – alles einzeln schaltbar unter „Klang &amp; Extras“ (auch im Overlay).</li><li>Jukebox-Overlay mit Streaming: Spotify, Deezer oder Apple Music spielt im Overlay (Mini = Titel + Knöpfe, groß = Cover + Titelliste); Umschalter „Meine Musik / Streaming“, es ist immer nur ein Player zu sehen. Geteilte Kurzlinks aus der Deezer- oder Spotify-App werden aufgelöst, sonst kommt ein Hinweis am Feld.</li><li>Browser: Lesezeichen mit Ordnern (Ziehen, Umbenennen, „Verschieben nach“, Alle in Tabs öffnen), „Lesezeichen verwalten“ und Import aus Chrome, Edge und Brave. Klappmenüs und Rückfragen im EVE-Omni-Stil, Ordner-Symbol in deiner Symbolfarbe.</li><li>Navigation: Systemname in der Route öffnet zKillboard, das Fahnen-Symbol dahinter setzt das System als Ziel in EVE beim aktiven Client (Umschalt+Klick = Wegpunkt anhängen) – Hauptfenster und Overlay.</li><li>Client-Vorschau: Haken oben rechts = Client beim Durchschalten mit Tab (vor und zurück) dabei oder übersprungen; dieselben Haken unter Einstellungen › EVE-Clients.</li><li>Overlays: Pin (immer im Vordergrund) und Strg+Mausrad (Größe) gelten je Fenster, auf der Karte ändert Strg+Mausrad die Schrift. Beim Andocken nebeneinander wird die Höhe nicht mehr übernommen. Das Demo-Hauptfenster lässt sich verschieben.</li><li>Fehler behoben: Lauf-Trades zeigten „verkauft“ zu hoch (Verkäufe späterer Läufe derselben Ware zählten mit); Trade-Karte „Menge im Hangar“ ohne die Ware in der eigenen Verkaufsorder; Neocom-Overlay-Symbole liefen nach Ziehen/Rechtsklick senkrecht aus dem Fenster; oberstes Neocom-Symbol wirkte abgeschnitten.</li><li>Übersicht nur noch als Seite im Hauptfenster (Overlay entfernt).</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.74 · 05.10.2026</summary><ul class="about-list"><li>Konto steckt jetzt in Einstellungen › Konto (kein eigenes Neocom-Symbol mehr, auch nicht im Neocom-Overlay). Oben „Deine Accounts &amp; Charaktere“: alle eingeloggten Charaktere mit Porträt, Rolle (Handelscharakter, Frachterpilot, Sprungpilot), Login-Zustand (fehlende Berechtigungen = neu einloggen) und Ausloggen – gruppiert nach Account. Den Account trägst du je Charakter selbst ein (EVE verrät ihn nicht), angezeigt wird „x von 3 Plätzen“.</li><li>Handel ist jetzt ein Formular: Die Reiter „Zu festem Hub/Station“ und „Im Umkreis“ fallen weg. In ① wählst du „Einkaufen in“ (Hub oder eigenes System) und „Verkaufen in“ (ein oder mehrere Hubs, eigenes System oder „Alles im Umkreis“) – daraus folgt die passende Suche (Hub-Vergleich oder Umkreis-Suche mit Schiffsempfehlung). Gilt auch im Overlay „Handel“.</li><li>Handel (Hub-Handel + Hauling, auch im Overlay) übersichtlicher: drei nummerierte Schritte (① Wo kaufen → wohin verkaufen, ② Womit fliegen, ③ Wie viel ISK & wie verkaufen), gleiche klare Namen in beiden Reitern, Felder erscheinen nur, wenn sie gelten. Schiff mit drei Knöpfen: „Automatisch (aus meinem Hangar)“, „Bestimmtes Schiff“ (eigene Schiffe oben) oder „Nur Laderaum eingeben“; Laderaum steht als Wert mit Skill und Fitting (✎ = eigener Wert). „Gank-Schutz“ (aus/vorsichtig/normal/knapp, Standard normal) zeigt sofort, wie viel Ladung das Schiff tragen darf. Budget leer = ganzes Wallet, Knopf „Wallet“. Zeile „Gerechnet wird mit“ fasst alles zusammen und warnt gelb (kein Ziel, Budget über Wallet, keine Schiffe erkannt …).</li><li>Neocom-Overlay: Symbole reagieren schon beim Loslassen der linken Maustaste (Absicherung, weil der Linksklick manchmal nicht ankam). Zur Fehlersuche schreibt das Neocom die letzten Maus-Ereignisse und was das Programm danach tut nach „neocom-log.txt“ im Einstellungsordner.</li><li>Schiffsvorschlag zeigt das Fitting: In Hub-Handel und Hauling steht beim Schiff „Fitting (Low-Slots)“ mit vollen Modulnamen (z. B. 2× Expanded Cargohold II + 1× Reinforced Bulkheads II), im Overlay als EVE-Symbole mit Anzahl (Name im Tooltip). Bulkheads werden erklärt: statt Cargo, weil die Ladung sonst zu wertvoll für die Panzerung wäre.</li><li>Fehler behoben: Hub-Handel und Hauling schlugen Schiffe vor, die der aktive Charakter gar nicht hat (z. B. die Rhea eines anderen Charakters) – Schiffsvorschlag, „besser mit …“ und automatischer Laderaum nehmen jetzt nur noch Schiffe aus dem Hangar des aktiven Charakters. Jump-Frachter werden nie automatisch vorgeschlagen (auch nicht als Kaufvorschlag), von Hand wählbar bleiben sie.</li><li>Neu: Erststart fragt „Was spielst du hauptsächlich?“ – passende Neocom-Gruppen kommen nach oben, der Rest wird eingeklappt. Später unter Einstellungen › Neocom „Spielart neu wählen“.</li><li>Neu: Seite „Übersicht“ (Neocom › Sonstiges, auch als Overlay) mit sechs Kacheln: Wallet, Trades & Läufe, Skills, Planeten, Intel, nächster Timer – Klick öffnet die passende Seite. Bei Neuinstallation die Startseite.</li><li>Aufgeräumt: Trading, Hauling, Hub-Handel, Navigation und Mining haben den Hauptknopf oben, selten gebrauchte Felder (Suchtiefe, Steuer, Standings, Jump Bridges …) stehen unter „Erweitert“ – auf/zu wird gemerkt.</li><li>Neocom-Overlay: Linksklick auf die Symbole kommt jetzt immer an (vorher ging manchmal nur noch der Rechtsklick). Verschieben weiter durch Ziehen an einer freien Stelle, mit Einrasten.</li><li>Zoom im Hauptfenster: Stufen 80–200 % unter Einstellungen › Darstellung, dazu Strg + / Strg − / Strg 0 und Strg + Mausrad. Beim ersten Start passt sich die Größe dem Bildschirm an (1440er- und Ultrawide-Bildschirme 125 %, 4K 150 %), bis du selbst zoomst.</li><li>Neu: Beim ersten Öffnen einer Seite erklärt ein kurzer Hinweis oben, wofür sie da ist – „Verstanden“ blendet ihn für immer aus, Einstellungen › Darstellung › „Alle Hinweise wieder zeigen“ holt alle zurück.</li><li>Lesbarere Schrift im Hauptfenster: Feldbeschriftungen, Tabellenköpfe und Kennzahlen sind bei 100 % jetzt mindestens 10 px groß.</li><li>Englisch: letzte deutsche Reste übersetzt (Gebührenzeile im Trading, Anleitung „3 Months“/„Advanced“, Hinweise bei eigener Client-ID).</li><li>Overlays haben jetzt nur noch ihre eigene Größe (Einstellungen › Overlay › Overlay-Skalierung) – der Zoom des Hauptfensters vergrößert sie nicht mehr mit.</li><li>Breite Bildschirme (Ultrawide, 4K): die Seiten werden mit dem Zoom breiter statt klein in der Mitte zu bleiben, Erklärtexte behalten eine gut lesbare Zeilenlänge.</li><li>Overlays, die du selbst öffnest (Neocom-Klick, Tray, Einstellungen), kommen jetzt immer nach vorne – auch wenn EVE gerade nicht das vordere Fenster ist. Vorher lagen sie mit „nur über EVE“ manchmal unsichtbar hinter dem aktiven Programm.</li><li>Kopfzeile im Hauptfenster zuckt nicht mehr im Sekundentakt (Uhr mit gleich breiten Ziffern).</li><li>Strg + Mausrad ändert in den Overlays nicht mehr die Deckkraft (Deckkraft weiter über die Einstellungen).</li><li>Automatische Vorschläge gank-sicher zum Jita-Preis: Hub-Handel, Hauling und die automatische Schiffswahl zählen jede Ware für die Gank-Grenze mit dem höheren von Einkauf und Jita-Verkaufspreis – so bewerten Ganker den gescannten Frachtraum. Kaufst du außerhalb von Jita billiger ein, wird weniger geladen, dafür ist die Ladung wirklich gank-sicher. Das ISK-Budget zählt weiter mit dem Einkauf. Die Ampel jeder Option zeigt den Jita-Wert, der Tooltip Einkauf und Jita-Wert.</li></ul></details>
 <details class="skills-more"><summary>Beta 4.0.73 · 05.10.2026</summary><ul class="about-list"><li>Einrasten der Overlays schnell an/aus: Rechtsklick in ein Overlay oder aufs Symbol unten rechts › „Einrasten“.</li><li>Watchlist zugeklappt schlanker: Läufe zeigen die Waren zum Herausnehmen und die grün/roten Punkte erst aufgeklappt – zugeklappt reicht der rote Rahmen.</li><li>Overlay-Fußzeile zählt herunter: je EVE-Datenart die Restzeit bis zu neuen Daten („Markt 3:12 · Orders 14:40“), als Laufschrift, wenn das Fenster zu schmal ist. Uhrzeiten weiter im Tooltip.</li><li>Orders aus EVE werden jetzt auch im Hintergrund erkannt (im Takt von EVE, höchstens alle 20 Min.) mit Windows-Meldung. Neu: Verkaufsorders an den 5 Hubs ohne passenden Trade werden ein Verkaufs-Trade – Einkaufspreis aus deinen letzten Käufen (Wallet), sonst „ohne Einkauf“ markiert. Löschen ignoriert die Order dauerhaft.</li><li>Gank-Check rechnet wie Ganker: Ladungswert = der höhere von bezahltem Einkauf und aktuellem Jita-Verkaufspreis (Ganker scannen den Frachtraum und bewerten ihn zum Jita-Preis). Der Tooltip zeigt beide Werte.</li><li><b>Englisch komplett:</b> Die englische Oberfläche war lückenhaft (Meldung: „fast 50 % deutsch“). Jetzt sind alle Bereiche, Unterreiter, Einstellungen, Overlays, Tooltips, Hinweise, Fehlermeldungen, Leerzustände, Bestätigungsdialoge, Windows-Meldungen, Tray-Menü und Rechtsklick-Menüs englisch; zusammengesetzte Statuszeilen werden stückweise übersetzt. Neue Installationen starten in der Windows-Sprache (Deutsch → Deutsch, sonst Englisch), bestehende Einstellungen bleiben. Patchnoten bleiben deutsch und sind im Englisch-Modus durch einen Hinweis auf die GitHub-Releases ersetzt.</li><li>EVE-Einstellungen sichern &amp; Profile (Einstellungen › EVE-Clients, nur im Programm): „Jetzt sichern“ kopiert Fensteranordnung, Chatfenster, Tastenbelegung, Overview &amp; Co. aller EVE-Profile nach EVE-Omni-Sicherungen\EVE-Einstellungen. Automatisch einmal am Tag beim ersten EVE-Start (abschaltbar, die letzten 10 bleiben). „Als Profil speichern“ mit Namen (z. B. „Mining“), wird nie automatisch gelöscht. „Laden“ für alles oder nur für angehakte Charaktere – nur bei geschlossenem EVE, der jetzige Stand wird vorher gesichert.</li><li>Fehler behoben: Im Handel- und Hauling-Overlay stand eine große Lücke zwischen „Sicherste Route …“ und „Alle Preise aktualisieren“ – die Optionen rutschten ans Fensterende.</li></ul></details>
@@ -9055,6 +9456,11 @@ if (typeof document !== 'undefined') {
     "Links": "Left",
     "LJ Reichweite.": "LY range.",
     "Login abgebrochen:": "Login cancelled:",
+    "Mail aktivieren": "Activate mail",
+    "Bei EVE mit den Mail-Berechtigungen einloggen (lesen, senden, löschen)": "Log in at EVE with the mail permissions (read, send, delete)",
+    "Mail konnte nicht aktiviert werden: EVE hat die Mail-Berechtigungen abgelehnt, weil sie in der EVE-Developer-App noch nicht freigeschaltet sind. Alles andere in EVE Omni funktioniert normal weiter.": "Mail could not be activated: EVE rejected the mail permissions because they are not enabled in the EVE developer app yet. Everything else in EVE Omni keeps working normally.",
+    "Login abgelehnt: EVE kennt eine der angefragten Berechtigungen nicht (sie ist in der EVE-Developer-App nicht freigeschaltet). Bitte EVE Omni aktualisieren oder bei eigener Client-ID die Berechtigungen dort freischalten.": "Login rejected: EVE does not know one of the requested permissions (it is not enabled in the EVE developer app). Please update EVE Omni or, with your own client ID, enable the permissions there.",
+    "Login abgebrochen: Die Anmeldung wurde bei EVE nicht bestätigt.": "Login cancelled: the sign-in was not confirmed at EVE.",
     "Logins mitsichern (Datei dann wie ein Passwort behandeln)": "Include logins in the backup (then treat the file like a password)",
     "lohnende Items gefunden (von": "profitable items found (of",
     "Lohnendes Gank-Ziel (Grenze": "Profitable gank target (limit",
@@ -9548,7 +9954,7 @@ if (typeof document !== 'undefined') {
   var EN_PAT = [
     [/^Broker ([\d.,]+) % · Steuer ([\d.,]+) %$/, "Broker $1 % · tax $2 %"],
     [/^(\d+) T$/, "$1 d"], [/^(\d+) Std$/, "$1 h"],   // MB: Restlaufzeit im Orderbuch
-    [/^Keine Ware gefunden: (.+)$/, "No item found: $1"], [/^Für Mail einmal neu einloggen \(Einstellungen › Konto › \+ Charakter\): (.+)$/, "Log in again once for mail (Settings › Account › + Character): $1"], [/^Nicht gefunden: (.+)$/, "Not found: $1"], [/^Nicht gesendet: (.+)$/, "Not sent: $1"], [/^In EVE öffnen ging nicht: (.+)$/, "Opening in EVE failed: $1"], [/^Mail: (\d+) ungelesen$/, "Mail: $1 unread"], [/^EVE Omni: Neue EVE-Mail \((\d+)\)$/, "EVE Omni: New EVE mail ($1)"], [/^Mail „(.+)“ in EVE löschen\?$/, "Delete mail “$1” in EVE?"], [/^📍 Einkauf = Standort von (.+) \((.+)\)$/, "📍 Buying at the location of $1 ($2)"], [/^📍 (.+) ist in (.+) – nicht in einem Hub, Einkauf bleibt\.$/, "📍 $1 is in $2 – not in a hub, buying location stays."], [/^Nach Broker ([\d.,]+) % \(Kauf und Verkauf\) und Steuer ([\d.,]+) % – (.+)\. Ändern unter Handel › Station-Trading\.$/, function(m, a, b, c){ return "After broker " + a + " % (buy and sell) and tax " + b + " % – " + (c === "Skills aus Konto" ? "skills from account" : c) + ". Change under Trading › Station trading."; }], [/^Lohnt ab ([\d.,]+) % Marge und ([\d.,]+) Stück Umsatz am Tag \(wie unter Handel › Station-Trading eingestellt\)$/, "Worth it from $1 % margin and $2 units traded per day (as set under Trading › Station trading)"], [/^„(.+)“ steht in der Preis-Merkliste \(Handel › Station-Trading\)\.$/, "“$1” is on the price watchlist (Trading › Station trading)."], [/^(✓ lohnt|~ Marge knapp|~ wenig Umsatz|✗ Verlust) · Gewinn je Stück (.+)$/, function(m, a, b){ return { "✓ lohnt": "✓ worth it", "~ Marge knapp": "~ thin margin", "~ wenig Umsatz": "~ low volume", "✗ Verlust": "✗ loss" }[a] + " · profit per unit " + b; }], [/^Markt nicht geladen: (.+)$/, "Market not loaded: $1"], [/^Warengruppen nicht geladen: (.+)$/, "Market groups not loaded: $1"],   // MB
+    [/^Keine Ware gefunden: (.+)$/, "No item found: $1"], [/^Mail ist noch nicht aktiviert für: (.+)$/, "Mail is not activated yet for: $1"], [/^Nicht gefunden: (.+)$/, "Not found: $1"], [/^Nicht gesendet: (.+)$/, "Not sent: $1"], [/^In EVE öffnen ging nicht: (.+)$/, "Opening in EVE failed: $1"], [/^Mail: (\d+) ungelesen$/, "Mail: $1 unread"], [/^EVE Omni: Neue EVE-Mail \((\d+)\)$/, "EVE Omni: New EVE mail ($1)"], [/^Mail „(.+)“ in EVE löschen\?$/, "Delete mail “$1” in EVE?"], [/^📍 Einkauf = Standort von (.+) \((.+)\)$/, "📍 Buying at the location of $1 ($2)"], [/^📍 (.+) ist in (.+) – nicht in einem Hub, Einkauf bleibt\.$/, "📍 $1 is in $2 – not in a hub, buying location stays."], [/^Nach Broker ([\d.,]+) % \(Kauf und Verkauf\) und Steuer ([\d.,]+) % – (.+)\. Ändern unter Handel › Station-Trading\.$/, function(m, a, b, c){ return "After broker " + a + " % (buy and sell) and tax " + b + " % – " + (c === "Skills aus Konto" ? "skills from account" : c) + ". Change under Trading › Station trading."; }], [/^Lohnt ab ([\d.,]+) % Marge und ([\d.,]+) Stück Umsatz am Tag \(wie unter Handel › Station-Trading eingestellt\)$/, "Worth it from $1 % margin and $2 units traded per day (as set under Trading › Station trading)"], [/^„(.+)“ steht in der Preis-Merkliste \(Handel › Station-Trading\)\.$/, "“$1” is on the price watchlist (Trading › Station trading)."], [/^(✓ lohnt|~ Marge knapp|~ wenig Umsatz|✗ Verlust) · Gewinn je Stück (.+)$/, function(m, a, b){ return { "✓ lohnt": "✓ worth it", "~ Marge knapp": "~ thin margin", "~ wenig Umsatz": "~ low volume", "✗ Verlust": "✗ loss" }[a] + " · profit per unit " + b; }], [/^Markt nicht geladen: (.+)$/, "Market not loaded: $1"], [/^Warengruppen nicht geladen: (.+)$/, "Market groups not loaded: $1"],   // MB
     [/^Warengruppen werden einmalig von EVE geladen( \([\d \/]+\))? …$/, "Loading market groups from EVE once$1 …"], [/^Umkreis um (.+) – Sprünge über Stargates\.$/, "Radius around $1 – jumps via stargates."],
     [/^Speicher: ([\d,]+) von (\d+) MB belegt \((\d+) %\)\.( Fast voll.*?\.| Zwischenspeicher.*?\.)( Freigegeben: (\d+) Zwischenspeicher\.)?$/, function(m, a, mx, b, c, d, e){   // S1
       return "Storage: " + a.replace(",", ".") + " of " + mx + " MB used (" + b + " %)." + (/Fast voll/.test(c) ? " Almost full – export your data and delete old trades and runs in the watchlist." : " Caches that EVE Omni reloads itself are freed automatically when needed.") + (d ? " Freed: " + e + " caches." : ""); }],
@@ -10268,7 +10674,7 @@ if (typeof document !== 'undefined') {
         tip.style.top = Math.max(0, Math.min(pr.height - th, y)) + "px";
       });
       body.addEventListener("mouseleave", function(){ tip.hidden = true; });
-      // T18: Symbol 0,4 s gedrueckt halten, dann ziehen; auf einem anderen Symbol loslassen = Plaetze tauschen
+      // T18: Symbol 0,4 s gedrueckt halten, dann ziehen; auf einem anderen Symbol loslassen = dort einfügen (PR2)
       var nd = null, noClick = 0, neoUpAt = 0;
       body.addEventListener("pointerdown", function(ev){
         var b = ev.button === 0 && ev.target.closest ? ev.target.closest("[data-neo]") : null;
@@ -10289,7 +10695,7 @@ if (typeof document !== 'undefined') {
         if (nd.on){
           noClick = Date.now(); de.classList.remove("neo-dragging");
           nd.b.classList.remove("drag"); nd.b.style.transform = "";
-          if (nd.to){ nd.to.classList.remove("drop"); H.satAction({ type: "neoSwap", a: nd.b.getAttribute("data-neo"), b: nd.to.getAttribute("data-neo") }); }
+          if (nd.to){ nd.to.classList.remove("drop"); H.satAction({ type: "neoIns", a: nd.b.getAttribute("data-neo"), b: nd.to.getAttribute("data-neo") }); }
         }
         nd = null;
       });
@@ -12325,6 +12731,8 @@ if (typeof document !== 'undefined') {
     wrap.appendChild(v); wrap.appendChild(b);
     return wrap;
   }
+  // PQ1: Warenname ohne Kopier-Knopf – Markt-/Kurven-Knöpfe hängen sich wie bei tscCopyCell hinten an
+  function tscNameCell(display){ var wrap = el("span", "tsc-cp"); wrap.appendChild(el("span", "tsc-cp-v", display)); return wrap; }
   // K2: Stationsname kopierbar in HTML-Texten – Platzhalter setzen, nach innerHTML durch Kopier-Zellen ersetzen
   function stCp(name){ return '<span class="st-cp" data-t="' + escapeHtml(name) + '">' + escapeHtml(name) + '</span>'; }
   function stCpFix(box){ [].forEach.call(box.querySelectorAll(".st-cp"), function(e){ e.replaceWith(stCell(e.getAttribute("data-t"))); }); }
@@ -12764,7 +13172,7 @@ if (typeof document !== 'undefined') {
       tr.appendChild(star);
 
       var tdName = el("td", "item-name"); tdName.setAttribute("data-label", "Artikel");
-      tdName.appendChild(tscCopyCell(escapeHtml(r.name), r.name, "Namen kopieren"));
+      tdName.appendChild(tscNameCell(escapeHtml(r.name)));
       tdName.lastChild.appendChild(mkBtn(r.tid));
       var sub = [];
       if (r.mine.length) sub.push('<span class="pill warn">schon ' + r.mine.length + " Order" + (r.mine.length > 1 ? "s" : "") + "</span>");
@@ -12833,7 +13241,7 @@ if (typeof document !== 'undefined') {
         var tr = document.createElement("tr");
         tr.appendChild(el("td", "", escapeHtml(m.charName)));
         tr.appendChild(el("td", "", o.is_buy_order ? "Kauf" : "Verkauf"));
-        var tdN = el("td", "item-name"); tdN.appendChild(tscCopyCell(escapeHtml(nameCache[o.type_id] || ("#" + o.type_id)), nameCache[o.type_id] || "", "Namen kopieren")); tdN.lastChild.appendChild(mkBtn(o.type_id));
+        var tdN = el("td", "item-name"); tdN.appendChild(tscNameCell(escapeHtml(nameCache[o.type_id] || ("#" + o.type_id)))); tdN.lastChild.appendChild(mkBtn(o.type_id));
         tr.appendChild(tdN);
         addMonoCell(tr, "Offen", fmtNum(o.volume_remain) + " / " + fmtNum(o.volume_total));
         addMonoCell(tr, "Dein Preis", tscFmtPrice(o.price));
@@ -13738,7 +14146,7 @@ if (typeof document !== 'undefined') {
       head.title = "Klick: Karte zu- oder aufklappen";
       head.onclick = function(e){ if (!e.target.closest("button, a, .tsc-cp-b, [data-mk], .hc-btn, .pill")) trFoldSet(t.id); };
       var title = el("div", "tr-title");
-      title.appendChild(tscCopyCell(escapeHtml(t.name), t.name, "Namen kopieren"));
+      title.appendChild(tscNameCell(escapeHtml(t.name)));
       title.insertAdjacentHTML("beforeend", hcBtnHtml(t.tid) + " " + compPill(compTrade(t.id), true) + (t.status !== "done" ? tkKeepPill(t) : "") + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : ""));   // AA5, AA3, BB10, BB23
       head.appendChild(title);
       var phase = t.status === "done" ? (t.cancelled ? ["abgebrochen" + (t.done ? " " + tkDay(t.done) : ""), ""] : ["erledigt" + (t.done ? " " + tkDay(t.done) : ""), "profit"]) : (ev.allSold ? ["alles verkauft", "profit"] :
@@ -14126,7 +14534,7 @@ if (typeof document !== 'undefined') {
     var mp = String(Math.ceil(r.maxBuy*100)/100);
     main.appendChild(tscCopyCell('<span class="sl-qty">'+fmtNum(r.q)+'×</span>', String(r.q), "Menge kopieren (" + r.q + ")"));
     main.appendChild(document.createTextNode(" "));
-    main.appendChild(tscCopyCell('<b>'+escapeHtml(r.name)+'</b>', r.name, "Namen kopieren"));
+    main.appendChild(tscNameCell('<b>'+escapeHtml(r.name)+'</b>'));
     main.lastChild.appendChild(mkBtn(r.tid));
     main.appendChild(document.createTextNode(" · "));
     main.appendChild(tscCopyCell('<span class="mono">bis '+fmtIsk(r.maxBuy)+' ISK/Stück</span>', mp, "Höchsten Einkaufspreis kopieren (" + mp + ") – so viel darf ein Stück höchstens kosten"));
@@ -14988,7 +15396,7 @@ if (typeof document !== 'undefined') {
       var li = document.createElement("li"), m = el("div", "sl-main", ""), avg = x.q ? x.sp / x.q : 0;
       m.appendChild(tscCopyCell('<span class="sl-qty">' + fmtNum(x.q) + "×</span>", String(x.q), "Menge kopieren (" + x.q + ")"));
       m.appendChild(document.createTextNode(" "));
-      m.appendChild(tscCopyCell("<b>" + escapeHtml(x.name) + "</b>", x.name, "Namen kopieren")); m.lastChild.appendChild(mkBtn(x.tid));
+      m.appendChild(tscNameCell("<b>" + escapeHtml(x.name) + "</b>")); m.lastChild.appendChild(mkBtn(x.tid));
       m.appendChild(document.createTextNode(" · "));
       m.appendChild(tscCopyCell('<span class="mono">Ø ' + fmtIsk(avg) + " ISK/Stück</span>", tscCopyPrice(avg), "Geplanten Einkaufspreis kopieren"));
       li.appendChild(m); li.appendChild(el("div", "sl-profit", "+" + fmtIsk(x.p) + " ISK")); ol.appendChild(li);
@@ -15501,7 +15909,7 @@ if (typeof document !== 'undefined') {
   function vcOut(run){ return (run.vc && run.vc.w || []).filter(function(w){ return w.red; }).map(function(w){ return w.name; }).join(", "); }
   // Z2: Ergebnis auf-/zuklappbar je Lauf; neue Prüfung setzt zurück (rot = offen, nur rote Waren)
   var vcView = {};
-  function vcSt(run){ var s = vcView[run.id]; if (!s || s.t !== run.vc.t) s = vcView[run.id] = { t: run.vc.t, open: vcRed(run), all: false }; return s; }
+  function vcSt(run){ var s = vcView[run.id]; if (!s || s.t !== run.vc.t) s = vcView[run.id] = { t: run.vc.t, open: false, all: false }; return s; }   // PR1: nach der Prüfung immer zu
   function vcTog(id, k){ var run = hrLoad().find(function(r){ return String(r.id) === String(id); }); if (!run || !run.vc) return; var s = vcSt(run); s[k] = !s[k]; vcRender(); }
   function vcMk(tid){ return '<button type="button" class="tsc-cp-b mk-btn" data-mk="' + Number(tid) + '" title="Marktfenster in EVE öffnen" aria-label="Marktfenster in EVE öffnen">' + icMini("markt") + "</button>" + hcBtnHtml(tid); }
   function vcCard(id){
@@ -15510,6 +15918,7 @@ if (typeof document !== 'undefined') {
     var v = run.vc, busy = vcBusy[run.id] || vcBusy.all, rid = escapeHtml(run.id);
     var h = '<div class="vc-box"><div class="vc-top"><button type="button" class="btn ghost vc-btn" data-vc="' + rid + '" data-ova="vcRun" data-arg="' + rid + '"' + (busy ? " disabled" : "") +
       ' title="Massenverkauf an die Kauforders am Ziel nachrechnen (nichts wird ans Spiel gesendet)">' + (busy ? "prüfe …" : "Verkauf prüfen") + "</button>" +
+      (v && !v.err ? ' <button type="button" class="btn ghost vc-fold" data-vcf="' + rid + '" data-ova="vcFold" data-arg="' + rid + '" title="Ergebnis auf-/zuklappen">' + (vcSt(run).open ? "▾" : "▸") + "</button>" : "") +   // PR1
       (run.sm ? "" : ' <span class="item-sub">Verkaufsart unbekannt</span>') + "</div>";
     if (!v) return h + "</div>";
     if (v.err) return h + '<div class="item-sub">' + escapeHtml(v.err) + "</div></div>";
@@ -15749,9 +16158,10 @@ if (typeof document !== 'undefined') {
     "esi-corporations.read_divisions.v1",
     // seit 30.09.2026: Mond-Extraktionen der Corp (MI3, braucht im Spiel Station Manager bzw. Accountant)
     "esi-industry.read_corporation_mining.v1",
-    // seit 11.10.2026: EVE-Mail lesen, schreiben, gelesen/löschen (EM)
-    "esi-mail.read_mail.v1", "esi-mail.send_mail.v1", "esi-mail.organize_mail.v1"
   ].join(" ");
+  // EVE-Mail (EM) lesen, schreiben, gelesen/löschen: nur beim Login über „Mail aktivieren“ – die drei sind in der gemeinsamen
+  // Developer-App nicht immer freigeschaltet, im normalen Login ließen sie EVE mit invalid_scope abbrechen (GitHub #1, #2)
+  var SSO_MAIL_SCOPES = "esi-mail.read_mail.v1 esi-mail.send_mail.v1 esi-mail.organize_mail.v1";
   // Pruefen, ob ein Login eine Berechtigung hat (alte Logins kennen die neuen noch nicht -> einmal neu einloggen)
   function tokHasScope(tok, scope){ var s = tokenScopes(tok); return !s.length || s.indexOf(scope) >= 0; }
   var SSO_CLIENT_ID_KEY = "eve-zentrale-client-id";
@@ -16190,7 +16600,8 @@ if (typeof document !== 'undefined') {
 
   (function(){ var cb = document.getElementById("sso-ext"); if (!cb) return; try{ cb.checked = localStorage.getItem("eve-zentrale-sso-ext-v1") === "1"; }catch(e){}
     cb.onchange = function(){ try{ localStorage.setItem("eve-zentrale-sso-ext-v1", cb.checked ? "1" : "0"); }catch(e){} }; })();
-  document.getElementById("sso-login-btn").onclick = async function(){
+  document.getElementById("sso-login-btn").onclick = function(){ return ssoStart(false); };
+  async function ssoStart(mail){
     var own = document.getElementById("sso-client-id").value.trim(), rd = document.getElementById("sso-redirect").value.trim();
     try{
       if (!window.crypto || !window.crypto.subtle) throw new Error("crypto.subtle nicht verfügbar in diesem Kontext.");
@@ -16198,6 +16609,7 @@ if (typeof document !== 'undefined') {
       if (rd && rd !== SSO_LEGACY_REDIRECT) localStorage.setItem(SSO_REDIRECT_KEY, rd); else localStorage.removeItem(SSO_REDIRECT_KEY);
       var cl = ssoClient(), clientId = cl.id;
       sessionStorage.setItem("eve-sso-client", clientId);
+      if (mail) sessionStorage.setItem("eve-sso-mail", "1"); else sessionStorage.removeItem("eve-sso-mail");   // für die Fehlermeldung
       var verifier = randomB64url(32);
       var challenge = await pkceChallenge(verifier);
       var state = randomB64url(16);
@@ -16205,7 +16617,7 @@ if (typeof document !== 'undefined') {
       sessionStorage.setItem("eve-sso-state", state);
       var url = SSO_AUTH_URL + "?response_type=code&client_id=" + encodeURIComponent(clientId) +
         "&redirect_uri=" + encodeURIComponent(cl.redirect) +
-        "&scope=" + encodeURIComponent(SSO_SCOPES) +
+        "&scope=" + encodeURIComponent(mail ? SSO_SCOPES + " " + SSO_MAIL_SCOPES : SSO_SCOPES) +
         "&state=" + encodeURIComponent(state) +
         "&code_challenge=" + encodeURIComponent(challenge) +
         "&code_challenge_method=S256";
@@ -16223,7 +16635,15 @@ if (typeof document !== 'undefined') {
     }catch(e){
       ssoSetStatus("Login konnte nicht gestartet werden: " + e.message);
     }
-  };
+  }
+  // EVE lehnt eine Berechtigung ab: verständlich statt der rohen EVE-Meldung
+  function ssoErrText(err, desc){
+    var mail = false; try{ mail = sessionStorage.getItem("eve-sso-mail") === "1"; }catch(e){}
+    if (err === "invalid_scope") return mail ? "Mail konnte nicht aktiviert werden: EVE hat die Mail-Berechtigungen abgelehnt, weil sie in der EVE-Developer-App noch nicht freigeschaltet sind. Alles andere in EVE Omni funktioniert normal weiter."
+      : "Login abgelehnt: EVE kennt eine der angefragten Berechtigungen nicht (sie ist in der EVE-Developer-App nicht freigeschaltet). Bitte EVE Omni aktualisieren oder bei eigener Client-ID die Berechtigungen dort freischalten.";
+    if (err === "access_denied") return "Login abgebrochen: Die Anmeldung wurde bei EVE nicht bestätigt.";
+    return "Login-Fehler: " + err + (desc ? " – " + desc : "");
+  }
 
   async function exchangeCodeForTokens(code, state){
     var expectedState = null, verifier = null;
@@ -16265,7 +16685,7 @@ if (typeof document !== 'undefined') {
   window.addEventListener("message", function(ev){
     var d = ev.data;
     if (!d || d.source !== "eve-sso-callback") return;
-    if (d.error){ ssoSetStatus("Login-Fehler: " + d.error); return; }
+    if (d.error){ ssoSetStatus(ssoErrText(d.error, "")); return; }
     exchangeCodeForTokens(d.code, d.state);
   });
 
@@ -16283,7 +16703,7 @@ if (typeof document !== 'undefined') {
       ssoSetStatus("Das sieht nicht wie eine gültige URL aus – bitte die komplette Adresse aus der Adresszeile kopieren.");
       return;
     }
-    if (err){ ssoSetStatus("Login-Fehler: " + err + (errDesc ? " – " + errDesc : "")); return; }
+    if (err){ ssoSetStatus(ssoErrText(err, errDesc)); return; }
     if (!code){ ssoSetStatus("In dieser URL wurde kein 'code'-Parameter gefunden – bitte die Adresse nach dem Login (mit ?code=...) einfügen."); return; }
     exchangeCodeForTokens(code, state);
   };
@@ -20076,6 +20496,14 @@ if (typeof document !== 'undefined') {
     c.grp[from] = gid || "-"; neoGrpStore(c);
     if (first) neoMove(from, first, false); else neoSave(neoLoadOrder());
   }
+  function neoGrpMove(gid, tgt){   // PR3: ganze Gruppe an die Stelle einer anderen (ohne Gruppe bleibt oben)
+    var c = neoGrpLoad(), o = neoGrouped(neoLoadOrder()), gs = [];
+    o.forEach(function(id){ var g = neoGroupOf(id, c); if (gs.indexOf(g) < 0) gs.push(g); });
+    var i = gs.indexOf(gid), j = gs.indexOf(tgt);
+    if (!gid || !tgt || i < 0 || j < 0 || i === j) return;
+    gs.splice(i, 1); gs.splice(gs.indexOf(tgt) + (i < j ? 1 : 0), 0, gid);
+    neoSave(gs.reduce(function(a, g){ return a.concat(o.filter(function(id){ return neoGroupOf(id, c) === g; })); }, []));
+  }
   function neoMove(dragId, targetId, after){
     var o = neoLoadOrder();
     if (dragId === targetId || o.indexOf(dragId) < 0 || o.indexOf(targetId) < 0) return;
@@ -20087,7 +20515,7 @@ if (typeof document !== 'undefined') {
   }
   (function neoInit(){
     neoApply(neoLoadOrder());
-    var dragId = null;
+    var dragId = null, grpDrag = null;
     NEO_DEFAULT.forEach(function(id){
       var b = document.getElementById(id); if (!b) return;
       b.setAttribute("draggable", "true");
@@ -20112,7 +20540,20 @@ if (typeof document !== 'undefined') {
         var from = dragId || (ev.dataTransfer && ev.dataTransfer.getData("text/plain")); if (from) neoToGroup(from, g[0]);
       });
       h.addEventListener("dragenter", function(){ if (dragId && neoEveOn()) neoFlyShow(g[0]); });   // LL8: Feld geht auf, dann an die gewünschte Stelle ziehen
+      // PR3: Gruppe selbst ziehen = vor/hinter eine andere Gruppe
+      h.setAttribute("draggable", "true");
+      h.addEventListener("dragstart", function(ev){ if (dragId) return; grpDrag = g[0]; neoFlyShow(""); h.classList.add("neo-dragging"); try{ ev.dataTransfer.effectAllowed = "move"; ev.dataTransfer.setData("text/plain", "grp:" + g[0]); }catch(e){} });
+      h.addEventListener("dragend", function(){ grpDrag = null; h.classList.remove("neo-dragging"); document.querySelectorAll(".neo-drag-over").forEach(function(x){ x.classList.remove("neo-drag-over"); }); });
+      h.addEventListener("dragover", function(ev){ if (!grpDrag || grpDrag === g[0]) return; ev.preventDefault(); h.classList.add("neo-drag-over"); });
+      h.addEventListener("drop", function(ev){ if (!grpDrag) return; ev.preventDefault(); h.classList.remove("neo-drag-over"); var f = grpDrag; grpDrag = null; neoGrpMove(f, g[0]); });
     });
+    // PR3: Symbol aus dem Gruppenfeld auf die freie Leiste ziehen = ohne Gruppe (wie in EVE)
+    var nav = document.getElementById("neocom"), onBar = function(ev){ return !(ev.target.closest && ev.target.closest(".neo-btn, .neo-grp, .neo-fly")); };
+    if (nav){
+      nav.addEventListener("dragover", function(ev){ if (!dragId || !onBar(ev)) { nav.classList.remove("neo-drop-bar"); return; } ev.preventDefault(); nav.classList.add("neo-drop-bar"); });
+      nav.addEventListener("dragleave", function(ev){ if (ev.target === nav) nav.classList.remove("neo-drop-bar"); });
+      nav.addEventListener("drop", function(ev){ nav.classList.remove("neo-drop-bar"); if (!dragId || !onBar(ev)) return; ev.preventDefault(); var f = dragId; dragId = null; neoFlyShow(""); neoToGroup(f, ""); });
+    }
     var rs = document.getElementById("neo-order-reset");
     if (rs) rs.onclick = function(){ var c = neoGrpLoad(); c.grp = {}; c.fold = []; neoGrpStore(c); neoSave(NEO_DEFAULT.slice()); };
     var sl = document.getElementById("neo-slim");
@@ -21884,7 +22325,7 @@ if (typeof document !== 'undefined') {
       var tmT = tkTimes()["Trade" + t.id], card = el("div", "ov-card" + (ovAlarmKeys[t.id] ? " alarm" : tkStCls(trPh(t, ev), trBad(ev) || !!(tmT && tmT.slow))) + (String(t.id) === fid ? " ov-focus" : "") + (fold && fold[t.id] ? " tr-fold" : ""));
       card.setAttribute("data-bk", "Trade:" + t.id);   // BB6
       var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(ovCp(escapeHtml(t.name), t.name, "Namen kopieren")); nm.lastChild.appendChild(mkBtn(t.tid)); nm.insertAdjacentHTML("beforeend", " " + compPill(compTrade(t.id), true) + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23
+      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid)); nm.insertAdjacentHTML("beforeend", " " + compPill(compTrade(t.id), true) + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23
       var phase = ev.allSold ? ["fertig", "profit"] : (ev.buyPhase && ev.sellPhase ? ["Kauf+Verk.", "warn"] : (ev.buyPhase ? ["Kauf", "warn"] : ["Verkauf", "warn"]));
       h.appendChild(el("span", "pill " + phase[1], phase[0]));
       if (fold){ h.setAttribute("data-ova", "trFold"); h.setAttribute("data-arg", t.id); h.title = "Klick: Karte zu- oder aufklappen"; }
@@ -22468,7 +22909,7 @@ if (typeof document !== 'undefined') {
     if (!open) return;
     tscRows.slice().sort(function(a, b){ return (b.inPlan - a.inPlan) || (b.profit - a.profit); }).slice(0, 40).forEach(function(r){
       var tracked = trFind(r.tid, hubKey, cid), card = el("div", "ov-card" + (tracked ? " good" : "")), h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); if (r.inPlan) nm.appendChild(el("span", "", "★ ")); nm.appendChild(ovCp(escapeHtml(r.name), r.name, "Namen kopieren")); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid));
+      var nm = el("span", "ov-name"); if (r.inPlan) nm.appendChild(el("span", "", "★ ")); nm.appendChild(tscNameCell(escapeHtml(r.name))); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid));
       nm.insertAdjacentHTML("beforeend", " " + compPill(r.comp, true)); h.appendChild(nm);
       h.appendChild(el("span", "ov-rbtn", tracked ? '<button type="button" data-ova="ovGo" data-arg="track">✓ Gemerkt</button>' : '<button type="button" data-ova="scanTrack" data-arg="' + r.tid + '" title="Diesen Trade merken, bis er erledigt ist">＋ Merken</button>'));
       card.appendChild(h);
@@ -22494,7 +22935,7 @@ if (typeof document !== 'undefined') {
       var tracked = trFind(r.tid, tscBook ? tscBook.hub : "jita", getActiveCharId() ? String(getActiveCharId()) : "");
       var card = el("div", "ov-card" + (tracked ? " good" : ""));
       var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.appendChild(ovCp(escapeHtml(r.name), r.name, "Namen kopieren")); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid)); h.appendChild(nm);
+      var nm = el("span", "ov-name"); nm.appendChild(tscNameCell(escapeHtml(r.name))); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid)); h.appendChild(nm);
       nm.insertAdjacentHTML("beforeend", " " + compPill(r.comp, true));   // AA5
       if (tracked) h.appendChild(el("span", "pill profit", "gemerkt"));
       card.appendChild(h);
@@ -22605,7 +23046,7 @@ if (typeof document !== 'undefined') {
         var it = el("div", "ov-hl-items");
         d.items.slice(0, 20).forEach(function(x){
           var q = el("span", "q"); q.appendChild(ovCp(fmtNum(x.q), String(x.q), "Menge kopieren")); it.appendChild(q);
-          var n = el("span", "n"); n.appendChild(ovCp(escapeHtml(x.name), x.name, "Namen kopieren")); if (x.tid) n.lastChild.appendChild(mkBtn(x.tid)); it.appendChild(n);
+          var n = el("span", "n"); n.appendChild(tscNameCell(escapeHtml(x.name))); if (x.tid) n.lastChild.appendChild(mkBtn(x.tid)); it.appendChild(n);
         });
         card.appendChild(it);
         var all = ovLine("txt"); all.appendChild(ovMultibuy(d.items)); card.appendChild(all);
@@ -22648,7 +23089,7 @@ if (typeof document !== 'undefined') {
     sortList("hub", H.rows, HUB_SORT).forEach(function(r){
       var card = el("div", "ov-card");
       var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.appendChild(ovCp(escapeHtml(r.name), r.name, "Namen kopieren")); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid)); h.appendChild(nm);
+      var nm = el("span", "ov-name"); nm.appendChild(tscNameCell(escapeHtml(r.name))); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid)); h.appendChild(nm);
       card.appendChild(h);
       var lb = ovLine();
       lb.appendChild(el("span", "", "Kaufen"));
@@ -22877,7 +23318,7 @@ if (typeof document !== 'undefined') {
       body.appendChild(el("div", "ov-sum trk-g", '<button type="button" data-ova="apList">' + (d.list ? "▾" : "▸") + " Liste <b>" + L.rows.length + "</b></button>"));
       if (d.list) L.rows.forEach(function(r){
         var row = el("div", "ov-l ap-row");
-        var nm = el("span", "ap-n", r.est ? "" : '<img class="ap-i" alt="" loading="lazy" src="https://images.evetech.net/types/' + Number(r.tid) + '/icon?size=32" onerror="this.onerror=null;this.src=this.src.split(&quot;/icon&quot;).join(&quot;/render&quot;)">'); nm.appendChild(ovCp(escapeHtml(r.name), r.name, "Namen kopieren"));
+        var nm = el("span", "ap-n", r.est ? "" : '<img class="ap-i" alt="" loading="lazy" src="https://images.evetech.net/types/' + Number(r.tid) + '/icon?size=32" onerror="this.onerror=null;this.src=this.src.split(&quot;/icon&quot;).join(&quot;/render&quot;)">'); nm.appendChild(tscNameCell(escapeHtml(r.name)));
         if (r.nick) nm.appendChild(el("span", "muted", " „" + escapeHtml(r.nick) + "“"));
         if (!r.est) nm.appendChild(mkBtn(r.tid)); row.appendChild(nm);
         if (r.est){ row.appendChild(el("span", "ap-q mono", fmtNum(r.q))); row.appendChild(el("span", "ap-v mono", '<span title="Nicht als Ware erkannt – Wert aus der eingefügten Zeile (Schätzpreis von EVE)">EVE-Schätzung ' + ovIsk(r.buy) + "</span>")); body.appendChild(row); return; }
@@ -23079,7 +23520,7 @@ if (typeof document !== 'undefined') {
     wrap.appendChild(side); wrap.appendChild(main); box.appendChild(wrap);
     if (!mbCur){ main.appendChild(el("div", "ov-empty", "Ware oben suchen oder links in den Warengruppen wählen – dann siehst du die Preise in den 5 Hubs und das Orderbuch.")); return; }
     var head = el("div", "mb-item", '<img class="mb-ic" alt="" src="https://images.evetech.net/types/' + mbCur.tid + '/icon?size=64" onerror="this.onerror=null;this.src=this.src.split(&quot;/icon&quot;).join(&quot;/render&quot;)"><b class="mb-name"></b>');
-    head.querySelector(".mb-name").appendChild(ovCp(escapeHtml(mbCur.name), mbCur.name, "Namen kopieren")); head.querySelector(".mb-name").appendChild(mkBtn(mbCur.tid));
+    head.querySelector(".mb-name").appendChild(tscNameCell(escapeHtml(mbCur.name))); head.querySelector(".mb-name").appendChild(mkBtn(mbCur.tid));
     var hb = head.querySelector(".hc-btn"); if (hb) hb.remove();   // MB4: Kurve steht hier immer offen
     head.appendChild(el("span", "item-sub", mbBusy ? "lädt Preise aus den 5 Hubs …" : mbCur.t ? "Stand " + new Date(mbCur.t).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) : ""));
     main.appendChild(head);
@@ -23258,6 +23699,7 @@ if (typeof document !== 'undefined') {
   }
   async function emAction(a){
     var d = emLoad(), f = a.form || {}, m = emHeads.filter(function(x){ return String(x.id) === String(a.arg); })[0];
+    if (a.type === "emLogin"){ ovSetMode("full", true); switchTab("settings"); if (typeof setShow === "function") setShow("chars"); ssoStart(true); return; }   // Mail-Berechtigungen erst hier anfragen
     if (a.type === "emTab"){ d.tab = a.arg; emSave(d); emOpen = null; emUi(); return; }
     if (a.type === "emChar"){ d.cid = String(f.emchar || ""); emSave(d); emUi(); return; }
     if (a.type === "emFind"){ d.q = String(f.emq || "").trim(); emSave(d); emUi(); return; }
@@ -23302,7 +23744,11 @@ if (typeof document !== 'undefined') {
   function emRenderInto(box, compact){
     var d = emLoad(), toks = emToks(), miss = emMissing(), list = emList(d);
     if (!loadAllTokens().length){ box.appendChild(el("p", "note", "Nicht eingeloggt. Unter Einstellungen › Konto einen Charakter einloggen.")); return; }
-    if (miss.length) box.appendChild(el("p", "note em-miss", "Für Mail einmal neu einloggen (Einstellungen › Konto › + Charakter): " + escapeHtml(miss.map(function(t){ return t.character_name; }).join(", "))));
+    if (miss.length){
+      var mn = el("p", "note em-miss", "Mail ist noch nicht aktiviert für: " + escapeHtml(miss.map(function(t){ return t.character_name; }).join(", ")) + " ");
+      mn.insertAdjacentHTML("beforeend", '<button type="button" class="btn ghost" data-ova="emLogin" title="Bei EVE mit den Mail-Berechtigungen einloggen (lesen, senden, löschen)">Mail aktivieren</button>');
+      box.appendChild(mn);
+    }
     if (!toks.length) return;
     var cnt = {}; emUnread().forEach(function(m){ var k = emKind(m); cnt[k] = (cnt[k] || 0) + 1; cnt.all = (cnt.all || 0) + 1; });
     var bar = '<div class="ovn-mode em-tabs">' + EM_TABS.map(function(t){ return '<button type="button" data-ova="emTab" data-arg="' + t[0] + '" aria-pressed="' + (d.tab === t[0]) + '">' + t[1] + (cnt[t[0]] ? " (" + cnt[t[0]] + ")" : "") + "</button>"; }).join("") + "</div>";
@@ -24491,11 +24937,11 @@ if (typeof document !== 'undefined') {
     if (btn && btn.onclick) btn.onclick(); else switchTab("station");
     var tb = document.getElementById("tsc-view-trades"); if (tb) tb.click();
   }
-  // T18: zwei Symbole tauschen (Einstellungen/Konto stehen nicht in der Liste und bleiben unten)
-  function neoSwap(a, b){
+  // PR2: Symbol an die Stelle des Ziels einfügen, die anderen rücken weiter (vorher Tauschen – mit der Gruppen-Sortierung sprang dabei der Rest mit)
+  function neoIns(a, b){
     var o = neoLoadOrder(), i = o.indexOf("neo-btn-" + a), j = o.indexOf("neo-btn-" + b);
     if (i < 0 || j < 0 || i === j) return;
-    o[i] = "neo-btn-" + b; o[j] = "neo-btn-" + a; neoSave(o);
+    neoMove("neo-btn-" + a, "neo-btn-" + b, i < j);
   }
   function neoOverlayAction(target, big, ct){
     if (target === "quit"){ neoQuit(); return; }
@@ -24810,7 +25256,7 @@ if (typeof document !== 'undefined') {
     else if (a.type === "alpha"){ var sa = ovLoad(); sa.alphaView = sa.alphaView || {}; sa.alphaView[view] = Math.max(0.2, Math.min(1, Number(a.v) || 1)); ovSave(sa); ovPublishSatellites(); ovsRender(); }
     else if (a.type === "jb") jbxCommand(a.arg === "q" ? "q:" + String(a.text || "") : String(a.cmd || ""));
     else if (a.type === "neo") neoOverlayAction(String(a.target || ""), !!a.big, !!a.ct);
-    else if (a.type === "neoSwap") neoSwap(String(a.a || ""), String(a.b || ""));
+    else if (a.type === "neoIns") neoIns(String(a.a || ""), String(a.b || ""));
     else if (a.type === "map") ovMapCmd(String(a.cmd || ""));
     else if (a.type === "act") ovAct(String(a.act || ""));
     else if (a.type === "grclear") grClear();
@@ -25226,7 +25672,7 @@ if (typeof document !== 'undefined') {
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "4.0.76";
+  var EVECORE_VERSION = "4.0.77";
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   // NX3: Funktionsliste (Einstellungen › Funktionen) – [Bereich, Funktion DE, Funktion EN, wo DE, wo EN, Ziel (Neocom-Knopf oder set:<Einstellungsbereich>), Overlay-Ansicht]
   // Steht auch auf der Homepage (tools/funktionsliste.js liest diese Liste). Neue Funktion → hier eine Zeile dazu.
@@ -25285,6 +25731,7 @@ if (typeof document !== 'undefined') {
     ["Extras", "Uhr und Timer (EVE-Zeit, Downtime, eigene Timer)", "Clock and timers (EVE time, downtime, own timers)", "Neocom-Overlay › Uhr & Timer", "Neocom overlay › Clock & timers", "", "uhr"],
     ["Extras", "Notizen", "Notes", "Neocom-Overlay › Notizen", "Neocom overlay › Notes", "", "notiz"],
     ["Extras", "Leistung: CPU, RAM, GPU des PCs", "Performance: CPU, RAM, GPU of the PC", "Neocom-Overlay › Leistung", "Neocom overlay › Performance", "", "leistung"],
+    ["Extras", "OmniBreaker: Minispiel mit 100 Leveln, Power-Items, Schienen, Rollbahnen, Combo-Effekten und weltweiter Bestenliste", "OmniBreaker: minigame with 100 levels, power-ups, rails, rolling tracks, combo effects and a worldwide leaderboard", "Sonstiges › OmniBreaker", "Other › OmniBreaker", "", "spiel"],
     ["Extras", "Übersicht als Startseite", "Overview as start page", "Sonstiges › Übersicht", "Other › Overview", "home", ""],
     ["Daten & Konto", "Mehrere Charaktere und Accounts einloggen (nur EVE-SSO)", "Log in several characters and accounts (EVE SSO only)", "Einstellungen › Konto", "Settings › Account", "set:chars", ""],
     ["Daten & Konto", "Daten sichern und auf einem anderen PC übernehmen", "Back up data and move it to another PC", "Einstellungen › Daten", "Settings › Data", "set:data", ""],

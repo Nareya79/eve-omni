@@ -30,6 +30,8 @@ public static class EcFg {
   [DllImport("user32.dll")] static extern bool BringWindowToTop(IntPtr h);
   [DllImport("user32.dll")] static extern bool ShowWindowAsync(IntPtr h, int cmd);
   [DllImport("user32.dll")] static extern bool IsIconic(IntPtr h);
+  [DllImport("user32.dll")] static extern IntPtr GetTopWindow(IntPtr h);
+  [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr h, uint cmd);
   [DllImport("user32.dll")] static extern bool IsWindow(IntPtr h);
   [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr h);
   [DllImport("user32.dll")] static extern bool AttachThreadInput(uint a, uint b, bool attach);
@@ -269,8 +271,17 @@ public static class EcFg {
   // nochmal) – so kommt kein verspaeteter Befehl von main.js dazwischen, der sie hinter EVE laesst.
   static readonly Dictionary<long, bool> ovs = new Dictionary<long, bool>();
   static void RaiseOv(){
-    List<long> hs;
-    lock (ovs){ hs = new List<long>(); foreach (var kv in ovs) if (!kv.Value) hs.Add(kv.Key); foreach (var kv in ovs) if (kv.Value) hs.Add(kv.Key); }   // S16: Namen (true) zuletzt
+    List<long> hs; Dictionary<long, bool> nm;
+    lock (ovs){ nm = new Dictionary<long, bool>(ovs); }
+    // Stapel erhalten: von unten nach oben heben – was vorne lag, bleibt vorne (vorher feste Liste: ein Overlay über einem anderen rutschte darunter)
+    Dictionary<long, int> pos = new Dictionary<long, int>(); int i = 0;
+    for (IntPtr w = GetTopWindow(IntPtr.Zero); w != IntPtr.Zero && pos.Count < nm.Count && i < 20000; w = GetWindow(w, 2), i++){ long k = w.ToInt64(); if (nm.ContainsKey(k)) pos[k] = i; }   // 2 = GW_HWNDNEXT, i = Abstand von oben
+    hs = new List<long>(nm.Keys);
+    hs.Sort(delegate(long a, long b){
+      if (nm[a] != nm[b]) return nm[a] ? 1 : -1;                                   // S16: Namen (true) zuletzt
+      int pa = pos.ContainsKey(a) ? pos[a] : int.MaxValue, pb = pos.ContainsKey(b) ? pos[b] : int.MaxValue;
+      return pb.CompareTo(pa);                                                      // weiter unten zuerst
+    });
     foreach (long h in hs) SetWindowPos(new IntPtr(h), new IntPtr(-1), 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0010 | 0x0200);   // HWND_TOPMOST, ohne Aktivieren
   }
 
