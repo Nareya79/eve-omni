@@ -479,6 +479,19 @@ function applySatState(w){
   w.setIgnoreMouseEvents(satCt(w), satCt(w) ? { forward: true } : undefined);
 }
 // 09.10.: Vordergrund je Overlay merken (S.windows[id].top) – ohne eigenen Wert gilt der allgemeine Schalter
+// PS2: OmniBreaker-Fenster immer genau so groß wie das hochkante Feld (4:5) plus Kopfleiste – keine schwarzen Ränder.
+// Kurz nach jeder Größenänderung (Ziehen, Einrasten, Zoom) wird die Höhe zur Breite passend gesetzt; Kopfleiste und Ränder misst die Seite selbst.
+function spielFit(w){
+  if (!w || w.isDestroyed() || (S.windows.spiel || {}).rolled) return;
+  w.webContents.executeJavaScript('(function(){var b=document.getElementById("ov-body");return b?[innerWidth,innerHeight,b.clientWidth,b.clientHeight]:null})()').then(r => {
+    if (!r || !r[0] || w.isDestroyed()) return;
+    const [cw, ch] = w.getContentSize(), k = cw / r[0], exW = (r[0] - r[2]) * k, exH = (r[1] - r[3]) * k;
+    const wa = screen.getDisplayMatching(w.getBounds()).workArea, fh = w.getBounds().height - ch;   // nie höher als der Bildschirm: dann schmaler
+    let nw = cw, want = Math.round((cw - exW) / 0.8 + exH);
+    if (want + fh > wa.height){ want = wa.height - fh; nw = Math.round((want - exH) * 0.8 + exW); }
+    if (Math.abs(want - ch) > 2 || nw !== cw) w.setContentSize(nw, want);
+  }, () => {});
+}
 function satTop(id){ const t = id && (S.windows[id] || {}).top; return typeof t === 'boolean' ? t : !!S.alwaysOnTop; }
 // S2: Durchklicken fuer alle Overlays oder nur fuer einzelne (S.windows[id].ct). Das Neocom bleibt klickbar – dort schaltet man es um.
 function satCt(w){
@@ -505,6 +518,7 @@ function openSat(id, show){
   w.__key = satKey();   // NW2: geparkt nur mit gleichen Einstellungen wiederverwenden
   w.setMinimumSize(SAT_MIN(id)[0], SAT_MIN(id)[1]);
   sats[id] = w;
+  if (id === 'spiel' && !w.__fit){ w.__fit = true; let ft = null; w.on('resize', () => { clearTimeout(ft); ft = setTimeout(() => spielFit(w), 250); }); w.webContents.on('did-finish-load', () => setTimeout(() => spielFit(w), 300)); w.webContents.on('zoom-changed', () => setTimeout(() => spielFit(w), 200)); }   // PS2
   if (!w.__zf){ w.__zf = true; w.on('focus', () => satZTouch(w)); w.once('closed', () => satZTouch(w)); }   // Stapel merken
   w.setMenu(null);
   if (cfg.rolled){ satRollApply(w, id, cfg); w.setBounds({ x: b.x, y: b.y, width: b.width, height: cfg.rollH }); }
