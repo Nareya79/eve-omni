@@ -47,6 +47,7 @@ const DEFAULTS = {
   hotkeys: { clickThrough: 'CommandOrControl+Shift+E', toggleShow: 'CommandOrControl+Shift+O', localPaste: 'CommandOrControl+Shift+L', musicToggle: '', musicNext: '', musicPrev: '' },
   autostart: false,
   eveAutoShow: true,
+  splash: true,               // NX2: Startbild (Logo, Version, Links) 4 s beim Programmstart
   startMain: true,            // BB26: Hauptfenster beim Start zeigen (aus = nur Overlays + Symbol unten rechts)
   eveAutoHide: false,
   closeToTray: true,
@@ -375,7 +376,7 @@ if (TEST) global.__evecoreTest = {
 
 /* ---------------- Einzelfenster (eine Ansicht je Fenster, frei platzierbar) ---------------- */
 const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Handel', track: 'Watchlist',
-                local: 'Local', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer' };
+                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
 /* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
    Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
 const MAIN_EN = {
@@ -459,6 +460,7 @@ function satIdOf(wc){ return Object.keys(sats).find(id => sats[id] && !sats[id].
 function satDefaultBounds(id){
   const wa = screen.getPrimaryDisplay().workArea, i = Object.keys(VIEWS).indexOf(id);
   if (id === 'neocom') return { width: 66, height: Math.min(640, wa.height - 160), x: wa.x + 8, y: wa.y + 120 };
+  if (id === 'spiel') return { width: 440, height: Math.min(620, wa.height - 160), x: wa.x + wa.width - 460, y: wa.y + 100 };   // OmniBreaker: hochkant
   if (id === 'piplan') return { width: 1000, height: Math.min(760, wa.height - 160), x: wa.x + wa.width - 1020, y: wa.y + 100 };   // DD3: 6 Spalten passen
   return { width: 320, height: 380, x: wa.x + wa.width - 340 - (i % 4) * 30, y: wa.y + 120 + (i % 4) * 40 };
 }
@@ -478,11 +480,21 @@ function satCt(w){
 function openSat(id, show){
   if (!VIEWS[id] || quitting) return null;   // 4.0.67: beim Beenden keine Fenster mehr oeffnen – sonst bricht app.quit ab
   if (sats[id] && !sats[id].isDestroyed()) return sats[id];
+  const pk = satParked[id]; delete satParked[id];
+  if (pk && !pk.isDestroyed()){
+    if (pk.__key === satKey()){
+      sats[id] = pk; neoTraceAdd('Overlay ' + id + ' wieder gezeigt');
+      if (show !== false) pk.showInactive();
+      return pk;
+    }
+    pk.destroy();
+  }
   const cfg = S.windows[id] || {};
   const b = visibleOnScreen(cfg.bounds) ? cfg.bounds : satDefaultBounds(id);
   // 4.0.51: fertig geladenes Reserve-Fenster nehmen (Klick → sofort da), nur das Neocom braucht eigene Fenster-Art (nicht fokussierbar)
   const sp = id !== 'neocom' && satSpareTake(), w = sp || satWin(b, id !== 'neocom');
   if (sp){ w.setBounds(b); w.setTitle('EVE Omni – ' + VIEWS[id]); }
+  w.__key = satKey();   // NW2: geparkt nur mit gleichen Einstellungen wiederverwenden
   w.setMinimumSize(SAT_MIN(id)[0], SAT_MIN(id)[1]);
   sats[id] = w;
   w.setMenu(null);
@@ -506,6 +518,7 @@ function openSat(id, show){
   });
   if (sp){ w.webContents.executeJavaScript('window.__satBecome && window.__satBecome(' + JSON.stringify(id) + ')').catch(() => {}); if (show !== false) setTimeout(() => { if (!w.isDestroyed()) w.showInactive(); }, 30); }
   else w.once('ready-to-show', () => { if (show !== false) w.showInactive(); });
+  if (id !== 'neocom') neoTraceAdd('Overlay ' + id + (sp ? ' aus Reserve' : ' neu gebaut'));   // NW2: Diagnose Taskleiste
   setTimeout(satSpareMake, 1500);
   // Doppelklick auf die Zieh-Leiste wuerde unter Windows maximieren: bei Overlay-Fenstern nie maximieren, bei der Jukebox = Miniplayer
   let preMax = null;
@@ -514,8 +527,18 @@ function openSat(id, show){
   if (!sp) w.loadFile(effectiveHtml(), { query: satQuery(id) });
   return w;
 }
+// NW2: Overlays gehören einem unsichtbaren Besitzer-Fenster – ein Fenster mit Besitzer meldet Windows der Taskleiste nicht als „neues
+// Programmfenster“; ohne Besitzer holte jedes neu gebaute Overlay (bei laufender Vorschau) die Taskleiste über EVE.
+let satOwner = null;
+function satKey(){ return effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang; }   // Reserve/geparkte Overlays nur mit diesen Einstellungen wiederverwenden
+function ownedResync(){ Object.keys(sats).forEach(id => applySatState(sats[id])); Object.keys(pvWins).forEach(h => zSet(pvWins[h], true)); }
+function satOwnerGet(){
+  if (!satOwner || satOwner.isDestroyed()){ satOwner = new BrowserWindow({ show: false, width: 1, height: 1, frame: false, skipTaskbar: true, focusable: false, type: 'toolbar', webPreferences: { sandbox: true } }); satOwner.loadURL('about:blank'); }   // ohne Seite hängen DevTools-Werkzeuge
+  return satOwner;
+}
 function satWin(b, focusable){
   return new BrowserWindow({
+    parent: satOwnerGet(),
     x: b.x, y: b.y, width: b.width, height: b.height,
     frame: false, transparent: !!S.transparent, backgroundColor: S.transparent ? '#00000000' : '#05070a',
     show: false, title: 'EVE Omni', icon: winIconPath(), thickFrame: !S.transparent, hasShadow: !S.transparent, skipTaskbar: true,
@@ -526,10 +549,15 @@ function satWin(b, focusable){
 }
 // 4.0.51: ein unsichtbares Reserve-Fenster mit fertig geladener Seite (?fenster=spare) – sonst liest jedes Overlay erst die ganze Seite (~0,2–0,3 s)
 let satSpare = null;
+// NW2 (gemessen 11.10. mit echtem EVE + schwebender Vorschau): jedes NEUE Fenster, das entsteht, während EVE vorne ist, holt ~0,05 s
+// später die Windows-Taskleiste über EVE (Explorer prüft „Vollbild?“ neu, die Vorschau-Fenster liegen über EVE). Darum: Fenster nur
+// bauen, wenn EVE nicht vorne ist, und geschlossene Overlays verstecken und wiederverwenden statt neu bauen.
+function eveFront(){ return !!fg.proc && fg.eve && fg.status === 'ok' && !TEST; }
 function satSpareMake(){
   if (quitting || (satSpare && !satSpare.isDestroyed())) return;
+  if (eveFront()){ setTimeout(satSpareMake, 3000); return; }
   const w = satSpare = satWin({ x: -32000, y: -32000, width: 320, height: 380 }, true);
-  w.__key = effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang;
+  w.__key = satKey();
   w.setMenu(null);
   w.webContents.once('did-finish-load', () => { w.__ready = true; });
   w.on('closed', () => { if (satSpare === w) satSpare = null; });
@@ -539,10 +567,18 @@ function satSpareTake(){
   const w = satSpare;
   if (!w || w.isDestroyed() || !w.__ready) return null;
   satSpare = null;
-  if (w.__key !== effectiveHtml() + '|' + !!S.transparent + '|' + demoOn() + '|' + S.lang){ w.destroy(); return null; }   // Einstellung geändert → frisch laden
+  if (w.__key !== satKey()){ w.destroy(); return null; }   // Einstellung geändert → frisch laden
   return w;
 }
-function closeSat(id){ const w = sats[id]; if (w && !w.isDestroyed()) w.close(); }
+const satParked = {};   // NW2: versteckte Overlays je Ansicht – erneutes Öffnen zeigt sie nur wieder
+function satPark(id){
+  const w = sats[id]; if (!w || w.isDestroyed()) return;
+  if (id === 'neocom' || quitting){ w.close(); return; }
+  S.windows[id] = Object.assign({}, S.windows[id], { open: false, bounds: w.getBounds() });
+  delete sats[id]; w.hide(); satParked[id] = w; saveSettings(); pushSettings();
+}
+function satParkedDrop(){ Object.keys(satParked).forEach(id => { const w = satParked[id]; delete satParked[id]; if (w && !w.isDestroyed()) w.destroy(); }); }
+function closeSat(id){ satPark(id); }
 // front: vom Nutzer geoeffnet (Neocom-Klick, Einstellungen) -> nach vorne, auch wenn EVE gerade nicht vorne ist
 // (sonst legt „nur ueber EVE“ es hinter das aktive Programm – Fenster scheint nicht aufzugehen; Nutzer 06.10.2026)
 function syncSats(show, front){
@@ -552,18 +588,19 @@ function syncSats(show, front){
     const want = !!(S.windows[id] && S.windows[id].open);
     const has = !!(sats[id] && !sats[id].isDestroyed());
     if (want && !has){ const w = openSat(id, show !== false); if (front && w) w.once('show', () => setTimeout(() => { if (!w.isDestroyed()) w.moveTop(); }, 150)); }   // nach dem BELOW des Helfers
-    if (!want && has){ satClosingAll = true; sats[id].close(); satClosingAll = false; }
+    if (!want && has){ satClosingAll = true; satPark(id); satClosingAll = false; }
   });
 }
 function recreateSats(){
   satClosingAll = true;
+  satParkedDrop();
   Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()){ S.windows[id] = Object.assign({}, S.windows[id], { bounds: w.getBounds() }); w.destroy(); } delete sats[id]; });
   satClosingAll = false;
   syncSats();
 }
 function satsVisible(){ return Object.keys(sats).some(id => sats[id] && !sats[id].isDestroyed() && sats[id].isVisible()); }
 function showSats(){ Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) w.showInactive(); }); }
-function hideSats(){ Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) w.hide(); }); }
+function hideSats(){ neoTraceAdd('alle Overlays versteckt'); Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) w.hide(); }); }
 
 /* MM3 (10.10.2026): Klappmenüs und Rückfragen im EVE-Omni-Stil statt Windows-Menü/-Dialog (Browser-Fenster).
    Ein durchsichtiges Fenster so groß wie das Elternfenster liegt über der Webseite; Klick daneben, Esc oder Fokusverlust = zu.
@@ -1100,6 +1137,7 @@ function toggleShow(){
    Vordergrund". Ist ein anderes Programm vorne: Overlays direkt hinter dieses Fenster legen (SetWindowPos),
    dadurch verdeckt z. B. der Browser die Overlays. Klicks auf EVECore selbst aendern nichts.
    Faellt der Hilfsprozess aus, bleibt alles wie vorher (immer vorne). */
+let neoClickAt = 0;   // NW2: letzter Klick im Neocom-Overlay
 const fg = { proc: null, status: '', eve: true, hwnd: '0', name: '', clients: [], cycle: '', sent: [], switches: 0 };
 // Quelltext des Hilfsprozesses: helfer.cs (C# 5). Er wird beim Start in ein PowerShell-Skript im Programm-Datenordner
 // geschrieben und mit Add-Type uebersetzt (die Befehlszeile waere fuer -EncodedCommand inzwischen zu lang).
@@ -1140,6 +1178,8 @@ function fgLine(line){
 // Vordergrund hat gewechselt
 function fgEvent(hwnd, name){
   const n = String(name || '').toLowerCase();
+  // NW2: Vordergrundwechsel kurz nach einem Neocom-Klick ins Neocom-Protokoll (Diagnose Taskleiste)
+  neoTraceAdd('Vordergrund ' + (n || '?') + ' ' + hwnd);   // Diagnose Overlays/Taskleiste
   if (n === 'eve-omni' || n === 'evecore' || n === 'electron' || n === 'shell' || hwnd === '0') return;     // EVECore selbst / Taskleiste (W1) / kurz kein Fenster: nichts aendern
   fg.hwnd = String(hwnd); fg.name = n;
   pvSync();   // Rahmen um die Vorschau des Clients, der gerade vorne ist
@@ -1161,13 +1201,16 @@ function zSet(w, top, last){
 function zSetOne(w, top, last){
   if (w.__ov !== !!top && fg.proc){ w.__ov = !!top; const h = hwndOf(w); fgWrite('OV ' + h + ' ' + (top ? (last ? 2 : 1) : 0)); w.once('closed', () => fgWrite('OV ' + h + ' 0')); }   // Helfer hebt es selbst, sobald EVE vorne ist
   if (top && onlyEveActive() && !fg.eve){
+    if (!w.__below) neoTraceAdd('hinter ' + (fg.name || '?') + ' gelegt: ' + w.getTitle());
     w.setAlwaysOnTop(false);
     if (fg.proc && fg.hwnd !== '0'){ try{ fg.proc.stdin.write('BELOW ' + hwndOf(w) + ' ' + fg.hwnd + '\n'); }catch(e){} }
     w.__below = true;
     return;
   }
   w.__below = false;
-  if (top){ if (w.isAlwaysOnTop()) w.setAlwaysOnTop(false); w.setAlwaysOnTop(true, 'screen-saver'); }
+  // NW2: schon oben → nur nach oben schieben. Kurz „aus“ nahm wegen des gemeinsamen Besitzers (satOwnerGet) ALLEN Overlays
+  // „immer oben“ (Windows: nicht-topmost gilt für Besitzer + Geschwister) – sie fielen hinter EVE, z. B. bei jeder Jukebox-Titelanzeige
+  if (top){ if (!w.isAlwaysOnTop()) w.setAlwaysOnTop(true, 'screen-saver'); else if (w.isVisible()) w.moveTop(); }   // moveTop zeigt versteckte Fenster (Hauptfenster ging beim Start auf)
   else w.setAlwaysOnTop(false);
 }
 
@@ -1290,7 +1333,7 @@ function pvNamePos(w){
 const PV_CHK = 18;
 const PV_CHK_HTML = 'data:text/html;charset=utf-8,' + encodeURIComponent('<!DOCTYPE html><html><body style="margin:0;overflow:hidden;background:transparent;cursor:pointer">' +
   '<div id="b" style="box-sizing:border-box;width:18px;height:18px;border:2px solid #e0b84a;border-radius:3px;background:rgba(0,0,0,.65);color:#e0b84a;font:900 13px/14px Segoe UI,sans-serif;text-align:center"></div>' +
-  '<script>var on=true;function set(v){on=v;var b=document.getElementById("b");b.textContent=on?"✓":"";b.style.opacity=on?"1":".75";}' +
+  '<script>var on=true;function set(v,c){on=v;var b=document.getElementById("b");if(c)b.style.color=b.style.borderColor=c;b.textContent=on?"✓":"";b.style.opacity=on?"1":".75";}' +
   'document.addEventListener("mousedown",function(e){e.preventDefault();set(!on);document.title=(on?"1":"0")+"-"+Date.now();});set(true);</script></body></html>');
 function pvSkipOn(name){ return cycleCfg().skip.some(n => n.toLowerCase() === String(name || '').toLowerCase()); }
 function pvSkipSet(name, on){
@@ -1315,7 +1358,7 @@ function pvChk(w, c){
   k.__name = c.name; pvChkApply(k); pvChkPos(w);
   if (!k.isVisible()) k.showInactive();
 }
-function pvChkApply(k){ if (!k.isDestroyed()) k.webContents.executeJavaScript('set(' + !pvSkipOn(k.__name) + ')').catch(() => {}); }
+function pvChkApply(k){ if (!k.isDestroyed()) k.webContents.executeJavaScript('set(' + !pvSkipOn(k.__name) + ',"' + (S.icColor || '#e0b84a') + '")').catch(() => {}); }   // NW1: Haken in der Designfarbe
 function pvChkPos(w){
   const k = w && !w.isDestroyed() ? w.__chk : null;
   if (!k || k.isDestroyed()) return;
@@ -1358,6 +1401,7 @@ function pvOpen(c, i){
   const pos = (S.preview.pos || {})[pvKey(c)], sz = pvSize(c), W = sz.width, H = sz.height;
   const b = pos && visibleOnScreen({ x: pos.x, y: pos.y, width: W, height: H }) ? pos : pvDefaultPos(i, W, H);
   const w = new BrowserWindow({
+    parent: satOwnerGet(),   // NW2: mit Besitzer holt ein neues Fenster die Taskleiste nicht über EVE
     x: b.x, y: b.y, width: W, height: H, minWidth: 120, frame: false, resizable: true, focusable: false, skipTaskbar: true, show: false, hasShadow: false,
     backgroundColor: '#000000', title: 'EVE Omni – Vorschau ' + c.name, icon: winIconPath(),
     webPreferences: { preload: path.join(__dirname, 'vorschau-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: false, spellcheck: false }
@@ -1781,12 +1825,13 @@ function applyAutostart(){
 }
 
 /* ---------------- IPC ---------------- */
-ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion() }; });
+ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion(), noGame: fs.existsSync(path.join(__dirname, 'ohne-omnibreaker')) }; });   // noGame: Installer hat OmniBreaker abgewählt
 ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
+  if (patch.windows) neoClickAt = Date.now();   // NW2: Overlay auf/zu
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
-  const allowed = ['lang', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck', 'icColor'];
+  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck', 'icColor'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   Object.keys(patch).forEach(k => {
     if (allowed.indexOf(k) < 0) return;
@@ -1794,7 +1839,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
     else S[k] = patch[k];
   });
   if (S.backup) { delete S.backup.dirEffective; }
-  if ('icColor' in patch){ S.icColor = /^#[0-9a-f]{6}$/i.test(String(S.icColor)) ? S.icColor : ''; browserPush(); }   // MM3: Ordner-Farbe im Browser
+  if ('icColor' in patch){ S.icColor = /^#[0-9a-f]{6}$/i.test(String(S.icColor)) ? S.icColor : ''; browserPush(); Object.values(pvWins).forEach(w => { if (w && !w.isDestroyed() && w.__chk) pvChkApply(w.__chk); }); }   // MM3: Ordner-Farbe im Browser
   if ('opacity' in patch) S.opacity = Math.max(0.3, Math.min(1, Number(S.opacity) || 1));
   if ('opacityFull' in patch) S.opacityFull = Math.max(0.3, Math.min(1, Number(S.opacityFull) || 1));
   if (patch.hotkeys) registerHotkeys();
@@ -1891,14 +1936,15 @@ ipcMain.on('evecore:publishView', (ev, id, data) => { const w = sats[id]; if (w 
 // U2: Kopieren aus Overlay-Fenstern (nicht fokussierbar -> navigator.clipboard schlaegt fehl)
 ipcMain.handle('evecore:copyText', (ev, t) => { clipboard.writeText(String(t || '')); return true; });
 const neoTrace = [];   // Diagnose 07.10.: was das Programm nach einem Klick tut (geht mit nach neocom-log.txt)
-function neoTraceAdd(s){ const d = new Date(); neoTrace.push(d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0') + ' ' + s); if (neoTrace.length > 40) neoTrace.shift(); }
+function neoTraceAdd(s){ const d = new Date(); neoTrace.push(d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0') + ' ' + s); if (neoTrace.length > 120) neoTrace.shift(); }
 ipcMain.on('evecore:satAction', (ev, action) => {
   const sid = satIdOf(ev.sender); if (!sid) return;
+  if (sid === 'neocom') neoClickAt = Date.now();
   if (action && sid === 'neocom') neoTraceAdd('satAction ' + action.type + ' ' + (action.target || '') + (action.big ? ' gross' : '') + ' → Hauptfenster ' + (win && !win.isDestroyed() ? (win.webContents.isCrashed() ? 'abgestürzt' : 'da') : 'fehlt'));
   if (action && (action.type === 'openMain' || action.type === 'openSettings' || (action.type === 'jb' && /^st:/.test(action.cmd || '')))) showWin(true);   // BB1: Streaming-Player spielt in der grossen Ansicht
   send({ type: 'satAction', view: sid, action });
 });
-ipcMain.on('evecore:closeSelf', ev => { const sid = satIdOf(ev.sender); if (sid) closeSat(sid); });
+ipcMain.on('evecore:closeSelf', ev => { const sid = satIdOf(ev.sender); if (sid){ neoClickAt = Date.now(); closeSat(sid); } });   // NW2: auch ✕ am Overlay
 // T8: Neocom hat keine Leiste mit Zahnrad – Rechtsklick auf freie Flaeche = Mini-Menue (wie Zahnrad der anderen Overlays)
 function satMenu(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
@@ -1953,11 +1999,14 @@ ipcMain.on('evecore:satDrag', (ev, phase) => { const sid = satIdOf(ev.sender); i
 // Diagnose Neocom-Linksklick (07.10.): letzte Maus-Ereignisse des Neocom-Overlays + Zustand im Programm nach neocom-log.txt (Einstellungsordner)
 ipcMain.on('evecore:neoLog', (ev, text) => {
   if (satIdOf(ev.sender) !== 'neocom') return;
+  neoLogWrite(text);
+});
+function neoLogWrite(text){
   const w = sats.neocom, st = w && !w.isDestroyed() ? { drag: selfDrags.has(w), ignore: satCt(w), top: w.isAlwaysOnTop(), focusable: w.isFocusable(), visible: w.isVisible(), locked: winLocked(w) } : null;
   const m = win && !win.isDestroyed() ? { visible: win.isVisible(), locked: winLocked(win), drags: drags.size, selfDrags: selfDrags.size, demo: demoOn() } : null;
   const open = Object.keys(sats).filter(k => sats[k] && !sats[k].isDestroyed() && sats[k].isVisible());
   try{ fs.writeFileSync(path.join(app.getPath('userData'), 'neocom-log.txt'), 'Neocom-Fenster: ' + JSON.stringify(st) + '\nHauptfenster: ' + JSON.stringify(m) + '\nOffene Overlays: ' + open.join(', ') + '\n\n--- Programm ---\n' + neoTrace.join('\n') + '\n\n--- Neocom-Overlay ---\n' + String(text)); }catch(e){}
-});
+}
 ipcMain.on('evecore:hide', () => hideMain());
 ipcMain.on('evecore:minimize', () => { if (win) win.minimize(); });
 ipcMain.on('evecore:toggleMaximize', () => { if (!win) return; if (win.isMaximized()) win.unmaximize(); else win.maximize(); });
@@ -1984,18 +2033,51 @@ ipcMain.on('evecore:notify', (ev, title, body) => {
   try{ if (tray && tray.displayBalloon) tray.displayBalloon({ title: String(title), content: String(body), iconType: 'info' }); }catch(e){}
 });
 /* JB5: Jukebox-Titel kurz über EVE einblenden – kleines Fenster oben mittig auf dem Bildschirm unter der Maus, nicht klickbar, 3,5 s */
+// NX2: Startbild – großes Logo, Name, Version, Links (öffnen im Browser). 4 s; nur solange die Maus auf einem Link ist, bleibt es (Maus stand oft zufällig in der Bildmitte → blieb ewig). Klick daneben schließt.
+// Auch über EVE: mit dem gemeinsamen Besitzer (satOwnerGet) holt das neue Fenster die Taskleiste nicht; nicht beim Start mit --hidden.
+const SPLASH_LINKS = [['Discord', 'https://discord.gg/Tyxt6J8yPR'], ['YouTube', 'https://www.youtube.com/@EVEOmni'], ['Homepage', 'https://omni.nareya79.com/'], ['GitHub', 'https://github.com/Nareya79/eve-omni']];
+function splashShow(tries){
+  if (S.splash === false || TEST) return;
+  let logo = ''; try{ logo = 'data:image/png;base64,' + fs.readFileSync(path.join(__dirname, 'icon.png')).toString('base64'); }catch(e){}
+  const en = S.lang === 'en', W = 460, H = 330, wa = screen.getPrimaryDisplay().workArea;
+  const html = '<!doctype html><meta charset="utf-8"><body style="margin:0;overflow:hidden;font:14px Segoe UI,sans-serif;color:#dff4fb;user-select:none">' +
+    '<div id="c" style="height:' + H + 'px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;' +
+    'background:radial-gradient(ellipse at center,rgba(8,14,20,.82) 0,rgba(8,14,20,.55) 60%,rgba(8,14,20,0) 75%);transition:opacity .4s">' +
+    (logo ? '<img src="' + logo + '" style="width:150px;height:150px;filter:drop-shadow(0 0 18px rgba(76,178,212,.55))">' : '') +
+    '<div style="font:700 30px Segoe UI,sans-serif;letter-spacing:.12em;text-shadow:0 0 12px rgba(76,178,212,.6)">EVE OMNI</div>' +
+    '<div style="font-size:13px;color:#8fb3c4">Beta ' + app.getVersion() + '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:6px">' + SPLASH_LINKS.map(l => '<a href="' + l[1] + '" target="_blank" style="color:#dff4fb;text-decoration:none;border:1px solid #4cb2d4;border-radius:3px;padding:4px 12px;background:rgba(76,178,212,.18)">' + (en && l[0] === 'Homepage' ? 'Website' : l[0]) + '</a>').join('') + '</div></div>' +
+    '<script>var over=false,t=Date.now();document.querySelectorAll("a").forEach(function(a){a.onmouseenter=function(){over=true};a.onmouseleave=function(){over=false;t=Date.now()-1000}});' +
+    'document.body.onmousedown=function(e){if(!e.target.closest("a"))document.title="zu"};' +
+    'setInterval(function(){if(!over&&Date.now()-t>4000){document.getElementById("c").style.opacity=0;setTimeout(function(){document.title="zu"},400)}},100);</script></body>';
+  const w = new BrowserWindow({ parent: satOwnerGet(), x: wa.x + Math.round((wa.width - W) / 2), y: wa.y + Math.round((wa.height - H) / 2), width: W, height: H, frame: false, transparent: true,
+    resizable: false, movable: false, focusable: false, skipTaskbar: true, show: false, type: 'toolbar', alwaysOnTop: true, hasShadow: false,
+    webPreferences: { contextIsolation: true, sandbox: true } });
+  w.webContents.setWindowOpenHandler(({ url }) => { if (SPLASH_LINKS.some(l => l[1] === url)) shell.openExternal(url); return { action: 'deny' }; });
+  w.webContents.on('will-navigate', ev => ev.preventDefault());
+  w.webContents.on('page-title-updated', (ev, t) => { if (t === 'zu' && !w.isDestroyed()) w.destroy(); });
+  w.once('ready-to-show', () => { if (w.isDestroyed()) return; w.showInactive(); w.setAlwaysOnTop(true, 'screen-saver'); w.moveTop(); });
+  w.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html));
+  setTimeout(() => { if (!w.isDestroyed()) w.destroy(); }, 60000);   // Sicherheitsnetz
+}
 let jbToastWin = null, jbToastT = null;
+// Jukebox-Titelanzeige: ohne gemeinsamen Besitzer (ihr Erscheinen nahm sonst allen Overlays kurz „immer oben“ – Overlays 1 s weg) und schon
+// beim Start versteckt gebaut, solange EVE nicht vorne ist (ein neues Fenster bei EVE vorne holt sonst die Taskleiste)
+function jbToastMake(){
+  if (jbToastWin && !jbToastWin.isDestroyed()) return;
+  jbToastWin = new BrowserWindow({ width: 380, height: 66, frame: false, transparent: true, resizable: false, movable: false, focusable: false, skipTaskbar: true, show: false,
+    type: 'toolbar', alwaysOnTop: true, hasShadow: false, webPreferences: { contextIsolation: true, sandbox: true, javascript: false } });
+  jbToastWin.setIgnoreMouseEvents(true);
+  jbToastWin.loadURL('about:blank');
+}
+function jbToastPre(){ if (quitting) return; if (eveFront()) setTimeout(jbToastPre, 3000); else jbToastMake(); }
 ipcMain.on('evecore:jbToast', (ev, t) => {
   try{
     t = t || {}; const esc = x => String(x || '').slice(0, 200).replace(/[&<>"]/g, c => '&#' + c.charCodeAt(0) + ';');
     let cover = '';
     try{ if (/^file:/.test(t.cover || '')){ const fp = require('url').fileURLToPath(t.cover); if (fs.statSync(fp).size < 2e6) cover = 'data:image/' + (/\.png$/i.test(fp) ? 'png' : 'jpeg') + ';base64,' + fs.readFileSync(fp).toString('base64'); } }catch(e){}
     const wa = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea, W = 380, H = 66;
-    if (!jbToastWin || jbToastWin.isDestroyed()){
-      jbToastWin = new BrowserWindow({ width: W, height: H, frame: false, transparent: true, resizable: false, movable: false, focusable: false, skipTaskbar: true, show: false,
-        type: 'toolbar', alwaysOnTop: true, hasShadow: false, webPreferences: { contextIsolation: true, sandbox: true, javascript: false } });
-      jbToastWin.setIgnoreMouseEvents(true);
-    }
+    jbToastMake();
     jbToastWin.setBounds({ x: wa.x + Math.round((wa.width - W) / 2), y: wa.y + 36, width: W, height: H });
     const html = '<!doctype html><meta charset="utf-8"><body style="margin:0;font:13px Segoe UI,sans-serif;color:#dff4fb;overflow:hidden">' +
       '<div style="display:flex;align-items:center;gap:10px;height:' + (H - 2) + 'px;box-sizing:border-box;padding:6px 12px;background:rgba(8,14,20,.88);border:1px solid #4cb2d4;border-radius:4px">' +
@@ -2005,6 +2087,8 @@ ipcMain.on('evecore:jbToast', (ev, t) => {
     jbToastWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html)).then(() => {
       if (!jbToastWin || jbToastWin.isDestroyed()) return;
       jbToastWin.showInactive(); zSet(jbToastWin, true);
+      neoTraceAdd('Jukebox-Anzeige: ' + Object.keys(sats).filter(k => sats[k] && !sats[k].isDestroyed() && sats[k].isVisible()).map(k => k + (sats[k].isAlwaysOnTop() ? '' : '(nicht oben)') + (sats[k].__below ? '(hinten)' : '')).join(', '));
+      setTimeout(() => neoLogWrite('(nach Jukebox-Anzeige)'), 1500);
       clearTimeout(jbToastT); jbToastT = setTimeout(() => { if (jbToastWin && !jbToastWin.isDestroyed()) jbToastWin.hide(); }, 3500);
     }, () => {});
   }catch(e){}
@@ -2190,6 +2274,8 @@ if (!TEST && !app.requestSingleInstanceLock()){
     startClipWatch();
     startFgWatch();
     deckStart();   // SD
+    setTimeout(jbToastPre, 2000);
+    if (!hidden) setTimeout(splashShow, 300);   // NX2
     ensureShortcut();
     applyAutostart();
     if (!S.shortcutDone){ S.shortcutDone = true; saveSettings(); }
@@ -2201,6 +2287,10 @@ if (!TEST && !app.requestSingleInstanceLock()){
   app.on('will-quit', () => { globalShortcut.unregisterAll(); saveSettings(true); try{ const p = fg.proc; fg.proc = null; if (p) p.kill(); }catch(e){} });
   app.on('before-quit', () => { Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) S.windows[id] = Object.assign({}, S.windows[id], { bounds: w.getBounds() }); }); });
   app.on('before-quit', () => { quitting = true; });
+  // Erscheint ein Fenster des gemeinsamen Besitzers (Jukebox-Anzeige, Vorschau, Overlay), nimmt Windows den Geschwistern „immer oben“
+  // (gemessen 11.10.: erste Jukebox-Anzeige → alle Overlays hinter EVE). Danach alle wieder richtig einordnen.
+  app.on('browser-window-created', (e, w) => setTimeout(() => { if (!w.isDestroyed() && satOwner && w.getParentWindow() === satOwner) w.on('show', () => setTimeout(ownedResync, 30)); }, 0));
+  app.on('browser-window-created', (e, w) => { if (fg.eve) setTimeout(() => { if (!w.isDestroyed()) neoTraceAdd('Fenster neu bei EVE vorne: ' + w.getTitle()); }, 0); });   // NW2: Diagnose Taskleiste
   app.on('window-all-closed', () => { if (!tray || quitting) app.quit(); });
 }
 

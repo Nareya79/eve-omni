@@ -53,6 +53,8 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 [CustomMessages]
 de.Soundtrack=EVE Omni Soundtrack (23 Titel, Jukebox)
 en.Soundtrack=EVE Omni soundtrack (23 tracks, jukebox)
+de.Game=OmniBreaker (Minispiel im EVE-Stil)
+en.Game=OmniBreaker (mini game in EVE style)
 de.Desktop=Symbol auf dem Desktop
 en.Desktop=Desktop icon
 de.Running=EVE Omni läuft noch. Bitte erst beenden (Rechtsklick auf das Symbol unten rechts › Beenden) und dann „Wiederholen“.
@@ -63,6 +65,7 @@ en.DelData=Also delete my data?%n%nThis permanently deletes EVE Omni logins, tra
 [Components]
 Name: "main"; Description: "EVE Omni"; Types: full compact custom; Flags: fixed
 Name: "soundtrack"; Description: "{cm:Soundtrack}"; Types: full
+Name: "omnibreaker"; Description: "{cm:Game}"; Types: full
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:Desktop}"; Flags: unchecked
@@ -75,6 +78,9 @@ Source: "{#SrcDir}\resources\app\soundtrack\*"; DestDir: "{app}\resources\app\so
 ; Gleicher Ort und Name wie die Verknüpfung, die das Programm selbst pflegt (Windows-Meldungen brauchen die AppUserModelID)
 Name: "{userprograms}\EVE Omni"; Filename: "{app}\EVE-Omni.exe"; AppUserModelID: "de.eveomni.app"
 Name: "{userdesktop}\EVE Omni"; Filename: "{app}\EVE-Omni.exe"; Tasks: desktopicon
+
+[UninstallDelete]
+Type: files; Name: "{app}\resources\app\ohne-omnibreaker"
 
 [Run]
 Filename: "{app}\EVE-Omni.exe"; Description: "{cm:LaunchProgram,EVE Omni}"; Flags: nowait postinstall skipifsilent
@@ -96,6 +102,15 @@ end;
 function InitializeSetup(): Boolean;
 begin
   Result := WaitClosed();
+end;
+
+// OmniBreaker steckt in EVE-Omni.html – abgewählt schreibt nur einen Merker, das Programm blendet das Spiel dann aus
+procedure CurStepChanged(CurStep: TSetupStep);
+var F: String;
+begin
+  if CurStep <> ssPostInstall then exit;
+  F := ExpandConstant('{app}\resources\app\ohne-omnibreaker');
+  if WizardIsComponentSelected('omnibreaker') then DeleteFile(F) else SaveStringToFile(F, 'OmniBreaker beim Installieren abgewählt', False);
 end;
 
 function InitializeUninstall(): Boolean;
