@@ -61,6 +61,7 @@
 | **Fittings, Klone & Implantate** | Fittings im EFT-Format kopieren, Sprungklone und Implantate aller Charaktere |
 | **Mehrere Charaktere & Settings-Sync** | Alle Charaktere gleichzeitig, EVE-Client-Einstellungen übertragen |
 | **Soundtrack** | Der EVE-Omni-Soundtrack von Nareya79 ist eingebaut |
+| **OmniBreaker** *(neu in 4.0.76)* | Minispiel im EVE-Stil für die Wartezeiten: Bergbaulaser ausrichten und die Erzadern abräumen – 100 Level, 8 Power-Items, Highscore. Im Installer abwählbar |
 | **Stream Deck & Stream Dock** | Plugin für Elgato Stream Deck (auch Stream Deck +) und MiraBox Stream Dock (N4 & Co.) – Overlay-Tasten, Live-Werte, Timer, Jukebox, Drehknöpfe |
 
 Alle Werte, die du in EVE eintippst, haben einen Kopier-Knopf.
