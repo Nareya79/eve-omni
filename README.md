@@ -61,6 +61,7 @@
 | **Fittings, clones & implants** | Copy fittings in EFT format, jump clones and implants of all characters |
 | **Multi-character & settings sync** | All characters at once, copy EVE client settings between them |
 | **Soundtrack** | The EVE Omni soundtrack by Nareya79 is built in |
+| **OmniBreaker** *(new in 4.0.76)* | A mini-game in EVE style for the waiting times: aim your mining laser and clear the ore veins – 100 levels, 8 power items, high score. Optional in the installer |
 | **Stream Deck & Stream Dock** | Plugin for Elgato Stream Deck (incl. Stream Deck +) and MiraBox Stream Dock (N4 & co.) – overlay keys, live values, timer, jukebox, dials |
 
 All values you type into EVE come with a copy button.
