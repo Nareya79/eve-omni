@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   isHost: true,
   version: initial.version,
   noGame: !!initial.noGame,
+  installLang: initial.installLang || '',
   getSettings: () => ipcRenderer.invoke('evecore:getSettings'),
   setSettings: patch => ipcRenderer.invoke('evecore:setSettings', patch),
   onCommand: cb => { cmdCb = cb; queue.splice(0).forEach(c => { try{ cb(c); }catch(e){} }); },

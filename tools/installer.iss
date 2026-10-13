@@ -81,6 +81,7 @@ Name: "{userdesktop}\EVE Omni"; Filename: "{app}\EVE-Omni.exe"; Tasks: desktopic
 
 [UninstallDelete]
 Type: files; Name: "{app}\resources\app\ohne-omnibreaker"
+Type: files; Name: "{app}\resources\app\install-lang"
 
 [Run]
 Filename: "{app}\EVE-Omni.exe"; Description: "{cm:LaunchProgram,EVE Omni}"; Flags: nowait postinstall skipifsilent
@@ -111,6 +112,8 @@ begin
   if CurStep <> ssPostInstall then exit;
   F := ExpandConstant('{app}\resources\app\ohne-omnibreaker');
   if WizardIsComponentSelected('omnibreaker') then DeleteFile(F) else SaveStringToFile(F, 'OmniBreaker beim Installieren abgewählt', False);
+  // PU1: gewählte Installer-Sprache ans Programm (main.js übernimmt sie einmal beim nächsten Start und löscht die Datei)
+  if not WizardSilent then SaveStringToFile(ExpandConstant('{app}\resources\app\install-lang'), ActiveLanguage, False);
 end;
 
 function InitializeUninstall(): Boolean;

@@ -71,7 +71,7 @@ const DEFAULTS = {
   preview: { float: false, fps: 10, width: 280, fit: 'crop', border: '#e0b84a', pos: {}, engine: 'dwm' },   // I4: engine dwm = Windows-Spiegelbild, video = alte Version   // H5: fit crop = 16:9 aus der Mitte, full = ganzes Bild
   browser: { bookmarks: [{ name: 'DOTLAN', url: 'https://evemaps.dotlan.net/' }, { name: 'zKillboard', url: 'https://zkillboard.com/' }, { name: 'EVE-Wiki', url: 'https://wiki.eveuniversity.org/' }], last: '', bounds: null }
 };
-let S = null, wasCompact = false;
+let S = null, wasCompact = false, installLang = '';
 function settingsFile(){ return path.join(app.getPath('userData'), 'einstellungen.json'); }
 function merge(a, b){
   const out = Array.isArray(a) ? a.slice() : Object.assign({}, a);
@@ -90,6 +90,8 @@ function loadSettings(){
   if (!S.w12){ S.w12 = true; wasCompact = S.mode === 'compact'; delete S.windows.main; }
   S.mode = 'full';
   delete S.hotkeys.toggleMode; delete S.hotkeys.nextView;
+  // PU1: Sprache aus dem Installer gilt einmal (die Seite übernimmt sie über evecore:initial), danach zählt die Wahl in EVE Omni
+  try{ const f = path.join(__dirname, 'install-lang'), l = fs.readFileSync(f, 'utf8').trim(); fs.unlinkSync(f); if (l === 'de' || l === 'en'){ installLang = l; S.lang = l; saveSettings(); } }catch(e){}
 }
 let saveTimer = null;
 function saveSettings(now){
@@ -468,7 +470,7 @@ function satIdOf(wc){ return Object.keys(sats).find(id => sats[id] && !sats[id].
 function satDefaultBounds(id){
   const wa = screen.getPrimaryDisplay().workArea, i = Object.keys(VIEWS).indexOf(id);
   if (id === 'neocom') return { width: 66, height: Math.min(640, wa.height - 160), x: wa.x + 8, y: wa.y + 120 };
-  if (id === 'spiel') return { width: 440, height: Math.min(620, wa.height - 160), x: wa.x + wa.width - 460, y: wa.y + 100 };   // OmniBreaker: hochkant
+  if (id === 'spiel') return { width: 400, height: Math.min(760, wa.height - 120), x: wa.x + wa.width - 420, y: wa.y + 60 };   // OmniBreaker: hochkant (4.0: Feld 9:16)
   if (id === 'piplan') return { width: 1000, height: Math.min(760, wa.height - 160), x: wa.x + wa.width - 1020, y: wa.y + 100 };   // DD3: 6 Spalten passen
   return { width: 320, height: 380, x: wa.x + wa.width - 340 - (i % 4) * 30, y: wa.y + 120 + (i % 4) * 40 };
 }
@@ -479,7 +481,7 @@ function applySatState(w){
   w.setIgnoreMouseEvents(satCt(w), satCt(w) ? { forward: true } : undefined);
 }
 // 09.10.: Vordergrund je Overlay merken (S.windows[id].top) – ohne eigenen Wert gilt der allgemeine Schalter
-// PS2: OmniBreaker-Fenster immer genau so groß wie das hochkante Feld (4:5) plus Kopfleiste – keine schwarzen Ränder.
+// PS2: OmniBreaker-Fenster immer genau so groß wie das hochkante Feld (4.0: 9:16) plus Kopfleiste – keine schwarzen Ränder.
 // Kurz nach jeder Größenänderung (Ziehen, Einrasten, Zoom) wird die Höhe zur Breite passend gesetzt; Kopfleiste und Ränder misst die Seite selbst.
 function spielFit(w){
   if (!w || w.isDestroyed() || (S.windows.spiel || {}).rolled) return;
@@ -487,8 +489,8 @@ function spielFit(w){
     if (!r || !r[0] || w.isDestroyed()) return;
     const [cw, ch] = w.getContentSize(), k = cw / r[0], exW = (r[0] - r[2]) * k, exH = (r[1] - r[3]) * k;
     const wa = screen.getDisplayMatching(w.getBounds()).workArea, fh = w.getBounds().height - ch;   // nie höher als der Bildschirm: dann schmaler
-    let nw = cw, want = Math.round((cw - exW) / 0.8 + exH);
-    if (want + fh > wa.height){ want = wa.height - fh; nw = Math.round((want - exH) * 0.8 + exW); }
+    let nw = cw, want = Math.round((cw - exW) / 0.5625 + exH);
+    if (want + fh > wa.height){ want = wa.height - fh; nw = Math.round((want - exH) * 0.5625 + exW); }
     if (Math.abs(want - ch) > 2 || nw !== cw) w.setContentSize(nw, want);
   }, () => {});
 }
@@ -1857,7 +1859,7 @@ function applyAutostart(){
 }
 
 /* ---------------- IPC ---------------- */
-ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion(), noGame: fs.existsSync(path.join(__dirname, 'ohne-omnibreaker')) }; });   // noGame: Installer hat OmniBreaker abgewählt
+ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion(), installLang: installLang, noGame: fs.existsSync(path.join(__dirname, 'ohne-omnibreaker')) }; });   // noGame: Installer hat OmniBreaker abgewählt
 ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
@@ -1865,6 +1867,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
   const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck', 'icColor'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
+  if ('lang' in patch) installLang = '';   // PU1: Seite hat die Installer-Sprache übernommen – Neuladen/Einzelfenster folgen ab jetzt eve-zentrale-lang-v1
   Object.keys(patch).forEach(k => {
     if (allowed.indexOf(k) < 0) return;
     if (k === 'hotkeys' || k === 'backup' || k === 'windows' || k === 'cycle' || k === 'preview' || k === 'deck') S[k] = merge(S[k] || {}, patch[k] || {});
