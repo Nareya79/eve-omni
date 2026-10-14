@@ -34,7 +34,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   resizeEnd: () => ipcRenderer.send('evecore:resizeEnd'),
   resetBounds: () => ipcRenderer.send('evecore:resetBounds'),
   attention: () => ipcRenderer.send('evecore:attention'),
-  notify: (title, body) => ipcRenderer.send('evecore:notify', String(title), String(body)),
+  notify: (title, body, act) => ipcRenderer.send('evecore:notify', String(title), String(body), act ? String(act) : ''),   // DC2: act 'discord' = Klick öffnet Discord
   jbToast: t => ipcRenderer.send('evecore:jbToast', { title: String(t && t.title || ''), sub: String(t && t.sub || ''), cover: String(t && t.cover || '') }),   // JB5
   writeBackup: (json, reason) => ipcRenderer.invoke('evecore:writeBackup', String(json), String(reason || '')),
   backupNow: () => ipcRenderer.invoke('evecore:backupNow'),
@@ -56,12 +56,14 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   removeMusicDir: d => ipcRenderer.invoke('evecore:removeMusicDir', d),
   readClipboard: () => ipcRenderer.invoke('evecore:readClipboard'),
   resolveLink: u => ipcRenderer.invoke('evecore:resolveLink', String(u || '')),   // LL1
+  wbFetch: (p, key) => ipcRenderer.invoke('evecore:wbFetch', String(p || ''), String(key || '')),   // WB: EVE Workbench mit Token
   perf: () => ipcRenderer.invoke('evecore:perf'),   // T20
   showView: id => ipcRenderer.send('evecore:showView', String(id)),
   openBrowser: url => ipcRenderer.send('evecore:openBrowser', url ? String(url) : ''),
   launchEve: () => ipcRenderer.send('evecore:launchEve'),   // DD5
   quitEve: () => ipcRenderer.send('evecore:quitEve'),   // FF5
   toggleBrowser: () => ipcRenderer.send('evecore:toggleBrowser'),
+  toggleDiscord: () => ipcRenderer.send('evecore:toggleDiscord'),   // DC
   showMain: () => ipcRenderer.send('evecore:showMain'),
   mainState: () => ipcRenderer.invoke('evecore:mainState'),
   quitApp: () => ipcRenderer.send('evecore:quit'),

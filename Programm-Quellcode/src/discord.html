@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>EVE Omni – Discord</title>
+<style>
+  /* DC: schmale Leiste über dem Discord-Chat – ziehen = verschieben, ☰ = Fenster-Menü, ✕ = schließen */
+  *{box-sizing:border-box}
+  html,body{margin:0;height:26px;overflow:hidden;background:#0b0f14;color:#c8d2dc;font:12px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
+  .row{display:flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 8px;border-bottom:1px solid #1c2630}
+  .t{flex:1;font-weight:600;letter-spacing:.02em;color:#8ea1e1}
+  button{-webkit-app-region:no-drag;background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:20px;min-width:24px;padding:0 6px;cursor:pointer;font:inherit}
+  button:hover{border-color:#5865f2;color:#fff}
+  #close:hover{background:#7a1f1f;border-color:#b33}
+  #grip{cursor:nwse-resize;touch-action:none}
+</style>
+</head>
+<body>
+<div class="row"><span class="t">Discord</span>
+  <button id="reload" title="Neu laden">⟳</button><button id="grip" title="Größe ändern: ziehen">⤡</button><button id="menu" title="Menü: Sperren, Deckkraft, Hintergrund, Vordergrund, Abmelden">☰</button><button id="min" title="Minimieren">–</button><button id="close" title="Schließen">✕</button></div>
+<script>
+  ["reload", "menu", "min", "close"].forEach(function(id){ document.getElementById(id).onclick = function(){ browserHost.cmd(id); }; });
+  /* DC2: durchsichtige Fenster haben keinen Rahmen – Größe über den Griff ziehen */
+  (function(){ var g = document.getElementById("grip"), d = null, q = 0;
+    g.onpointerdown = function(e){ d = { x: e.screenX, y: e.screenY, w: window.outerWidth, h: window.outerHeight }; g.setPointerCapture(e.pointerId); };
+    g.onpointermove = function(e){ if (!d || q) return; q = requestAnimationFrame(function(){ q = 0; browserHost.cmd("size", Math.round(d.w + e.screenX - d.x) + "," + Math.round(d.h + e.screenY - d.y)); }); };
+    g.onpointerup = g.onpointercancel = function(){ d = null; }; })();
+  if (/^en/.test(location.hash.slice(1))){ document.documentElement.lang = "en"; [["reload", "Reload"], ["grip", "Resize: drag"], ["menu", "Menu: lock, opacity, background, on top, log out"], ["min", "Minimise"], ["close", "Close"]].forEach(function(x){ document.getElementById(x[0]).title = x[1]; }); }
+</script>
+</body>
+</html>

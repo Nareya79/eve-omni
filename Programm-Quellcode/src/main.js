@@ -44,7 +44,7 @@ const DEFAULTS = {
   snapGap: 1,                 // H4: Abstand zum Bildschirmrand in Pixeln (0–50)
   snapEdge: 'screen',         // 'screen' = echter Bildschirmrand (EVE Vollbild-Fenster), 'work' = ueber der Taskleiste
   snapMatch: true,            // D1: seitlich angedockt = Hoehe des Nachbarn, oben/unten angedockt = Breite
-  hotkeys: { clickThrough: 'CommandOrControl+Shift+E', toggleShow: 'CommandOrControl+Shift+O', localPaste: 'CommandOrControl+Shift+L', musicToggle: '', musicNext: '', musicPrev: '' },
+  hotkeys: { clickThrough: 'CommandOrControl+Shift+E', toggleShow: 'CommandOrControl+Shift+O', localPaste: 'CommandOrControl+Shift+L', musicToggle: '', musicNext: '', musicPrev: '', discordToggle: '' },
   autostart: false,
   eveAutoShow: true,
   splash: true,               // NX2: Startbild (Logo, Version, Links) 4 s beim Programmstart
@@ -175,10 +175,12 @@ function pushSettings(){
    SNAP Pixel an einer Kante eines anderen Overlay-Fensters oder am Bildschirmrand liegen, bündig angelegt. */
 const SNAP = 14;       // so nah muss eine Kante kommen, damit das Fenster einrastet
 const BREAK = 45;     // so weit muss man weiterziehen, damit es sich wieder loesst (wie in EVE)
+const WIN_GAP = 1;    // 14.10.2026: Abstand zum Nachbarfenster (daneben/darueber/darunter), passt zu den Abstaenden der EVE-Fenster
 function overlayWindowsExcept(w){
   const list = Object.keys(sats).map(id => sats[id]).filter(o => o && !o.isDestroyed() && o.isVisible());
   if (win && !win.isDestroyed() && win.isVisible() && !win.isMaximized() && !win.isMinimized()) list.push(win);   // W12: Hauptfenster rastet mit ein
   if (bwin && !bwin.isDestroyed() && bwin.isVisible()) list.push(bwin);
+  if (dwin && !dwin.isDestroyed() && dwin.isVisible()) list.push(dwin);   // DC
   Object.keys(pvWins).forEach(h => { const o = pvWins[h]; if (o && !o.isDestroyed() && o.isVisible()) list.push(o); });
   return list.filter(o => o !== w);
 }
@@ -196,8 +198,8 @@ function snapCands(w, nb, margin){
     const t = o.getBounds();
     const vOverlap = y < t.y + t.height + margin && y + H > t.y - margin;
     const hOverlap = x < t.x + t.width + margin && x + W > t.x - margin;
-    if (vOverlap){ cx.push(t.x + t.width, t.x - W); }
-    if (hOverlap){ cy.push(t.y + t.height, t.y - H); }
+    if (vOverlap){ cx.push(t.x + t.width + WIN_GAP, t.x - W - WIN_GAP); }
+    if (hOverlap){ cy.push(t.y + t.height + WIN_GAP, t.y - H - WIN_GAP); }
     if (vOverlap || hOverlap){ cx.push(t.x, t.x + t.width - W); cy.push(t.y, t.y + t.height - H); }
   });
   return { cx, cy };
@@ -236,7 +238,7 @@ function snapSize(w, b){
   if (S.snap === false) return b;
   const wa = snapArea(b);
   const rx = [wa.x + wa.width], by = [wa.y + wa.height];
-  overlayWindowsExcept(w).forEach(o => { const t = o.getBounds(); rx.push(t.x, t.x + t.width); by.push(t.y, t.y + t.height); });
+  overlayWindowsExcept(w).forEach(o => { const t = o.getBounds(); rx.push(t.x - WIN_GAP, t.x + t.width); by.push(t.y - WIN_GAP, t.y + t.height); });
   const r = snapPick(b.x + b.width, rx), btm = snapPick(b.y + b.height, by);
   const out = { x: b.x, y: b.y, width: r === null ? b.width : r - b.x, height: btm === null ? b.height : btm - b.y };
   // beim Groesser-Ziehen nicht unter die Taskleiste / aus dem Bildschirm
@@ -250,8 +252,8 @@ function snapMatchBounds(w, b){
   if (S.snap === false || S.snapMatch === false) return null;
   for (const o of overlayWindowsExcept(w)){
     const t = o.getBounds();
-    const side = (b.x === t.x + t.width || b.x + b.width === t.x) && b.y < t.y + t.height && b.y + b.height > t.y;
-    const stack = (b.y === t.y + t.height || b.y + b.height === t.y) && b.x < t.x + t.width && b.x + b.width > t.x;
+    const side = (b.x === t.x + t.width + WIN_GAP || b.x + b.width + WIN_GAP === t.x) && b.y < t.y + t.height && b.y + b.height > t.y;
+    const stack = (b.y === t.y + t.height + WIN_GAP || b.y + b.height + WIN_GAP === t.y) && b.x < t.x + t.width && b.x + b.width > t.x;
     if (!side && stack && (b.x !== t.x || b.width !== t.width)) return { x: t.x, y: b.y, width: t.width, height: b.height };
   }
   return null;
@@ -306,7 +308,7 @@ function dragEnd(w){ drags.delete(w); snapEnd(w); }
 // H8: Position gesperrt: Hauptfenster = windows.main (Schloss in der Titelleiste), Einzelfenster = windows.<Ansicht>
 function winLocked(w){
   if (pvHwndOf(w.webContents)) return !!(S.preview && S.preview.lock);
-  const id = w === win ? 'main' : w === bwin ? 'browser' : satIdOf(w.webContents);   // CC7
+  const id = w === win ? 'main' : w === bwin ? 'browser' : w === dwin ? 'discord' : satIdOf(w.webContents);   // CC7, DC
   return !!(id && S.windows[id] && S.windows[id].lock);
 }
 function attachSnap(w){
@@ -360,6 +362,8 @@ if (TEST) global.__evecoreTest = {
   helperScript: () => helperScript(),
   cycleCfg: () => cycleCfg(),
   browserUrl: s => browserUrl(s),
+  dcInfo: () => ({ open: !!(dwin && !dwin.isDestroyed()), vis: !!(dwin && !dwin.isDestroyed() && dwin.isVisible()), bounds: dwin && !dwin.isDestroyed() ? dwin.getBounds() : null, bg: dcBgState, css: !!dcCssKey, unread: dcUnread }),   // DC2
+  dcCmd: (t, a) => discordCmd(t, a), dcBgApply: () => dcBgApply(), dcKill: () => { if (dwin && !dwin.isDestroyed()) dwin.destroy(); }, dcLoad: u => dview && dview.webContents.loadURL(u), dcSent: () => dcSentN,
   openBrowser: u => openBrowser(u),
   browserCmd: (t, a) => browserCmd(t, a),
   setClients: list => { fg.clients = list; pvSync(); },
@@ -378,11 +382,11 @@ if (TEST) global.__evecoreTest = {
 
 /* ---------------- Einzelfenster (eine Ansicht je Fenster, frei platzierbar) ---------------- */
 const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Handel', track: 'Watchlist',
-                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
+                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', workbench: 'Workbench', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
 /* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
    Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
 const MAIN_EN = {
-  'Position und Größe sperren': 'Lock position and size', 'Deckkraft': 'Opacity', 'Durchklicken (nur Browser)': 'Click-through (browser only)',
+  'Position und Größe sperren': 'Lock position and size', 'Deckkraft': 'Opacity', 'Durchklicken (nur Browser)': 'Click-through (browser only)', 'Durchklicken (nur Discord)': 'Click-through (Discord only)', 'Hintergrund durchsichtig': 'Transparent background', 'Hintergrund-Deckkraft': 'Background opacity', 'geht mit dieser Discord-Version gerade nicht': 'does not work with this Discord version right now', 'Discord ganz beenden': 'Quit Discord completely', '✕ blendet nur aus – das hier beendet Discord': '✕ only hides – this quits Discord', 'Im Standard-Browser öffnen': 'Open in default browser', 'Abmelden (Discord-Sitzung löschen)': 'Log out (clear Discord session)', 'Abmelden': 'Log out', 'Bei Discord abmelden?': 'Log out of Discord?', 'Löscht die Anmeldung nur in diesem Fenster. Beim nächsten Öffnen meldest du dich neu an.': 'Clears the login in this window only. You log in again next time you open it.',
   'Ausschalten: Einstellungen › Programm › Durchklicken': 'Turn off: Settings › App › Click-through', 'Immer im Vordergrund': 'Always on top',
   'Startseite': 'Home page', 'Aktuelle Seite als Startseite': 'Current page as home page', 'Startseite öffnen': 'Open home page',
   'Zurücksetzen (erstes Lesezeichen)': 'Reset (first bookmark)', 'Neuer Tab öffnet': 'New tab opens', 'Leere Seite': 'Blank page',
@@ -1052,6 +1056,7 @@ function applyWindowState(){
   win.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
   satIdsByZ().forEach(id => applySatState(sats[id]));   // in Stapel-Reihenfolge, oben bleibt oben
   browserLook();   // CC7
+  discordLook();   // DC
   Object.keys(pvWins).forEach(h => zSet(pvWins[h], true));
 }
 
@@ -1702,6 +1707,117 @@ function showView(id){
   if (w && !w.isDestroyed() && !w.isVisible() && w.webContents && !w.webContents.isLoading()) w.showInactive();
 }
 
+/* ---------------- DC (14.10.2026): Discord-Chat als Overlay-Fenster ----------------
+   Oben eine schmale Leiste (discord.html, nutzt browser-preload.js), darunter discord.com in eigener dauerhafter Sitzung
+   "persist:discord" ohne Zugriff aufs Programm. Anmelden macht der Nutzer selbst im Fenster – EVE Omni liest und speichert
+   keine Zugangsdaten. Nur Anzeige: kein Mikrofon/Kamera, keine Desktop-Meldungen, nichts geht an EVE. */
+const DISCORD_BAR_H = 26, DISCORD_URL = (process.env.EVECORE_TEST && process.env.EVECORE_DISCORD_URL) || 'https://discord.com/app';   // Test: nachgebaute Seite
+let dwin = null, dview = null, dcCssKey = '', dcBgState = '', dcUnread = -1, dcSentN = 0;
+/* DC2 (14.10.2026): nur die Hintergrundflächen von Discord durchsichtig (Fenster ist transparent angelegt). Discord-Variablen ändern sich
+   mit Discord-Updates – deshalb bei jedem Laden neu einfügen, danach prüfen; klappt es nicht, Seite wieder deckend (nie unlesbar). */
+function dcBg(){ const c = S.windows.discord || {}; return { on: c.bgOn !== false, a: c.bgAlpha === undefined ? 0.6 : Math.max(0, Math.min(1, Number(c.bgAlpha))) }; }
+function dcBgCss(a){
+  const v = (r, g, b) => 'rgba(' + r + ',' + g + ',' + b + ',' + a + ') !important';
+  const dark = [['--background-primary', 49, 51, 56], ['--background-secondary', 43, 45, 49], ['--background-secondary-alt', 35, 36, 40], ['--background-tertiary', 30, 31, 34],
+    ['--background-base-lowest', 18, 18, 20], ['--background-base-lower', 26, 26, 30], ['--background-base-low', 30, 31, 34], ['--background-surface-high', 36, 36, 41], ['--background-surface-higher', 40, 40, 46],
+    ['--bg-base-primary', 49, 51, 56], ['--bg-base-secondary', 43, 45, 49], ['--bg-base-tertiary', 30, 31, 34], ['--chat-background-default', 49, 51, 56], ['--bg-overlay-chat', 49, 51, 56], ['--bg-overlay-1', 43, 45, 49], ['--bg-overlay-2', 30, 31, 34], ['--bg-overlay-3', 30, 31, 34]];
+  return ':root, html, [class*="theme-"], .visual-refresh{' + dark.map(x => x[0] + ':' + v(x[1], x[2], x[3])).join(';') + '}' +
+    'html, body, #app-mount{background:transparent !important}';
+}
+async function dcBgApply(){
+  if (!dview) return;
+  const wc = dview.webContents, b = dcBg();
+  try{ if (dcCssKey){ const k = dcCssKey; dcCssKey = ''; await wc.removeInsertedCSS(k); } }catch(e){}
+  if (!b.on){ dcBgState = ''; return; }
+  try{
+    dcCssKey = await wc.insertCSS(dcBgCss(b.a), { cssOrigin: 'user' });
+    // Prüfen: wird eine der großen Flächen wirklich durchsichtig? (Discord-Update kann die Namen ändern)
+    const ok = await wc.executeJavaScript('(function(){var e=document.querySelector("main,[class*=chatContent],[class*=sidebar]")||document.body,s=getComputedStyle(document.documentElement).getPropertyValue("--background-primary");' +
+      'for(;e&&e!==document.documentElement;e=e.parentElement){var m=/rgba?\\(([^)]+)\\)/.exec(getComputedStyle(e).backgroundColor);if(m){var p=m[1].split(",");if(p.length<4||+p[3]>0.98)return false;}}return /rgba/.test(s);})()', true);
+    dcBgState = ok ? 'ok' : 'bad';
+  }catch(e){ dcBgState = 'bad'; }
+  if (dcBgState === 'bad' && dcCssKey){ try{ const k = dcCssKey; dcCssKey = ''; await wc.removeInsertedCSS(k); }catch(e){} }   // Rückfall: deckend wie vorher, Fenster-Deckkraft gilt weiter
+}
+// DC2: Zähler „(3) Discord“ im Titel – nur die Zahl, keine Inhalte. Erster Wert nach dem Laden ist nur der Ausgangsstand.
+function dcTitle(t){
+  const m = /^\((\d+)\)/.exec(String(t || '')), n = m ? Number(m[1]) : 0;
+  if (dcUnread >= 0 && n > dcUnread){ dcSentN++; send({ type: 'discordUnread', n }); }
+  dcUnread = n;
+}
+function discordLook(){
+  if (!dwin || dwin.isDestroyed()) return;
+  const c = S.windows.discord || {}, ct = !!S.clickThrough || !!c.ct;
+  zSet(dwin, satTop('discord'));
+  dwin.setOpacity(Math.max(0.3, Math.min(1, Number(c.alpha) || 1)));
+  dwin.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
+  dwin.setResizable(!c.lock);
+}
+function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); dview.setBounds({ x: 0, y: DISCORD_BAR_H, width: w, height: Math.max(0, h - DISCORD_BAR_H) }); } }
+function discordOpenPush(){ send({ type: 'discordOpen', open: !!(dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) }); }
+function discordMenu(){
+  if (!dwin || dwin.isDestroyed()) return;
+  const c = S.windows.discord || {}, set = p => { S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); };
+  eoMenu(dwin, [
+    { label: 'Position und Größe sperren', type: 'checkbox', checked: !!c.lock, click: () => set({ lock: !c.lock }) },
+    { label: 'Deckkraft', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3].map(a => ({ label: Math.round(a * 100) + ' %', type: 'radio', checked: Math.abs((Number(c.alpha) || 1) - a) < 0.01, click: () => set({ alpha: a }) })) },
+    { label: 'Durchklicken (nur Discord)', type: 'checkbox', checked: !!c.ct, sublabel: 'Ausschalten: Einstellungen › Programm › Durchklicken', click: () => set({ ct: !c.ct }) },
+    { label: 'Immer im Vordergrund', type: 'checkbox', checked: satTop('discord'), click: () => set({ top: !satTop('discord') }) },
+    { type: 'separator' },
+    { label: 'Hintergrund durchsichtig', type: 'checkbox', checked: dcBg().on, sublabel: dcBgState === 'bad' ? 'geht mit dieser Discord-Version gerade nicht' : '', click: () => { set({ bgOn: !dcBg().on }); dcBgApply(); } },
+    { label: 'Hintergrund-Deckkraft', enabled: dcBg().on && dcBgState !== 'bad', submenu: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(p => ({ label: p + ' %', type: 'radio', checked: Math.round(dcBg().a * 100) === p, click: () => { set({ bgAlpha: p / 100 }); dcBgApply(); } })) },
+    { type: 'separator' },
+    { label: 'Im Standard-Browser öffnen', click: () => shell.openExternal(DISCORD_URL) },
+    { label: 'Abmelden (Discord-Sitzung löschen)', click: () => eoAsk(dwin, { buttons: ['Abmelden', 'Abbrechen'], defaultId: 1, cancelId: 1, message: 'Bei Discord abmelden?', detail: 'Löscht die Anmeldung nur in diesem Fenster. Beim nächsten Öffnen meldest du dich neu an.' })
+      .then(r => { if (r.response === 0 && dview) dview.webContents.session.clearStorageData().then(() => dview && dview.webContents.loadURL(DISCORD_URL)); }) },
+    { label: 'Discord ganz beenden', sublabel: '✕ blendet nur aus – das hier beendet Discord', click: () => { if (dwin && !dwin.isDestroyed()) dwin.destroy(); } }
+  ]);
+}
+function discordCmd(type, arg){
+  if (!dwin || dwin.isDestroyed()) return;
+  if (type === 'close') dwin.hide();   // DC2: Discord läuft weiter und bleibt angemeldet
+  else if (type === 'min') dwin.minimize(); else if (type === 'menu') discordMenu(); else if (type === 'reload' && dview) dview.webContents.reload();
+  else if (type === 'size' && !(S.windows.discord || {}).lock){ const m = /^(\d+),(\d+)$/.exec(String(arg || '')); if (m) dwin.setSize(Math.max(320, +m[1]), Math.max(200, +m[2])); }   // DC2: Griff ⤡ (durchsichtige Fenster haben keinen Rahmen zum Ziehen)
+}
+function openDiscord(){
+  if (dwin && !dwin.isDestroyed()){ if (dwin.isMinimized()) dwin.restore(); dwin.show(); dwin.focus(); return dwin; }
+  const wa = screen.getPrimaryDisplay().workArea, c = S.windows.discord || {};
+  const b = visibleOnScreen(c.bounds) ? c.bounds : { width: 520, height: 720, x: wa.x + wa.width - 540, y: wa.y + 60 };
+  const w = dwin = new BrowserWindow({
+    x: b.x, y: b.y, width: b.width, height: b.height, minWidth: 320, minHeight: 200,
+    frame: false, transparent: true, backgroundColor: '#00000000', thickFrame: false, hasShadow: false, show: false, title: 'EVE Omni – Discord', icon: winIconPath(),   // DC2: durchsichtig (geht nur beim Anlegen)
+    webPreferences: { preload: path.join(__dirname, 'browser-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: false }
+  });
+  w.setMenu(null);
+  attachSnap(w);
+  discordLook();
+  const v = dview = new WebContentsView({ webPreferences: { partition: 'persist:discord', contextIsolation: true, nodeIntegration: false, sandbox: true } });
+  const wc = v.webContents, ses = wc.session;
+  ses.setPermissionRequestHandler((x, perm, cb) => cb(perm === 'clipboard-sanitized-write' || perm === 'fullscreen'));   // kein Mikrofon, keine Kamera, keine Meldungen
+  ses.setPermissionCheckHandler((x, perm) => perm === 'clipboard-sanitized-write');
+  wc.setUserAgent(wc.getUserAgent().replace(/ Electron\/\S+/, '').replace(/\) \S+\/[\d.]+ Chrome\//, ') Chrome/'));   // wie ein normaler Chrome, sonst meldet Discord „Browser nicht unterstützt“
+  wc.setWindowOpenHandler(({ url }) => { if (/^https?:\/\//.test(url)) shell.openExternal(url); return { action: 'deny' }; });   // Links aus dem Chat → Standard-Browser
+  wc.on('will-navigate', (e, url) => { if (!/^https:\/\/([\w-]+\.)*discord(app)?\.com\//.test(url)){ e.preventDefault(); if (/^https?:\/\//.test(url)) shell.openExternal(url); } });
+  v.setBackgroundColor('#00000000');
+  wc.on('did-navigate', () => { dcUnread = -1; });   // neue Seite: erster Titel ist nur der Ausgangsstand
+  wc.on('did-finish-load', () => { dcCssKey = ''; setTimeout(dcBgApply, 300); setTimeout(dcBgApply, 5000); });   // DC2: Discord baut sich nach dem Laden noch auf → zweimal prüfen
+  wc.on('page-title-updated', (e, t) => dcTitle(t));
+  w.contentView.addChildView(v);
+  let t = null;
+  const remember = () => { clearTimeout(t); t = setTimeout(() => { if (w.isDestroyed() || w.isMinimized()) return; S.windows = merge(S.windows || {}, { discord: { bounds: w.getBounds() } }); saveSettings(); }, 300); };
+  w.on('move', remember);
+  w.on('resize', () => { discordLayout(); remember(); });
+  w.webContents.on('will-navigate', ev => ev.preventDefault());
+  w.on('close', e => { if (!quitting && !w.__kill){ e.preventDefault(); w.hide(); } });   // DC2: Alt+F4 & Co. blenden nur aus
+  const kill = w.destroy.bind(w); w.destroy = () => { w.__kill = true; kill(); };
+  w.on('closed', () => { if (dwin === w){ dwin = null; try{ v.webContents.close(); }catch(e){} dview = null; dcUnread = -1; } discordOpenPush(); });
+  ['show', 'hide', 'minimize', 'restore'].forEach(e => w.on(e, discordOpenPush));
+  w.once('ready-to-show', () => { w.show(); discordLayout(); });
+  w.loadFile(path.join(__dirname, 'discord.html'), { hash: uiLang() });
+  wc.loadURL(DISCORD_URL);
+  return w;
+}
+function toggleDiscord(){ if (dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) dwin.hide(); else openDiscord(); }   // DC2: aus = nur ausblenden
+
 /* ---------------- Tastenkuerzel ---------------- */
 // Zwischenablage lesen (neuere Electron-Versionen liefern hier ein Promise, aeltere direkt den Text)
 async function readClip(){ try{ return String((await clipboard.readText()) || ''); }catch(e){ return ''; } }
@@ -1721,7 +1837,8 @@ const HOTKEY_ACTIONS = {
   },
   musicToggle: () => send({ type: 'music', cmd: 'toggle' }),
   musicNext: () => send({ type: 'music', cmd: 'next' }),
-  musicPrev: () => send({ type: 'music', cmd: 'prev' })
+  musicPrev: () => send({ type: 'music', cmd: 'prev' }),
+  discordToggle: () => toggleDiscord()   // DC
 };
 function registerHotkeys(){
   globalShortcut.unregisterAll();
@@ -2062,9 +2179,9 @@ ipcMain.on('evecore:resizeEnd', ev => {
 });
 ipcMain.on('evecore:resetBounds', () => resetBounds());
 ipcMain.on('evecore:attention', () => { if (win && !win.isFocused()) win.flashFrame(true); });
-ipcMain.on('evecore:notify', (ev, title, body) => {
+ipcMain.on('evecore:notify', (ev, title, body, act) => {
   try{
-    if (Notification.isSupported()){ new Notification({ title: String(title), body: String(body), icon: iconPath(), silent: true }).show(); return; }
+    if (Notification.isSupported()){ const n = new Notification({ title: String(title), body: String(body), icon: iconPath(), silent: true }); if (act === 'discord') n.on('click', () => openDiscord()); n.show(); return; }   // DC2: Klick öffnet Discord
   }catch(e){}
   try{ if (tray && tray.displayBalloon) tray.displayBalloon({ title: String(title), content: String(body), iconType: 'info' }); }catch(e){}
 });
@@ -2198,6 +2315,17 @@ ipcMain.handle('evecore:resolveLink', async (ev, u) => {
     return m ? m[0] : '';
   }catch(e){ return ''; }
 });
+// WB (14.10.2026): EVE Workbench mit persönlichem Token – die API lässt den Abruf mit X-API-KEY nicht aus der Seite zu (CORS-Preflight 401).
+// Nur GET an api.eveworkbench.com, nur eigene Fit-Liste und Fits/EFT; das Token wird nicht gespeichert und nicht geloggt.
+async function wbFetch(p, key){
+  p = String(p || ''); key = String(key || '');
+  if (!/^fits\/(list|[0-9a-f-]{36}(\/eft)?)$/i.test(p) || !/^[\x21-\x7e]{8,300}$/.test(key)) return { status: 0 };
+  try{
+    const r = await fetch('https://api.eveworkbench.com/v1/' + p, { headers: { 'X-API-KEY': key, Accept: 'application/json' }, redirect: 'error', signal: AbortSignal.timeout(15000) });
+    return { status: r.status, retry: r.headers.get('retry-after') || '', body: (await r.text()).slice(0, 2000000) };
+  }catch(e){ return { status: 0 }; }
+}
+ipcMain.handle('evecore:wbFetch', (ev, p, key) => wbFetch(p, key));
 // T20: Leistungs-Overlay – CPU seit dem letzten Aufruf, RAM, Ping = TCP-Verbindungsaufbau zum EVE-Server (Tranquility)
 let cpuPrev = null;
 function cpuPct(){
@@ -2243,7 +2371,8 @@ ipcMain.on('evecore:launchEve', () => launchEve());   // DD5
 ipcMain.on('evecore:quitEve', () => quitEve());   // FF5
 // L5: Neocom-Knopf – offen und sichtbar -> schliessen, sonst oeffnen
 ipcMain.on('evecore:toggleBrowser', () => { if (bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) bwin.close(); else openBrowser(); });
-ipcMain.on('browser:cmd', (ev, type, arg) => { if (bwin && !bwin.isDestroyed() && ev.sender === bwin.webContents) browserCmd(String(type), String(arg || '')); });
+ipcMain.on('browser:cmd', (ev, type, arg) => { if (bwin && !bwin.isDestroyed() && ev.sender === bwin.webContents) browserCmd(String(type), String(arg || '')); else if (dwin && !dwin.isDestroyed() && ev.sender === dwin.webContents) discordCmd(String(type), String(arg || '')); });   // DC: Discord-Leiste nutzt dieselbe Brücke
+ipcMain.on('evecore:toggleDiscord', () => toggleDiscord());   // DC
 ipcMain.on('evecore:showMain', () => showWin(true));
 // EVE-Login im Standard-Browser (nur die EVE-Anmeldeseite)
 ipcMain.on('evecore:openExternal', (ev, url) => { url = String(url || ''); if (/^https:\/\/login\.eveonline\.com\//.test(url)) shell.openExternal(url); });
