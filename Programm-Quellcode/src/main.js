@@ -606,12 +606,16 @@ function satSpareTake(){
   if (w.__key !== satKey()){ w.destroy(); return null; }   // Einstellung geändert → frisch laden
   return w;
 }
+const SAT_PARK_MAX = 8;   // YY8
 const satParked = {};   // NW2: versteckte Overlays je Ansicht – erneutes Öffnen zeigt sie nur wieder
 function satPark(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
   if (id === 'neocom' || quitting){ w.close(); return; }
   S.windows[id] = Object.assign({}, S.windows[id], { open: false, bounds: w.getBounds() });
   delete sats[id]; w.hide(); satParked[id] = w; saveSettings(); pushSettings();
+  // YY8: höchstens 8 versteckt behalten (je ~150 MB) – das am längsten geparkte wirklich schließen; Zerstören baut kein Fenster (Taskleiste bleibt unten)
+  const ks = Object.keys(satParked);
+  ks.slice(0, Math.max(0, ks.length - SAT_PARK_MAX)).forEach(k => { const o = satParked[k]; delete satParked[k]; if (o && !o.isDestroyed()) o.destroy(); neoTraceAdd('Overlay ' + k + ' geschlossen (mehr als ' + SAT_PARK_MAX + ' versteckt)'); });
 }
 function satParkedDrop(){ Object.keys(satParked).forEach(id => { const w = satParked[id]; delete satParked[id]; if (w && !w.isDestroyed()) w.destroy(); }); }
 function closeSat(id){ satPark(id); }

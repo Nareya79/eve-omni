@@ -87,7 +87,7 @@ HOOK = """  window.__test = {
     rtLoad: rtLoad, rtRouteStats: rtRouteStats, rtStatsText: rtStatsText, rtSysLoad: rtSysLoad, rtLoadKills: rtLoadKills, rtSetPos: rtSetPos,
     rtRouteText: rtRouteText, openEsiRouteTab: openEsiRouteTab,
     dxBuild: dxBuild, dxParse: dxParse, dxApply: dxApply, dxSummary: dxSummary, dxKeys: dxKeys,
-    mkBtn: mkBtn, mkChar: mkChar,
+    mkBtn: mkBtn, mkChar: mkChar, stDest: stDest, getHaulRouteMsg: function(){ return haulRouteMsg; },
     ovSetMode: ovSetMode, ovGetMode: ovGetMode, ovRender: ovRender, ovLoad: ovLoad, ovLook: ovLook, ovSave: ovSave,
     ovCollectAlarms: ovCollectAlarms, ovAfterTradesRefresh: ovAfterTradesRefresh, ovAlarm: ovAlarm, ovLoadWallet: ovLoadWallet, ovFootText: ovFootText, ovAgeSet: ovAgeSet, esiCd: esiCd, trSync: trSync, trPreBuy: trPreBuy, greedyAllocate2: greedyAllocate, gkLotsJita: gkLotsJita, gkJitaLoop: gkJitaLoop, gkJrefSet: function(t, p, chk){ gkJref[t] = p; if (chk) gkJchk[t] = 1; }, trProgressII: trProgress, trIgnoredII: trIgnored, trRunTagII: trRunTag,
     ovEnsureData: ovEnsureData, ovsRender: ovsRender, hsAccelFromEvent: hsAccelFromEvent, hsAccelText: hsAccelText, hsRender: hsRender,

@@ -35,7 +35,7 @@ ALLOW = [
     re.compile(r'Nareya79', re.I),
 ]
 # Dateien, die nie veröffentlicht werden dürfen
-FORBIDDEN = re.compile(r'(^|/)(UEBERGABE\.md|PLAN[^/]*\.md|AUFTRAG[^/]*\.md|PROJEKT-ANWEISUNGEN\.txt|einstellungen\.json|backups/|Aufnahmen/|[^/]*Sync[^/]*\.bat|[^/]*\.alt)$|(^|/)(backups|Aufnahmen)/', re.I)
+FORBIDDEN = re.compile(r'(^|/)(UEBERGABE[^/]*\.md|PLAN[^/]*\.md|AUFTRAG[^/]*\.md|PROJEKT-ANWEISUNGEN\.txt|einstellungen\.json|backups/|Aufnahmen/|[^/]*Sync[^/]*\.bat|[^/]*\.alt)$|(^|/)(backups|Aufnahmen)/', re.I)
 # Fremdsoftware (Lizenztexte von Chromium/Electron/Node-Paketen enthalten die E-Mails ihrer Autoren) und Prüfsummen: nicht prüfen
 THIRD = re.compile(r'(^|/|!)(LICENSES?\.chromium\.html|LICENSE(S)?(\.[A-Za-z]+)?|COPYING|NOTICE)$|(^|/)node_modules/', re.I)
 CHECKSUM = re.compile(r'(^|/)SHA256SUMS(\.txt)?$', re.I)

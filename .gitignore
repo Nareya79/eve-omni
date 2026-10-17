@@ -13,7 +13,7 @@ einstellungen.json
 *.alt
 *.zip
 *.exe
-UEBERGABE.md
+UEBERGABE*.md
 PLAN*.md
 AUFTRAG*.md
 tools/release-check-namen.txt
