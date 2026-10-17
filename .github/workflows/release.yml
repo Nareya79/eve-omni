@@ -18,6 +18,7 @@ permissions:
 
 env:
   # Soundtrack = EVE-Omni-Soundtrack.zip aus einem bestehenden Release – bei geändertem Soundtrack Tag + SHA256 tauschen
+  PYTHONUTF8: "1"
   SOUNDTRACK_TAG: v5.0.5
   SOUNDTRACK_SHA256: 160ee4666988b98d1908a95eddff6759624b4713e836233fccdfb15792ebba9c
 
