@@ -22,8 +22,8 @@ node -e "const s=require('fs').readFileSync('$W/home/EVECore.html','utf8');const
 ok=0; bad=0
 for t in ${1:-$(cd "$W/t" && ls test-*.js)}; do
   cp "$W/t/$t" "$W/home/__$t"
-  r=$(cd "$W/home" && timeout 180 node "__$t" 2>&1 | tail -1); rm -f "$W/home/__$t"
-  case "$r" in *PASSED) ok=$((ok+1));; *) bad=$((bad+1)); echo "ROT  $t: $r";; esac
+  (cd "$W/home" && timeout 180 node "__$t" > "$W/tmp/__out.txt" 2>&1); r=$(tail -1 "$W/tmp/__out.txt"); rm -f "$W/home/__$t"
+  case "$r" in *PASSED) ok=$((ok+1));; *) bad=$((bad+1)); echo "ROT  $t: $r"; grep -v '^OK' "$W/tmp/__out.txt" | head -30 | sed 's/^/     | /';; esac   # V6: Fehlerausgabe ins Log (CI)
 done
 echo "gruen: $ok  rot: $bad"
 [ "$bad" = 0 ]

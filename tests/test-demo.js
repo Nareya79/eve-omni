@@ -7,7 +7,8 @@ const ok = (c, m) => { console.log((c ? 'OK: ' : 'FAIL: ') + m); if (!c) fails++
 const BAD_HOSTS = /esi\.evetech\.net|login\.eveonline\.com|zkillboard\.com|dotlan|github|eve-scout|nareya79\.com/;
 (async () => {
   const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-  const ctx = await browser.newContext({ viewport: { width: 1500, height: 900 } });
+  // V6: Browsersprache fest Deutsch – die Prüfungen erwarten die deutsche Demo; GitHub-Läufer sind en-US (sonst orders/wormhole/mining rot)
+  const ctx = await browser.newContext({ viewport: { width: 1500, height: 900 }, locale: 'de-DE' });
   const net = [];
   await ctx.route(/^https?:\/\//, r => { net.push(r.request().url()); r.abort(); });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
@@ -51,7 +52,7 @@ const BAD_HOSTS = /esi\.evetech\.net|login\.eveonline\.com|zkillboard\.com|dotla
   ok(await p.evaluate(() => JSON.parse(localStorage.getItem('eve-zentrale-trades-v1'))[0].name === 'Echt'), 'V1: nach „Demo beenden“ wieder die echten Daten');
   ok(await p.evaluate(() => Object.keys(localStorage).some(k => k.indexOf('eve-zentrale-demo-') === 0)), 'V1: Demo schreibt nur eve-zentrale-demo-…');
   // Erststart „Erst mal umsehen“ → Demo
-  const p2 = await (await browser.newContext()).newPage();
+  const p2 = await (await browser.newContext({ locale: 'de-DE' })).newPage();
   await p2.route(/^https?:\/\//, r => r.abort());
   await p2.goto(FILE); await p2.waitForTimeout(800);
   await p2.click('[data-wl="de"]'); await p2.waitForTimeout(1500); await p2.click('[data-wl="play"]'); await p2.waitForTimeout(300); await p2.click('[data-wl="wz-std"]'); await p2.waitForTimeout(300); await p2.click('[data-wl="skip"]'); await p2.waitForTimeout(2500);   // VV2: + Schritt 3
