@@ -1,0 +1,190 @@
+# V6: EVE Omni automatisch aus dem Repo bauen – Tests, Release-Check, Programmordner (build.js), Installer, portable ZIP,
+# Soundtrack-ZIP, SHA256SUMS.txt. Ergebnis als Workflow-Artefakt; bei Tag v* (oder Haken „entwurf“) zusätzlich ein Release-Entwurf.
+# Veröffentlicht wird nie automatisch. Die Signatur (SignPath) läuft nur, wenn das Secret SIGNPATH_API_TOKEN angelegt ist.
+name: Release bauen
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      entwurf:
+        description: 'Zusätzlich einen Release-Entwurf (draft) anlegen'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  # Soundtrack = EVE-Omni-Soundtrack.zip aus einem bestehenden Release – bei geändertem Soundtrack Tag + SHA256 tauschen
+  SOUNDTRACK_TAG: v5.0.5
+  SOUNDTRACK_SHA256: 160ee4666988b98d1908a95eddff6759624b4713e836233fccdfb15792ebba9c
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read   # SignPath holt die hochgeladenen Artefakte
+    env:
+      SIGNPATH: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
+      RELEASE_CHECK_NAMES: ${{ secrets.RELEASE_CHECK_NAMES }}
+    outputs:
+      version: ${{ steps.ver.outputs.v }}
+    steps:
+      - name: Private Namen im Log verdecken
+        run: foreach ($n in "$env:RELEASE_CHECK_NAMES" -split ',') { if ($n.Trim()) { Write-Output "::add-mask::$($n.Trim())" } }
+
+      - name: Zeilenenden unverändert lassen (EVE-Omni.html ist LF)
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Version
+        id: ver
+        run: |
+          $v = node -p "require('./Programm-Quellcode/src/package.json').version"
+          if (-not $v) { throw 'Version nicht lesbar' }
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$v") { throw "Tag $env:GITHUB_REF_NAME passt nicht zur Version $v" }
+          "v=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Abhängigkeiten nur aus den Sperrdateien
+        shell: bash
+        run: |
+          npm ci --ignore-scripts
+          npm ci --ignore-scripts --omit=dev --prefix Programm-Quellcode/src
+
+      - name: Offizielles Electron laden + SHA256 gegen SHASUMS256.txt prüfen
+        run: |
+          $e = node -p "require('./package.json').config.electron"
+          $base = "https://github.com/electron/electron/releases/download/v$e"
+          Invoke-WebRequest "$base/electron-v$e-win32-x64.zip" -OutFile "$env:RUNNER_TEMP\electron.zip"
+          Invoke-WebRequest "$base/SHASUMS256.txt" -OutFile "$env:RUNNER_TEMP\SHASUMS256.txt"
+          $want = ((Select-String -Path "$env:RUNNER_TEMP\SHASUMS256.txt" -Pattern " \*?electron-v$e-win32-x64\.zip$").Line -split ' ')[0]
+          $have = (Get-FileHash "$env:RUNNER_TEMP\electron.zip" -Algorithm SHA256).Hash.ToLower()
+          if (-not $want -or $want -ne $have) { throw "Electron $e: SHA256 $have passt nicht zu SHASUMS256.txt ($want)" }
+          Expand-Archive "$env:RUNNER_TEMP\electron.zip" "$env:RUNNER_TEMP\electron"
+          Write-Output "Electron $e geprüft: $have"
+
+      - name: Soundtrack laden + SHA256 prüfen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download $env:SOUNDTRACK_TAG -R $env:GITHUB_REPOSITORY -p EVE-Omni-Soundtrack.zip -D $env:RUNNER_TEMP
+          if ($LASTEXITCODE) { throw "Release $env:SOUNDTRACK_TAG mit EVE-Omni-Soundtrack.zip fehlt" }
+          $have = (Get-FileHash "$env:RUNNER_TEMP\EVE-Omni-Soundtrack.zip" -Algorithm SHA256).Hash.ToLower()
+          if ($have -ne $env:SOUNDTRACK_SHA256) { throw "Soundtrack-ZIP: SHA256 $have passt nicht zum Wert im Workflow" }
+
+      - name: Alle Tests
+        shell: bash
+        run: sh tests/run-local-windows.sh
+
+      - name: Release-Check (V8) auf den Repo-Inhalt
+        run: python tools/release-check.py
+
+      - name: Programmordner bauen (build.js) + Soundtrack einlegen
+        run: |
+          node Programm-Quellcode/build.js "$env:RUNNER_TEMP\electron" build\EVE-Omni
+          if ($LASTEXITCODE) { throw 'build.js fehlgeschlagen' }
+          Copy-Item Programm-Quellcode\LIES-MICH.txt build\EVE-Omni\
+          Expand-Archive "$env:RUNNER_TEMP\EVE-Omni-Soundtrack.zip" "$env:RUNNER_TEMP\st"
+          Move-Item "$env:RUNNER_TEMP\st\EVE Omni Soundtrack" build\EVE-Omni\resources\app\soundtrack
+
+      # --- Signatur 1: EVE-Omni.exe (nur mit Secret SIGNPATH_API_TOKEN) ---
+      - name: EVE-Omni.exe für SignPath hochladen
+        id: exe_up
+        if: env.SIGNPATH == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsigniert-exe
+          path: build/EVE-Omni/EVE-Omni.exe
+          if-no-files-found: error
+
+      - name: EVE-Omni.exe signieren (SignPath)
+        if: env.SIGNPATH == 'true'
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.exe_up.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signiert-exe
+
+      - name: Signierte exe übernehmen
+        if: env.SIGNPATH == 'true'
+        run: Copy-Item signiert-exe\EVE-Omni.exe build\EVE-Omni\EVE-Omni.exe -Force
+
+      - name: Installer, portable ZIP, Soundtrack-ZIP, Prüfsummen (release-build.py)
+        run: python tools/release-build.py --src build/EVE-Omni
+
+      # --- Signatur 2: Installer (gebaut mit der signierten exe) ---
+      - name: Installer für SignPath hochladen
+        id: setup_up
+        if: env.SIGNPATH == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsigniert-setup
+          path: release/${{ steps.ver.outputs.v }}/EVE-Omni-Setup-${{ steps.ver.outputs.v }}.exe
+          if-no-files-found: error
+
+      - name: Installer signieren (SignPath)
+        if: env.SIGNPATH == 'true'
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.setup_up.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signiert-setup
+
+      - name: Signierten Installer übernehmen + Prüfsummen neu
+        if: env.SIGNPATH == 'true'
+        run: |
+          Copy-Item "signiert-setup\EVE-Omni-Setup-${{ steps.ver.outputs.v }}.exe" "release\${{ steps.ver.outputs.v }}\" -Force
+          python tools/release-build.py --summen "release/${{ steps.ver.outputs.v }}"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: EVE-Omni-${{ steps.ver.outputs.v }}
+          path: release/${{ steps.ver.outputs.v }}/
+          if-no-files-found: error
+          compression-level: 0
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag' || inputs.entwurf
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # nur hier: Release-Entwurf anlegen
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: EVE-Omni-${{ needs.build.outputs.version }}
+          path: dateien
+
+      - name: Release-Entwurf anlegen (nicht veröffentlicht)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ needs.build.outputs.version }}
+        run: |
+          tag="$GITHUB_REF_NAME"; [ "$GITHUB_REF_TYPE" = tag ] || tag="v$V-ci-$GITHUB_RUN_NUMBER"
+          gh release create "$tag" -R "$GITHUB_REPOSITORY" --draft --target "$GITHUB_SHA" --title "EVE Omni $V" \
+            --notes "Automatisch gebaut (Lauf $GITHUB_RUN_NUMBER). Patchnotes eintragen, prüfen, dann von Hand veröffentlichen." dateien/*

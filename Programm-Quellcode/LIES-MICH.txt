@@ -1,0 +1,170 @@
+EVE Omni - Programm mit Overlay
+==============================
+
+Früher hieß das Programm EVECore. Beim ersten Start übernimmt EVE Omni alle Daten
+(Einstellungen, Trades, Logins, Sicherungen) aus EVECore. Der alte Ordner EVECore
+kann danach weg.
+
+1. Einrichten (einmalig)
+------------------------
+- Diesen Ordner an einen festen Platz legen, z. B. Dokumente\EVE-Omni-Programm.
+- EVE-Omni.exe doppelklicken.
+- Windows warnt beim ersten Start ("Der Computer wurde durch Windows geschützt"),
+  weil das Programm nicht signiert ist: "Weitere Informationen" -> "Trotzdem ausführen".
+- Das Programm legt beim ersten Start eine Verknüpfung im Startmenü an (nötig für
+  Windows-Meldungen bei überbotenen Orders).
+
+2. Deine Daten aus Chrome übernehmen
+------------------------------------
+- In Chrome wie gewohnt EVE-Omni.html öffnen -> Einstellungen -> "Daten sichern & übertragen"
+  -> "Daten exportieren". Mit Häkchen "Logins mit exportieren" musst du dich im Programm
+  nicht neu einloggen (die Datei dann wie ein Passwort behandeln und danach löschen).
+- Im Programm: Einstellungen -> "Importieren" -> Datei wählen -> "Jetzt übernehmen".
+- Ohne Logins: im Programm unter Konto neu einloggen. Das Login-Fenster erledigt den
+  Rest automatisch, du musst keine Adresse mehr kopieren.
+- In deiner EVE-Developer-App musst du nichts ändern.
+
+3. Overlay über EVE
+-------------------
+- EVE muss im Fenster- oder randlosen Modus laufen (nicht echtes Vollbild).
+- Knopf "Kompakt" oben rechts -> kleines Overlay mit Trades, Route, Skills, Wallet.
+- Verschieben: an der oberen Leiste ziehen. Größe: Ecke unten rechts ziehen.
+- Einzelfenster: Jede Ansicht (Trades, Route, Skills, Wallet, Scanner-Plan, Hauling,
+  Hub-Handel, Local, Charaktere, Planeten, Jukebox) kann ein eigenes kleines Fenster bekommen - Knopf mit den zwei Rechtecken
+  in der Kompaktansicht oder Einstellungen -> Ansichten -> "eigenes Fenster".
+  Frei platzieren, die Position wird gemerkt.
+- Transparenter Hintergrund gilt für Kompaktansicht, Hauptansicht und Einzelfenster.
+- Einrasten: Schiebst du ein Overlay-Fenster nah an ein anderes oder an den
+  Bildschirmrand, rastet es bündig ein (wie in EVE). Zum Lösen einfach ein Stück
+  weiterziehen (etwa 45 Pixel). Abschaltbar unter Einstellungen -> Programm.
+- Größe aller Overlays: Einstellungen -> Kompaktansicht -> "Overlay-Skalierung" (60-200 %).
+- Neocom-Reihenfolge: Symbole links einfach mit der Maus an eine andere Stelle ziehen
+  oder Einstellungen -> Darstellung -> Neocom-Reihenfolge.
+- Tastenkürzel (änderbar unter Einstellungen -> Programm):
+    Strg+Umschalt+E   Durchklicken ein/aus (Mausklicks gehen auf EVE)
+    Strg+Umschalt+O   Ein-/Ausblenden
+    Strg+Umschalt+K   Kompakt <-> Groß
+    Strg+Umschalt+N   Nächste Kompaktansicht
+    Strg+Umschalt+L   Local prüfen (nur nötig, wenn die automatische Erkennung aus ist)
+    (Jukebox: Abspielen/Weiter/Zurück - ohne Vorgabe, z. B. die Medientasten eintragen)
+- Symbol unten rechts in der Taskleiste: Rechtsklick für alle Schalter und "Beenden".
+- Alle Schalter (Vordergrund, Transparenz, Deckkraft, Autostart, Sicherung) findest du
+  unter Einstellungen -> Programm.
+
+3a. Neu in 1.3 (Ideen aus RIFT)
+-------------------------------
+- Intel / Local (seit 1.3.1 wie bei RIFT): Im EVE-Local in die Mitgliederliste klicken, Strg+A, Strg+C
+  -> das Overlay-Fenster "Local" geht von selbst auf: jeder Pilot mit Allianz-Kürzel, Balken für
+  Gefahr und Gang, Kills/Verluste (zKillboard). Abschaltbar: Einstellungen -> Programm.
+- Jukebox: offizielle EVE-Musik über Spotify direkt im Programm (für ganze Titel im Player anmelden).
+- Neocom als Overlay (1.3.2): Einstellungen -> Programm -> "Neocom als eigenes Overlay-Fenster".
+  Symbolleiste frei platzieren, an der Ecke unten rechts größer/kleiner ziehen (Symbole wachsen mit,
+  breit gezogen = waagerecht). Klick = Overlay-Fenster der Ansicht an/aus, Rechtsklick = große Ansicht.
+  Einstellungen/Assets/usw.: Klick öffnet das Hauptfenster dort, nochmal klicken schließt es wieder.
+  Ganz unten "Beenden": zweimal klicken beendet EVE Omni (erster Klick färbt den Knopf rot).
+  Seit 1.3.4: Die Symbole ordnen sich beim Größe-Ändern als Raster an (schmal = Spalte, breit = Reihe,
+  quadratisch = Raster). Maus drüber zeigt den Namen. Welche Symbole erscheinen: Einstellungen ->
+  Programm -> "Symbole im Neocom-Overlay auswählen".
+- Aussehen wie in EVE (1.3.4, Standard): Einstellungen -> Kompaktansicht -> "Overlay-Stil".
+
+3b. Neu in 1.4.0
+----------------
+- Gang-Alarm: große Ansicht -> Intel -> "Gang-Alarm" einschalten. Wird im Umkreis deines Standorts
+  (einstellbar 0-10 Sprünge) mit genug Angreifern gekämpft, geht das Overlay-Fenster "Gang-Alarm" auf,
+  mit Ton und Windows-Meldung. Quelle: zKillboard live. Fliegt eine Gang nur durch, sieht man sie nicht.
+- Karte als Overlay: im Neocom-Overlay "Karte" - Region um dich herum, Route, Kills, Gang-Alarme.
+- Beim Start automatisch laden: Einstellungen -> ganz oben (Wallet, Orders, Trades, Skills, ...).
+- Jukebox spielt beim Start den letzten Titel weiter (Haken in der Jukebox).
+- Local mit Strg+A / Strg+C: Namen nur aus Ziffern (z. B. "0186") haben die Erkennung verhindert - behoben.
+  Zweimal hintereinander dieselbe Liste kopieren wird jetzt auch erkannt.
+- Einrasten: am echten Bildschirmrand (für EVE im Vollbild-Fenster). Umschaltbar auf "über der
+  Taskleiste": Einstellungen -> Programm -> Bildschirmrand.
+
+3c. Neu in 1.4.1
+----------------
+- Gang-Alarm-Einstellungen jetzt unter Einstellungen (ganz oben), ein oder mehrere Charaktere
+  anhakbar. Der Alarm nennt den Charakter und die Sprünge ("2 Sprünge von Aria Demo"). Das Alarm-Fenster
+  schließt sich nach einigen Sekunden wieder (einstellbar). Das Zahnrad im Alarm-Fenster führt direkt hin.
+- Karte: eigener Neocom-Knopf "Karte" (große Ansicht). Im Karten-Overlay: Mausrad = zoomen,
+  ziehen = verschieben, keine Scrollleiste mehr.
+- Hintergrund-Deckkraft für jedes Overlay-Fenster einzeln: Einstellungen -> Kompaktansicht -> Ansichten.
+
+3f. Neu in 1.5.0
+----------------
+- Wallet-Overlay: Porträt je Charakter, Gesamtwert (Kontostand + Verkaufsorders + Kauf-Treuhand
+  + geschätzte Assets, falls in Wallet mit "Assets" geladen), Bewegung der letzten 24 Std, exakter Kontostand.
+- Navigation im Overlay (früher "Route"): einfacher Modus wie in EVE - Start (Knopf = mein Standort),
+  Ziel, Kürzeste / Sicherste / Unsicherer anklicken = Route. Umschalter "Sprung (Jump)": Start, Ziel,
+  Schiff -> Sprungroute von DOTLAN direkt im Overlay.
+- Gang-Alarm-Fenster wie "Hostile reported" in EVE: System + dein Charakter oben, darunter Kill,
+  Schiffe und Piloten mit Bildern.
+- Gang-Report: nur die letzten 10 Meldungen, mit kleinem Porträt des Charakters, für den gemeldet wurde.
+  Klick auf eine Meldung klappt Piloten und Schiffe mit Bildern auf.
+- Gang-Alarm: Windows-Desktop-Benachrichtigung abschaltbar (Einstellungen -> Gang-Alarm), Standard aus.
+- Neues Neocom-Symbol "Planeten" (PI) - große Ansicht und Neocom-Overlay.
+
+3e. Neu in 1.4.3
+----------------
+- Jukebox-Miniplayer überarbeitet: Doppelklick auf die obere Leiste des Jukebox-Fensters schaltet den
+  Miniplayer an und aus - jetzt zuverlässig auch unter Windows. Der Miniplayer ist nur 84 Pixel hoch,
+  die Breite bleibt: Titel, Zurück/Play/Weiter, Spulbalken und Lautstärke-Regler, keine Titelliste.
+  Das Fenster verschiebst du weiter an der oberen Leiste.
+
+3d. Neu in 1.4.2
+----------------
+- Jukebox-Overlay: Spulbalken. Doppelklick auf die Titelleiste des Jukebox-Fensters = Miniplayer
+  (gleiche Breite, nur Titel und Knöpfe); nochmal Doppelklick = wieder groß.
+- Titel aus dem Musikordner ohne die langen Nummern ("Learning From The Past - Fenris Creations").
+- Gang-Alarm: 6 Alarmtöne zur Auswahl + eigene Lautstärke (Einstellungen -> Gang-Alarm -> Anhören).
+- Overlay "Hauling" und "Scanner-Plan": Suche/Scan direkt im Overlay starten.
+- Hauling: Name und Menge jedes Artikels kopierbar (große Ansicht bei den Optionen und im Overlay),
+  plus "Einkaufsliste kopieren" für den Multibuy im EVE-Markt.
+- Login im eigenen Browser (Chrome, mit gespeicherten Passwörtern): Konto -> Haken "Anmeldung im
+  Standard-Browser". Nach dem Login in Chrome die Adresszeile kopieren (Strg+A, Strg+C) - fertig.
+- Gang-Report: eigenes Fenster (Neocom-Overlay "Gang-Report"), in dem alle Gang-Meldungen der letzten
+  24 Stunden stehen bleiben - mit Uhrzeit, System, Sprüngen und Charakter.
+- Neocom-Overlay ohne Titelleiste: zum Verschieben an einer freien Stelle zwischen den Symbolen ziehen.
+- Jukebox-Overlay (1.3.3): ganze Titelliste (Klick = abspielen), Zufall ohne Wiederholung, Wiederholen,
+  Lautstärke als Schieberegler.
+- Overlays nur über EVE (1.3.2, Standard an): Ist ein anderes Programm vorne (z. B. der Browser),
+  liegen die Overlays dahinter. Sobald du EVE anklickst, sind sie wieder vorne.
+- Charaktere: wo sind meine Charaktere, online, welches Schiff; Planeten (PI) mit Alarm;
+  Klone und Implantate.
+- Navigation: Karte der Region mit Route, Jump Bridges, Start = mein Standort,
+  Ziel/Wegpunkte in den Autopiloten von EVE eintragen.
+- Assets: "Fitting kopieren" für jedes aufgebaute Schiff (in EVE: Fittings -> Importieren).
+- Jukebox: Musik aus einem eigenen Ordner oder Internet-Radio.
+- Wichtig: Einmal unter Konto jeden Charakter neu einloggen, damit die neuen Berechtigungen gelten.
+
+4. Neue EVE-Omni-Versionen
+-------------------------
+Unter Einstellungen -> Programm -> "Andere Datei wählen" deine EVE-Omni.html aus dem
+Projektordner wählen (Dokumente\CLAUDE\EVE Omni\EVE-Omni.html). Dann wirkt jede neue
+Version sofort im Programm.
+
+4b. EVE-Clients mit Tab durchschalten (neu in 1.5.1)
+---------------------------------------------------
+Ersetzt das Umschalten von EVE-X-Preview. Einschalten unter Einstellungen -> Programm ->
+"EVE-Clients umschalten":
+  1. In EVE-X-Preview das Umschalten mit Tab ausschalten (sonst schalten beide gleichzeitig).
+  2. In EVE Omni den Haken "Mit einer Taste durch die EVE-Clients schalten" setzen.
+  3. Reihenfolge mit den Pfeilen festlegen ("nach vorne" holt einen Client testweise nach vorne).
+Tab = nächster Client, Umschalt+Tab = vorheriger (beides änderbar). Wirkt nur, wenn ein
+EVE-Client vorne ist und mindestens zwei laufen. EVE bekommt diesen Tastendruck dann nicht
+(auch nicht im Chat). Alt+Tab bleibt normal.
+
+5. Sicherungen
+--------------
+Täglich automatisch nach Dokumente\EVE-Omni-Sicherungen (die letzten 14). Zurückholen:
+Einstellungen -> Importieren -> Sicherungsdatei wählen.
+
+6. Entfernen
+------------
+Ordner löschen. Einstellungen und Daten liegen in %APPDATA%\EVE Omni,
+die Verknüpfung im Startmenü unter "EVE Omni".
+
+Das Programm liest die EVE-Schnittstelle (ESI) mit deinem Login und zeigt an. Einzige
+Ausnahme: "Ziel im Spiel setzen" trägt auf deinen Klick ein Autopilot-Ziel über die
+offizielle Schnittstelle ein. Es drückt keine Tasten im Spiel und fliegt nicht selbst. Beim Umschalten holt es nur
+ein EVE-Fenster nach vorne (wie EVE-X-Preview).
+Für die Local-Liste fragt es zKillboard (öffentliche Kill-Statistiken).
