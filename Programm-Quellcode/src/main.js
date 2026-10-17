@@ -63,6 +63,7 @@ const DEFAULTS = {
   musicDirs: [],               // T24: Jukebox – alle freigegebenen Musikordner
   localWatch: true,            // Zwischenablage beobachten: kopierte Local-Liste oeffnet das Local-Fenster
   overlayOnlyEve: true,        // Overlays nur ueber EVE: ist ein anderes Programm vorne, liegen sie dahinter
+  linksInBrowser: true,        // TT2: Links aus EVE Omni im EVE-Omni-Browser (eigene Seiten im normalen Browser)
   // EVE-Clients mit einer Taste durchschalten (wie EVE-X-Preview). vk = Windows-Tastencode, mods: 1 Strg, 2 Umschalt, 4 Alt
   cycle: { on: false, fwd: { vk: 9, mods: 0, label: 'Tab' }, back: { vk: 9, mods: 2, label: 'Umschalt+Tab' }, skipLogin: true, order: [] },
   // E1: eigenes Browser-Fenster
@@ -173,8 +174,9 @@ function pushSettings(){
 /* ---------------- Einrasten (magnetisch wie in EVE) ----------------
    Beim Verschieben (Windows: will-move waehrend des Ziehens) und beim Groesse-Aendern werden Kanten, die naeher als
    SNAP Pixel an einer Kante eines anderen Overlay-Fensters oder am Bildschirmrand liegen, bündig angelegt. */
-const SNAP = 14;       // so nah muss eine Kante kommen, damit das Fenster einrastet
-const BREAK = 45;     // so weit muss man weiterziehen, damit es sich wieder loesst (wie in EVE)
+const SNAP = 8;        // so nah muss eine Kante kommen, damit das Fenster einrastet (SS4 15.10.: vorher 14, Nutzer: zu aggressiv)
+const BREAK = 25;     // so weit muss man weiterziehen, damit es sich wieder loesst (SS4: vorher 45)
+const MATCH_TOL = 20; // SS4: Breite beim Übereinander-Andocken nur übernehmen, wenn sie fast gleich ist
 const WIN_GAP = 1;    // 14.10.2026: Abstand zum Nachbarfenster (daneben/darueber/darunter), passt zu den Abstaenden der EVE-Fenster
 function overlayWindowsExcept(w){
   const list = Object.keys(sats).map(id => sats[id]).filter(o => o && !o.isDestroyed() && o.isVisible());
@@ -248,13 +250,14 @@ function snapSize(w, b){
 }
 // D1: Nach dem Loslassen: liegt das Fenster darueber/darunter buendig an einem anderen, uebernimmt es dessen Breite (und linke Kante).
 // LL4 (10.10.2026): links/rechts daneben wird die Hoehe NICHT mehr uebernommen (Nutzer: Fenster sprang auf die Hoehe des Nachbarn).
+// SS4 (15.10.2026): übereinander nur noch bei fast gleicher Breite (± MATCH_TOL), sonst bleibt die eigene Größe.
 function snapMatchBounds(w, b){
   if (S.snap === false || S.snapMatch === false) return null;
   for (const o of overlayWindowsExcept(w)){
     const t = o.getBounds();
     const side = (b.x === t.x + t.width + WIN_GAP || b.x + b.width + WIN_GAP === t.x) && b.y < t.y + t.height && b.y + b.height > t.y;
     const stack = (b.y === t.y + t.height + WIN_GAP || b.y + b.height + WIN_GAP === t.y) && b.x < t.x + t.width && b.x + b.width > t.x;
-    if (!side && stack && (b.x !== t.x || b.width !== t.width)) return { x: t.x, y: b.y, width: t.width, height: b.height };
+    if (!side && stack && (b.x !== t.x || b.width !== t.width) && Math.abs(b.width - t.width) <= MATCH_TOL) return { x: t.x, y: b.y, width: t.width, height: b.height };
   }
   return null;
 }
@@ -381,8 +384,8 @@ if (TEST) global.__evecoreTest = {
 };
 
 /* ---------------- Einzelfenster (eine Ansicht je Fenster, frei platzierbar) ---------------- */
-const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Handel', track: 'Watchlist',
-                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'Neocom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', workbench: 'Workbench', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
+const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Hauling', track: 'Watchlist',
+                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'OmniCom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', workbench: 'Workbench', produktion: 'Produktion', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
 /* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
    Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
 const MAIN_EN = {
@@ -399,7 +402,7 @@ const MAIN_EN = {
   'EVE Omni anzeigen / ausblenden': 'Show / hide EVE Omni', 'EVE starten (Launcher)': 'Start EVE (launcher)', 'Alle EVE-Clients beenden …': 'Quit all EVE clients …',
   'Hauptfenster immer im Vordergrund': 'Main window always on top', 'Overlays immer im Vordergrund': 'Overlays always on top', 'Durchklicken': 'Click-through',
   'Transparenter Hintergrund': 'Transparent background', 'Einrasten': 'Snap windows', 'Overlays': 'Overlays', 'Browser-Fenster': 'Browser window', 'Fensterposition zurücksetzen': 'Reset window position',
-  'Einstellungen …': 'Settings …', 'Neocom-Einstellungen …': 'Neocom settings …', 'Alle Einstellungen …': 'All settings …', 'Sicherungsordner öffnen': 'Open backup folder',
+  'Einstellungen …': 'Settings …', 'OmniCom-Einstellungen …': 'OmniCom settings …', 'Alle Einstellungen …': 'All settings …', 'Sicherungsordner öffnen': 'Open backup folder',
   'Beenden': 'Quit', 'Schließen': 'Close', 'Hintergrund': 'Background', 'Durchsichtigkeit': 'Transparency',
   'nie (immer offen)': 'never (always open)', '10 s nach der Maus': '10 s after the mouse', '30 s nach der Maus': '30 s after the mouse',
   '1 Min nach der Maus': '1 min after the mouse', '2 Min nach der Maus': '2 min after the mouse', '5 Min nach der Maus': '5 min after the mouse',
@@ -407,8 +410,8 @@ const MAIN_EN = {
   'EVE läuft noch – erst alle EVE-Clients schließen.': 'EVE is still running – close all EVE clients first.', 'EVECore läuft noch.': 'EVECore is still running.',
   'EVECore heißt jetzt EVE Omni und übernimmt beim ersten Start alle Daten. Bitte EVECore zuerst beenden (Symbol unten rechts › Beenden) und EVE Omni dann neu starten.': 'EVECore is now called EVE Omni and takes over all data on the first start. Please quit EVECore first (icon bottom right › Quit) and then restart EVE Omni.',
   // Overlay-Namen (Tray › Overlays)
-  'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Handel': 'Trade', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map',
-  'Wertschätzer': 'Appraisal', 'Kurier': 'Courier', 'PI-Planer': 'PI planner', 'Wurmlöcher': 'Wormholes', 'Industrie': 'Industry', 'Notizen': 'Notes',
+  'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Hauling': 'Hauling', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map',
+  'Wertschätzer': 'Appraisal', 'Kurier': 'Courier', 'PI-Planer': 'PI planner', 'Wurmlöcher': 'Wormholes', 'Industrie': 'Industry', 'Produktion': 'Manufacturing', 'Notizen': 'Notes',
   'Leistung': 'Performance', 'Uhr & Timer': 'Clock & timers',
   'Neuer Ordner': 'New folder', 'Neuer Ordner darin': 'New folder inside', 'Lesezeichen verwalten …': 'Manage bookmarks …', 'Lesezeichen importieren': 'Import bookmarks',
   'Kein Chrome, Edge oder Brave gefunden': 'No Chrome, Edge or Brave found', 'Keine Lesezeichen in Chrome, Edge oder Brave gefunden': 'No bookmarks found in Chrome, Edge or Brave', 'Alle in Tabs öffnen': 'Open all in tabs', 'Verschieben nach': 'Move to', 'Umbenennen': 'Rename',
@@ -499,7 +502,7 @@ function spielFit(w){
   }, () => {});
 }
 function satTop(id){ const t = id && (S.windows[id] || {}).top; return typeof t === 'boolean' ? t : !!S.alwaysOnTop; }
-// S2: Durchklicken fuer alle Overlays oder nur fuer einzelne (S.windows[id].ct). Das Neocom bleibt klickbar – dort schaltet man es um.
+// S2: Durchklicken fuer alle Overlays oder nur fuer einzelne (S.windows[id].ct). Das OmniCom bleibt klickbar – dort schaltet man es um.
 function satCt(w){
   const id = Object.keys(sats).find(k => sats[k] === w);
   return !!S.clickThrough || !!(id && id !== 'neocom' && (S.windows[id] || {}).ct);
@@ -518,7 +521,7 @@ function openSat(id, show){
   }
   const cfg = S.windows[id] || {};
   const b = visibleOnScreen(cfg.bounds) ? cfg.bounds : satDefaultBounds(id);
-  // 4.0.51: fertig geladenes Reserve-Fenster nehmen (Klick → sofort da), nur das Neocom braucht eigene Fenster-Art (nicht fokussierbar)
+  // 4.0.51: fertig geladenes Reserve-Fenster nehmen (Klick → sofort da), nur das OmniCom braucht eigene Fenster-Art (nicht fokussierbar)
   const sp = id !== 'neocom' && satSpareTake(), w = sp || satWin(b, id !== 'neocom');
   if (sp){ w.setBounds(b); w.setTitle('EVE Omni – ' + VIEWS[id]); }
   w.__key = satKey();   // NW2: geparkt nur mit gleichen Einstellungen wiederverwenden
@@ -536,8 +539,7 @@ function openSat(id, show){
   w.on('move', remember); w.on('resize', remember);
   // N5: zKillboard aus dem Overlay im EVECore-Browser, alles andere im normalen Browser
   w.webContents.setWindowOpenHandler(({ url }) => {
-    if (/^https:\/\/zkillboard\.com\//.test(url)) openBrowser(url);
-    else if (/^https?:\/\//.test(url)) shell.openExternal(url);
+    linkOpen(url);   // TT2 (vorher nur zKillboard im EVE-Omni-Browser)
     return { action: 'deny' };
   });
   w.webContents.on('will-navigate', ev => ev.preventDefault());
@@ -576,7 +578,7 @@ function satWin(b, focusable){
     x: b.x, y: b.y, width: b.width, height: b.height,
     frame: false, transparent: !!S.transparent, backgroundColor: S.transparent ? '#00000000' : '#05070a',
     show: false, title: 'EVE Omni', icon: winIconPath(), thickFrame: !S.transparent, hasShadow: !S.transparent, skipTaskbar: true,
-    focusable: focusable,   // 4.0.39: Neocom nie aktivieren (WS_EX_NOACTIVATE) – EVE bleibt vorne, Taskleiste blitzt nicht
+    focusable: focusable,   // 4.0.39: OmniCom nie aktivieren (WS_EX_NOACTIVATE) – EVE bleibt vorne, Taskleiste blitzt nicht
     type: 'toolbar',   // 4.0.40: WS_EX_TOOLWINDOW – neues Overlay ist für Windows kein App-Fenster, EVE bleibt „Vollbild“ (sonst Taskleiste)
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: false, spellcheck: false }
   });
@@ -613,10 +615,10 @@ function satPark(id){
 }
 function satParkedDrop(){ Object.keys(satParked).forEach(id => { const w = satParked[id]; delete satParked[id]; if (w && !w.isDestroyed()) w.destroy(); }); }
 function closeSat(id){ satPark(id); }
-// front: vom Nutzer geoeffnet (Neocom-Klick, Einstellungen) -> nach vorne, auch wenn EVE gerade nicht vorne ist
+// front: vom Nutzer geoeffnet (OmniCom-Klick, Einstellungen) -> nach vorne, auch wenn EVE gerade nicht vorne ist
 // (sonst legt „nur ueber EVE“ es hinter das aktive Programm – Fenster scheint nicht aufzugehen; Nutzer 06.10.2026)
 function syncSats(show, front){
-  // O2: Hauling + Hub-Handel sind jetzt ein Fenster „Handel“
+  // O2: Hauling + Hub-Handel sind jetzt ein Fenster „Hauling“ (SS5)
   ['hauling', 'hubhandel'].forEach(o => { if (S.windows[o]){ if (S.windows[o].open && !S.windows.handel) S.windows.handel = { open: true }; delete S.windows[o]; } });
   Object.keys(VIEWS).forEach(id => {
     const want = !!(S.windows[id] && S.windows[id].open);
@@ -768,7 +770,11 @@ function browserView(url){
   const v = new WebContentsView({ webPreferences: { partition: 'persist:browser', contextIsolation: true, nodeIntegration: false, sandbox: true } });
   const wc = v.webContents;
   wc.session.setPermissionRequestHandler((c, perm, cb) => cb(perm === 'fullscreen' || perm === 'clipboard-sanitized-write'));
-  wc.setWindowOpenHandler(({ url }) => { if (/^https?:\/\//.test(url)) browserTab(url); return { action: 'deny' }; });   // CC7: Links für neue Fenster → neuer Tab
+  wc.setWindowOpenHandler(({ url, disposition }) => {   // CC7: Links für neue Fenster → neuer Tab
+    if (disposition === 'new-window' && /^https?:\/\//.test(url)) return { action: 'allow', overrideBrowserWindowOptions: { parent: bwin, autoHideMenuBar: true, width: 520, height: 720 } };   // 17.10.: Anmelde-Popups (Google/Claude …) brauchen window.opener → echtes Fenster
+    if (/^https?:\/\//.test(url)) browserTab(url); return { action: 'deny' };
+  });
+  wc.once('destroyed', () => { const i = btabs.indexOf(v); if (i >= 0 && bwin && !bwin.isDestroyed()) browserCloseTab(i); });   // 17.10.: Seite schloss sich selbst (window.close) → Tab weg statt Absturz
   ['did-navigate', 'did-navigate-in-page', 'page-title-updated', 'did-start-loading', 'did-stop-loading'].forEach(e => wc.on(e, browserPush));
   wc.on('did-navigate', browserSaveTabs); wc.on('did-navigate-in-page', browserSaveTabs);
   wc.on('did-finish-load', () => browserZoom(wc));   // FF1
@@ -940,7 +946,7 @@ async function bmImport(src){
   bmDone();
   eoAsk(bwin, { message: n + ' Lesezeichen importiert.', detail: 'Ordner „' + name + '“ in der Lesezeichen-Leiste – sortieren unter „Lesezeichen verwalten“.' });
 }
-// P2: Hauptfenster erfaehrt, ob das Browser-Fenster offen ist (Markierung im Neocom-Overlay)
+// P2: Hauptfenster erfaehrt, ob das Browser-Fenster offen ist (Markierung im OmniCom-Overlay)
 function browserOpenPush(){ send({ type: 'browserOpen', open: !!(bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) }); }
 function browserPush(){ if (bwin && !bwin.isDestroyed() && bview){ bwin.webContents.send('browser:state', browserState()); bedit = ''; } }   // BM: „bearbeiten“ nur einmal schicken
 function browserLayout(){
@@ -968,6 +974,10 @@ function quitEve(){
     });
   });
 }
+// TT2 (16.10.2026): Links aus Hauptfenster, Overlays und Discord-Chat – eigene Seiten (Homepage, GitHub, Discord-Einladung, YouTube) im
+// normalen Browser, alles andere im EVE-Omni-Browser; Schalter Einstellungen › EVE Omni › Fenster & Overlays (S.linksInBrowser).
+const OWN_SITES = /^https?:\/\/((www\.)?omni\.nareya79\.com|(www\.)?github\.com\/Nareya79|discord\.gg|(www\.)?discord\.com\/invite|(www\.|m\.)?youtube\.com|youtu\.be)(\/|$)/i;
+function linkOpen(url){ if (!/^https?:\/\//.test(url)) return; if (S.linksInBrowser !== false && !OWN_SITES.test(url)) openBrowser(url); else shell.openExternal(url); }
 function openBrowser(url){
   url = browserUrl(url);
   if (bwin && !bwin.isDestroyed()){
@@ -1006,7 +1016,7 @@ function openBrowser(url){
   return w;
 }
 function browserCmd(type, arg){
-  if (!bwin || bwin.isDestroyed() || !bview) return;
+  if (!bwin || bwin.isDestroyed() || !bview || !bview.webContents) return;
   const wc = bview.webContents, h = wc.navigationHistory, bm = S.browser.bookmarks;
   if (type === 'go' || type === 'tab' || type === 'newtab'){ if (bmanage){ bmanage = false; browserLayout(); } }   // BM: Seite aufrufen beendet die Verwaltung
   if (type === 'go'){ const u = browserUrl(arg); if (u) wc.loadURL(u); }
@@ -1088,7 +1098,7 @@ function createWindow(showNow){
       return { action: 'allow', overrideBrowserWindowOptions: { width: 520, height: 760, alwaysOnTop: true, autoHideMenuBar: true, title: 'Spotify-Anmeldung',
         icon: winIconPath(), webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true } } };
     }
-    if (/^https?:\/\//.test(url)) shell.openExternal(url);
+    linkOpen(url);   // TT2
     return { action: 'deny' };
   });
   win.webContents.on('did-create-window', child => {
@@ -1125,7 +1135,7 @@ function createWindow(showNow){
   };
   win.on('moved', remember); win.on('resized', remember); win.on('move', remember); win.on('resize', remember);
   win.on('maximize', remember); win.on('unmaximize', remember);
-  // Z8: backgroundThrottling aus -> document.hidden bleibt false; Sichtbarkeit fuers Neocom ("offen") selbst melden
+  // Z8: backgroundThrottling aus -> document.hidden bleibt false; Sichtbarkeit fuers OmniCom ("offen") selbst melden
   const vis = () => setTimeout(() => { if (win && !win.isDestroyed()) send({ type: 'mainVis', on: win.isVisible() && !win.isMinimized() }); }, 50);
   ['show', 'hide', 'minimize', 'restore'].forEach(e => win.on(e, vis));
   win.webContents.on('did-finish-load', vis);   // BB14: auch beim Start versteckt (Tray) melden
@@ -1176,7 +1186,7 @@ function toggleShow(){
    Vordergrund". Ist ein anderes Programm vorne: Overlays direkt hinter dieses Fenster legen (SetWindowPos),
    dadurch verdeckt z. B. der Browser die Overlays. Klicks auf EVECore selbst aendern nichts.
    Faellt der Hilfsprozess aus, bleibt alles wie vorher (immer vorne). */
-let neoClickAt = 0;   // NW2: letzter Klick im Neocom-Overlay
+let neoClickAt = 0;   // NW2: letzter Klick im OmniCom-Overlay
 const fg = { proc: null, status: '', eve: true, hwnd: '0', name: '', clients: [], cycle: '', sent: [], switches: 0 };
 // Quelltext des Hilfsprozesses: helfer.cs (C# 5). Er wird beim Start in ein PowerShell-Skript im Programm-Datenordner
 // geschrieben und mit Add-Type uebersetzt (die Befehlszeile waere fuer -EncodedCommand inzwischen zu lang).
@@ -1217,7 +1227,7 @@ function fgLine(line){
 // Vordergrund hat gewechselt
 function fgEvent(hwnd, name){
   const n = String(name || '').toLowerCase();
-  // NW2: Vordergrundwechsel kurz nach einem Neocom-Klick ins Neocom-Protokoll (Diagnose Taskleiste)
+  // NW2: Vordergrundwechsel kurz nach einem OmniCom-Klick ins OmniCom-Protokoll (Diagnose Taskleiste)
   neoTraceAdd('Vordergrund ' + (n || '?') + ' ' + hwnd);   // Diagnose Overlays/Taskleiste
   if (n === 'eve-omni' || n === 'evecore' || n === 'electron' || n === 'shell' || hwnd === '0') return;     // EVECore selbst / Taskleiste (W1) / kurz kein Fenster: nichts aendern
   fg.hwnd = String(hwnd); fg.name = n;
@@ -1742,6 +1752,7 @@ async function dcBgApply(){
 function dcTitle(t){
   const m = /^\((\d+)\)/.exec(String(t || '')), n = m ? Number(m[1]) : 0;
   if (dcUnread >= 0 && n > dcUnread){ dcSentN++; send({ type: 'discordUnread', n }); }
+  if (n !== dcUnread) send({ type: 'discordCount', n });   // QQ1: Punkt am OmniCom-Symbol, auch wenn es weniger wird
   dcUnread = n;
 }
 function discordLook(){
@@ -1751,12 +1762,16 @@ function discordLook(){
   dwin.setOpacity(Math.max(0.3, Math.min(1, Number(c.alpha) || 1)));
   dwin.setIgnoreMouseEvents(ct, ct ? { forward: true } : undefined);
   dwin.setResizable(!c.lock);
+  dcBarPush();
 }
+// SS2 (15.10.2026): Leiste wie die Overlay-Fenster – Knöpfe zeigen Durchklicken / Vordergrund / Sperre
+function dcBarPush(){ if (dwin && !dwin.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock } }); } }
+function dcSet(p){ S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); }
 function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); dview.setBounds({ x: 0, y: DISCORD_BAR_H, width: w, height: Math.max(0, h - DISCORD_BAR_H) }); } }
 function discordOpenPush(){ send({ type: 'discordOpen', open: !!(dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) }); }
 function discordMenu(){
   if (!dwin || dwin.isDestroyed()) return;
-  const c = S.windows.discord || {}, set = p => { S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); };
+  const c = S.windows.discord || {}, set = dcSet;
   eoMenu(dwin, [
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!c.lock, click: () => set({ lock: !c.lock }) },
     { label: 'Deckkraft', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3].map(a => ({ label: Math.round(a * 100) + ' %', type: 'radio', checked: Math.abs((Number(c.alpha) || 1) - a) < 0.01, click: () => set({ alpha: a }) })) },
@@ -1768,14 +1783,18 @@ function discordMenu(){
     { type: 'separator' },
     { label: 'Im Standard-Browser öffnen', click: () => shell.openExternal(DISCORD_URL) },
     { label: 'Abmelden (Discord-Sitzung löschen)', click: () => eoAsk(dwin, { buttons: ['Abmelden', 'Abbrechen'], defaultId: 1, cancelId: 1, message: 'Bei Discord abmelden?', detail: 'Löscht die Anmeldung nur in diesem Fenster. Beim nächsten Öffnen meldest du dich neu an.' })
-      .then(r => { if (r.response === 0 && dview) dview.webContents.session.clearStorageData().then(() => dview && dview.webContents.loadURL(DISCORD_URL)); }) },
+      .then(r => { if (r.response === 0 && dview){ delete S.discordLast; saveSettings(); } if (r.response === 0 && dview) dview.webContents.session.clearStorageData().then(() => dview && dview.webContents.loadURL(DISCORD_URL)); }) },
     { label: 'Discord ganz beenden', sublabel: '✕ blendet nur aus – das hier beendet Discord', click: () => { if (dwin && !dwin.isDestroyed()) dwin.destroy(); } }
   ]);
 }
 function discordCmd(type, arg){
   if (!dwin || dwin.isDestroyed()) return;
   if (type === 'close') dwin.hide();   // DC2: Discord läuft weiter und bleibt angemeldet
-  else if (type === 'min') dwin.minimize(); else if (type === 'menu') discordMenu(); else if (type === 'reload' && dview) dview.webContents.reload();
+  else if (type === 'min') dwin.minimize(); else if (type === 'menu') discordMenu();
+  else if (type === 'top') dcSet({ top: !satTop('discord') });   // SS2
+  else if (type === 'lock') dcSet({ lock: !(S.windows.discord || {}).lock });
+  else if (type === 'ct') dcSet({ ct: !(S.windows.discord || {}).ct });
+  else if (type === 'reload' && dview) dview.webContents.reload();
   else if (type === 'size' && !(S.windows.discord || {}).lock){ const m = /^(\d+),(\d+)$/.exec(String(arg || '')); if (m) dwin.setSize(Math.max(320, +m[1]), Math.max(200, +m[2])); }   // DC2: Griff ⤡ (durchsichtige Fenster haben keinen Rahmen zum Ziehen)
 }
 function openDiscord(){
@@ -1795,10 +1814,13 @@ function openDiscord(){
   ses.setPermissionRequestHandler((x, perm, cb) => cb(perm === 'clipboard-sanitized-write' || perm === 'fullscreen'));   // kein Mikrofon, keine Kamera, keine Meldungen
   ses.setPermissionCheckHandler((x, perm) => perm === 'clipboard-sanitized-write');
   wc.setUserAgent(wc.getUserAgent().replace(/ Electron\/\S+/, '').replace(/\) \S+\/[\d.]+ Chrome\//, ') Chrome/'));   // wie ein normaler Chrome, sonst meldet Discord „Browser nicht unterstützt“
-  wc.setWindowOpenHandler(({ url }) => { if (/^https?:\/\//.test(url)) shell.openExternal(url); return { action: 'deny' }; });   // Links aus dem Chat → Standard-Browser
+  wc.setWindowOpenHandler(({ url }) => { linkOpen(url); return { action: 'deny' }; });   // Links aus dem Chat → EVE-Omni-Browser (TT2), eigene Seiten → Standard-Browser
   wc.on('will-navigate', (e, url) => { if (!/^https:\/\/([\w-]+\.)*discord(app)?\.com\//.test(url)){ e.preventDefault(); if (/^https?:\/\//.test(url)) shell.openExternal(url); } });
   v.setBackgroundColor('#00000000');
   wc.on('did-navigate', () => { dcUnread = -1; });   // neue Seite: erster Titel ist nur der Ausgangsstand
+  // VV1: zuletzt geöffneten Kanal / DM merken (Discord wechselt Kanäle ohne Neuladen → did-navigate-in-page)
+  const dcKeep = (e, url) => { if (/^https:\/\/(ptb\.|canary\.)?discord\.com\/channels\/[\w@]+(\/\d+)?\/?$/.test(url) && S.discordLast !== url){ S.discordLast = url; saveSettings(); } };
+  wc.on('did-navigate', dcKeep); wc.on('did-navigate-in-page', dcKeep);
   wc.on('did-finish-load', () => { dcCssKey = ''; setTimeout(dcBgApply, 300); setTimeout(dcBgApply, 5000); });   // DC2: Discord baut sich nach dem Laden noch auf → zweimal prüfen
   wc.on('page-title-updated', (e, t) => dcTitle(t));
   w.contentView.addChildView(v);
@@ -1809,11 +1831,12 @@ function openDiscord(){
   w.webContents.on('will-navigate', ev => ev.preventDefault());
   w.on('close', e => { if (!quitting && !w.__kill){ e.preventDefault(); w.hide(); } });   // DC2: Alt+F4 & Co. blenden nur aus
   const kill = w.destroy.bind(w); w.destroy = () => { w.__kill = true; kill(); };
-  w.on('closed', () => { if (dwin === w){ dwin = null; try{ v.webContents.close(); }catch(e){} dview = null; dcUnread = -1; } discordOpenPush(); });
+  w.on('closed', () => { if (dwin === w){ dwin = null; try{ v.webContents.close(); }catch(e){} dview = null; dcUnread = -1; send({ type: 'discordCount', n: 0 }); } discordOpenPush(); });
   ['show', 'hide', 'minimize', 'restore'].forEach(e => w.on(e, discordOpenPush));
   w.once('ready-to-show', () => { w.show(); discordLayout(); });
   w.loadFile(path.join(__dirname, 'discord.html'), { hash: uiLang() });
-  wc.loadURL(DISCORD_URL);
+  w.webContents.on('did-finish-load', dcBarPush);   // SS2
+  wc.loadURL(S.discordLast && !process.env.EVECORE_DISCORD_URL ? S.discordLast : DISCORD_URL);   // VV1: dort weiter, wo du warst
   return w;
 }
 function toggleDiscord(){ if (dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) dwin.hide(); else openDiscord(); }   // DC2: aus = nur ausblenden
@@ -1875,7 +1898,7 @@ function updateTray(){
     { label: 'Fensterposition zurücksetzen', click: () => resetBounds() },
     { type: 'separator' },
     { label: 'Einstellungen …', click: () => { showWin(); send({ type: 'openSettings' }); } },
-    { label: 'Neocom-Einstellungen …', click: () => { showWin(); send({ type: 'openSettings', pane: 'neocom' }); } },   // BB12
+    { label: 'OmniCom-Einstellungen …', click: () => { showWin(); send({ type: 'openSettings', pane: 'neocom' }); } },   // BB12
     { label: 'Sicherungsordner öffnen', click: () => { fs.mkdirSync(backupDir(), { recursive: true }); shell.openPath(backupDir()); } },
     { type: 'separator' },
     { label: 'Beenden', click: () => { quitting = true; app.quit(); } }
@@ -1982,7 +2005,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
   if (patch.windows) neoClickAt = Date.now();   // NW2: Overlay auf/zu
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
-  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'cycle', 'preview', 'deck', 'icColor'];
+  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'linksInBrowser', 'cycle', 'preview', 'deck', 'icColor'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   if ('lang' in patch) installLang = '';   // PU1: Seite hat die Installer-Sprache übernommen – Neuladen/Einzelfenster folgen ab jetzt eve-zentrale-lang-v1
   Object.keys(patch).forEach(k => {
@@ -2098,7 +2121,7 @@ ipcMain.on('evecore:satAction', (ev, action) => {
   send({ type: 'satAction', view: sid, action });
 });
 ipcMain.on('evecore:closeSelf', ev => { const sid = satIdOf(ev.sender); if (sid){ neoClickAt = Date.now(); closeSat(sid); } });   // NW2: auch ✕ am Overlay
-// T8: Neocom hat keine Leiste mit Zahnrad – Rechtsklick auf freie Flaeche = Mini-Menue (wie Zahnrad der anderen Overlays)
+// T8: OmniCom hat keine Leiste mit Zahnrad – Rechtsklick auf freie Flaeche = Mini-Menue (wie Zahnrad der anderen Overlays)
 function satMenu(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
   const cfg = S.windows[id] || {}, act = a => send({ type: 'satAction', view: id, action: a });
@@ -2113,7 +2136,7 @@ function satMenu(id){
     { label: 'Schließen', submenu: [[0, 'nie (immer offen)'], [10, '10 s nach der Maus'], [30, '30 s nach der Maus'], [60, '1 Min nach der Maus'], [120, '2 Min nach der Maus'], [300, '5 Min nach der Maus']]
       .map(x => ({ label: x[1], type: 'radio', checked: (Number(cfg.autoClose) || 0) === x[0], click: () => setWin({ autoClose: x[0] }) })) },
     { type: 'separator' },
-    ...(id === 'neocom' ? [{ label: 'Neocom-Einstellungen …', click: () => { showWin(true); act({ type: 'openSettings', pane: 'neocom' }); } }] : []),   // BB12
+    ...(id === 'neocom' ? [{ label: 'OmniCom-Einstellungen …', click: () => { showWin(true); act({ type: 'openSettings', pane: 'neocom' }); } }] : []),   // BB12
     { label: 'Alle Einstellungen …', click: () => { showWin(true); act({ type: 'openSettings' }); } }
   ]).popup({ window: w, callback: () => { satMenuOpen = false; } });
   satMenuOpen = true;
@@ -2149,7 +2172,7 @@ function satDrag(w, phase){
   selfDrags.set(w, st);
 }
 ipcMain.on('evecore:satDrag', (ev, phase) => { const sid = satIdOf(ev.sender); if (sid) satDrag(sats[sid], phase); });
-// Diagnose Neocom-Linksklick (07.10.): letzte Maus-Ereignisse des Neocom-Overlays + Zustand im Programm nach neocom-log.txt (Einstellungsordner)
+// Diagnose OmniCom-Linksklick (07.10.): letzte Maus-Ereignisse des OmniCom-Overlays + Zustand im Programm nach neocom-log.txt (Einstellungsordner)
 ipcMain.on('evecore:neoLog', (ev, text) => {
   if (satIdOf(ev.sender) !== 'neocom') return;
   neoLogWrite(text);
@@ -2158,7 +2181,7 @@ function neoLogWrite(text){
   const w = sats.neocom, st = w && !w.isDestroyed() ? { drag: selfDrags.has(w), ignore: satCt(w), top: w.isAlwaysOnTop(), focusable: w.isFocusable(), visible: w.isVisible(), locked: winLocked(w) } : null;
   const m = win && !win.isDestroyed() ? { visible: win.isVisible(), locked: winLocked(win), drags: drags.size, selfDrags: selfDrags.size, demo: demoOn() } : null;
   const open = Object.keys(sats).filter(k => sats[k] && !sats[k].isDestroyed() && sats[k].isVisible());
-  try{ fs.writeFileSync(path.join(app.getPath('userData'), 'neocom-log.txt'), 'Neocom-Fenster: ' + JSON.stringify(st) + '\nHauptfenster: ' + JSON.stringify(m) + '\nOffene Overlays: ' + open.join(', ') + '\n\n--- Programm ---\n' + neoTrace.join('\n') + '\n\n--- Neocom-Overlay ---\n' + String(text)); }catch(e){}
+  try{ fs.writeFileSync(path.join(app.getPath('userData'), 'neocom-log.txt'), 'OmniCom-Fenster: ' + JSON.stringify(st) + '\nHauptfenster: ' + JSON.stringify(m) + '\nOffene Overlays: ' + open.join(', ') + '\n\n--- Programm ---\n' + neoTrace.join('\n') + '\n\n--- OmniCom-Overlay ---\n' + String(text)); }catch(e){}
 }
 ipcMain.on('evecore:hide', () => hideMain());
 ipcMain.on('evecore:minimize', () => { if (win) win.minimize(); });
@@ -2171,6 +2194,20 @@ ipcMain.on('evecore:resizeTo', (ev, w, h, auto) => {
   if (!win) return;
   const b = win.getBounds();
   win.setBounds(snapSize(win, { x: b.x, y: b.y, width: Math.max(MIN[0], Math.round(w)), height: Math.max(MIN[1], Math.round(h)) }));
+});
+// 16.10.: OmniCom „Fenster wächst“ – Grundmaße merken, offene Gruppe braucht d Seiten-Pixel quer (x) bzw. hoch (y); back = nach links/oben
+// (gegenüberliegende Kante bleibt stehen). d = 0 → zurück auf die Grundmaße, auch wenn das Fenster inzwischen verschoben wurde.
+ipcMain.on('evecore:satGrow', (ev, axis, back, d) => {
+  const sid = satIdOf(ev.sender), w = sid && sats[sid]; if (!w || w.isDestroyed()) return;
+  const st = S.windows[sid] = S.windows[sid] || {}, b = w.getBounds();
+  d = Math.max(0, Math.round(Number(d) * ev.sender.getZoomFactor()) || 0);
+  if (!d && !st.grow) return;
+  const g = st.grow || (st.grow = { w: b.width, h: b.height, y: axis === 'y', back: !!back });
+  const n = { x: b.x, y: b.y, width: g.y ? g.w : g.w + d, height: g.y ? g.h + d : g.h };
+  if (g.back){ if (g.y) n.y = b.y + b.height - n.height; else n.x = b.x + b.width - n.width; }
+  if (!d) delete st.grow;
+  if (n.width !== b.width || n.height !== b.height) w.setBounds(n);
+  saveSettings();
 });
 ipcMain.on('evecore:resizeEnd', ev => {
   const sid = satIdOf(ev.sender);
@@ -2369,7 +2406,7 @@ ipcMain.on('evecore:showView', (ev, id) => showView(String(id)));
 ipcMain.on('evecore:openBrowser', (ev, url) => openBrowser(url));
 ipcMain.on('evecore:launchEve', () => launchEve());   // DD5
 ipcMain.on('evecore:quitEve', () => quitEve());   // FF5
-// L5: Neocom-Knopf – offen und sichtbar -> schliessen, sonst oeffnen
+// L5: OmniCom-Knopf – offen und sichtbar -> schliessen, sonst oeffnen
 ipcMain.on('evecore:toggleBrowser', () => { if (bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) bwin.close(); else openBrowser(); });
 ipcMain.on('browser:cmd', (ev, type, arg) => { if (bwin && !bwin.isDestroyed() && ev.sender === bwin.webContents) browserCmd(String(type), String(arg || '')); else if (dwin && !dwin.isDestroyed() && ev.sender === dwin.webContents) discordCmd(String(type), String(arg || '')); });   // DC: Discord-Leiste nutzt dieselbe Brücke
 ipcMain.on('evecore:toggleDiscord', () => toggleDiscord());   // DC

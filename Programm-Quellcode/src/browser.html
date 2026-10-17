@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
 <title>EVE Omni – Browser</title>
 <style>
   /* E1: Leiste des Browser-Fensters (90 px hoch, darunter liegt die Webseite). An der Leiste ziehen = Fenster verschieben. CC7: oben die Tabs. */
@@ -16,6 +16,9 @@
   .tab .tx{flex:none;width:16px;height:16px;min-width:0;padding:0;border:none;background:none;font-size:11px;line-height:16px;color:#6b7885}
   .tab .tx:hover{color:#fff;background:#7a1f1f;border-radius:3px}
   .tab.ld .tt::before{content:"⟳ ";color:#4fa3d1}
+  #omni{flex:none;width:18px;height:18px;margin:0 5px 2px 1px;align-self:center;filter:drop-shadow(0 0 3px rgba(79,163,209,.45))}   /* SS3: Omni-Symbol vor den Tabs (nur Schmuck, Ziehen = Fenster verschieben) */
+  .r0{padding-left:4px}
+  #tabs{display:flex;align-items:flex-end;gap:2px;flex:1;min-width:0;height:100%;overflow:hidden}
   #newtab{-webkit-app-region:no-drag;height:21px;min-width:22px;margin-bottom:1px;padding:0 5px}
   #lock.on{color:#e0b84a;border-color:#e0b84a}
   .r1{height:34px;border-bottom:1px solid #1c2630}
@@ -63,7 +66,7 @@
 </style>
 </head>
 <body>
-  <div class="row r0" id="tabs"></div>
+  <div class="row r0"><img id="omni" alt="" draggable="false" src="data:image/png;base64,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"><div id="tabs"></div></div>
   <div class="row r1">
     <button id="back" title="Zurück" disabled>◀</button>
     <button id="fwd" title="Vor" disabled>▶</button>

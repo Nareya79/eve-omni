@@ -5,28 +5,53 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
 <title>EVE Omni – Discord</title>
 <style>
-  /* DC: schmale Leiste über dem Discord-Chat – ziehen = verschieben, ☰ = Fenster-Menü, ✕ = schließen */
+  /* DC: schmale Leiste über dem Discord-Chat – ziehen = verschieben. SS2 (15.10.2026): aufgebaut wie die Titelleiste der Overlay-Fenster
+     (links ⟳, Mitte Symbol + Titel, rechts ⌗ 📌 ⚙ 🔓, dazu ⤡ Größe – ✕); ⚙ öffnet das Fenster-Menü (vorher ☰). */
   *{box-sizing:border-box}
-  html,body{margin:0;height:26px;overflow:hidden;background:#0b0f14;color:#c8d2dc;font:12px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
-  .row{display:flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 8px;border-bottom:1px solid #1c2630}
-  .t{flex:1;font-weight:600;letter-spacing:.02em;color:#8ea1e1}
-  button{-webkit-app-region:no-drag;background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:20px;min-width:24px;padding:0 6px;cursor:pointer;font:inherit}
-  button:hover{border-color:#5865f2;color:#fff}
-  #close:hover{background:#7a1f1f;border-color:#b33}
+  html,body{margin:0;height:26px;overflow:hidden;background:#101215;color:#c8d2dc;font:12px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
+  .row{position:relative;display:flex;align-items:center;gap:1px;height:26px;padding:0 3px;background:rgba(255,255,255,.035);border-bottom:1px solid rgba(255,255,255,.07)}
+  .sp{flex:1}
+  .t{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;letter-spacing:.02em;color:#e6edf3;white-space:nowrap;pointer-events:none}
+  .t svg{width:16px;height:16px;flex:none;filter:drop-shadow(0 0 3px rgba(88,101,242,.6))}
+  button{-webkit-app-region:no-drag;display:inline-grid;place-items:center;width:23px;height:22px;padding:0;border:0;border-radius:0;background:none;color:rgba(255,255,255,.5);cursor:pointer;font:inherit;font-size:13px}
+  button:hover{color:#fff;background:rgba(255,255,255,.09)}
+  button[aria-pressed="true"]{color:#fff;background:rgba(255,255,255,.13)}
+  #close:hover{background:#7a1f1f}
   #grip{cursor:nwse-resize;touch-action:none}
+  .sep{width:1px;height:14px;margin:0 3px;background:rgba(255,255,255,.1)}
 </style>
 </head>
 <body>
-<div class="row"><span class="t">Discord</span>
-  <button id="reload" title="Neu laden">⟳</button><button id="grip" title="Größe ändern: ziehen">⤡</button><button id="menu" title="Menü: Sperren, Deckkraft, Hintergrund, Vordergrund, Abmelden">☰</button><button id="min" title="Minimieren">–</button><button id="close" title="Schließen">✕</button></div>
+<div class="row">
+  <button id="reload" title="Neu laden">&#x27F3;</button>
+  <span class="t"><svg viewBox="0 0 48 48" fill="none" stroke="#8ea1e1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12c6-2.4 14-2.4 20 0 3.6 5.2 5.6 11.2 6 18-3.2 3-6.8 4.8-10 6l-2-4c-2.6.6-5.4.6-8 0l-2 4c-3.2-1.2-6.8-3-10-6 .4-6.8 2.4-12.8 6-18z"/><circle cx="19" cy="25" r="2.6" fill="#4fd1e8" stroke="none"/><circle cx="29" cy="25" r="2.6" fill="#4fd1e8" stroke="none"/></svg><span id="tt">Discord</span></span>
+  <span class="sp"></span>
+  <button id="ct" title="Durchklicken ein/aus (Mausklicks gehen auf EVE) – ausschalten: Einstellungen › Programm" aria-pressed="false">&#x2317;</button>
+  <button id="top" title="Immer im Vordergrund ein/aus" aria-pressed="false">&#x1F4CC;&#xFE0E;</button>
+  <button id="menu" title="Fenster-Optionen: Deckkraft, Hintergrund, Abmelden">&#x2699;&#xFE0E;</button>
+  <button id="lock" title="Position und Größe sperren" aria-pressed="false">&#x1F513;&#xFE0E;</button>
+  <span class="sep"></span>
+  <button id="grip" title="Größe ändern: ziehen">&#x2921;</button>
+  <button id="min" title="Minimieren">&#x2013;</button>
+  <button id="close" title="Schließen (Discord läuft weiter)">&#x2715;</button>
+</div>
 <script>
-  ["reload", "menu", "min", "close"].forEach(function(id){ document.getElementById(id).onclick = function(){ browserHost.cmd(id); }; });
+  ["reload", "menu", "min", "close", "ct", "top", "lock"].forEach(function(id){ document.getElementById(id).onclick = function(){ browserHost.cmd(id); }; });
   /* DC2: durchsichtige Fenster haben keinen Rahmen – Größe über den Griff ziehen */
   (function(){ var g = document.getElementById("grip"), d = null, q = 0;
     g.onpointerdown = function(e){ d = { x: e.screenX, y: e.screenY, w: window.outerWidth, h: window.outerHeight }; g.setPointerCapture(e.pointerId); };
     g.onpointermove = function(e){ if (!d || q) return; q = requestAnimationFrame(function(){ q = 0; browserHost.cmd("size", Math.round(d.w + e.screenX - d.x) + "," + Math.round(d.h + e.screenY - d.y)); }); };
     g.onpointerup = g.onpointercancel = function(){ d = null; }; })();
-  if (/^en/.test(location.hash.slice(1))){ document.documentElement.lang = "en"; [["reload", "Reload"], ["grip", "Resize: drag"], ["menu", "Menu: lock, opacity, background, on top, log out"], ["min", "Minimise"], ["close", "Close"]].forEach(function(x){ document.getElementById(x[0]).title = x[1]; }); }
+  var EN = /^en/.test(location.hash.slice(1));
+  // SS2: Zustand der Knöpfe vom Programm (main.js dcBarPush)
+  if (window.browserHost && browserHost.onState) browserHost.onState(function(st){ var c = st && st.dc; if (!c) return;
+    document.getElementById("ct").setAttribute("aria-pressed", String(!!c.ct));
+    document.getElementById("top").setAttribute("aria-pressed", String(!!c.top));
+    var l = document.getElementById("lock"); l.setAttribute("aria-pressed", String(!!c.lock)); l.innerHTML = c.lock ? "&#x1F512;&#xFE0E;" : "&#x1F513;&#xFE0E;";
+    l.title = c.lock ? (EN ? "Locked – click to unlock" : "Gesperrt – Klick gibt Position und Größe frei") : (EN ? "Lock position and size" : "Position und Größe sperren");
+    document.getElementById("grip").disabled = !!c.lock;
+  });
+  if (EN){ document.documentElement.lang = "en"; [["reload", "Reload"], ["ct", "Click-through on/off (mouse clicks go to EVE) – turn off: Settings › Program"], ["top", "Always on top on/off"], ["menu", "Window options: opacity, background, log out"], ["lock", "Lock position and size"], ["grip", "Resize: drag"], ["min", "Minimise"], ["close", "Close (Discord keeps running)"]].forEach(function(x){ document.getElementById(x[0]).title = x[1]; }); }
 </script>
 </body>
 </html>

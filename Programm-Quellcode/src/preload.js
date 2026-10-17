@@ -48,9 +48,10 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   closeSelf: () => ipcRenderer.send('evecore:closeSelf'),
   satMini: h => ipcRenderer.send('evecore:satMini', Number(h) || 0),
   satFitH: h => ipcRenderer.send('evecore:satFitH', Number(h) || 0),
+  satGrow: (axis, back, d) => ipcRenderer.send('evecore:satGrow', axis === 'y' ? 'y' : 'x', !!back, Number(d) || 0),
   satMenu: () => ipcRenderer.send('evecore:satMenu'),
   satDrag: phase => ipcRenderer.send('evecore:satDrag', String(phase)),
-  neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose Neocom-Linksklick (07.10.)
+  neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose OmniCom-Linksklick (07.10.)
   pickMusicDir: () => ipcRenderer.invoke('evecore:pickMusicDir'),
   listMusic: () => ipcRenderer.invoke('evecore:listMusic'),
   removeMusicDir: d => ipcRenderer.invoke('evecore:removeMusicDir', d),
