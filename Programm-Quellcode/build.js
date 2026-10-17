@@ -1,6 +1,7 @@
 // Baut den Windows-Ordner EVE-Omni-win32-x64 aus dem offiziellen Electron-Paket (Pruefsumme geprueft)
 // und dem Programmcode in src/. Setzt Symbol und Versionsangaben der EVE-Omni.exe mit resedit (ohne Wine).
 // Aufruf (im Ordner Programm-Quellcode): npm install resedit@3.1.0 && node build.js <entpacktes electron-win32-x64> <Ziel>
+// V6/CI: resedit kommt aus der Sperrdatei im Repo-Hauptordner (npm ci), koffi aus src/package-lock.json (npm ci --prefix src)
 'use strict';
 const fs = require('fs'), path = require('path');
 const ResEdit = require('resedit');

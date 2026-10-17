@@ -1,0 +1,18 @@
+{
+"Fitting unbekannt – Assets laden": "Fitting unknown – load assets",
+"Das Fitting des Schiffs ist unbekannt (nicht in den Assets gefunden). Mit dem nackten Rumpf wäre die Ampel zu streng. Unter Assets einmal „Assets laden“ drücken.": "The ship's fitting is unknown (not found in the assets). With the bare hull the rating would be too strict. Press “Load assets” once under Assets.",
+"Mindestmarge für Trade-Warnungen": "Minimum margin for trade warnings",
+"0 % (nur Verlust)": "0 % (loss only)",
+"Gelbe Warnung in „Meine Trades“ und im Trades-Overlay, wenn die Marge nach Gebühren unter diesen Wert fällt. Danach richtet sich auch „Nicht über“ (Höchstkaufpreis). 0 % = nur bei Verlust warnen.": "Yellow warning in “My trades” and the trades overlay when the margin after fees drops below this value. “Not above” (maximum buy price) follows it too. 0 % = warn only on a loss.",
+"Nicht über": "Not above",
+"nicht über": "not above",
+"Höchstpreis kopieren": "Copy maximum price",
+"Markt leer – kein Vergleich möglich": "Market empty – no comparison possible",
+"Unter deiner Mindestmarge": "Below your minimum margin",
+"beim aktuellen Kaufpreis nur": "at the current buy price only",
+"beim Marktpreis": "at the market price",
+"Markt liegt": "Market is",
+"unter deinem Plan": "below your plan",
+"über deinem Plan": "above your plan",
+"Stk": "unit"
+}

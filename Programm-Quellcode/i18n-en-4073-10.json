@@ -1,0 +1,6 @@
+{
+"3 Monate": "3 Months",
+"Erweitert": "Advanced",
+"Nur nötig, wenn du eine eigene Developer-App benutzt. Leer lassen = einfach mit EVE einloggen.": "Only needed if you use your own developer app. Leave empty = simply log in with EVE.",
+"Rücksprung-Adresse deiner eigenen Developer-App (Callback URL). Gilt nur zusammen mit einer eigenen Client-ID.": "Return address of your own developer app (callback URL). Only applies together with your own client ID."
+}
