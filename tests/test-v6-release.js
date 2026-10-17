@@ -38,6 +38,8 @@ try{
   assert(sign.length === 6 && sign.every(s => /if: env\.SIGNPATH == 'true'/.test(s)) && /SIGNPATH: \$\{\{ secrets\.SIGNPATH_API_TOKEN != '' \}\}/.test(wf), 'V6: alle 6 Signatur-Schritte laufen nur mit Secret SIGNPATH_API_TOKEN');
   assert(['ORGANIZATION_ID', 'PROJECT_SLUG', 'SIGNING_POLICY_SLUG', 'ARTIFACT_CONFIGURATION_SLUG'].every(k => wf.indexOf('vars.SIGNPATH_' + k) > 0), 'V6: SignPath-Angaben als Repo-Variablen');
   assert(wf.indexOf('EVE-Omni.exe signieren') < wf.indexOf('release-build.py --src') && wf.indexOf('release-build.py --src') < wf.indexOf('Installer signieren') && wf.indexOf('Installer signieren') < wf.indexOf('--summen'), 'V6: Reihenfolge exe signieren → Installer bauen → Installer signieren → Prüfsummen neu');
+  const psColon = wf.split('\n').filter(l => /\$(?!env:)[A-Za-z_]\w*:/.test(l));
+  assert(!psColon.length, 'V6: kein „$name:“ in run-Blöcken (PowerShell liest das als Laufwerk, ${name}: nehmen)' + (psColon.length ? ': ' + psColon[0].trim() : ''));
   assert(!/echo[^\n]*secrets\.|Write-Output[^\n]*secrets\./.test(wf) && /::add-mask::/.test(wf), 'V6: keine Secrets ausgeben, private Namen im Log verdeckt');
   console.log('ALL TESTS PASSED');
 }catch(e){ console.error(e.message); process.exit(1); }

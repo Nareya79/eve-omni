@@ -74,7 +74,7 @@ jobs:
           Invoke-WebRequest "$base/SHASUMS256.txt" -OutFile "$env:RUNNER_TEMP\SHASUMS256.txt"
           $want = ((Select-String -Path "$env:RUNNER_TEMP\SHASUMS256.txt" -Pattern " \*?electron-v$e-win32-x64\.zip$").Line -split ' ')[0]
           $have = (Get-FileHash "$env:RUNNER_TEMP\electron.zip" -Algorithm SHA256).Hash.ToLower()
-          if (-not $want -or $want -ne $have) { throw "Electron $e: SHA256 $have passt nicht zu SHASUMS256.txt ($want)" }
+          if (-not $want -or $want -ne $have) { throw "Electron ${e}: SHA256 $have passt nicht zu SHASUMS256.txt ($want)" }
           Expand-Archive "$env:RUNNER_TEMP\electron.zip" "$env:RUNNER_TEMP\electron"
           Write-Output "Electron $e geprüft: $have"
 
