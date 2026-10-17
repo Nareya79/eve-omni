@@ -41,6 +41,7 @@
 - Small see-through windows that float over the game – only while EVE is in front.
 - Views: Trades · Watchlist · Market · Wallet · Assets · Characters · Skills · Mining · Industry · Wormholes · Route · Map · Local · Gang alarm · Jukebox
 - One compact window or each view as its own window, snapped to the screen edge; transparency per window, lock position, auto-hide.
+- **OmniCom:** the launcher of the overlay, in four layouts (grid, favourites + folders, expandable groups, a bar that grows). Drag icons into groups and back out, like folders on a phone.
 - One click to copy exact prices, open an item's market window in EVE or set your autopilot destination.
 - Copy local with Ctrl+C and the overlay shows who is there; a live alarm pops up when hostiles are reported.
 
@@ -54,6 +55,8 @@
 | **Wallet & assets** | All characters, ISK, journal and items in every station |
 | **Mining** | Mining log per day and character, ore/ice/gas/moon values per m³ with your refine yield, best place to sell, moon extractions of your corp |
 | **Industry & blueprints** | Jobs and blueprints |
+| **Manufacturing planner** | Is building worth it, or should you sell the materials? Build or buy every component, invention with the chance from your skills and all decryptors, reactions, copying and ME/TE research – up to T2. It checks itself against the real cost of your industry jobs of the last 30 days |
+| **Setup assistant** | Pick your look first – EVE (Caldari colours) or EVE Omni (gold on dark blue) – then colour scheme and overlays |
 | **Planetary industry (PI)** | Your colonies with an alarm when extractors run out |
 | **Skills** | Skill queue and trading skills – fees are calculated from your real skills |
 | **Navigation & wormholes** | Route planner, jump planner, map with jump bridges, Thera & Turnur connections via EVE-Scout, wormhole info, autopilot destination in one click |
