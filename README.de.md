@@ -41,6 +41,7 @@
 - Kleine, durchsichtige Fenster, die über dem Spiel schweben – nur solange EVE vorne ist.
 - Ansichten: Trades · Watchlist · Handel · Wallet · Assets · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
 - Ein kompaktes Fenster oder jede Ansicht als eigenes Fenster, rastet am Bildschirmrand ein; Deckkraft je Fenster, Position sperren, automatisch ausblenden.
+- **OmniCom:** der Starter des Overlays, in vier Aufbauten (Raster, Favoriten + Ordner, aufklappbare Gruppen, eine Leiste, die wächst). Symbole ziehst du wie Ordner auf dem Handy in Gruppen hinein und wieder heraus.
 - Mit einem Klick exakte Preise kopieren, das Marktfenster eines Items in EVE öffnen oder das Autopilot-Ziel setzen.
 - Local mit Strg+C kopieren und das Overlay zeigt, wer da ist; bei gemeldeten Feinden springt ein Live-Alarm auf.
 
@@ -54,6 +55,8 @@
 | **Wallet & Assets** | Alle Charaktere, ISK, Journal und Items in jeder Station |
 | **Mining** | Mining-Tagebuch je Tag und Charakter, Erz-/Eis-/Gas-/Mond-Werte pro m³ mit deiner Raffinier-Ausbeute, bester Verkaufsort, Mond-Extraktionen deiner Corp |
 | **Industrie & Blueprints** | Jobs und Blueprints |
+| **Produktions-Planer** | Lohnt sich die Herstellung, oder verkaufst du das Material besser? Jedes Bauteil selbst bauen oder kaufen, Erfindung mit der Chance aus deinen Skills und allen Decryptoren, Reaktionen, Kopieren und ME/TE-Forschung – bis T2. Er prüft sich selbst an den echten Kosten deiner Industrie-Jobs der letzten 30 Tage |
+| **Einrichtungs-Assistent** | Zuerst den Look wählen – EVE (Caldari-Farben) oder EVE Omni (Gold auf Dunkelblau) –, dann Farbschema und Overlays |
 | **Planeten-Industrie (PI)** | Deine Kolonien mit Alarm, wenn Extraktoren auslaufen |
 | **Skills** | Skill-Warteschlange und Handels-Skills – Gebühren mit deinen echten Skills berechnet |
 | **Navigation & Wurmlöcher** | Routenplaner, Sprungplaner, Karte mit Jump Bridges, Thera- & Turnur-Verbindungen über EVE-Scout, Wurmloch-Infos, Autopilot-Ziel mit einem Klick |
