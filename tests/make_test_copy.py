@@ -134,7 +134,7 @@ def main():
     patched = html.replace(MARKER, HOOK + MARKER, 1)
     # 4.0.73: Neuinstallation folgt der Systemsprache (navigator.language). jsdom meldet immer en-US – die jsdom-Tests sind für
     # deutsches Windows geschrieben, darum dort de-DE vortäuschen. Echte Browser (Playwright) behalten ihre Sprache/locale.
-    patched = ("<script>try{ if (/jsdom/i.test(navigator.userAgent)) Object.defineProperty(navigator, 'language', { get: function(){ return 'de-DE'; } }); }catch(e){}</script>") + patched   # Datei hat kein <head> – ganz an den Anfang
+    patched = ('<meta charset="utf-8">' + "<script>try{ if (/jsdom/i.test(navigator.userAgent)) Object.defineProperty(navigator, 'language', { get: function(){ return 'de-DE'; } }); }catch(e){}</script>") + patched   # Datei hat kein <head> – ganz an den Anfang
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(patched)
     print("wrote", out_path)
