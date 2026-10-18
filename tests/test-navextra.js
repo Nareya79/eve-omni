@@ -74,6 +74,10 @@ function makeWindow(extra){
     POSTS = []; $('rt-ap-way').onclick(); await tick(300);
     const wp = POSTS.filter(x => /autopilot/.test(x.u)).map(x => x.u);
     assert(wp.length === 3 && /destination_id=2/.test(wp[0]) && /clear_other_waypoints=true/.test(wp[0]) && /clear_other_waypoints=false&destination_id=4/.test(wp[2]), 'Genaue Route als Wegpunkte (erster löscht alte Wegpunkte)');
+    // 17.10.: Hauling-„Ziel“ setzt nur das Ziel (ein Aufruf, Charakter in der Meldung) – keine Wegpunkte
+    POSTS = []; await T.haulRoute('1DQ1-A', 'MJXW-P', true, true); await tick(200);
+    const hp = POSTS.filter(x => /autopilot/.test(x.u));
+    assert(hp.length === 1 && /clear_other_waypoints=true&destination_id=4/.test(hp[0].u) && /^Taron Velkar: Ziel MJXW-P im Spiel gesetzt/.test(T.getHaulRouteMsg()), 'Hauling-Ziel: nur Ziel, ein Aufruf, Charakter genannt (' + T.getHaulRouteMsg() + ')');
     // Standort
     await T.rtLocStart(); await tick(100);
     assert($('rt-from').value === 'Q-JQSG' && /Start: Q-JQSG/.test($('rt-loc-info').textContent), 'Start = aktuelles System des Charakters');

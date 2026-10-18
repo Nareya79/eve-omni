@@ -64,7 +64,7 @@ function makeWindow(extra, host){
     $('ov-body').querySelector('[data-ova="mirrorRun"]').click(); await tick(30);
     assert($('hl-budget').value.replace(/[^0-9]/g, '') === '250000000' && $('hl-hub').value === 'amarr' && runs === 1, 'I11: Werte übernommen und Suche gestartet');
     $('hl-search-btn').onclick = oldRun;
-    const s9 = T.ovLoad(); s9.mirrorOpen = { 'hub-run': true }; T.ovSave(s9);
+    const s9 = T.ovLoad(); s9.mirrorOpen = { 'haul-run': true }; T.ovSave(s9);   // 17.10.: Hauling + Hub-Handel teilen „Suchoptionen auf/zu“
     T.ovSatAction('handel', { type: 'kkd', arg: 'dodixie' }); await tick(30);   // KK6: Ziel-Hub statt Reiter
     assert(w.localStorage.getItem('eve-zentrale-handel-mode-v1') === 'hub' && $('is-budget').value === '250.000.000', 'O2: zurück auf „Zu festem Hub/Station“, Budget mitgenommen');
     const dcb = $('ov-body').querySelector('[data-ova="kkd"][data-arg="dodixie"][aria-pressed="true"]');   // KK6: Ziele als Knöpfe
@@ -94,7 +94,8 @@ function makeWindow(extra, host){
     assert($('is-src').value === 'amarr' && T.isDstKeys().indexOf('jita') >= 0, 'R6: Einkauf Amarr, Verkauf Jita übernommen');
     $('is-start').onclick = oldIs;
     s1.view = 'handel'; T.ovSave(s1); T.ovRender(); T.ovSatAction('handel', { type: 'kkd', arg: 'umkreis' }); await tick(30);
-    const cps = [...ob.querySelectorAll('.ov-hl-items [data-copy]')].map(e => e.getAttribute('data-copy'));
+    T.ovSatAction('handel', { type: 'haulSel', arg: '0' }); await tick(30);   // AB: Einkaufsliste erst nach dem Aufklappen
+    const cps = [...ob.querySelectorAll('.ov-card:not(.ov-opt)')].map(c => (c.querySelector('[data-copy]') || { getAttribute(){ return ''; } }).getAttribute('data-copy'));
     assert(cps.join('|') === '120000|12', 'PQ1: Menge je Artikel kopierbar, Name ohne Kopier-Knopf: ' + cps.join('|'));
     const mb = [...ob.querySelectorAll('[data-copy]')].find(e => /Tritanium 120000/.test(e.getAttribute('data-copy')));
     assert(mb && mb.getAttribute('data-copy') === 'Tritanium 120000\nDamage Control II 12', 'Einkaufsliste für Multibuy (Name Menge je Zeile)');

@@ -25,11 +25,12 @@ const { chromium } = require('playwright');
   const o = await p.evaluate(() => {
     document.documentElement.classList.add('ov-eve');
     const g = document.createElement('div'); g.className = 'neo-ov'; g.innerHTML = '<button class="on">a</button><button>b</button>'; document.body.appendChild(g);
-    const bs = g.querySelectorAll('button'), r = { on: getComputedStyle(bs[0]).boxShadow, off: getComputedStyle(bs[1]).boxShadow };
+    const bs = g.querySelectorAll('button'), c0 = getComputedStyle(bs[0]), c1 = getComputedStyle(bs[1]), r = { on: c0.borderTopColor + ' ' + c0.borderTopWidth, off: c1.borderTopColor, sh: c0.boxShadow };
     g.remove(); document.documentElement.classList.remove('ov-eve'); return r;
   });
-  ok(frame(o.on), 'Overlay (EVE-Stil): aktives Symbol hat Rahmen rundum (' + o.on + ')');
-  ok(o.off === 'none', 'Overlay (EVE-Stil): inaktive Symbole ohne Rahmen');
+  // AF3 (18.10.): wie das EVE-Neocom – offen = Kante ringsum in Symbol-/Akzentfarbe (statt weißem Innenrahmen A2), zu = graue Kante
+  ok(/1px$/.test(o.on) && !/255, 255, 255/.test(o.on) && o.sh === 'none', 'Overlay (EVE-Stil): offenes Symbol hat Kante rundum in Symbolfarbe (' + o.on + ')');
+  ok(o.off === 'rgba(255, 255, 255, 0.16)', 'Overlay (EVE-Stil): geschlossene Symbole mit grauer Kante (' + o.off + ')');
   // Farben
   const col = sel => p.evaluate(s => getComputedStyle(document.querySelector(s)).color, sel);
   const GOLD = 'rgb(255, 226, 154)';
@@ -52,10 +53,10 @@ const { chromium } = require('playwright');
   ok(await p.evaluate(() => document.querySelector('#ic-presets [data-icp="gallente"]').getAttribute('aria-pressed') === 'true'), 'T27: gewählte Vorlage markiert');
   await p.evaluate(() => { const i = document.getElementById('ic-color'); i.value = '#123456'; i.dispatchEvent(new Event('change')); });
   ok(await col('#neo-btn-intel svg') === 'rgb(18, 52, 86)', 'T27: eigene Symbolfarbe per Farbwähler');
-  await p.evaluate(() => { document.querySelector('#ui-schemes [data-scheme="minmatar"]').click(); const c = document.getElementById('ic-scheme'); c.checked = true; c.dispatchEvent(new Event('change')); });
-  ok(await col('#neo-btn-intel svg') === 'rgb(227, 131, 79)' && await p.evaluate(() => document.querySelector('#ic-presets button').disabled), 'T27: passend zum Farbschema (Minmatar -> Rost), Vorlagen gesperrt');
-  await p.evaluate(() => document.querySelector('#ui-schemes [data-scheme="caldari"]').click());
-  ok(await col('#neo-btn-intel svg') === 'rgb(197, 210, 223)', 'T27: Farbschema gewechselt -> Symbolfarbe folgt (Caldari)');
+  await p.evaluate(() => { document.querySelector('#ui-schemes [data-scheme="minmatar-eve"]').click(); const c = document.getElementById('ic-scheme'); c.checked = true; c.dispatchEvent(new Event('change')); });
+  ok(await col('#neo-btn-intel svg') === 'rgb(208, 92, 59)' && await p.evaluate(() => document.querySelector('#ic-presets button').disabled), 'T27: passend zum Farbschema (Minmatar (EVE) -> EVE-Akzent), Vorlagen gesperrt');
+  await p.evaluate(() => document.querySelector('#ui-schemes [data-scheme="caldari-eve"]').click());
+  ok(await col('#neo-btn-intel svg') === 'rgb(154, 210, 227)', 'T27: Farbschema gewechselt -> Symbolfarbe folgt (Caldari (EVE))');
   await p.evaluate(() => { document.querySelector('#ui-schemes [data-scheme="photon"]').click(); const c = document.getElementById('ic-scheme'); c.checked = false; c.dispatchEvent(new Event('change')); document.querySelector('#ic-presets [data-icp="gold"]').click(); });
   // A5 jetzt: x = wieder Symbolfarbe
   await p.evaluate(() => document.querySelector('[data-neo-nocolor="neo-btn-haul"]').click());

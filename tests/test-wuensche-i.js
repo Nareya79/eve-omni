@@ -53,7 +53,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     T.ovSatAction('hauling', { type: 'haulEve', arg: '0' }); await tick(600);
     assert(rc.some(u => /\/route\/30000142\/30002187 .*Safer/.test(u)), 'I13: Route mit der gewählten Art (Sicherste) berechnet');
     const wp = rc.filter(u => /autopilot\/waypoint/.test(u));
-    assert(wp.length === 2 && /clear_other_waypoints=true&destination_id=30000144/.test(wp[0]) && /destination_id=30002187/.test(wp[1]), 'I13: Wegpunkte in EVE gesetzt: ' + wp.length);
+    assert(wp.length === 1 && /clear_other_waypoints=true&destination_id=30002187/.test(wp[0]), 'I13 (17.10.): nur das Ziel in EVE gesetzt, keine Wegpunkte: ' + wp.length);
     // I15: Hauling-Lauf merken, Fortschritt aus der Wallet (Kauf am Start, Verkauf am Ziel)
     w.localStorage.setItem('eve-zentrale-active-char', '111');
     const run = T.hrAdd(60003760, 'Jita IV (Jita)', 60008494, 'Amarr VIII', [{ tid: '34', name: 'Tritanium', q: 100, sp: 500, p: 300 }]);

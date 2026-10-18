@@ -57,6 +57,7 @@ const lastMenu = () => env.menus[env.menus.length - 1], item = (m, re) => m.find
     // Ordner-Menü: Lesezeichen, Unterordner, „Alle in Tabs“
     A.browserCmd('bmfolder', '1'); let m = lastMenu();
     assert(m[0].label === 'zKill' && m[1].label === 'Tools' && m[1].folder && m[1].submenu[0].label.startsWith('janice') && item(m, /Alle 2 in Tabs/), 'Klick auf Ordner: Menü mit Unterordnern und „Alle in Tabs öffnen“');
+    assert(m[0].fav === 'https://www.google.com/s2/favicons?sz=32&domain=zkillboard.com' && !m[1].fav, 'ZZ2: Ordner-Menü – Lesezeichen mit Seitensymbol (nur Domain), Ordner ohne');
     m[0].click(); assert(V().webContents.url === 'https://zkillboard.com/', 'Lesezeichen im Ordner-Menü öffnet die Seite');
     // Neuer Ordner → Umbenennen über Pfad, Menü „Verschieben nach“
     A.browserCmd('bmnew', ''); assert(B()[3].name === 'Neuer Ordner' && w.st.edit === '3', 'Neuer Ordner: angelegt und gleich zum Umbenennen');
@@ -92,6 +93,7 @@ const lastMenu = () => env.menus[env.menus.length - 1], item = (m, re) => m.find
     const st = Object.assign({}, w.st, { manage: false, edit: '' });
     await p.evaluate(s => window.__cb(s), st);
     assert(await p.evaluate(() => [...document.querySelectorAll('#bms .bm')].map(e => e.textContent).join('|')) === 'Wiki✕|Handel▾|Aus Chrome▾' && await p.evaluate(() => document.querySelectorAll('#bms .bm.fd svg.fdi').length === 2), 'Leiste: Lesezeichen und Ordner (Ordner-Symbol … ▾)');
+    assert(await p.evaluate(() => { const i = document.querySelector('#bms .bm:not(.fd) img.fav'); return !!i && /s2\/favicons\?sz=32&domain=wiki\.eveuniversity\.org/.test(i.src) && !document.querySelector('#bms .bm.fd img.fav'); }), 'ZZ2: Leiste – Lesezeichen mit Seitensymbol, Ordner mit Ordner-Symbol');
     await p.click('#bms .bm:nth-child(2)'); await p.click('#bms .bm:nth-child(1)', { button: 'right' }); await p.click('#mgb');
     assert(JSON.stringify(await p.evaluate(() => window.browserHost.cmds)) === JSON.stringify([['bmfolder', '1'], ['bmmenu', '0'], ['manage', '1']]), 'Leiste: Ordner-Klick, Rechtsklick und 📑 schicken die Befehle');
     await p.evaluate(s => window.__cb(Object.assign({}, s, { manage: true })), st);

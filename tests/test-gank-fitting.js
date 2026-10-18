@@ -67,6 +67,14 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     assert((await wait('Prüfschiff Y')).src === 'Rumpf ohne Module', '(4) ohne Assets: Rumpf');
     T.asRender({ v: false, n: 1, g: [{ cid: '1', name: 'Testpilot', locs: [{ id: '60003760', name: 'Jita', rows: [{ tid: 777, name: 'Rumpf', qty: 1, ship: { id: 9, fv: 0, sl: [['Low', [[1335, 'Reinforced Bulkheads II', 2]]]] } }] }] }] });
     assert((await wait('Prüfschiff Y')).src === 'Fitting aus dem Hangar', '(4) nach „Assets laden“ sofort Fitting aus dem Hangar');
+    // (3) gleicher Gewinn in allen Fittings (Ladung passt überall) → das Fitting mit mehr EHP gewinnt, nicht „wie im Hangar“
+    const pick = html.slice(html.indexOf('async function gkFleetPick('), html.indexOf('async function gkFleetPick(') + 1400);
+    const cmp = new Function('return ' + pick.match(/all\.sort\((function\(a, b\)\{[^}]*\})\)/)[1])();
+    const vs = [['Fitting wie im Hangar', 9e4], ['3× Expanded Cargohold II', 9e4], ['3× Reinforced Bulkheads II', 15e4], ['1× Expanded Cargohold II + 2× Reinforced Bulkheads II', 12e4]]
+      .map(([fit, ehp]) => ({ v: { fit, ehp }, res: { profit: 5e7 }, r9: { iskh: 2e8 } }));
+    assert(vs.slice().sort(cmp)[0].v.fit === '3× Reinforced Bulkheads II', '(3) gleicher Gewinn → mehr EHP gewinnt (Bulkheads)');
+    vs[1].r9.iskh = 3e8;
+    assert(vs.slice().sort(cmp)[0].v.fit === '3× Expanded Cargohold II', '(3) mehr Gewinn mit Cargo → Cargo gewinnt weiter');
     console.log('ALL GANK-FITTING TESTS PASSED');
   }catch(e){ console.error(e); console.log('FAILED: ' + e.message); }
   process.exit(0);

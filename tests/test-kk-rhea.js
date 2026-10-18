@@ -16,5 +16,5 @@ const fitIcons = new Function('escapeHtml', 'shipFitName', body('fitIcons') + '\
 const ic = fitIcons({ mods: [[1319, 2], [1335, 1]] });
 assert(/2×<img[^>]*types\/1319\/icon/.test(ic) && /1×<img[^>]*types\/1335\/icon/.test(ic) && /title="1× Reinforced Bulkheads II"/.test(ic), 'Overlay: Modul-Symbole mit Anzahl, Name im Tooltip');
 assert(fitIcons({ mods: [[1319, 3], [0, 0]] }).split('<img').length === 2 && fitIcons({ name: 'x' }) === 'wie im Hangar', 'Nur gefittete Module als Symbol, sonst Text');
-assert(/fit: best\.v\.fit, mods: best\.v\.mods/.test(html) && /fitIcons\(H\.ship\)/.test(html) && /fitIcons\(d\.ship\)/.test(html) && /shipFitHtml\(opt\.ship\) \+ gkFleetCmp\(opt\)/.test(html), 'Fitting in Hub-Handel, Hauling und beiden Overlays');
+assert(/fit: best\.v\.fit, mods: best\.v\.mods/.test(html) && /fitIcons\(H\.ship\)/.test(html) && /rows: d\.items \|\| \[\], ship: d\.ship/.test(html) && /shipFitHtml\(opt\.ship\) \+ gkFleetCmp\(opt\)/.test(html), 'Fitting in Hub-Handel, Hauling und beiden Overlays');
 console.log('\nALL KK-RHEA TESTS PASSED');

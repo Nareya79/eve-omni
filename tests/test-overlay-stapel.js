@@ -17,7 +17,7 @@ f.satZTouch(sats.wallet);
 assert(f.satIdsByZ().slice(-1)[0] === 'wallet', 'erneut angeklickt → wieder oben');
 const d = sats.station; d.isDestroyed = () => true; f.satZTouch(d);
 assert(f.satIdsByZ().join() === 'haul,station,wallet' || f.satIdsByZ().indexOf('station') < 2, 'geschlossenes Fenster fällt aus dem Stapel');
-assert(/w\.on\('focus', \(\) => satZTouch\(w\)\)/.test(main), 'Fokus eines Overlays wird gemerkt');
+assert(/w\.on\('focus', \(\) => \{ satZTouch\(w\);/.test(main), 'Fokus eines Overlays wird gemerkt');
 assert(/function applyWindowState\(\)[\s\S]{0,600}satIdsByZ\(\)\.forEach\(id => applySatState/.test(main) && /function ownedResync\(\)\{ satIdsByZ\(\)/.test(main), 'beide Neu-Einordnungen nutzen den Stapel');
 assert(/static void RaiseOv\(\)\{[\s\S]*?GetTopWindow\(IntPtr\.Zero\)[\s\S]*?GetWindow\(w, 2\)[\s\S]*?return pb\.CompareTo\(pa\);/.test(cs), 'Helfer: echte Stapelfolge lesen, von unten nach oben anheben');
 assert(/if \(nm\[a\] != nm\[b\]\) return nm\[a\] \? 1 : -1;/.test(cs), 'Helfer: Namen der Vorschau weiter zuletzt (S16)');

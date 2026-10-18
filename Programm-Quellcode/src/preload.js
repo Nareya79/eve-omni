@@ -50,6 +50,7 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   satFitH: h => ipcRenderer.send('evecore:satFitH', Number(h) || 0),
   satGrow: (axis, back, d) => ipcRenderer.send('evecore:satGrow', axis === 'y' ? 'y' : 'x', !!back, Number(d) || 0),
   satMenu: () => ipcRenderer.send('evecore:satMenu'),
+  popMenu: items => ipcRenderer.invoke('evecore:popMenu', items),   // AH2
   satDrag: phase => ipcRenderer.send('evecore:satDrag', String(phase)),
   neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose OmniCom-Linksklick (07.10.)
   pickMusicDir: () => ipcRenderer.invoke('evecore:pickMusicDir'),
@@ -59,6 +60,8 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   resolveLink: u => ipcRenderer.invoke('evecore:resolveLink', String(u || '')),   // LL1
   wbFetch: (p, key) => ipcRenderer.invoke('evecore:wbFetch', String(p || ''), String(key || '')),   // WB: EVE Workbench mit Token
   perf: () => ipcRenderer.invoke('evecore:perf'),   // T20
+  eveFonts: () => ipcRenderer.invoke('evecore:eveFonts'),
+  eveThemes: () => ipcRenderer.invoke('evecore:eveThemes'),   // AG7: Farbthema je Charakter aus den EVE-Einstellungen   // AE1: EVE-Schrift aus der eigenen EVE-Installation (nur lokal)
   showView: id => ipcRenderer.send('evecore:showView', String(id)),
   openBrowser: url => ipcRenderer.send('evecore:openBrowser', url ? String(url) : ''),
   launchEve: () => ipcRenderer.send('evecore:launchEve'),   // DD5

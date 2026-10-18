@@ -32,7 +32,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     const box = d.createElement('div'); T.ovRenderViewInto('hauling', box);
     const cards = box.querySelectorAll('.ov-card');
     assert(box.querySelector('.sort-bar [data-arg="haul:perJump"][aria-pressed="true"]') && /Amarr/.test(cards[0].textContent), 'J4: Overlay nutzt dieselbe Sortierung');
-    assert(/beste/.test(cards[1].textContent) && !/beste/.test(cards[0].textContent), 'J4: „beste“ bleibt beim höchsten Gewinn');
+    assert(/empfohlen/.test(cards[1].textContent) && !/empfohlen/.test(cards[0].textContent), 'J4: „empfohlen“ (vorher „beste“) bleibt beim höchsten Gewinn');
     assert(/data-arg="0"/.test(cards[1].innerHTML), 'J4: Route-Knopf zeigt weiter auf das richtige Ziel');
     // Trades: Name A–Z im Hauptfenster
     w.localStorage.setItem('eve-zentrale-trades-v1', JSON.stringify([
@@ -45,7 +45,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     assert(/^Pyerite.*Zydrine/.test(names()), 'J4: Trades nach Name A–Z per Klick');
     // J6: „＋ Lauf merken“ im Hauling- und Hub-Overlay
     w.localStorage.removeItem('eve-zentrale-haulruns-v1');
-    const HL = { t: 111, origin: 'Jita', originSys: 'Jita', originStation: 60003760, originLabel: 'Jita IV - 4', list: [
+    const HL = { t: 111, sel: 0, origin: 'Jita', originSys: 'Jita', originStation: 60003760, originLabel: 'Jita IV - 4', list: [
       { stationId: 7, stationName: 'Amarr VIII', systemName: 'Amarr', jumps: 9, itemCount: 1, profit: 5e6, items: [{ tid: 34, name: 'Tritanium', q: 100, sp: 500, p: 200 }] }] };
     T.setOvData({ haul: HL });
     let ob = d.createElement('div'); T.ovRenderViewInto('hauling', ob);

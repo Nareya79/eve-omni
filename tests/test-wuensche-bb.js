@@ -264,7 +264,7 @@ function makeWindow(extra, host){
             onCommand(cb){ Z.cmd = cb; }, ready(){}, satAction: a => Z.act.push(a), closeSelf(){}, resizeTo(){}, resizeEnd(){}, satMini(){}, satDrag(){} }; } }).window;
       await tick(400);
       const zd1 = zw1.document, lk = zd1.getElementById('ov-lock');
-      assert(lk && lk.getAttribute('aria-pressed') === 'false' && lk.nextElementSibling.id === 'ov-hide', 'Z1: Schloss-Knopf neben ✕, offen');
+      assert(lk && lk.getAttribute('aria-pressed') === 'false' && (lk.nextElementSibling.id === 'ov-hide' || (lk.nextElementSibling.id === 'ov-roll' && lk.nextElementSibling.nextElementSibling.id === 'ov-hide')), 'Z1: Schloss-Knopf neben ✕ (AF5: im Stil EVE „—“ dazwischen), offen');
       lk.click(); await tick(50);
       assert(Z.set.pop().windows.wallet.lock === true && lk.getAttribute('aria-pressed') === 'true' && lk.textContent.codePointAt(0) === 0x1F512, 'Z1: Klick sperrt Position + Größe, Symbol zu');
       lk.click(); await tick(50);

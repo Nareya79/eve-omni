@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data: https://www.google.com https://*.gstatic.com">
 <title>EVE Omni – Browser</title>
 <style>
   /* E1: Leiste des Browser-Fensters (90 px hoch, darunter liegt die Webseite). An der Leiste ziehen = Fenster verschieben. CC7: oben die Tabs. */
@@ -34,6 +34,7 @@
   .bm{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border:1px solid #243140;border-radius:11px;background:#131a22;cursor:pointer;flex:none}
   .bm:hover{border-color:#4fa3d1;color:#fff}
   .bm.fd{border-radius:4px;color:var(--ic, #e0b84a)}
+  .fav{flex:none;width:14px;height:14px;border-radius:2px}
   .fdi{flex:none;color:var(--ic, #e0b84a);filter:drop-shadow(0 0 3px color-mix(in srgb, var(--ic, #e0b84a) 60%, transparent));vertical-align:-3px}   /* MM3: Ordner wie im Menü */
   .mr .ic .fdi{vertical-align:-3px}
   .bm .x{opacity:0;font-size:11px;color:#c66}
@@ -110,6 +111,10 @@
     $("url").placeholder = L("Adresse oder Suchbegriff"); $("mgq").placeholder = L("Suchen …");
     $("mgt").textContent = L("Lesezeichen verwalten"); $("mgnew").innerHTML = FOLDER_SVG + " "; $("mgnew").appendChild(document.createTextNode(L("Neuer Ordner"))); $("mgimp").textContent = L("⤓ Importieren …"); $("mgdone").textContent = L("Fertig");
   }
+  // ZZ2: Seitensymbol je Lesezeichen (Symboldienst sieht nur die Domain); fehlt es, bleibt nichts bzw. 🔗 stehen
+  function favUrl(u){ try{ var h = new URL(String(u)).hostname; return h ? "https://www.google.com/s2/favicons?sz=32&domain=" + encodeURIComponent(h) : ""; }catch(e){ return ""; } }
+  function favImg(u, fb){ var f = favUrl(u); if (!f) return null; var im = document.createElement("img"); im.className = "fav"; im.alt = ""; im.width = im.height = 14; im.src = f; im.contentEditable = "false";
+    im.onerror = function(){ if (fb){ var x = document.createElement("span"); x.textContent = fb; im.replaceWith(x); } else im.remove(); }; return im; }
   function at(p){ var n = null, list = st.bookmarks; String(p).split("/").forEach(function(i){ n = list && list[Number(i)]; list = n && n.kids; }); return n; }
   // Ziehen: Ordner in der Mitte = hinein, sonst davor/danach (Leiste waagerecht, Liste senkrecht)
   function dropMode(ev, el, folder, horiz){
@@ -141,6 +146,7 @@
       el.className = "bm" + (fd ? " fd" : "");
       el.title = fd ? b.name + "\n" + L("Ordner – Klick: aufklappen · Rechtsklick: Menü · Ziehen: sortieren") : b.url + (s.home === b.url ? "\n⌂" : "") + "\n" + L("Rechtsklick: Menü · Doppelklick: umbenennen · Ziehen: sortieren oder in einen Ordner legen");
       if (fd){ var fi = document.createElement("span"); fi.innerHTML = FOLDER_SVG; fi.contentEditable = "false"; el.appendChild(fi.firstChild); }   // MM3: Ordner-Symbol im EVE-Omni-Stil statt Emoji
+      else { var fv = favImg(b.url); if (fv) el.appendChild(fv); }
       el.appendChild(document.createTextNode(b.name));
       if (fd){ var a = document.createElement("span"); a.textContent = "▾"; a.contentEditable = "false"; el.appendChild(a); }
       else { var x = document.createElement("span"); x.className = "x"; x.textContent = "✕"; x.title = L("Lesezeichen entfernen"); x.contentEditable = "false";
@@ -161,7 +167,7 @@
     function row(b, p, depth, trail){
       var fd = !!b.kids, r = document.createElement("div"); r.className = "mr" + (fd ? " f" : ""); r.style.paddingLeft = (8 + depth * 18) + "px";
       var tg = document.createElement("span"); tg.className = "tg"; tg.textContent = fd ? (mgOpen[p] || q ? "▾" : "▸") : ""; if (fd){ tg.title = L("Ordner auf/zu"); tg.onclick = function(){ mgOpen[p] = !mgOpen[p]; renderManage(st); }; }
-      var ic = document.createElement("span"); ic.className = "ic"; if (fd) ic.innerHTML = FOLDER_SVG; else ic.textContent = "🔗";
+      var ic = document.createElement("span"); ic.className = "ic"; if (fd) ic.innerHTML = FOLDER_SVG; else { var fv = favImg(b.url, "🔗"); if (fv) ic.appendChild(fv); else ic.textContent = "🔗"; }
       r.appendChild(tg); r.appendChild(ic);
       if (mgEdit === p){
         var ni = document.createElement("input"); ni.className = "n"; ni.value = b.name; ni.placeholder = L("Name"); r.appendChild(ni);

@@ -42,15 +42,15 @@ function makeWindow(url, host, extra){
     const sc = H.pub.scanner;
     assert(sc.title === 'Scanner-Plan' && /Damage Control II/.test(sc.html) && !/Nicht im Plan/.test(sc.html), 'Scanner-Plan zeigt nur Items im Plan');
     assert(/data-copy="99510"/.test(sc.html) && /data-copy="120"/.test(sc.html) && /data-copy="120200"/.test(sc.html), 'Kaufpreis, Menge, Verkaufspreis kopierbar (exakt)');
-    assert(/Gewinn netto <b>\+14\.567,89 ISK<\/b>\/Stk · gesamt <b>\+1,75 <span class="ov-u">Mio\.<\/span> ISK<\/b>/.test(sc.html), 'Gewinn netto pro Stück und gesamt');
+    assert(/Gewinn netto <b class="ov-pf">\+14\.567,89 ISK<\/b>\/Stk · gesamt <b class="ov-pf">\+1,75 <span class="ov-u">Mio\.<\/span> ISK<\/b>/.test(sc.html), 'Gewinn netto pro Stück und gesamt (AG8: grün)');
     assert(/Scan: /.test(sc.foot.age) && sc.look && 'alpha' in sc.look, 'Fußzeile + Aussehen werden mitgeschickt');
     const hb = H.pub.handel;
-    assert(/Jita → Amarr/.test(hb.html) && /Tritanium/.test(hb.html) && /data-copy="1000000"/.test(hb.html) && /\+0,50 ISK<\/b>\/Stk · gesamt <b>\+500 <span class="ov-u">Tsd\.<\/span> ISK/.test(hb.html), 'Hub-Handel: Ladung mit Menge, Gewinn pro Stück und gesamt');
+    assert(/Jita → Amarr/.test(hb.html) && /Tritanium/.test(hb.html) && /data-copy="1000000"/.test(hb.html) && /\+0,50 ISK<\/b>\/Stk · gesamt <b class="ov-pf">\+500 <span class="ov-u">Tsd\.<\/span> ISK/.test(hb.html), 'Hub-Handel: Ladung mit Menge, Gewinn pro Stück und gesamt');
     assert(/data-rt-pos="2"/.test(H.pub.route.html), 'Route: Zeilen tragen die Position');
     // Hauling
     T.setOvData({ haul: { t: Date.now(), origin: 'Jita IV - Moon 4', list: [{ stationName: 'Perimeter - Station', systemName: 'Perimeter', jumps: 1, itemCount: 12, profit: 8000000 }] } });
     const box = d.createElement('div'); T.ovRenderViewInto('hauling', box);
-    assert(/Perimeter - Station/.test(box.innerHTML) && /1<\/b> Sprünge/.test(box.innerHTML) && /\+8 Mio\. ISK/.test(box.textContent), 'Hauling-Ansicht mit Ziel, Sprüngen, Gewinn');
+    assert(/→ Perimeter/.test(box.innerHTML) && /Sprünge: <b>1<\/b>/.test(box.innerHTML) && /\+8 Mio\. ISK/.test(box.textContent), 'Hauling-Ansicht mit Ziel, Sprüngen, Gewinn (AB: Optionszeile)');
     // Aktionen aus dem Einzelfenster
     H.cmd({ type: 'satAction', view: 'route', action: { type: 'rtPos', i: 2 } }); await tick(50);
     assert(T.rtLoad().last.pos === 2, 'Standort aus dem Einzelfenster übernommen');

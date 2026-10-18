@@ -128,6 +128,44 @@ const SHOT = '/tmp/sd-keys.png';
     await pd.selectOption('#char', '7'); await pd.selectOption('#act', 'timer'); await pd.waitForTimeout(30);
     const pds = await pd.evaluate(() => window.__pis.filter(m => m.event === 'setSettings').pop().payload);
     assert(pds.show === 'wal' && pds.char === '7' && pds.act === 'timer' && await pd.evaluate(() => !document.getElementById('f-min').hidden), 'SD-C: Auswahl gespeichert, Timer-Minuten erscheinen bei Kombi „Timer“');
+    // ZZ3: Sprache kommt von EVE Omni – Tasten zeichnen sofort englisch, Einstellungsfenster ebenso
+    const jbDe = await p.evaluate(() => window.EVEOMNI_TEST.render({ kind: 'jukebox', settings: {} }).toDataURL());
+    await p.evaluate(() => { const s = JSON.parse(JSON.stringify(window.__lastSt || {})); window.__es.onmessage({ data: JSON.stringify(Object.assign({ jb: { t: '', p: false }, dt: Date.now() + 3600e3 }, s, { lang: 'en' })) }); });
+    const jbEn = await p.evaluate(() => window.EVEOMNI_TEST.render({ kind: 'jukebox', settings: {} }).toDataURL());
+    assert(await p.evaluate(() => EO.lang === 'en' && EO.t('keine Musik') === 'no music' && EO.t('Overlay ein/aus') === 'Overlay on/off') && jbEn !== jbDe, 'ZZ3: EVE Omni meldet Englisch → Tasten zeichnen englisch (neues Bild)');
+    const pe = await b.newPage();
+    await pe.addInitScript(() => { window.WebSocket = class { constructor(){} send(){} };
+      window.EventSource = class { constructor(){ setTimeout(() => this.onmessage({ data: JSON.stringify({ lang: 'en', x: { chars: [] } }) }), 5); } close(){} }; });
+    await pe.goto('file://' + DIR + 'pi/index.html');
+    await pe.evaluate(() => window.connectElgatoStreamDeckSocket(1, 'PE', 'registerPropertyInspector', '{}', JSON.stringify({ action: 'de.eveomni.tasten.display', context: 'e0', payload: { settings: { show: 'wal' } } })));
+    await pe.waitForTimeout(60);
+    assert(await pe.evaluate(() => document.querySelector('label[for="show"]').textContent === 'Display' && document.getElementById('show').value === 'wal' && document.getElementById('show').selectedOptions[0].textContent === 'Wallet' &&
+      document.getElementById('act').options[0].textContent === 'Open matching overlay' && /^Shows the chosen value live/.test(document.getElementById('hint').textContent)), 'ZZ3: Einstellungsfenster englisch, Auswahl bleibt');
+    // ZZ4: Laufschrift gleitet (auch kurzer Titel), nur Jukebox-Tasten werden schnell neu gezeichnet (~8/s)
+    const mq = await p.evaluate(async () => {
+      const T = window.EVEOMNI_TEST, sl = ms => new Promise(r => setTimeout(r, ms));
+      T.setState({ jb: { t: 'Echo', p: true, vol: .5 }, dt: Date.now() + 3600e3, lang: 'de' });
+      const a = T.render({ kind: 'jukebox', settings: {} }).toDataURL(); await sl(150); const b = T.render({ kind: 'jukebox', settings: {} }).toDataURL();
+      T.setState({ jb: { t: 'Echo', p: false, vol: .5 }, dt: Date.now() + 3600e3, lang: 'de' });
+      const c = T.render({ kind: 'jukebox', settings: {} }).toDataURL(); await sl(150); const d = T.render({ kind: 'jukebox', settings: {} }).toDataURL();
+      return { moves: a !== b, pausedStill: c === d };
+    });
+    assert(mq.moves && mq.pausedStill, 'ZZ4: kurzer Titel läuft gleitend während der Wiedergabe, bei Pause steht er');
+    const cnt = await p.evaluate(async () => {
+      const ws = window.__ws, sl = ms => new Promise(r => setTimeout(r, ms));
+      ws.emit({ event: 'willAppear', action: 'de.eveomni.tasten.jukebox', context: 'mq1', payload: { settings: {} } });
+      ws.emit({ event: 'willAppear', action: 'de.eveomni.tasten.clock', context: 'mq2', payload: { settings: {} } });
+      window.__es.onmessage({ data: JSON.stringify({ jb: { t: 'Ein ziemlich langer Titel der Jukebox', p: true, vol: .5 }, dt: Date.now() + 3600e3, lang: 'de' }) });
+      await sl(100); const n0 = window.__sent.length; await sl(2000);
+      const s = window.__sent.slice(n0).filter(m => m.event === 'setImage');
+      return { jb: s.filter(m => m.context === 'mq1').length, clock: s.filter(m => m.context === 'mq2').length };
+    });
+    assert(cnt.jb >= 8 && cnt.jb <= 18 && cnt.jb >= cnt.clock * 3 && cnt.clock <= 3, 'ZZ4: Jukebox-Taste ~8 Bilder/s, andere Tasten bleiben bei ~1/s (' + JSON.stringify(cnt) + ')');
+    const keyImg = await p.evaluate(() => window.EVEOMNI_TEST.render({ kind: 'jukebox', settings: {} }).toDataURL());
+    const stripImg = await p.evaluate(() => window.EVEOMNI_TEST.strip({ kind: 'dialJb', settings: {}, turnAt: 0 }).toDataURL());
+    const sp4 = await b.newPage({ viewport: { width: 360, height: 150 } });
+    await sp4.setContent('<body style="margin:0;background:#333;display:flex;gap:6px;align-items:center"><img src="' + keyImg + '"><img src="' + stripImg + '"></body>');
+    await sp4.screenshot({ path: '/tmp/sd-zz4.png' });
     console.log('ALL PASSED');
   }catch(e){ console.log(e.stack || e.message); await b.close(); process.exit(1); }
   await b.close(); process.exit(0);

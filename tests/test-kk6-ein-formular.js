@@ -31,5 +31,14 @@ const hid = id => $(id).closest('.field').hidden;
   assert(mode() === 'haul' && $('hl-target').value === 'amarr', 'Eigenes System kaufen + Hub verkaufen → Hauling mit Ziel-Hub');
   const saved = JSON.parse(w.localStorage.getItem('eve-zentrale-handel-ziel-v1'));
   assert(saved.buy === 'sys' && saved.dest === 'hubs' && saved.hubs.join() === 'amarr', 'Wahl wird gemerkt');
+  // 5.0.6+: Suchoptionen im Overlay zu → nur Einkaufen in + Verkaufen in als kleine Knöpfe, Rest weg
+  const T = w.__test, box = d.createElement('div');
+  box.innerHTML = T.ovMirrorFields('haul-run', true);
+  assert(box.querySelectorAll('.ovm-mini').length === 2 && box.querySelectorAll('[data-ova="kkb"]').length === 6, 'zu: Einkaufen in (5 Hubs + Eigenes System) als Knöpfe');
+  assert(box.querySelector('[data-ova="kkb"][data-arg="sys"][aria-pressed="true"]'), 'zu: aktuelle Einkaufswahl markiert');
+  assert(box.querySelectorAll('.ovm-mini [data-ova="kkd"]').length === 7 && !box.querySelector('[data-ovf="hl-budget"]') && !box.querySelector('.sb-info'), 'zu: Verkaufen-Knöpfe, ohne Budget und Hinweise');
+  box.innerHTML = T.ovMirrorFields('haul-run', false);
+  assert(!box.querySelector('.ovm-mini') && box.querySelector('select[data-ovf="kk-buy"]'), 'offen: alles wie bisher');
+  assert(T.ovMirrorFields('scan-run', true) === '', 'Markt-Scanner: zu = nichts (kein Einkaufen/Verkaufen)');
   console.log('\nALL KK6 TESTS PASSED'); process.exit(0);
 }catch(e){ console.error(e.stack || e); process.exit(1); } })();

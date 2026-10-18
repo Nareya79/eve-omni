@@ -65,5 +65,11 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
   here = 30000144; await T.nwBuyHere(); await tick(300);
   v = T.kkwLoad();
   assert(v.buy === 'amarr' && /nicht in einem Hub/.test(d.getElementById('kk-here').textContent), 'NW4: Zu festem Hub bleibt, Hinweis (' + JSON.stringify(v) + ')');
+  // 17.10.: eigene Wahl gilt nur im System, in dem sie getroffen wurde – nach Systemwechsel wieder automatisch
+  w.localStorage.setItem('eve-zentrale-handel-ziel-v1', JSON.stringify({ buy: 'dodixie', dest: 'umkreis', hubs: [] }));
+  T.nwPick(); here = 30000144; await T.nwBuyAgain(); await tick(300);
+  assert(T.kkwLoad().buy === 'dodixie', 'eigene Wahl bleibt, solange der Charakter im System bleibt');
+  here = 30000142; await T.nwBuyAgain(); await tick(300);
+  assert(T.kkwLoad().buy === 'jita' && T.nwMine() === false, 'nach Systemwechsel erkennt die Suche den Standort wieder (Jita)');
   console.log(bad ? 'FAILED ' + bad : 'ALL ' + ok + ' PASSED'); process.exit(0);
 })();

@@ -7,12 +7,14 @@ function mk(store){ return new JSDOM(html, { runScripts:'dangerously', url:'http
 function assert(c, m){ if(!c) throw new Error('ASSERTION FAILED: ' + m); console.log('OK:', m); }
 setTimeout(() => { try{
   const w = mk(), d = w.document, root = d.documentElement;
-  assert(root.getAttribute('data-scheme') === 'caldari' && root.style.getPropertyValue('--ui-scale') === '1', 'Standard: Caldari (seit 17.10.), Groesse 100 %');
+  assert(root.getAttribute('data-scheme') === 'caldari-eve' && root.style.getPropertyValue('--ui-scale') === '1', 'Standard: Caldari (EVE) (seit 18.10.), Groesse 100 %');
   const btns = d.querySelectorAll('#ui-schemes .scheme-btn');
-  assert(btns.length === 13, '13 Farbschemen (12 Vorlagen + Eigenes) zur Auswahl');   // UU5: + EVE Omni · Homepage   // UU4: + Lila, Neon-Pink, Neon-Grün, Rot, Weiß
-  assert(d.querySelector('#ui-schemes [data-scheme="caldari"]').getAttribute('aria-pressed') === 'true', 'Aktives Schema markiert (Standard Caldari)');
-  d.querySelector('#ui-schemes [data-scheme="amarr"]').onclick();
-  assert(root.getAttribute('data-scheme') === 'amarr' && JSON.parse(w.localStorage.getItem('eve-zentrale-ui-v1')).scheme === 'amarr', 'Amarr angewendet und gespeichert');
+  assert(btns.length === 15, '15 Farbschemen (14 Vorlagen + Eigenes) zur Auswahl');   // 18.10.: alte Völker-Schemas weg   // AC: + 6 EVE-Farbthemen   // UU5: + EVE Omni · Homepage   // UU4: + Lila, Neon-Pink, Neon-Grün, Rot, Weiß
+  assert(d.querySelector('#ui-schemes [data-scheme="caldari-eve"]').getAttribute('aria-pressed') === 'true' && !d.querySelector('#ui-schemes [data-scheme="caldari"]'), 'Aktives Schema markiert (Standard Caldari (EVE)), altes Caldari weg');
+  d.querySelector('#ui-schemes [data-scheme="amarr-eve"]').onclick();
+  assert(root.getAttribute('data-scheme') === 'amarr-eve' && JSON.parse(w.localStorage.getItem('eve-zentrale-ui-v1')).scheme === 'amarr-eve', 'Amarr (EVE) angewendet und gespeichert');
+  w.__test.applyUi({ scheme:'minmatar', scale: 1 });
+  assert(root.getAttribute('data-scheme') === 'minmatar-eve', '18.10.: gespeichertes altes „Minmatar“ wird zu Minmatar (EVE)');
   d.querySelector('#ui-schemes [data-scheme="photon"]').onclick();
   assert(!root.hasAttribute('data-scheme'), 'Zurueck auf Photon entfernt das Attribut');
   const r = d.getElementById('ui-scale'); r.value = '1.2'; r.dispatchEvent(new w.Event('input'));
@@ -29,7 +31,7 @@ setTimeout(() => { try{
   wh(100); wh(100); wh(100); wh(100); assert(root.style.getPropertyValue('--ui-scale') === '0.8', 'JJ1: Strg + Mausrad runter, unten bei 80 % Schluss');
   root.classList.add('sat-win'); assert(wh(-100) && root.style.getPropertyValue('--ui-scale') === '0.8', 'JJ1: Overlay-Fenster – Strg + Mausrad zoomt nicht das Hauptfenster'); root.classList.remove('sat-win');
   w.__test.applyUi({ scheme:'kaputt', scale: 9 });
-  assert(root.getAttribute('data-scheme') === 'caldari' && root.style.getPropertyValue('--ui-scale') === '2', 'Ungueltige Werte werden begrenzt (max. 200 %), unbekanntes Schema = Caldari');
+  assert(root.getAttribute('data-scheme') === 'caldari-eve' && root.style.getPropertyValue('--ui-scale') === '2', 'Ungueltige Werte werden begrenzt (max. 200 %), unbekanntes Schema = Caldari (EVE)');
   const w2 = mk({ 'eve-zentrale-ui-v1': JSON.stringify({ scheme:'light', scale:1.15 }) });
   assert(w2.document.documentElement.getAttribute('data-scheme') === 'light' && w2.document.documentElement.style.getPropertyValue('--ui-scale') === '1.15', 'Beim naechsten Start sofort angewendet');
   assert(w2.document.getElementById('ui-scale-val').textContent === '115 %', 'Regler zeigt gespeicherten Wert');

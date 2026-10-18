@@ -50,6 +50,20 @@ const w = new JSDOM(html, { runScripts:'dangerously', url:'https://claude.ai/art
     const job1 = kv(b, 'Gesamtkosten Job').textContent, prof1 = kv(b, 'Gewinn netto gesamt').textContent;
     assert(/ISK/.test(job1) && /^\+/.test(prof1), 'Kostenaufstellung + Gewinn gezeigt (' + job1 + ', ' + prof1 + ')');
     assert(/mehr als die Materialien direkt zu verkaufen/.test(b.textContent), 'Vergleich „Material direkt verkaufen“');
+    // GitHub #6: Zahlenfeld liefert „1.9“ (Punkt), Pfeiltasten „1.95“ – nicht 19 bzw. 100 %
+    const prof = () => { const D = P.load(); return D.prof[D.cur]; };
+    for (const [inV, want] of [['1.9', 1.9], ['1.95', 1.95], ['1,9', 1.9], ['0.25', 0.25], ['3', 3]]){ await P.action({ type: 'pdSet:tax', arg: inV }); assert(prof().tax === want, '#6 Anlagensteuer „' + inV + '“ → ' + prof().tax + ' %'); }
+    await P.action({ type: 'pdSet:tax', arg: '1.9' });
+    // GitHub #7: Kostenindex von Hand (Wurmloch) – ersetzt den ESI-Wert, nur für dieses System, leer = wieder ESI
+    b = view();
+    assert(b.querySelector('input[data-ova-change="pdSet:sci"]') && /2,47 %/.test(b.textContent) && !/von Hand\)/.test(b.textContent), '#7 Feld „von Hand“ da, ESI-Index 2,47 %');
+    await P.action({ type: 'pdSet:sci', arg: '12.5' }); b = view();
+    const job2 = kv(b, 'Gesamtkosten Job').textContent;
+    assert(/12,5 %/.test(b.textContent) && /\(von Hand\)/.test(b.textContent) && job2 !== job1, '#7 Index von Hand 12,5 % gilt + gekennzeichnet, Jobkosten neu (' + job1 + ' → ' + job2 + ')');
+    assert(b.querySelector('input[data-ova-change="pdSet:sci"]').value === '12.5', '#7 eigener Wert bleibt im Feld');
+    const sidWas = prof().sid; prof().sid = 31000005; assert(P.calc(P.inputs(P.load(), P.picked(P.load()))).sci !== 0.125, '#7 anderes System: Wert von Hand gilt nicht'); prof().sid = sidWas;
+    await P.action({ type: 'pdSet:sci', arg: '' }); b = view();
+    assert(/2,47 %/.test(b.textContent) && !/von Hand\)/.test(b.textContent) && kv(b, 'Gesamtkosten Job').textContent === job1, '#7 Feld leer → wieder Wert von EVE');
     // Kopier-Knöpfe exakt
     const z = P.calc(P.inputs(P.load(), P.picked(P.load())));
     const be = kv(b, 'Break-even je Stück').querySelector('[data-copy]').getAttribute('data-copy');

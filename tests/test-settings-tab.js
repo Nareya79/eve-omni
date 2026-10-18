@@ -69,8 +69,10 @@ function makeWindow(host, extra){
     assert($('ovs-mainalpha').value === '0.6' && $('ovs-mainalpha-v').textContent === '60 %', 'Regler zeigt 60 %');
     $('ovs-mainalpha').value = '0.4'; $('ovs-mainalpha').oninput();
     assert(shell.style.getPropertyValue('--surface') === 'rgba(13,17,22,0.4)', 'Regler wirkt sofort');
-    d.querySelector('#ui-schemes [data-scheme="amarr"]').onclick();
-    assert(shell.style.getPropertyValue('--surface') === 'rgba(18,16,12,0.4)', 'Farbschema-Wechsel: neue Farben, gleiche Durchsichtigkeit');
+    d.querySelector('#ui-schemes [data-scheme="caldari-eve"]').onclick();
+    assert(shell.style.getPropertyValue('--surface') === 'rgba(15,24,27,0.4)', 'Farbschema-Wechsel: neue Farben, gleiche Durchsichtigkeit (Caldari (EVE))');
+    d.querySelector('#ui-schemes [data-scheme="amarr-eve"]').onclick();
+    assert(/^color-mix\(in srgb, .*40%, transparent\)$/.test(shell.style.getPropertyValue('--surface')), '18.10.: gemischte EVE-Flächen (Amarr (EVE)) bekommen dieselbe Durchsichtigkeit: ' + shell.style.getPropertyValue('--surface'));
     $('ovs-mainalpha').value = '1'; $('ovs-mainalpha').oninput();
     assert(shell.style.getPropertyValue('--surface') === '', '100 % = deckend');
     assert($('hs-opacity-full').value === '0.8' && $('hs-opacity-full-v').textContent === '80 %', 'Fenster-Deckkraft Hauptansicht angezeigt');
@@ -85,7 +87,7 @@ function makeWindow(host, extra){
     H.cmd({ type: 'settings', settings: Object.assign({}, S, { transparent: false }) }); await tick(30);
     assert(!d.documentElement.classList.contains('host-transparent') && shell.style.getPropertyValue('--surface') === '', 'Ohne transparentes Fenster bleibt alles deckend');
     H.cmd({ type: 'settings', settings: Object.assign({}, S, { transparent: true }) }); await tick(30);
-    assert(shell.style.getPropertyValue('--surface') === 'rgba(18,16,12,0.5)', 'Wieder an: Durchsichtigkeit zurück');
+    assert(/^color-mix\(in srgb, .*50%, transparent\)$/.test(shell.style.getPropertyValue('--surface')), 'Wieder an: Durchsichtigkeit zurück');   // 18.10.: Amarr (EVE) mischt seine Flächen
 
     console.log('\nALL SETTINGS-TAB TESTS PASSED');
     process.exit(0);

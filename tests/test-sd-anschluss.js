@@ -57,9 +57,9 @@ function req(port, method, p, body){ return new Promise((res, rej) => { const r 
     assert(/nicht gefunden/.test(miss), 'SD-B: ohne MiraBox-Software klarer Hinweis');
     fs.mkdirSync(path.join(tmp, 'HotSpot', 'StreamDock'), { recursive: true });
     const orig = path.join('/home/claude', 'deck');
-    const fn2 = new Function('require', 'S', 'send', 'saveSettings', 'pushSettings', 'pushSettingsSoon', 'toggleShow', 'hideMain', 'showWin', 'applyWindowState', 'ipcMain', 'app', 'path', 'fs', 'win', 'env', '__dirname',
-      main.slice(i, j) + '; env.api2 = 1;');
-    const h2 = {}; fn2(require, env.S, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, { on: () => {}, handle: (n, f) => h2[n] = f }, { getVersion: () => '9', getPath: () => tmp }, path, fs, null, env, '/home/claude');
+    const fn2 = new Function('require', 'S', 'send', 'saveSettings', 'pushSettings', 'pushSettingsSoon', 'toggleShow', 'hideMain', 'showWin', 'applyWindowState', 'ipcMain', 'app', 'path', 'fs', 'win', 'env', '__dirname', 'uiLang',
+      main.slice(i, j) + '; env.api2 = 1; env.deckLangSync = deckLangSync;');
+    const h2 = {}; fn2(require, env.S, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, { on: () => {}, handle: (n, f) => h2[n] = f }, { getVersion: () => '9', getPath: () => tmp }, path, fs, null, env, '/home/claude', () => env.lang || 'de');
     const msg = h2['evecore:deckInstall']({}, 'mirabox'), dst = path.join(tmp, 'HotSpot', 'StreamDock', 'plugins', 'de.eveomni.tasten.sdPlugin');
     const cfg = fs.readFileSync(path.join(dst, 'plugin', 'config.js'), 'utf8');
     assert(/Installiert/.test(msg) && fs.existsSync(path.join(dst, 'manifest.json')) && cfg.indexOf('"key":"geheim"') >= 0 && cfg.indexOf('"port":' + port) >= 0, 'SD-B: Plugin kopiert, Port + Schlüssel ins Plugin geschrieben');
@@ -70,6 +70,14 @@ function req(port, method, p, body){ return new Promise((res, rej) => { const r 
     const mfE = JSON.parse(fs.readFileSync(path.join(dstE, 'manifest.json'), 'utf8')), mfM = JSON.parse(fs.readFileSync(path.join(dst, 'manifest.json'), 'utf8'));
     assert(/Installiert/.test(msgE) && /Stream-Deck/.test(msgE) && mfE.SDKVersion === 2 && mfE.Actions.length === mfM.Actions.length && mfE.Actions.filter(x => x.Controllers[0] === 'Encoder' && x.Encoder.layout === '$A0').length === 4 &&
       mfM.Actions.filter(x => x.Controllers[0] === 'Knob').length === 4 && /window\.EVEOMNI/.test(fs.readFileSync(path.join(dstE, 'plugin', 'config.js'), 'utf8')), 'SD-F: Elgato-Plugin mit eigenem Manifest (4 Encoder), MiraBox bleibt bei Knob');
+    // ZZ3: Sprache – Englisch schreibt englische Namen + lang in config.js; Sprachwechsel zieht installierte Plugins nach
+    env.lang = 'en'; env.deckLangSync();
+    const mfEn = JSON.parse(fs.readFileSync(path.join(dst, 'manifest.json'), 'utf8')), mfEnE = JSON.parse(fs.readFileSync(path.join(dstE, 'manifest.json'), 'utf8'));
+    assert(mfEn.Actions[0].Name === 'Overlay on/off' && /^Keys for EVE Omni/.test(mfEn.Description) && mfEnE.Actions.find(x => /dialJb$/.test(x.UUID)).Encoder.TriggerDescription.Rotate === 'Volume' && mfEn.Actions.length === mfM.Actions.length,
+      'ZZ3: Sprachwechsel → englische Namen in beiden installierten Plugins (MiraBox + Elgato)');
+    assert(/"lang":"en"/.test(fs.readFileSync(path.join(dst, 'plugin', 'config.js'), 'utf8')) && /"key":"geheim"/.test(fs.readFileSync(path.join(dst, 'plugin', 'config.js'), 'utf8')), 'ZZ3: config.js mit Sprache, Schlüssel bleibt');
+    env.lang = 'de'; env.deckLangSync();
+    assert(JSON.parse(fs.readFileSync(path.join(dst, 'manifest.json'), 'utf8')).Actions[0].Name === 'Overlay ein/aus', 'ZZ3: zurück auf Deutsch');
     env.api.deckStop();
     // ---- Seite: Befehle + Zustand + Einstellungen ----
     const patches = [], states = []; let cmdCb = null;

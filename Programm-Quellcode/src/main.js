@@ -528,7 +528,7 @@ function openSat(id, show){
   w.setMinimumSize(SAT_MIN(id)[0], SAT_MIN(id)[1]);
   sats[id] = w;
   if (id === 'spiel' && !w.__fit){ w.__fit = true; let ft = null; w.on('resize', () => { clearTimeout(ft); ft = setTimeout(() => spielFit(w), 250); }); w.webContents.on('did-finish-load', () => setTimeout(() => spielFit(w), 300)); w.webContents.on('zoom-changed', () => setTimeout(() => spielFit(w), 200)); }   // PS2
-  if (!w.__zf){ w.__zf = true; w.on('focus', () => satZTouch(w)); w.once('closed', () => satZTouch(w)); }   // Stapel merken
+  if (!w.__zf){ w.__zf = true; w.on('focus', () => { satZTouch(w); satActiveSet(w); }); w.once('closed', () => satZTouch(w)); }   // Stapel merken
   w.setMenu(null);
   if (cfg.rolled){ satRollApply(w, id, cfg); w.setBounds({ x: b.x, y: b.y, width: b.width, height: cfg.rollH }); }
   if (id === 'neocom') w.on('system-context-menu', ev => { ev.preventDefault(); satMenu(id); });   // T8: Rechtsklick auf den Ziehbereich (Windows)
@@ -566,6 +566,11 @@ function satKey(){ return effectiveHtml() + '|' + !!S.transparent + '|' + demoOn
 // landete – ein Overlay genau über einem anderen rutschte so beim nächsten Neu-Einordnen wieder darunter.
 const satZ = [];
 function satZTouch(w){ const i = satZ.indexOf(w); if (i >= 0) satZ.splice(i, 1); if (!w.isDestroyed()) satZ.push(w); }
+// AD1 (18.10.): aktiv = zuletzt angeklicktes Overlay – bleibt aktiv, auch wenn danach EVE den Fokus hat; das OmniCom zählt nie als aktiv
+function satActiveSet(w){
+  const id = Object.keys(sats).find(k => sats[k] === w); if (!id || id === 'neocom') return;
+  Object.keys(sats).forEach(k => { const o = sats[k]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'active', id }); });
+}
 function satIdsByZ(){ return Object.keys(sats).sort((a, b) => satZ.indexOf(sats[a]) - satZ.indexOf(sats[b])); }
 function ownedResync(){ satIdsByZ().forEach(id => applySatState(sats[id])); Object.keys(pvWins).forEach(h => zSet(pvWins[h], true)); }
 function satOwnerGet(){
@@ -590,6 +595,7 @@ let satSpare = null;
 // bauen, wenn EVE nicht vorne ist, und geschlossene Overlays verstecken und wiederverwenden statt neu bauen.
 function eveFront(){ return !!fg.proc && fg.eve && fg.status === 'ok' && !TEST; }
 function satSpareMake(){
+  if (!quitting && !eveFront() && !TEST) satPopGet();   // AH2: Menüfenster vorbauen, solange EVE nicht vorne ist (NW2)
   if (quitting || (satSpare && !satSpare.isDestroyed())) return;
   if (eveFront()){ setTimeout(satSpareMake, 3000); return; }
   const w = satSpare = satWin({ x: -32000, y: -32000, width: 320, height: 380 }, true);
@@ -649,6 +655,7 @@ const EO_FOLDER = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" s
 const EO_POP_JS = `
 var P = JSON.parse(decodeURIComponent(location.hash.slice(1))), R = document.getElementById("r"), open = [], done = false;
 if (P.ic) document.documentElement.style.setProperty("--ic", P.ic);
+if (P.look && P.look.eve){ var de = document.documentElement; de.className = "eve"; ["bg", "bd", "sel", "ac", "tx"].forEach(function(k){ if (P.look[k]) de.style.setProperty("--" + k, P.look[k]); }); }   // AH1: Stil EVE
 function pick(v){ if (done) return; done = true; document.title = "eo:" + v + ":" + Date.now(); }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 function panel(items, x, y, lvl, flip){
@@ -657,7 +664,7 @@ function panel(items, x, y, lvl, flip){
   items.forEach(function(it){
     if (it.sep){ p.appendChild(document.createElement("hr")); return; }
     var r = document.createElement("div"); r.className = "i" + (it.en === false ? " off" : "") + (it.kids ? " sub" : ""); r.__it = it;
-    r.innerHTML = '<span class="c">' + (it.chk ? (it.radio ? "●" : "✓") : it.folder ? P.folder : "") + '</span><span class="t">' + esc(it.label) + (it.sl ? '<small>' + esc(it.sl) + "</small>" : "") + '</span><span class="a">' + (it.kids ? "›" : "") + "</span>";
+    r.innerHTML = '<span class="c">' + (it.chk ? (it.radio ? "●" : "✓") : it.folder ? P.folder : it.fav ? '<img src="' + esc(it.fav) + '" width="16" height="16" alt="" onerror="this.remove()">' : "") + '</span><span class="t">' + esc(it.label) + (it.sl ? '<small>' + esc(it.sl) + "</small>" : "") + '</span><span class="a">' + (it.kids ? "›" : "") + "</span>";
     r.onmouseenter = function(){ hover(p, r, lvl); };
     r.onclick = function(ev){ ev.stopPropagation(); act(p, r, lvl); };
     p.appendChild(r);
@@ -703,6 +710,12 @@ const EO_POP_HTML = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' +
   '.ask{min-width:300px;max-width:440px;padding:16px 18px 14px;border-color:#4fa3d1}.q{font-size:14px;color:#e6edf3;font-weight:600;white-space:normal}.dt{margin-top:8px;color:#8fa0b0;white-space:normal;line-height:1.4}' +
   '.bs{display:flex;justify-content:flex-end;gap:6px;margin-top:16px}button{background:#131a22;color:#c8d2dc;border:1px solid #243140;border-radius:3px;height:26px;min-width:80px;padding:0 12px;cursor:pointer;font:inherit}' +
   'button:hover,button:focus{border-color:#4fa3d1;color:#fff;outline:none}button.def{border-color:#4fa3d1}' +
+  // AH1 (18.10.): Stil EVE wie das EVE-Menü (gemessen: Fläche fast deckend in der Grundfarbe, 1-px-Kante grau, eckig, Trennlinie gleiche Farbe, Auswahl Akzent)
+  'html.eve .m{background:var(--bg,#0a1214);border:1px solid var(--bd,#1f2827);border-radius:0;box-shadow:0 6px 18px rgba(0,0,0,.55);padding:3px 0}' +
+  'html.eve .i{border-radius:0;min-height:22px;padding:2px 12px 2px 6px;color:var(--tx,#bec0bf)}html.eve .i.on{background:var(--sel,#27444b);box-shadow:none;color:#fff}' +
+  'html.eve hr{border-top-color:var(--bd,#1f2827);margin:3px 0}html.eve .i .a{color:var(--ac,#9ad2e3)}' +
+  'html.eve .ask{border-color:var(--bd,#1f2827)}html.eve button{border-radius:0;background:color-mix(in srgb, var(--ac,#9ad2e3) 18%, transparent);border-color:color-mix(in srgb, var(--ac,#9ad2e3) 50%, transparent)}' +
+  'html.eve button:hover,html.eve button:focus{background:color-mix(in srgb, var(--ac,#9ad2e3) 40%, transparent);border-color:var(--ac,#9ad2e3);box-shadow:0 0 6px color-mix(in srgb, var(--ac,#9ad2e3) 45%, transparent)}html.eve button.def{border-color:var(--ac,#9ad2e3)}' +
   '</style></head><body><div id="r"></div><script>' + EO_POP_JS + '</script></body></html>';
 let eoPopWin = null;
 function eoPop(parent, payload, onPick){
@@ -717,21 +730,63 @@ function eoPop(parent, payload, onPick){
   w.webContents.on('page-title-updated', (ev, t) => { ev.preventDefault(); const m = /^eo:([^:]*):/.exec(t); if (m) finish(m[1]); });
   w.on('blur', () => setTimeout(() => finish(null), 50));
   w.on('closed', () => finish(null));
-  payload.folder = EO_FOLDER; payload.ic = S.icColor || '';
+  payload.folder = EO_FOLDER; payload.ic = S.icColor || ''; payload.look = S.popLook || null;   // AH1
   w.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(EO_POP_HTML) + '#' + encodeURIComponent(JSON.stringify(payload)));
   w.once('ready-to-show', () => { if (!w.isDestroyed()){ w.show(); w.focus(); } });
 }
 // Menü an der Mausposition (Vorlage wie bei den Windows-Menüs)
-function eoMenu(parent, tpl){
-  const fns = {}; let n = 0;
+function eoConv(tpl, fns){
+  let n = 0;
   const conv = list => (list || []).map(it => {
     if (it.type === 'separator') return { sep: true };
     const id = String(n++); if (it.click) fns[id] = it.click;
-    return { id, label: it.label, sl: it.sublabel, chk: !!it.checked && (it.type === 'checkbox' || it.type === 'radio'), radio: it.type === 'radio', en: it.enabled !== false, folder: !!it.folder,
+    return { id, label: it.label, sl: it.sublabel, chk: !!it.checked && (it.type === 'checkbox' || it.type === 'radio'), radio: it.type === 'radio', en: it.enabled !== false, folder: !!it.folder, fav: it.fav || '',
       kids: Array.isArray(it.submenu) ? conv(it.submenu) : undefined };
   });
-  const items = conv(tMenu(tpl)), cb = parent.getContentBounds(), c = screen.getCursorScreenPoint();
+  return conv(tMenu(tpl));
+}
+function eoMenu(parent, tpl){
+  const fns = {}, items = eoConv(tpl, fns), cb = parent.getContentBounds(), c = screen.getCursorScreenPoint();
   eoPop(parent, { items, x: c.x - cb.x, y: c.y - cb.y }, v => { const f = v != null && fns[v]; if (f) try{ f(); }catch(e){ console.error('eoMenu', e); } });
+}
+/* AH2 (18.10.): Menüs der Overlays, der Client-Vorschau und des OmniCom als eigenes Menüfenster (Aussehen wie eoMenu, Stil EVE) statt Windows-Menü.
+   Ein einziges Fenster mit dem Besitzer der Overlays (NW2: kein „neues Programmfenster“ für Windows), vorgebaut solange EVE nicht vorne ist und
+   danach immer wiederverwendet (versteckt statt geschlossen), nur 360×480 an der Maus – passt auch beim schmalen OmniCom.
+   Gemessen 18.10. mit echtem EVE: ist es noch nicht vorgebaut, wird bei EVE vorne NIE neu gebaut → dann bleibt es beim Windows-Menü.
+   Nach dem Schließen bekommt der EVE-Client, der zuletzt vorne war, den Fokus zurück (vorher blieb EVE Omni vorne). */
+let satPopWin = null, satPopCb = null;
+const POP_W = 360, POP_H = 480;
+function satPopGet(){
+  if (satPopWin && !satPopWin.isDestroyed()) return satPopWin;
+  const w = satPopWin = new BrowserWindow({ parent: satOwnerGet(), show: false, width: POP_W, height: POP_H, frame: false, transparent: true, backgroundColor: '#00000000', resizable: false, movable: false,
+    minimizable: false, maximizable: false, skipTaskbar: true, hasShadow: false, type: 'toolbar', webPreferences: { sandbox: true, contextIsolation: true, spellcheck: false } });
+  w.setMenu(null); w.setAlwaysOnTop(true, 'screen-saver');
+  w.webContents.on('page-title-updated', (ev, t) => { ev.preventDefault(); const m = /^eo:([^:]*):/.exec(t); if (m) satPopDone(m[1]); });
+  w.on('blur', () => setTimeout(() => { if (satPopCb && !w.isDestroyed() && !w.isFocused()) satPopDone(null); }, 50));
+  w.on('closed', () => { if (satPopWin === w) satPopWin = null; satPopDone(null); });
+  neoTraceAdd('Menüfenster gebaut');   // ohne about:blank – Laden einer leeren Seite und danach der Menüseite ließ den Renderer abstürzen (gemessen 18.10.)
+  return w;
+}
+function satPopDone(v){
+  const cb = satPopCb, was = satPopWin && !satPopWin.isDestroyed() && satPopWin.isVisible(); satPopCb = null;
+  if (was){ satPopWin.hide(); if (fg.eveBefore && fg.lastEve) activateClient(fg.lastEve); }   // Fokus zurück an EVE
+  if (cb) try{ cb(v); }catch(e){ console.error('satPop', e); }
+}
+function satPopReady(){ return !!(satPopWin && !satPopWin.isDestroyed()) || !eveFront(); }   // sonst Windows-Menü (kein neues Fenster bei EVE vorne)
+function satPop(payload, onPick){
+  if (satPopCb) satPopDone(null);
+  const w = satPopGet(), c = screen.getCursorScreenPoint(), wa = screen.getDisplayNearestPoint(c).workArea;
+  const x = Math.max(wa.x, Math.min(c.x, wa.x + wa.width - POP_W)), y = Math.max(wa.y, Math.min(c.y, wa.y + wa.height - POP_H));
+  Object.assign(payload, { x: c.x - x, y: c.y - y, folder: EO_FOLDER, ic: S.icColor || '', look: S.popLook || null });
+  w.setBounds({ x, y, width: POP_W, height: POP_H });
+  satPopCb = onPick; fg.eveBefore = !!fg.eve;
+  w.webContents.once('did-finish-load', () => { if (!w.isDestroyed() && satPopCb === onPick){ w.show(); w.focus(); } });
+  w.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(EO_POP_HTML + '<!--' + Date.now() + '-->') + '#' + encodeURIComponent(JSON.stringify(payload)));
+}
+function eoMenuAt(tpl, onClose, win){
+  if (!satPopReady()){ Menu.buildFromTemplate(tpl).popup(Object.assign({ callback: () => { if (onClose) onClose(); } }, win && !win.isDestroyed() ? { window: win } : {})); return; }   // Rückfall Windows-Menü
+  const fns = {}, items = eoConv(tpl, fns);
+  satPop({ items }, v => { const f = v != null && fns[v]; if (f) try{ f(); }catch(e){ console.error('eoMenuAt', e); } if (onClose) onClose(); });
 }
 // Rückfrage/Meldung wie der Windows-Dialog – liefert Promise mit { response }
 function eoAsk(parent, o){
@@ -856,9 +911,11 @@ function bmMove(from, to, mode){
 }
 function bmDone(){ saveSettings(); browserPush(); }
 function bmOpenAll(list){ bmUrls(list).slice(0, 20).forEach(u => browserTab(u)); }
+// ZZ2: Seitensymbol (Favicon) je Lesezeichen – über den Symboldienst von Google (sieht nur die Domain, Nutzer 17.10. ok), Chromium hält es im Cache
+function bmFav(u){ try{ const h = new URL(String(u)).hostname; return h ? 'https://www.google.com/s2/favicons?sz=32&domain=' + encodeURIComponent(h) : ''; }catch(e){ return ''; } }
 function bmMenuItems(list, pre){
   const it = (list || []).map((n, i) => n.kids ? { label: String(n.name), folder: true, submenu: bmMenuItems(n.kids, pre + i + '/') }
-    : { label: String(n.name), click: () => { bmanage = false; if (bview) bview.webContents.loadURL(n.url); browserLayout(); browserPush(); } });
+    : { label: String(n.name), fav: bmFav(n.url), click: () => { bmanage = false; if (bview) bview.webContents.loadURL(n.url); browserLayout(); browserPush(); } });
   const n = bmUrls(list).length;
   if (n > 1) it.push({ type: 'separator' }, { label: 'Alle ' + Math.min(n, 20) + ' in Tabs öffnen', click: () => { bmanage = false; bmOpenAll(list); } });
   if (!it.length) it.push({ label: '(leer)', enabled: false });
@@ -1237,7 +1294,7 @@ function fgEvent(hwnd, name){
   fg.hwnd = String(hwnd); fg.name = n;
   pvSync();   // Rahmen um die Vorschau des Clients, der gerade vorne ist
   const eve = n === 'exefile';
-  if (eve) fg.lastEve = fg.hwnd;   // H10: welcher Client zuletzt vorne war (fuer „Markt in EVE“)
+  if (eve && fg.lastEve !== fg.hwnd){ fg.lastEve = fg.hwnd; const fc = fg.clients.find(c => c.hwnd === fg.hwnd); if (fc && fc.name) send({ type: 'eveFront', name: fc.name }); }   // H10: zuletzt vorne (Markt in EVE); AG7: Farbthema wechselt mit
   if (eve === fg.eve && eve) return;
   fg.eve = eve;
   applyWindowState();
@@ -1550,10 +1607,10 @@ function pvThumb(w){
 // Rechtsklick auf die Vorschau: kleines Menue (Position sperren, Durchsichtigkeit) – gilt fuer alle Vorschau-Fenster
 function pvMenu(w){
   const p = S.preview, set = patch => { Object.assign(S.preview, patch); saveSettings(); Object.keys(pvWins).forEach(h => { const o = pvWins[h]; if (o && !o.isDestroyed()){ pvLook(o); pvThumb(o); } }); };
-  Menu.buildFromTemplate([
+  eoMenuAt([
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!p.lock, click: () => set({ lock: !p.lock }) },
     { label: 'Durchsichtigkeit', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5].map(a => ({ label: Math.round(a * 100) + ' %', type: 'radio', checked: Math.abs(pvAlpha() - a) < 0.01, click: () => set({ alpha: a }) })) }
-  ]).popup({ window: w });
+  ], null, w);   // AH2
 }
 ipcMain.handle('evecore:previewPick', (ev, hwnd) => { capRequest(ev.sender.getProcessId(), hwnd); return true; });
 ipcMain.handle('preview:pick', ev => { const h = pvHwndOf(ev.sender); if (h) capRequest(ev.sender.getProcessId(), h); return !!h; });
@@ -1771,6 +1828,10 @@ function discordLook(){
 // SS2 (15.10.2026): Leiste wie die Overlay-Fenster – Knöpfe zeigen Durchklicken / Vordergrund / Sperre
 function dcBarPush(){ if (dwin && !dwin.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock } }); } }
 function dcSet(p){ S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); }
+// AG2 (18.10.): Discord wie ein Overlay skaliert (Overlay-Skalierung der Seite × eigener Zoom per Strg + Mausrad, gemerkt in windows.discord.zoom)
+function dcZoom(){ if (!dview) return; const z = Math.max(0.3, Math.min(4, (Number(S.ovScale) || 1) * (Number((S.windows.discord || {}).zoom) || 1))); if (Math.abs(dview.webContents.getZoomFactor() - z) > 0.001) dview.webContents.setZoomFactor(z); }
+function dcZoomStep(dir){ const z0 = Number((S.windows.discord || {}).zoom) || 1; dcSet({ zoom: Math.round(Math.max(0.5, Math.min(2.5, z0 + (dir > 0 ? 0.1 : -0.1))) * 10) / 10 }); dcZoom(); }
+const DC_WHEEL_JS = "if (!window.__eoz){ window.__eoz = 1; addEventListener('wheel', function(e){ if (!e.ctrlKey) return; e.preventDefault(); console.log('__eozoom:' + (e.deltaY < 0 ? 1 : -1)); }, { passive: false, capture: true }); }";
 function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); dview.setBounds({ x: 0, y: DISCORD_BAR_H, width: w, height: Math.max(0, h - DISCORD_BAR_H) }); } }
 function discordOpenPush(){ send({ type: 'discordOpen', open: !!(dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) }); }
 function discordMenu(){
@@ -1825,7 +1886,13 @@ function openDiscord(){
   // VV1: zuletzt geöffneten Kanal / DM merken (Discord wechselt Kanäle ohne Neuladen → did-navigate-in-page)
   const dcKeep = (e, url) => { if (/^https:\/\/(ptb\.|canary\.)?discord\.com\/channels\/[\w@]+(\/\d+)?\/?$/.test(url) && S.discordLast !== url){ S.discordLast = url; saveSettings(); } };
   wc.on('did-navigate', dcKeep); wc.on('did-navigate-in-page', dcKeep);
-  wc.on('did-finish-load', () => { dcCssKey = ''; setTimeout(dcBgApply, 300); setTimeout(dcBgApply, 5000); });   // DC2: Discord baut sich nach dem Laden noch auf → zweimal prüfen
+  wc.on('did-finish-load', () => { dcCssKey = ''; dcZoom(); wc.executeJavaScript(DC_WHEEL_JS).catch(() => {}); setTimeout(dcBgApply, 300); setTimeout(dcBgApply, 5000); });
+  wc.on('before-mouse-event', (e, m) => {   // AG2: Strg + Mausrad zoomt nur das Discord-Fenster (eigener Faktor zusätzlich zur Overlay-Skalierung)
+    if (!m || m.type !== 'mouseWheel' || !(m.modifiers || []).includes('control')) return;
+    e.preventDefault(); const d = Number(m.wheelTicksY || m.deltaY) || 0; if (!d) return;
+    dcZoomStep(d > 0 ? 1 : -1);
+  });
+  wc.on('console-message', (e, a, b) => { const m = /^__eozoom:(-?1)$/.exec(String((e && e.message) || b || '')); if (m) dcZoomStep(Number(m[1])); });   // AG2: Weg 2 – die Seite meldet Strg + Mausrad (falls before-mouse-event es nicht abfängt)   // DC2: Discord baut sich nach dem Laden noch auf → zweimal prüfen
   wc.on('page-title-updated', (e, t) => dcTitle(t));
   w.contentView.addChildView(v);
   let t = null;
@@ -1974,6 +2041,42 @@ function checkEve(){
     }
   });
 }
+/* AE1 (18.10.): EVE-Schrift „EVE Sans Neue“ aus der eigenen EVE-Installation – nur lesen, nie kopieren/weitergeben (CCP-Eigentum).
+   Pfad aus den Launcher-Daten (shared-cache › eve-online › location.path), Dateien über tq\resfileindex.txt → ResFiles\<hash> (normale OTF).
+   Fehlt etwas: null → die Seite nimmt die Ersatzschrift. Einmal je Programmstart gelesen (nach EVE-Patch neue Hashes → nächster Start). */
+const EVE_FONTS = ['regular', 'bold', 'condensed', 'condensedbold'];
+let eveFontsMem;
+function eveFontsRead(){
+  if (eveFontsMem !== undefined) return eveFontsMem;
+  eveFontsMem = null;
+  try{
+    const ld = fs.readFileSync(path.join(app.getPath('appData'), 'EVE Online', 'launcher-data.json'), 'utf8');
+    const m = ld.match(/"shared-cache"[\s\S]*?"eve-online"[\s\S]*?"path"\s*:\s*("(?:[^"\\]|\\.)*")/), root = m && JSON.parse(m[1]);
+    if (!root) return null;
+    const idx = fs.readFileSync(path.join(root, 'tq', 'resfileindex.txt'), 'latin1'), out = {};
+    EVE_FONTS.forEach(n => {
+      const r = idx.match(new RegExp('^res:/ui/fonts/evesansneue-' + n + '\\.otf,([^,\\r\\n]+)', 'm')); if (!r) return;
+      const b = fs.readFileSync(path.join(root, 'ResFiles', r[1])); if (b.slice(0, 4).toString('latin1') === 'OTTO') out[n] = b;
+    });
+    if (out.regular) eveFontsMem = out;
+  }catch(e){}
+  return eveFontsMem;
+}
+/* AG7 (18.10.): Farbthema je Charakter aus den EVE-Einstellungen (nur lesen): %LOCALAPPDATA%\CCP\EVE\<Server>\settings_*\core_char_<id>.dat
+   enthält „ColorThemes/<Name>“; je Charakter zählt die zuletzt geschriebene Datei (mehrere Profilordner). 20 s gemerkt. */
+let eveThemeMem = { t: 0, m: {} };
+function eveThemes(){
+  if (Date.now() - eveThemeMem.t < 20000) return eveThemeMem.m;
+  const m = {}, best = {}, base = path.join(process.env.LOCALAPPDATA || '', 'CCP', 'EVE'), ls = d => { try{ return fs.readdirSync(d); }catch(e){ return []; } };
+  ls(base).forEach(srv => ls(path.join(base, srv)).filter(n => /^settings_/.test(n)).forEach(st => ls(path.join(base, srv, st)).forEach(f => {
+    const r = /^core_char_(\d+)\.dat$/.exec(f); if (!r) return;
+    const fp = path.join(base, srv, st, f); let mt = 0; try{ mt = fs.statSync(fp).mtimeMs; }catch(e){ return; }
+    if (best[r[1]] >= mt) return;
+    let x = null; try{ x = /ColorThemes\/([A-Za-z]{2,24})/.exec(fs.readFileSync(fp, 'latin1')); }catch(e){}
+    if (x){ best[r[1]] = mt; m[r[1]] = x[1]; }
+  })));
+  eveThemeMem = { t: Date.now(), m }; return m;
+}
 function isEveRunningNow(){
   if (!IS_WIN) return Promise.resolve(false);
   return new Promise(res => execFile('tasklist', ['/FI', 'IMAGENAME eq exefile.exe', '/NH', '/FO', 'CSV'], { windowsHide: true }, (err, out) => res(!err && /exefile\.exe/i.test(String(out)))));
@@ -2009,7 +2112,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
   if (patch.windows) neoClickAt = Date.now();   // NW2: Overlay auf/zu
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
-  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'linksInBrowser', 'cycle', 'preview', 'deck', 'icColor'];
+  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'linksInBrowser', 'cycle', 'preview', 'deck', 'icColor', 'ovScale', 'popLook'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   if ('lang' in patch) installLang = '';   // PU1: Seite hat die Installer-Sprache übernommen – Neuladen/Einzelfenster folgen ab jetzt eve-zentrale-lang-v1
   Object.keys(patch).forEach(k => {
@@ -2019,6 +2122,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   });
   if (S.backup) { delete S.backup.dirEffective; }
   if ('icColor' in patch){ S.icColor = /^#[0-9a-f]{6}$/i.test(String(S.icColor)) ? S.icColor : ''; browserPush(); Object.values(pvWins).forEach(w => { if (w && !w.isDestroyed() && w.__chk) pvChkApply(w.__chk); }); }   // MM3: Ordner-Farbe im Browser
+  if ('ovScale' in patch){ S.ovScale = Math.max(0.6, Math.min(2, Number(S.ovScale) || 1)); dcZoom(); }   // AG2: Overlay-Skalierung gilt auch für Discord
   if ('opacity' in patch) S.opacity = Math.max(0.3, Math.min(1, Number(S.opacity) || 1));
   if ('opacityFull' in patch) S.opacityFull = Math.max(0.3, Math.min(1, Number(S.opacityFull) || 1));
   if (patch.hotkeys) registerHotkeys();
@@ -2028,6 +2132,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   if (patch.deck){ if (patch.deck.newKey){ delete S.deck.newKey; S.deck.key = ''; } S.deck.port = Math.max(1024, Math.min(65535, Number(S.deck.port) || 51780)); deckStart(); }   // SD
   if ('autostart' in patch) applyAutostart();
   if ('lang' in patch) trayKey = '';   // 4.0.73: Tray-Menü in der neuen Sprache
+  if ('lang' in patch && S.lang !== before.lang) deckLangSync();   // ZZ3
   if ('lang' in patch && before.lang && S.lang !== before.lang){ if (satSpare && !satSpare.isDestroyed()) satSpare.destroy(); setTimeout(recreateSats, 300); }   // Overlays in der neuen Sprache (storage-Ereignis kommt unter file:// nicht an)
   applyWindowState();
   saveSettings();
@@ -2084,14 +2189,25 @@ function deckStart(){
 function toggleMainFromDeck(){ if (win && win.isVisible() && !win.isMinimized()) hideMain(); else showWin(true); }
 // SD: Plugin in die Tasten-Software kopieren; Port + Schlüssel werden ins Plugin geschrieben (kein Abtippen)
 function copyDir(src, dst){ fs.mkdirSync(dst, { recursive: true }); fs.readdirSync(src, { withFileTypes: true }).forEach(e => { const s = path.join(src, e.name), d = path.join(dst, e.name); if (e.isDirectory()) copyDir(s, d); else fs.copyFileSync(s, d); }); }
+// ZZ3: Manifest (Namen/Tooltips in der Tasten-Software) + config.js (Anschluss, Sprache) in der Sprache von EVE Omni schreiben
+const DECK_ID = 'de.eveomni.tasten.sdPlugin';
+function deckBase(kind){ return kind === 'elgato' ? path.join(app.getPath('appData'), 'Elgato', 'StreamDeck') : path.join(app.getPath('appData'), 'HotSpot', 'StreamDock'); }
+function deckWriteLang(kind, dst){
+  const c = deckCfg(), src = path.join(__dirname, 'deck', DECK_ID), lang = uiLang();
+  let mf = fs.readFileSync(path.join(src, kind === 'elgato' ? 'manifest-elgato.json' : 'manifest.json'), 'utf8');   // SD-F: gleicher Kern, Elgato-Manifest (Encoder)
+  if (lang === 'en'){ const en = JSON.parse(fs.readFileSync(path.join(src, 'lang-en.json'), 'utf8')); mf = JSON.stringify(JSON.parse(mf, (k, v) => typeof v === 'string' && en[v] ? en[v] : v), null, 2); }
+  fs.writeFileSync(path.join(dst, 'manifest.json'), mf);
+  fs.writeFileSync(path.join(dst, 'plugin', 'config.js'), '// von EVE Omni geschrieben'+'\n' + 'window.EVEOMNI = ' + JSON.stringify({ port: c.port, key: c.key, lang: lang }) + ';'+'\n');
+}
+// Sprachwechsel in EVE Omni: installierte Plugins nachziehen (Tasten wechseln sofort, Namen in der Tasten-Software nach deren Neustart)
+function deckLangSync(){ ['dock', 'elgato'].forEach(kind => { const dst = path.join(deckBase(kind), 'plugins', DECK_ID); try{ if (fs.existsSync(path.join(dst, 'plugin'))) deckWriteLang(kind, dst); }catch(e){} }); }
 ipcMain.handle('evecore:deckInstall', (ev, kind) => {
-  const c = deckCfg(), id = 'de.eveomni.tasten.sdPlugin', src = path.join(__dirname, 'deck', id);
-  const base = kind === 'elgato' ? path.join(app.getPath('appData'), 'Elgato', 'StreamDeck') : path.join(app.getPath('appData'), 'HotSpot', 'StreamDock');
+  const c = deckCfg(), src = path.join(__dirname, 'deck', DECK_ID);
+  const base = deckBase(kind);
   if (!fs.existsSync(base)) return (kind === 'elgato' ? 'Stream-Deck-Software' : 'Stream-Dock-Software (MiraBox)') + ' nicht gefunden – Ordner fehlt: ' + base;
-  const dst = path.join(base, 'plugins', id);
+  const dst = path.join(base, 'plugins', DECK_ID);
   copyDir(src, dst);
-  if (kind === 'elgato') fs.copyFileSync(path.join(src, 'manifest-elgato.json'), path.join(dst, 'manifest.json'));   // SD-F: gleicher Kern, Elgato-Manifest (Encoder)
-  fs.writeFileSync(path.join(dst, 'plugin', 'config.js'), '// von EVE Omni geschrieben'+'\n' + 'window.EVEOMNI = ' + JSON.stringify({ port: c.port, key: c.key }) + ';'+'\n');
+  deckWriteLang(kind, dst);
   if (!c.on){ S.deck.on = true; saveSettings(); deckStart(); pushSettings(); }
   return 'Installiert nach ' + dst + ' – jetzt die ' + (kind === 'elgato' ? 'Stream-Deck' : 'Stream-Dock') + '-Software einmal beenden und neu starten, dann liegen die Tasten unter „EVE Omni“.';
 });
@@ -2130,7 +2246,7 @@ function satMenu(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
   const cfg = S.windows[id] || {}, act = a => send({ type: 'satAction', view: id, action: a });
   const setWin = p => { const o = {}; o[id] = p; S.windows = merge(S.windows || {}, o); saveSettings(); pushSettings(); };
-  Menu.buildFromTemplate([
+  eoMenuAt([
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!cfg.lock, click: () => setWin({ lock: !cfg.lock }) },
     { label: 'Hintergrund', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2].map(a => ({ label: Math.round(a * 100) + ' %', click: () => act({ type: 'alpha', v: a }) })) },
     // Z1: Durchklicken (alle Overlays, wie Taskleistenmenue) + Immer im Vordergrund
@@ -2142,11 +2258,14 @@ function satMenu(id){
     { type: 'separator' },
     ...(id === 'neocom' ? [{ label: 'OmniCom-Einstellungen …', click: () => { showWin(true); act({ type: 'openSettings', pane: 'neocom' }); } }] : []),   // BB12
     { label: 'Alle Einstellungen …', click: () => { showWin(true); act({ type: 'openSettings' }); } }
-  ]).popup({ window: w, callback: () => { satMenuOpen = false; } });
+  ], () => { satMenuOpen = false; }, w);   // AH2: eigenes Menü, Rückfall Windows-Menü
   satMenuOpen = true;
 }
 let satMenuOpen = false;
 ipcMain.on('evecore:satMenu', ev => { const sid = satIdOf(ev.sender); if (sid) satMenu(sid); });
+ipcMain.handle('evecore:popMenu', (ev, list) => new Promise(res => { if (!satPopReady()) return res(-2);   // -2 = Seite zeichnet ihr eigenes Menü (kein neues Fenster bei EVE vorne)
+  satPop({ items: (Array.isArray(list) ? list : []).slice(0, 40).map((it, n) => it && it.sep ? { sep: true } : { id: String(n), label: String((it && it.label) || ''), chk: !!(it && it.chk), en: !(it && it.en === false) }) },
+    v => res(v == null || v === 'x' ? -1 : Number(v))); }));   // AH2: Menü aus der Seite (OmniCom-Uhr) – Index oder -1
 ipcMain.on('evecore:satMini', (ev, h) => { const sid = satIdOf(ev.sender); if (sid) satMiniToggle(sid, Number(h)); });
 // BB12: Jukebox-Mini meldet ihre Inhaltshoehe (CSS-Pixel) -> Fensterhoehe inkl. Zoom (Strg+Mausrad)
 ipcMain.on('evecore:satFitH', (ev, h) => {
@@ -2405,6 +2524,8 @@ function cpuTemp(){
   }
   return cpuT.v;
 }
+ipcMain.handle('evecore:eveFonts', () => eveFontsRead());   // AE1
+ipcMain.handle('evecore:eveThemes', () => eveThemes());   // AG7
 ipcMain.handle('evecore:perf', async () => { const os = require('os'); const [ping, g] = await Promise.all([tqPing(), gpuInfo()]); return Object.assign({ cpu: cpuPct(), ram: Math.round(100 * (1 - os.freemem() / os.totalmem())), ping, cpuTemp: cpuTemp() }, g || {}); });
 ipcMain.on('evecore:showView', (ev, id) => showView(String(id)));
 ipcMain.on('evecore:openBrowser', (ev, url) => openBrowser(url));
@@ -2422,7 +2543,7 @@ ipcMain.on('evecore:killfeed', (ev, on) => { if (!TEST) kfSet(on); else kf.on = 
 ipcMain.handle('evecore:intelList', () => intelList());   // HZ23
 ipcMain.handle('evecore:intelSet', (ev, o) => intelSet(o));
 ipcMain.handle('evecore:activateClient', (ev, hwnd) => activateClient(hwnd));
-ipcMain.handle('evecore:frontClient', () => (fg.clients.find(c => c.hwnd === fg.lastEve) || {}).name || '');
+ipcMain.handle('evecore:frontClient', () => (fg.clients.find(c => c.hwnd === fg.lastEve) || (fg.clients.length === 1 ? fg.clients[0] : null) || {}).name || '');   // AG6: kurz nach dem Start – einziger laufender Client
 ipcMain.handle('evecore:mainState', () => ({ visible: !!(win && !win.isDestroyed() && win.isVisible() && !win.isMinimized()), mode: S.mode }));
 ipcMain.handle('evecore:writeBackup', (ev, json, reason) => writeBackup(json, reason));
 ipcMain.handle('evecore:backupNow', async () => { await requestBackup('manuell'); return publicSettings(); });

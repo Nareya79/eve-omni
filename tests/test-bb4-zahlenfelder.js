@@ -57,7 +57,7 @@ const tick = ms => new Promise(r => setTimeout(r, ms || 80));
     // Overlay: Suchoptionen im Handel-Overlay (KK7: Laderaum-Feld nur bei „Nur Laderaum eingeben“)
     d.querySelector('#is-sm [data-sm=cargo]').click(); await tick(30);
     T.ovSetMode('compact'); await tick(100);
-    const s = T.ovLoad(); s.views = s.views.filter(v => v.id !== 'handel').concat([{ id: 'handel', on: true }]); s.view = 'handel'; s.mirrorOpen = { 'hub-run': true }; T.ovSave(s); T.ovRender();
+    const s = T.ovLoad(); s.views = s.views.filter(v => v.id !== 'handel').concat([{ id: 'handel', on: true }]); s.view = 'handel'; s.mirrorOpen = { 'haul-run': true }; T.ovSave(s); T.ovRender();   // 17.10.: ein gemeinsamer Auf/Zu-Zustand für Hauling + Hub-Handel
     await tick(30);
     const ob = $('ov-body'), ob2 = () => ob.querySelector('input[data-ovf="is-budget"]');
     assert(ob2() && ob2().parentNode.classList.contains('num-wrap') && ob.querySelector('input[data-ovf="is-cargo"]').parentNode.querySelector('.num-hint'), 'BB4: Overlay-Felder Budget/Laderaum mit Mio./Tsd.-Anzeige');

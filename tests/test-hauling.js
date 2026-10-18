@@ -139,6 +139,24 @@ setTimeout(async () => {
     assert(reach.stationDepth[5001] === 0 && reach.stationDepth[5002] === 1 && reach.stationDepth[5003] === 2, 'buildReachableStations maps each station to its system\'s jump depth');
     assert(reach.regionIds.length === 1 && reach.regionIds[0] === 7001, 'buildReachableStations dedupes to the single shared region (7001)');
 
+    // --- AG9: Gank-Systeme auf dem Weg ---
+    assert(reach.stationSys[5003] === 9003, 'AG9: Station → System');
+    assert(JSON.stringify(T.gkPath(depth, 9003)) === '[9001,9002,9003]' && Object.keys(depth).length === 3, 'AG9: Weg Alpha → Beta → Gamma aus der Breitensuche (Vorgänger nicht in Object.keys)');
+    window.localStorage.setItem('eve-zentrale-gank-v1', JSON.stringify(['beta']));
+    assert(await T.gkRouteHit(T.gkPath(depth, 9003)) === 'Beta' && await T.gkRouteHit(T.gkPath(depth, 9001)) === '', 'AG9: Gank-System auf dem Weg erkannt (Liste ohne Groß-/Kleinschreibung), Start allein nicht');
+    const direct = { 9003: 2 }; Object.defineProperty(direct, '__route', { value: [9001, 9002, 9003] });
+    assert(JSON.stringify(T.gkPath(direct, 9003)) === '[9001,9002,9003]', 'AG9: Direktziel nimmt die Route');
+    window.localStorage.removeItem('eve-zentrale-gank-v1');
+    // Grenze ×0,75: Charon 475.663 EHP, normal 2.000 → 951 Mio. → 713 Mio.
+    const ehp = 475663, safe = 2000 * ehp;
+    assert(T.gkSafeF(safe, 2000, ehp, 0.75) === Math.floor(1500 * ehp) && T.gkSafeF(safe, 2000, ehp, 1) === safe, 'AG9: Grenze ×0,75 (951 → 713 Mio.), ohne Gank-System unverändert');
+    assert(T.gkSafeF(2000 * ehp - 50e6, 2000, ehp, 0.75) === Math.floor(1500 * ehp - 50e6), 'AG9: Modulwert wird weiter abgezogen');
+    const fl = T.gkFleetF([{ ship: 'A', safe: safe, budget: 5e8, ehp: ehp }, { ship: 'B', safe: 1e6, budget: 1e6, ehp: 1000 }], 'hl', 0.75);
+    assert(fl.length === 2 && fl[0].safe === Math.floor(1500 * ehp) && fl[0].budget === 5e8 && fl[1].safe === 500000 && fl[1].budget === 500000, 'AG9: Flotte – Grenze und Budget je Schiff angepasst');
+    const cp = T.gkCapF({ budget: 2e9, safe: safe, lim: 2000, ehp: ehp }, 0.75);
+    assert(cp.safe === Math.floor(1500 * ehp) && cp.budget === cp.safe, 'AG9: gewähltes Schiff – Grenze angepasst');
+    assert(/⚠ über Uedama/.test(T.gkRouteTag('Uedama')) && /75 % der Grenze/.test(T.gkRouteTag('Uedama')) && T.gkRouteTag('') === '', 'AG9: Hinweis „⚠ über …“ mit Tooltip');
+
     // --- Travel time unit test ---
     const t1 = T.computeTravelSeconds(30, 3, 2, false); // 2 jumps, normal ship
     assert(t1 !== null && t1 > 0, 'computeTravelSeconds returns a positive estimate for a normal ship');

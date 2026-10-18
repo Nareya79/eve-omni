@@ -9,7 +9,19 @@
     display: "Zeigt den gewählten Wert live. Rot = Achtung (blinkt bei überbotenen Trades und nahem Feind). Drücken öffnet das passende Overlay – oder die Aktion, die du darunter wählst (Kombi-Taste)." };
   var sock, uuid, kind = "", settings = {}, charSet = {};
   function $(id){ return document.getElementById(id); }
-  function opts(list, first){ return (first ? '<option value="">' + first + "</option>" : "") + list.map(function(v){ return '<option value="' + v[0] + '">' + v[1] + "</option>"; }).join(""); }
+  var T = EO.t;   // ZZ3: Texte englisch, wenn EVE Omni englisch ist
+  function opts(list, first){ return (first ? '<option value="">' + T(first) + "</option>" : "") + list.map(function(v){ return '<option value="' + v[0] + '">' + T(v[1]) + "</option>"; }).join(""); }
+  // Beschriftungen + Listen in der aktuellen Sprache (beim Öffnen und wenn EVE Omni eine andere Sprache meldet)
+  function texts(){
+    [["show", "Anzeige"], ["char", "Charakter"], ["view", "Overlay"], ["min", "Minuten"], ["name", "Name des Timers (leer = „Stream-Taste … Min.“)"]].forEach(function(x){ var l = document.querySelector('label[for="' + x[0] + '"]'); if (l) l.textContent = T(x[1]); });
+    var keep = { view: $("view").value, show: $("show").value, act: $("act").value };
+    $("view").innerHTML = opts(EO.VIEWS); $("show").innerHTML = opts(EO.SHOWS);
+    $("act").innerHTML = kind === "display" ? opts(EO.ACTS, "Passendes Overlay öffnen") : opts(EO.ACTS);
+    $("char").options[0].textContent = T("alle");
+    $("l-act").textContent = T(kind === "display" ? "Drücken" : "Aktion");
+    $("hint").textContent = (EO.lang === "en" ? EO.EN["h_" + kind] || "" : HINT[kind] || "") + T(" EVE Omni muss laufen (Einstellungen › Programm › Stream-Tasten an).");
+    Object.keys(keep).forEach(function(k){ if (keep[k] !== "") $(k).value = keep[k]; });
+  }
   function vis(){
     var act = $("act").value, show = $("show").value, sh = EO.SHOWS.filter(function(x){ return x[0] === show; })[0];
     $("f-show").hidden = kind !== "display"; $("f-char").hidden = kind !== "display" || !(sh && sh[4]);
@@ -23,13 +35,13 @@
     if (kind === "display"){ settings.show = $("show").value; settings.act = $("act").value; settings.char = $("char").value; }
     vis(); if (sock) sock.send(JSON.stringify({ event: "setSettings", context: uuid, payload: settings }));
   }
-  $("view").innerHTML = opts(EO.VIEWS); $("show").innerHTML = opts(EO.SHOWS);
   ["view", "min", "name", "act", "show", "char"].forEach(function(id){ $(id).addEventListener("change", save); });
   // Charaktere einmal bei EVE Omni abfragen (gleicher Anschluss wie das Plugin)
   function chars(){
     var C = window.EVEOMNI; if (!C || !window.EventSource) return;
     var es = new EventSource("http://127.0.0.1:" + C.port + "/events?k=" + encodeURIComponent(C.key));
     es.onmessage = function(ev){ es.close(); var st = {}; try{ st = JSON.parse(ev.data); }catch(e){}
+      if (st.lang && st.lang !== EO.lang){ EO.lang = st.lang; texts(); }
       ((st.x || {}).chars || []).forEach(function(c){ if (charSet[c.id]){ charSet[c.id].textContent = c.n; return; } var o = charSet[c.id] = document.createElement("option"); o.value = c.id; o.textContent = c.n; $("char").appendChild(o); });
       $("char").value = settings.char || ""; };
     es.onerror = function(){ es.close(); };
@@ -37,14 +49,12 @@
   window.connectElgatoStreamDeckSocket = function(port, inUuid, registerEvent, info, actionInfo){
     uuid = inUuid; var ai = {}; try{ ai = JSON.parse(actionInfo); }catch(e){}
     kind = String(ai.action || "").split(".").pop(); settings = (ai.payload && ai.payload.settings) || {};
-    $("act").innerHTML = kind === "display" ? opts(EO.ACTS, "Passendes Overlay öffnen") : opts(EO.ACTS);
-    $("l-act").textContent = kind === "display" ? "Drücken" : "Aktion";
-    $("hint").textContent = (HINT[kind] || "") + " EVE Omni muss laufen (Einstellungen › Programm › Stream-Tasten an).";
+    texts();
     $("view").value = settings.view || "trades"; $("min").value = settings.min || 5; $("name").value = settings.name || "";
     $("act").value = settings.act || (kind === "display" ? "" : "ov"); $("show").value = settings.show || "dt";
-    if (settings.char && !charSet[settings.char]){ var o = charSet[settings.char] = document.createElement("option"); o.value = settings.char; o.textContent = "(gespeicherter Charakter)"; $("char").appendChild(o); }
+    if (settings.char && !charSet[settings.char]){ var o = charSet[settings.char] = document.createElement("option"); o.value = settings.char; o.textContent = T("(gespeicherter Charakter)"); $("char").appendChild(o); }
     $("char").value = settings.char || "";
-    vis(); if (kind === "display") chars();
+    vis(); chars();   // ZZ3: auch für die Sprache – nicht nur bei Anzeige-Tasten
     sock = new WebSocket("ws://127.0.0.1:" + port);
     sock.onopen = function(){ sock.send(JSON.stringify({ event: registerEvent, uuid: uuid })); };
   };
