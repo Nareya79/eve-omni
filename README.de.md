@@ -39,19 +39,20 @@
 
 ### 🪟 Overlay im Spiel – deine Werkzeuge direkt über EVE
 - Kleine, durchsichtige Fenster, die über dem Spiel schweben – nur solange EVE vorne ist.
-- Ansichten: Trades · Watchlist · Handel · Wallet · Assets · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
+- Ansichten: Trades · Hauling · Watchlist · Handel · Wallet · Assets · Fittings · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
 - Ein kompaktes Fenster oder jede Ansicht als eigenes Fenster, rastet am Bildschirmrand ein; Deckkraft je Fenster, Position sperren, automatisch ausblenden.
-- **OmniCom:** der Starter des Overlays, in vier Aufbauten (Raster, Favoriten + Ordner, aufklappbare Gruppen, eine Leiste, die wächst). Symbole ziehst du wie Ordner auf dem Handy in Gruppen hinein und wieder heraus.
+- **Overlays stapeln wie in EVE:** Ein Overlay an der Kopfleiste auf ein anderes ziehen macht daraus Reiter; einen Reiter herausziehen gibt wieder ein eigenes Fenster. Deckkraft, Sperren, Durchklicken und Vordergrund gelten für den ganzen Stapel.
+- **OmniCom:** der Starter des Overlays, in vier Aufbauten (Raster, Favoriten + Ordner, aufklappbare Gruppen, eine Leiste, die wächst). Symbole ziehst du wie Ordner auf dem Handy in Gruppen hinein und wieder heraus. Auf Wunsch mit Knöpfen zum Starten und Beenden von EVE; ein Linksklick auf die Uhr öffnet deine Timer.
 - Mit einem Klick exakte Preise kopieren, das Marktfenster eines Items in EVE öffnen oder das Autopilot-Ziel setzen.
 - Local mit Strg+C kopieren und das Overlay zeigt, wer da ist; bei gemeldeten Feinden springt ein Live-Alarm auf.
 
 ### …und alles andere
 | | |
 |---|---|
-| **Markt-Scanner** | Lohnende Trades zwischen Handelsplätzen wie Jita 4-4 – Steuern, Gebühren und Volumen eingerechnet |
+| **Trading – Trades scannen** | Lohnende Trades zwischen Handelsplätzen wie Jita 4-4 – Steuern, Gebühren und Volumen eingerechnet. Trading und Hauling haben den gleichen Aufbau: Suchen · Ergebnisse · Meine Trades / Meine Läufe · Gewinne |
 | **Meine Trades & Gewinne** | Jeder Kauf und Verkauf aus der Wallet – echter Gewinn **netto pro Stück und gesamt** |
 | **Hauling & Watchlist** | Läufe planen, sehen was gekauft, unterwegs oder im Verkauf ist |
-| **Orders, Verträge & Verkaufs-Check** | Orders im Blick, unterboten-Hinweis, besten Verkaufsort finden |
+| **Orders, Verträge & Verkaufs-Check** | Orders und Order-Verlauf (Reiter unter Trading) – unterboten-Hinweis, besten Verkaufsort finden |
 | **Wallet & Assets** | Alle Charaktere, ISK, Journal und Items in jeder Station |
 | **Mining** | Mining-Tagebuch je Tag und Charakter, Erz-/Eis-/Gas-/Mond-Werte pro m³ mit deiner Raffinier-Ausbeute, bester Verkaufsort, Mond-Extraktionen deiner Corp |
 | **Industrie & Blueprints** | Jobs und Blueprints |
@@ -61,10 +62,13 @@
 | **Skills** | Skill-Warteschlange und Handels-Skills – Gebühren mit deinen echten Skills berechnet |
 | **Navigation & Wurmlöcher** | Routenplaner, Sprungplaner, Karte mit Jump Bridges, Thera- & Turnur-Verbindungen über EVE-Scout, Wurmloch-Infos, Autopilot-Ziel mit einem Klick |
 | **PvP & Intel** | Local-Check mit zKillboard-Infos, Kills und Sprünge je System, gefährliche Systeme, Gang-Alarm mit Live-Fenster „Feind gemeldet“ |
-| **Fittings, Klone & Implantate** | Fittings im EFT-Format kopieren, Sprungklone und Implantate aller Charaktere |
+| **Fittings** | Eigener Bereich mit Overlay: Meine Fittings + EVE Workbench, Fittings im EFT-Format kopieren |
+| **Klone & Implantate** | Sprungklone und Implantate aller Charaktere |
+| **Uhr & Timer** | Timer mit Wochentagen und Wiederholung, Stoppuhr |
+| **Hauptfenster** | Vor/Zurück oben links (auch Maustasten 4/5 und Alt + ←/→), Unterreiter jedes Bereichs als Liste links |
 | **Mehrere Charaktere & Settings-Sync** | Alle Charaktere gleichzeitig, EVE-Client-Einstellungen übertragen |
 | **Soundtrack** | Der EVE-Omni-Soundtrack von Nareya79 ist eingebaut |
-| **OmniBreaker** *(neu in 4.0.76)* | Minispiel im EVE-Stil für die Wartezeiten: Bergbaulaser ausrichten und die Erzadern abräumen – 100 Level, 8 Power-Items, Highscore. Im Installer abwählbar |
+| **OmniBreaker** | Minispiel im EVE-Stil für die Wartezeiten: Bergbaulaser ausrichten und die Erzadern abräumen – 150 Level, Power-Items, Highscore. Im Installer abwählbar |
 | **Stream Deck & Stream Dock** | Plugin für Elgato Stream Deck (auch Stream Deck +) und MiraBox Stream Dock (N4 & Co.) – Overlay-Tasten, Live-Werte, Timer, Jukebox, Drehknöpfe |
 
 Alle Werte, die du in EVE eintippst, haben einen Kopier-Knopf.
@@ -102,7 +106,7 @@ Für andere Systeme liegt eine Browser-Version (eine HTML-Datei) in diesem Repos
 2. **Installer starten.** Wenn Windows *„Der Computer wurde durch Windows geschützt“* zeigt: **Weitere Informationen → Trotzdem ausführen**.
    > Warum? EVE Omni ist ein kostenloses Hobby-Projekt ohne Code-Signatur (ein Zertifikat kostet jedes Jahr Geld). Zu jeder Version gibt es SHA256-Prüfsummen und einen VirusTotal-Scan.
 3. **Mit EVE einloggen:** „Mit EVE einloggen“ klicken, auf der Login-Seite von CCP den Charakter wählen und bestätigen. Weitere Charaktere jederzeit.
-4. **Losfliegen.** Handelsplatz wählen, Markt-Scanner öffnen, los geht's. o7
+4. **Losfliegen.** Handelsplatz wählen, Trading › Trades scannen öffnen, los geht's. o7
 5. **Updates:** EVE Omni prüft einmal am Tag, ob es eine neue Version gibt, und zeigt dir den Download-Link (abschaltbar in den Einstellungen). Installiere die neue Version einfach über die alte, deine Daten bleiben erhalten.
 
 Kein Entwicklerkonto und keine API-Schlüssel nötig.
