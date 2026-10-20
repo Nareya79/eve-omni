@@ -39,19 +39,20 @@
 
 ### 🪟 In-game overlay – your tools right over EVE
 - Small see-through windows that float over the game – only while EVE is in front.
-- Views: Trades · Watchlist · Market · Wallet · Assets · Characters · Skills · Mining · Industry · Wormholes · Route · Map · Local · Gang alarm · Jukebox
+- Views: Trades · Hauling · Watchlist · Market · Wallet · Assets · Fittings · Characters · Skills · Mining · Industry · Wormholes · Route · Map · Local · Gang alarm · Jukebox
 - One compact window or each view as its own window, snapped to the screen edge; transparency per window, lock position, auto-hide.
-- **OmniCom:** the launcher of the overlay, in four layouts (grid, favourites + folders, expandable groups, a bar that grows). Drag icons into groups and back out, like folders on a phone.
+- **Stack overlays like in EVE:** drag an overlay by its title bar onto another one and they become tabs; drag a tab out to get its own window again. Opacity, lock, click-through and always-on-top apply to the whole stack.
+- **OmniCom:** the launcher of the overlay, in four layouts (grid, favourites + folders, expandable groups, a bar that grows). Drag icons into groups and back out, like folders on a phone. Optional buttons to start and quit EVE, and a left click on the clock opens your timers.
 - One click to copy exact prices, open an item's market window in EVE or set your autopilot destination.
 - Copy local with Ctrl+C and the overlay shows who is there; a live alarm pops up when hostiles are reported.
 
 ### …and everything else
 | | |
 |---|---|
-| **Market scanner** | Profitable trades between hubs like Jita 4-4 – taxes, fees and volume included |
+| **Trading – scan trades** | Profitable trades between hubs like Jita 4-4 – taxes, fees and volume included. Trading and hauling share one layout: Search · Results · My trades / My runs · Profits |
 | **My trades & profits** | Every buy and sell from your wallet – real profit **net per unit and in total** |
 | **Hauling & watchlist** | Plan runs, see what is bought, in transit or selling |
-| **Orders, contracts & sell check** | Watch your orders, see when you are undercut, find the best place to sell |
+| **Orders, contracts & sell check** | Your orders and order history (tabs under Trading) – see when you are undercut, find the best place to sell |
 | **Wallet & assets** | All characters, ISK, journal and items in every station |
 | **Mining** | Mining log per day and character, ore/ice/gas/moon values per m³ with your refine yield, best place to sell, moon extractions of your corp |
 | **Industry & blueprints** | Jobs and blueprints |
@@ -61,10 +62,13 @@
 | **Skills** | Skill queue and trading skills – fees are calculated from your real skills |
 | **Navigation & wormholes** | Route planner, jump planner, map with jump bridges, Thera & Turnur connections via EVE-Scout, wormhole info, autopilot destination in one click |
 | **PvP & intel** | Local check with zKillboard info, kills and jumps per system, dangerous systems, gang alarm with live “Hostile reported” window |
-| **Fittings, clones & implants** | Copy fittings in EFT format, jump clones and implants of all characters |
+| **Fittings** | Own section with overlay: My fittings + EVE Workbench, copy fittings in EFT format |
+| **Clones & implants** | Jump clones and implants of all characters |
+| **Clock & timers** | Timers with weekdays and repeat, stopwatch |
+| **Main window** | Back/forward at the top left (also mouse buttons 4/5 and Alt + ←/→), sub-tabs of every section as a list on the left |
 | **Multi-character & settings sync** | All characters at once, copy EVE client settings between them |
 | **Soundtrack** | The EVE Omni soundtrack by Nareya79 is built in |
-| **OmniBreaker** *(new in 4.0.76)* | A mini-game in EVE style for the waiting times: aim your mining laser and clear the ore veins – 100 levels, 8 power items, high score. Optional in the installer |
+| **OmniBreaker** | A mini-game in EVE style for the waiting times: aim your mining laser and clear the ore veins – 150 levels, power items, high score. Optional in the installer |
 | **Stream Deck & Stream Dock** | Plugin for Elgato Stream Deck (incl. Stream Deck +) and MiraBox Stream Dock (N4 & co.) – overlay keys, live values, timer, jukebox, dials |
 
 All values you type into EVE come with a copy button.
@@ -102,7 +106,7 @@ A browser version (single HTML file) is included in this repository for other sy
 2. **Start the installer.** If Windows shows *“Windows protected your PC”*, click **More info → Run anyway**.
    > Why? EVE Omni is a free hobby project and is not code-signed (a certificate costs money every year). Every release lists SHA256 checksums and a VirusTotal scan so you can verify the file.
 3. **Log in with EVE** – click “Log in with EVE”, pick your character on CCP's login page and confirm. Add more characters any time.
-4. **Fly.** Pick your trade hub, open the market scanner and go. o7
+4. **Fly.** Pick your trade hub, open Trading › Scan trades and go. o7
 5. **Updates:** EVE Omni checks once a day whether a new version is out and shows you the download link (you can turn this off in the settings). Just install the new version over the old one, your data stays.
 
 No developer account and no API keys needed.
