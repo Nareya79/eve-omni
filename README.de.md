@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/banner.png" alt="EVE Omni – das All-in-One-Werkzeug für EVE Online" width="100%">
+  <img src="docs/banner.png" alt="EVE Omni – das All-in-One-Tool für EVE Online" width="100%">
 </p>
 
 <p align="center">
-  <b>Kostenloses All-in-One-Programm für EVE Online</b><br>
+  <b>Kostenloses All-in-One-Tool für EVE Online</b><br>
   Handel, Hauling, Mining, PvP-Intel, Navigation & Wurmlöcher, Industrie, PI und Skills<br>
   Multi-Client-Vorschau · Overlay im Spiel · Stream Deck
 </p>

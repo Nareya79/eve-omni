@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/banner.png" alt="EVE Omni – the all-in-one companion for EVE Online" width="100%">
+  <img src="docs/banner.png" alt="EVE Omni – the all-in-one tool for EVE Online" width="100%">
 </p>
 
 <p align="center">
-  <b>Free all-in-one desktop companion for EVE Online</b><br>
+  <b>Free all-in-one desktop tool for EVE Online</b><br>
   Trading, hauling, mining, PvP intel, navigation & wormholes, industry, PI and skills<br>
   Multi-client preview · in-game overlay · Stream Deck
 </p>
