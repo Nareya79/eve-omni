@@ -12,9 +12,9 @@ const { chromium } = require('playwright');
     await page.goto('file:///home/claude/EVECore.html'); await page.waitForTimeout(600);
     const r = await page.evaluate(() => {
       const a = document.querySelector('.neo-btn[aria-selected="true"]'), b = document.querySelector('.neo-btn[aria-selected="false"]');
-      return { a: a && getComputedStyle(a).boxShadow, b: b && getComputedStyle(b).boxShadow };
+      return { a: a && getComputedStyle(a).boxShadow, ab: a && getComputedStyle(a).borderTopColor, b: b && getComputedStyle(b).boxShadow };
     });
-    ok(r.a && frame(r.a), name + ': aktives Symbol hat Rahmen rundum (' + r.a + ')');
+    ok(r.a && (frame(r.a) || /255, 255, 255/.test(r.ab)), name + ': aktives Symbol hat Rahmen rundum (' + r.a + ' / ' + r.ab + ')');   // AJ: im Stil EVE weiße Kante statt Innenrahmen
     ok(r.b === 'none', name + ': inaktive Symbole ohne Rahmen');
     await page.close();
   }
@@ -38,7 +38,7 @@ const { chromium } = require('playwright');
   ok(await p.evaluate(() => { const g = document.querySelector('#ic-defs #ic-l-ffe29a'); return !!g && /url\(#ic-l-ffe29a\)/.test(document.querySelector('#neo-btn-haul svg').outerHTML) && !!document.querySelector('#neo-btn-haul svg [fill="url(#ic-cyan)"]'); }), 'T27: Linien-Verlauf je Farbe + Cyan aus dem gemeinsamen Vorrat');
   ok(await p.evaluate(() => ['station','haul','wallet','skills','jump','chars','settings','account'].every(id => document.querySelector('#neo-btn-' + id + ' svg.ic2')) && !!document.querySelector('#neo-quit svg.ic2')), 'T27: neue Symbole in allen Knöpfen inkl. Beenden');
   const rows = await p.evaluate(() => document.querySelectorAll('#neo-order input[type=color], #neo-color-extra input[type=color]').length);
-  const nBtn = await p.evaluate(() => document.querySelectorAll('#neocom .neo-btn:not(#neo-quit):not(#neo-btn-account)').length);
+  const nBtn = await p.evaluate(() => document.querySelectorAll('#neocom .neo-btn:not(#neo-quit):not(#neo-btn-account):not(#neo-btn-orders)').length);   // AL5: Orders steckt unter Trading
   ok(rows === nBtn + 10, 'Farbfeld fuer jedes Symbol inkl. Alert/Gang-Report/Notizen/Leistung/Timer/D-Scan/Scanner-Plan/PI-Planer/Workbench/Produktion (' + rows + ')');
   await p.evaluate(() => { const i = document.querySelector('[data-neo-color="neo-btn-haul"]'); i.value = '#ff0000'; i.dispatchEvent(new Event('input')); i.dispatchEvent(new Event('change')); });
   ok(await col('#neo-btn-haul svg') === 'rgb(255, 0, 0)' && await p.evaluate(() => !!document.getElementById('ic-l-ff0000')), 'eigene Farbe je Symbol (Ausnahme) sofort, mit eigenem Verlauf');

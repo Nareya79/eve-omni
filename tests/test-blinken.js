@@ -13,7 +13,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     const d = w.document, T = w.__test;
     const view = id => { const b = d.createElement('div'); T.ovRenderViewInto(id, b); return b; };
     let b = view('track');
-    assert(b.querySelector('.ov-blm [data-ova="blinkOpen"]') && !b.querySelector('[data-ova="blink"]') && view('trades').querySelector('.ov-blm [data-ova="blinkOpen"]'), '⚙-Knopf in Watchlist und Trades, Menü zu');
+    assert(b.querySelector('.ov-blm [data-ova="blinkOpen"]') && !b.querySelector('[data-ova="blink"]') && view('trades').querySelector('.ovm-top [data-ova="blinkOpen"]'), '⚙-Knopf in Watchlist und Trades (AM1: in der Zeile „Suchoptionen“), Menü zu');
     assert(!b.querySelector('.ov-card[class*="bl-"]'), 'Standard: Blinken wie bisher');
     T.ovSatAction('track', { type: 'blinkOpen' });
     b = view('track');

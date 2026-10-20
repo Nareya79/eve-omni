@@ -58,7 +58,7 @@ function req(port, method, p, body){ return new Promise((res, rej) => { const r 
     fs.mkdirSync(path.join(tmp, 'HotSpot', 'StreamDock'), { recursive: true });
     const orig = path.join('/home/claude', 'deck');
     const fn2 = new Function('require', 'S', 'send', 'saveSettings', 'pushSettings', 'pushSettingsSoon', 'toggleShow', 'hideMain', 'showWin', 'applyWindowState', 'ipcMain', 'app', 'path', 'fs', 'win', 'env', '__dirname', 'uiLang',
-      main.slice(i, j) + '; env.api2 = 1; env.deckLangSync = deckLangSync;');
+      'var TEST = false; ' + main.slice(i, j) + '; env.api2 = 1; env.deckLangSync = deckLangSync;');
     const h2 = {}; fn2(require, env.S, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, () => {}, { on: () => {}, handle: (n, f) => h2[n] = f }, { getVersion: () => '9', getPath: () => tmp }, path, fs, null, env, '/home/claude', () => env.lang || 'de');
     const msg = h2['evecore:deckInstall']({}, 'mirabox'), dst = path.join(tmp, 'HotSpot', 'StreamDock', 'plugins', 'de.eveomni.tasten.sdPlugin');
     const cfg = fs.readFileSync(path.join(dst, 'plugin', 'config.js'), 'utf8');

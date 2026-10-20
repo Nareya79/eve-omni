@@ -52,6 +52,10 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   satMenu: () => ipcRenderer.send('evecore:satMenu'),
   popMenu: items => ipcRenderer.invoke('evecore:popMenu', items),   // AH2
   satDrag: phase => ipcRenderer.send('evecore:satDrag', String(phase)),
+  stackTab: id => ipcRenderer.send('evecore:stackTab', String(id)),   // AK
+  stackOut: (id, x, y) => ipcRenderer.send('evecore:stackOut', String(id), Number(x), Number(y)),
+  stackClose: id => ipcRenderer.send('evecore:stackClose', String(id)),   // AK3
+  stackFront: id => ipcRenderer.send('evecore:stackFront', String(id)),
   neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose OmniCom-Linksklick (07.10.)
   pickMusicDir: () => ipcRenderer.invoke('evecore:pickMusicDir'),
   listMusic: () => ipcRenderer.invoke('evecore:listMusic'),

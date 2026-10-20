@@ -14,7 +14,7 @@ const order = d => [...d.querySelectorAll('#neocom > .neo-btn')].filter(b => b.i
     let w = makeWindow(); await tick(500);
     let d = w.document, $ = id => d.getElementById(id);
     const def = order(d);
-    assert(def.join(',') === 'station,haul,market,track,sell,orders,contracts,appraisal,courier,wallet,assets,industry,mining,jump,map,intel,radar,wormhole,chars,skills,pi,mail,music,game,home,settings,account', 'Standard-Reihenfolge (BB13: nach Gruppen)');
+    assert(def.join(',') === 'station,haul,market,track,sell,orders,contracts,appraisal,courier,wallet,assets,fits,industry,mining,jump,map,intel,radar,wormhole,chars,skills,pi,mail,music,game,home,settings,account', 'Standard-Reihenfolge (BB13: nach Gruppen)');
     let rows = d.querySelectorAll('#neo-order .neo-row');
     assert([...rows].filter(r => r.querySelector('button[title="nach oben"]')).length === 35 && rows.length === 37 && /Trading/.test(rows[0].textContent) && rows[0].querySelector('svg') && /Einstellungen/.test(rows[35].textContent), 'Einstellungen: eine Liste mit Symbol und Namen, Overlay-Symbole mit Pfeilen, Einstellungen/Konto fest unten');
     assert($('panel-settings').contains($('neo-order')), 'Liegt in Einstellungen › Darstellung');
@@ -41,7 +41,7 @@ const order = d => [...d.querySelectorAll('#neocom > .neo-btn')].filter(b => b.i
     w = makeWindow({ 'eve-zentrale-neocom-v1': JSON.stringify(broken) }); await tick(500);
     d = w.document; $ = id => d.getElementById(id);
     o = order(d);
-    assert(o[0] === 'jump' && o[o.indexOf('skills') - 1] === 'chars' && o.length === 27, 'Nach Neustart gleiche Reihenfolge, fehlende Bereiche hinter ihrem Vorgänger eingefügt');
+    assert(o[0] === 'jump' && o[o.indexOf('skills') - 1] === 'chars' && o.length === 28, 'Nach Neustart gleiche Reihenfolge, fehlende Bereiche hinter ihrem Vorgänger eingefügt');
     $('neo-order-reset').onclick();
     assert(order(d).join(',') === def.join(','), 'Standard-Reihenfolge wiederherstellbar');
 

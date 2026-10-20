@@ -19,7 +19,7 @@ class Win { constructor(o){ this.o = o; this.ev = {}; this.kids = []; this.sent 
 const env = { S: { browser: { bookmarks: [{ name: 'DOTLAN', url: 'https://evemaps.dotlan.net/' }], tabs: ['https://a.example/', 'https://b.example/'], act: 1 }, windows: {}, alwaysOnTop: true }, saves: 0, menus: [] };
 const merge = (a, b) => { const o = Object.assign({}, a); Object.keys(b).forEach(k => { o[k] = b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) ? merge(a[k] || {}, b[k]) : b[k]; }); return o; };
 const fn = new Function('S', 'saveSettings', 'send', 'screen', 'visibleOnScreen', 'BrowserWindow', 'WebContentsView', 'winIconPath', 'attachSnap', 'zSet', 'Menu', 'merge', 'pushSettings', 'applyWindowState', 'shell', 'path', '__dirname', 'env', 'satTop', 'uiLang', 'eoMenu', 'nativeTheme',
-  main.slice(i, j) + '; env.api = { openBrowser, browserCmd, browserLook, tabs: () => btabs, act: () => bact, win: () => bwin, view: () => bview };');
+  "var extAct = '', extActSet = function(){}; " + main.slice(i, j) + '; env.api = { openBrowser, browserCmd, browserLook, tabs: () => btabs, act: () => bact, win: () => bwin, view: () => bview };');
 fn(env.S, () => env.saves++, () => {}, { getPrimaryDisplay: () => ({ workArea: { x: 0, y: 0, width: 1920, height: 1040 } }) }, () => false, Win, View, () => '', () => {}, (w, t) => { if (w) w.top = t; },
   { buildFromTemplate: t => ({ popup(){ env.menus.push(t); } }) }, merge, () => {}, () => {}, { openExternal(){} }, require('path'), '/x', env, new Function('S', main.match(/function satTop\(id\)\{[^\n]*\}/)[0] + '; return satTop;')(env.S), () => 'de', (w, t) => env.menus.push(t), env.theme = {});   // MM3
 const A = env.api;

@@ -39,7 +39,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     assert(!/Amarr VIII/.test($('wv-done-body').textContent), 'M8: abgebrochener Lauf fehlt in der Wallet-Erledigt-Liste');
     // BB11: Lauf abbrechen in der Watchlist (Hauling zeigt nur noch den Hinweis)
     d.querySelector('[data-trk="active"]').onclick(); await tick(30);
-    d.querySelector('[data-trk-row="Lauf:r1"]').onclick(); await tick(30);
+    if (!d.querySelector('#trk-body [data-tk="cancel|Lauf:r1"]')) d.querySelector('#trk-body [data-trk-row="Lauf:r1"]').onclick(); await tick(30);   // AM7: Zeile in der Watchlist (nicht mehr in „Laufend“ bei Trading)
     d.querySelector('#trk-body [data-tk="cancel|Lauf:r1"]').onclick(); await tick(30);
     const r1 = JSON.parse(w.localStorage.getItem('eve-zentrale-haulruns-v1')).find(x => x.id === 'r1');
     assert(r1.status === 'done' && r1.cancelled, 'M8: Lauf lässt sich abbrechen');

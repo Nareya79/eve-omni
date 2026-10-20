@@ -40,7 +40,7 @@ try{
   assert(/'EVE-Omni-Sicherungen'/.test(main) && /'EVE-Omni-Sicherung-'/.test(main) && /\(EVE-Omni\|EVECore\)-Sicherung-/.test(main) && /o\.format !== 'evecore-daten'/.test(main), 'BB0: Sicherungen neu benannt, alte zählen beim Aufräumen mit, Dateiformat gleich');
   assert(/'EVE Omni\.lnk'/.test(main) && /'EVECore\.lnk'/.test(main) && /name: OLD_APP_ID/.test(main), 'BB0: alte Startmenü-Verknüpfung + Autostart werden weggeräumt');
   // Seite
-  assert(/^<title>EVE Omni Beta<\/title>/.test(html) && /<h1>EVE Omni<\/h1>/.test(html) && /class="ov-brand">EVE Omni</.test(html), 'BB0: Titel, Kopfzeile, Overlay-Leiste heißen EVE Omni');
+  assert(/^(<meta charset="utf-8">\s*)?<title>EVE Omni Beta<\/title>/.test(html) && /<h1>EVE Omni<\/h1>/.test(html) && /class="ov-brand">EVE Omni</.test(html), 'BB0: Titel, Kopfzeile, Overlay-Leiste heißen EVE Omni');
   const fav = /<link rel="icon" type="image\/svg\+xml" href="data:image\/svg\+xml;base64,([^"]+)"/.exec(html);
   assert(fav && /stroke="#e0b45d"/.test(Buffer.from(fav[1], 'base64').toString()), 'BB0: Favicon = neues Symbol (goldener Ring)');
   assert(/Fan-Tool – nicht von CCP/.test(html) && /window\.EVECore = \{/.test(html), 'BB0: Fan-Tool-Hinweis, Schnittstelle window.EVECore bleibt');

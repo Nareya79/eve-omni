@@ -21,8 +21,8 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     // X3: Uhr oben im OmniCom-Overlay, Klick schaltet Ortszeit → EVE-Zeit → beides, „aus“ blendet sie aus
     const ck = () => T.neoOverlayHtml().match(/data-neo="clock"[^>]*data-tz="(\w+)"/);
     assert(ck() && ck()[1] === 'local' && T.neoOverlayHtml().indexOf('data-neo="clock"') < T.neoOverlayHtml().indexOf('data-neo="wallet"'), 'X3: Uhr (Ortszeit) steht oben');
-    T.neoOverlayAction('clock'); assert(ck()[1] === 'eve' && /\d\d:\d\d<\/span><span class="clk e">EVE</.test(T.neoOverlayHtml()), 'X3: Klick → EVE-Zeit');
-    T.neoOverlayAction('clock'); assert(ck()[1] === 'both' && /clk e/.test(T.neoOverlayHtml()), 'X3: Klick → beides');
+    T.neoOverlayAction('clockMode'); assert(ck()[1] === 'eve' && /\d\d:\d\d<\/span><span class="clk e">EVE</.test(T.neoOverlayHtml()), 'X3: Klick → EVE-Zeit');
+    T.neoOverlayAction('clockMode'); assert(ck()[1] === 'both' && /clk e/.test(T.neoOverlayHtml()), 'X3: Klick → beides');
     // Y13: Uhrfarbe aus den Einstellungen (Vorlage oder eigene), Standard = ohne Farbe
     const cs = d.getElementById('neo-clock-col'), cc = d.getElementById('neo-clock-cc');
     assert(cs && cs.options.length === 12 && cs.options[0].value === '', 'Y13: Uhrfarbe Standard + 10 Vorlagen + eigene');   // UU4: Standard = Farbe des Farbschemas (nicht mehr ohne Farbe)

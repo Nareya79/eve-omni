@@ -118,6 +118,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', url:'https://claude.ai/art
     // Hauptfenster
     T.switchTab('track'); await tick(50);
     assert($('trk-vc') && /Verkauf prüfen/.test($('trk-vc').textContent), 'T28: Hauptfenster „Verkauf prüfen“ für alle');
+    T.switchTab('haul'); await tick(50);   // AM7: Läufe stehen in „Laufend“ bei Hauling
     const tro = $('tro-body');
     assert(tro && tro.querySelector('.trk-sm.st-bad') && !tro.querySelector('.trk-sm .vc-dot'), 'II2: zugeklappte Zeile im Hauptfenster rot umrandet, ohne Punkte');
     console.log('\nALL T28 TESTS PASSED'); process.exit(0);

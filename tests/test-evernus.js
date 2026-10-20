@@ -37,10 +37,10 @@ setTimeout(async () => {
 
     // --- Tab switching wires up the 3 new tabs ---
     doc.getElementById('neo-btn-orders').onclick();
-    assert(doc.getElementById('panel-orders').classList.contains('active'), 'orders panel active after click');
+    assert(doc.getElementById('panel-station').classList.contains('active') && !doc.getElementById('orders-view').hidden, 'AL5: Orders öffnet Trading › Orders');
     doc.getElementById('neo-btn-contracts').onclick();
     assert(doc.getElementById('panel-contracts').classList.contains('active'), 'contracts panel active after click');
-    assert(!doc.getElementById('panel-orders').classList.contains('active'), 'orders panel deactivated on switch');
+    assert(!doc.getElementById('panel-station').classList.contains('active'), 'Trading deactivated on switch');
     doc.getElementById('neo-btn-industry').onclick();
     assert(doc.getElementById('panel-industry').classList.contains('active'), 'industry panel active after click');
 

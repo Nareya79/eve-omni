@@ -19,7 +19,7 @@ function makeWindow(extra, host){
 (async () => {
   try{
     // ---------- BB8 Beta ----------
-    assert(/^<title>EVE Omni Beta<\/title>/.test(src) && /<h1>EVE Omni<\/h1><span class="beta-tag">Beta<\/span>/.test(src), 'BB8: Titel + Kopfzeile mit Beta');
+    assert(/^(<meta charset="utf-8">\s*)?<title>EVE Omni Beta<\/title>/.test(src) && /<h1>EVE Omni<\/h1><span class="beta-tag" id="beta-tag">Beta<\/span>/.test(src), 'BB8: Titel + Kopfzeile mit Beta');
     const sums = src.match(/<summary>[^<]*\d+\.\d+[^<]*·[^<]*<\/summary>/g) || [];
     assert(sums.length > 20 && sums.every(x => /<summary>Beta \d/.test(x)), 'BB8: alle Patchnotes-Versionen heißen Beta x.y');
     assert(/tray\.setToolTip\((T\()?'EVE Omni Beta ' \+ app\.getVersion\(\)/.test(main), 'BB8: Taskleisten-Tooltip mit Beta + Version');
@@ -477,7 +477,7 @@ function makeWindow(extra, host){
       assert($('trk-stats').querySelector('.stat-tile[title*="je Auftrag"]') && $('trk-body').querySelector('.trk-r b[title*="je Auftrag"]'), 'BB11: Ergebnis erklärt (je Auftrag)');
       // Hauling nur Hinweis, Läufe in der Watchlist
       T.hrUpdate(run.id, {}); await tick(20);
-      assert(/1 Lauf aktiv/.test($('hr-list').textContent) && !$('hr-list').querySelector('.tr-card') && $('hr-list').querySelector('[data-go-track]'), 'BB11: Hauling zeigt nur „1 Lauf aktiv → Watchlist“');
+      assert($('hr-list').querySelectorAll('[data-hr-card]').length === 1 && $('hr-tabs').querySelector('[data-hrv="active"]').getAttribute('aria-selected') === 'true', 'AL7: Meine Läufe zeigt den Lauf als Zeile unter „Laufend“ (vorher nur Verweis → Watchlist)');
       d.querySelector('[data-trk="active"]').click(); d.querySelector('[data-trk-row="Lauf:' + run.id + '"]').click(); await tick(20);
       assert(/data-hr-buydone/.test(src) && $('trk-body').querySelector('.hr-det'), 'BB11: Lauf-Karte in der Watchlist mit „Weiter zu Unterwegs“ und Details');
       // Laufend: kompakte Zeilen, Klick → Watchlist; Wallet › Erledigt nur Summe
@@ -527,7 +527,7 @@ function makeWindow(extra, host){
       const kids = () => [...$('neocom').children].map(b => b.id.replace(/^neo-(btn|grp)-/, ''));
       assert(kids().slice(0, 5).join() === 'handel,station,haul,market,track' && $('neo-grp-besitz') && kids().indexOf('besitz') === kids().indexOf('courier') + 1, 'BB13: Leiste in Gruppen mit Überschrift (Handel, Besitz, …)');
       $('neo-grp-besitz').onclick();
-      assert($('neo-btn-assets').classList.contains('neo-fold') && $('neo-grp-besitz').getAttribute('aria-expanded') === 'false' && /4/.test($('neo-grp-besitz').textContent), 'BB13: Gruppe einklappen per Klick auf die Überschrift');
+      assert($('neo-btn-assets').classList.contains('neo-fold') && $('neo-grp-besitz').getAttribute('aria-expanded') === 'false' && /5/.test($('neo-grp-besitz').textContent), 'BB13: Gruppe einklappen per Klick auf die Überschrift (AL9: + Fittings = 5)');
       const sel = d.querySelector('[data-neo-grpsel="neo-btn-wallet"]'); sel.value = 'handel'; sel.onchange();
       assert(kids().indexOf('wallet') < kids().indexOf('besitz') && !$('neo-btn-wallet').classList.contains('neo-fold'), 'BB13: Symbol per Auswahl in andere Gruppe');
       const mc = d.querySelector('[data-neo-main="neo-btn-radar"]'); mc.checked = false; mc.onchange();

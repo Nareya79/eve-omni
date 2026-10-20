@@ -43,9 +43,12 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     T.ovSatAction('track', { type: 'trkOv', arg: 'all' }); tb = d.createElement('div'); T.ovRenderViewInto('track', tb);
     assert(tb.querySelectorAll('.ov-card').length === 2 && T.ovLoad().trkView === 'all', 'O2/2: Alle, Auswahl gemerkt');
     // O2/4: Trading-Seite zeigt oben, was läuft
-    d.getElementById('neo-btn-station').click(); await tick();
+    d.getElementById('neo-btn-haul').click(); await tick();   // AM7: Läufe stehen in „Laufend“ bei Hauling, Trading zeigt nur Trades
     let tro = d.getElementById('tro-box');
     assert(!tro.hidden && d.getElementById('tro-sum').textContent === '1 Lauf' && tro.querySelectorAll('.trk-sm').length === 1 && /Amarr VIII/.test(tro.textContent), 'O2/4: Laufend-Box zeigt den offenen Lauf');
+    d.getElementById('neo-btn-station').click(); await tick();
+    assert(tro.hidden, 'AM7: Trading zeigt keine Läufe in „Laufend“');
+    d.getElementById('neo-btn-haul').click(); await tick();
     T.hrUpdate('r1', { status: 'done' }); await tick();
     assert(tro.hidden, 'O2/4: nichts aktiv -> Box ausgeblendet');
     console.log('\nALL WUENSCHE-O TESTS PASSED'); process.exit(0);

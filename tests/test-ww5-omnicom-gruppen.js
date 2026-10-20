@@ -28,7 +28,7 @@ function makeWindow(url, host, mode){
     assert(gOf('wallet') === 'besitz' && bes.indexOf('wallet') === bes.indexOf('mining') - 1, 'auf ein Symbol einer Gruppe = in die Gruppe, davor eingefügt (' + bes.join() + ')');
     sat({ type: 'neoGrp', a: 'wallet', g: 'gibtsnicht' }); sat({ type: 'neoGrp', a: '"><x', g: '-' }); await tick(80);
     assert(gOf('wallet') === 'besitz' && !/<x/.test(H.pub.neocom.html), 'falsche Gruppe/Name wird ignoriert');
-    ['wallet', 'assets', 'industry', 'mining', 'workbench', 'prod'].forEach(a => sat({ type: 'neoGrp', a, g: '-' })); await tick(80);
+    ['wallet', 'assets', 'fits', 'industry', 'mining', 'workbench', 'prod'].forEach(a => sat({ type: 'neoGrp', a, g: '-' })); await tick(80);   // AL9: + Fittings
     assert(ov().querySelector('.neo-g[data-neo-g="besitz"]') && !ov().querySelector('[data-g="besitz"]'), 'leere Gruppe bleibt als Ablageziel sichtbar');
     const ls = JSON.parse(w.localStorage.getItem('eve-zentrale-neocom-groups-v1') || '{}');
     assert(!ls.grp || !ls.grp['neo-btn-wallet'], 'die Gruppen der großen Leiste bleiben unverändert');

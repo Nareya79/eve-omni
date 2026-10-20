@@ -12,7 +12,7 @@ try{
   const destroyed = [], trace = [];
   const win = id => ({ id, d: false, hide(){}, close(){}, getBounds(){ return {}; }, isDestroyed(){ return this.d; }, destroy(){ this.d = true; destroyed.push(id); } });
   const run = new Function('sats', 'S', 'saveSettings', 'pushSettings', 'neoTraceAdd', 'quitting', 'SAT_PARK_MAX',
-    'const satParked = {};\n' + pick('satPark') + '\nreturn { satPark, satParked };');
+    'const satParked = {}, stackDrop = () => {};\n' + pick('satPark') + '\nreturn { satPark, satParked };');
   const sats = {}, S = { windows: {} };
   const api = run(sats, S, () => {}, () => {}, t => trace.push(t), false, max);
   for (let i = 1; i <= 10; i++){ sats['v' + i] = win('v' + i); api.satPark('v' + i); }

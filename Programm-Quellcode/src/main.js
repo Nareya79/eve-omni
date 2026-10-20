@@ -161,6 +161,8 @@ function publicSettings(){
   o.eveClients = fg.clients.map(c => ({ hwnd: c.hwnd, name: c.name, title: c.title }));
   o.cycleStatus = fg.cycle;
   o.wasCompact = wasCompact;
+  o.viewNames = VIEWS;   // AK: Reiternamen im Stapel
+  o.satBadges = satBadges;   // AK: Warnzahl je Ansicht
   o.deck = deckCfg(); o.deckClients = deckClients.length; o.deckErr = S.deckErr || ''; o.deckRun = !!deckSrv;   // SD
   return o;
 }
@@ -179,7 +181,7 @@ const BREAK = 25;     // so weit muss man weiterziehen, damit es sich wieder loe
 const MATCH_TOL = 20; // SS4: Breite beim Übereinander-Andocken nur übernehmen, wenn sie fast gleich ist
 const WIN_GAP = 1;    // 14.10.2026: Abstand zum Nachbarfenster (daneben/darueber/darunter), passt zu den Abstaenden der EVE-Fenster
 function overlayWindowsExcept(w){
-  const list = Object.keys(sats).map(id => sats[id]).filter(o => o && !o.isDestroyed() && o.isVisible());
+  const list = Object.keys(sats).filter(id => !stackHidden(id)).map(id => sats[id]).filter(o => o && !o.isDestroyed() && o.isVisible());   // AK: hintere Reiter (unsichtbar) zählen nicht
   if (win && !win.isDestroyed() && win.isVisible() && !win.isMaximized() && !win.isMinimized()) list.push(win);   // W12: Hauptfenster rastet mit ein
   if (bwin && !bwin.isDestroyed() && bwin.isVisible()) list.push(bwin);
   if (dwin && !dwin.isDestroyed() && dwin.isVisible()) list.push(dwin);   // DC
@@ -483,7 +485,9 @@ function satDefaultBounds(id){
 }
 function applySatState(w){
   if (!w || w.isDestroyed()) return;
-  zSet(w, satTop(Object.keys(sats).find(k => sats[k] === w)));
+  const id = Object.keys(sats).find(k => sats[k] === w);
+  zSet(w, satTop(id));
+  if (stackHidden(id)){ w.setOpacity(0); w.setIgnoreMouseEvents(true); return; }   // AK: hinterer Reiter – unsichtbar, zeichnet aber weiter
   w.setOpacity(Math.max(0.3, Math.min(1, Number(S.opacity) || 1)));
   w.setIgnoreMouseEvents(satCt(w), satCt(w) ? { forward: true } : undefined);
 }
@@ -501,6 +505,17 @@ function spielFit(w){
     if (Math.abs(want - ch) > 2 || nw !== cw) w.setContentSize(nw, want);
   }, () => {});
 }
+// AI4 (18.10., gemessen beim Nutzer): beim Öffnen genau ein show/hide je Klick – das Auf-zu-auf war das Zeichnen: ein wieder gezeigtes
+// (geparktes/Reserve-)Fenster zeigt kurz sein altes Bild, dann leer, dann den neuen Inhalt. Darum unsichtbar zeigen und nach zwei Bildern einblenden;
+// dabei auch einordnen (applySatState fehlte beim geparkten Fenster).
+function satShowSoft(w, done){   // done: wenn sichtbar (AK: altes Reiter-Fenster erst dann verstecken, sonst blinkt es)
+  if (!w || w.isDestroyed()) return;
+  let fin = false; const show = () => { if (fin || w.isDestroyed()) return; fin = true; applySatState(w); if (done) done(); };
+  w.setOpacity(0); w.showInactive();
+  w.webContents.executeJavaScript('new Promise(function(r){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ r(1); }); }); })').catch(() => 0)
+    .then(() => setTimeout(show, 16));
+  setTimeout(show, 400);   // Sicherheitsnetz
+}
 function satTop(id){ const t = id && (S.windows[id] || {}).top; return typeof t === 'boolean' ? t : !!S.alwaysOnTop; }
 // S2: Durchklicken fuer alle Overlays oder nur fuer einzelne (S.windows[id].ct). Das OmniCom bleibt klickbar – dort schaltet man es um.
 function satCt(w){
@@ -514,7 +529,7 @@ function openSat(id, show){
   if (pk && !pk.isDestroyed()){
     if (pk.__key === satKey()){
       sats[id] = pk; neoTraceAdd('Overlay ' + id + ' wieder gezeigt');
-      if (show !== false) pk.showInactive();
+      if (show !== false) satShowSoft(pk);   // AI4
       return pk;
     }
     pk.destroy();
@@ -529,13 +544,14 @@ function openSat(id, show){
   sats[id] = w;
   if (id === 'spiel' && !w.__fit){ w.__fit = true; let ft = null; w.on('resize', () => { clearTimeout(ft); ft = setTimeout(() => spielFit(w), 250); }); w.webContents.on('did-finish-load', () => setTimeout(() => spielFit(w), 300)); w.webContents.on('zoom-changed', () => setTimeout(() => spielFit(w), 200)); }   // PS2
   if (!w.__zf){ w.__zf = true; w.on('focus', () => { satZTouch(w); satActiveSet(w); }); w.once('closed', () => satZTouch(w)); }   // Stapel merken
+  if (!w.__tr){ w.__tr = true; const nm = () => (Object.keys(sats).find(k => sats[k] === w) || (Object.keys(satParked).find(k => satParked[k] === w) ? 'geparkt' : '?')); ['show', 'hide', 'minimize', 'restore'].forEach(e => w.on(e, () => neoTraceAdd('Fenster ' + nm() + ' ' + e))); }   // AI4 (18.10.): Auf-zu-auf beim Öffnen messen
   w.setMenu(null);
   if (cfg.rolled){ satRollApply(w, id, cfg); w.setBounds({ x: b.x, y: b.y, width: b.width, height: cfg.rollH }); }
   if (id === 'neocom') w.on('system-context-menu', ev => { ev.preventDefault(); satMenu(id); });   // T8: Rechtsklick auf den Ziehbereich (Windows)
   attachSnap(w);
   applySatState(w);
   let t = null;
-  const remember = () => { clearTimeout(t); t = setTimeout(() => { if (w.isDestroyed()) return; S.windows[id] = Object.assign({}, S.windows[id], { bounds: w.getBounds() }); saveSettings(); }, 300); };
+  const remember = () => { clearTimeout(t); t = setTimeout(() => { if (w.isDestroyed()) return; S.windows[id] = Object.assign({}, S.windows[id], { bounds: w.getBounds() }); saveSettings(); stackSync(id); }, 300); };   // AK: hintere Reiter ziehen mit
   w.on('move', remember); w.on('resize', remember);
   // N5: zKillboard aus dem Overlay im EVECore-Browser, alles andere im normalen Browser
   w.webContents.setWindowOpenHandler(({ url }) => {
@@ -547,7 +563,7 @@ function openSat(id, show){
     if (sats[id] === w) delete sats[id];
     if (!quitting && !satClosingAll){ S.windows[id] = Object.assign({}, S.windows[id], { open: false }); saveSettings(); pushSettings(); }
   });
-  if (sp){ w.webContents.executeJavaScript('window.__satBecome && window.__satBecome(' + JSON.stringify(id) + ')').catch(() => {}); if (show !== false) setTimeout(() => { if (!w.isDestroyed()) w.showInactive(); }, 30); }
+  if (sp){ w.webContents.executeJavaScript('window.__satBecome && window.__satBecome(' + JSON.stringify(id) + ')').catch(() => {}); if (show !== false) setTimeout(() => { if (!w.isDestroyed()) satShowSoft(w); }, 30); }   // AI4
   else w.once('ready-to-show', () => { if (show !== false) w.showInactive(); });
   if (id !== 'neocom') neoTraceAdd('Overlay ' + id + (sp ? ' aus Reserve' : ' neu gebaut'));   // NW2: Diagnose Taskleiste
   setTimeout(satSpareMake, 1500);
@@ -569,7 +585,16 @@ function satZTouch(w){ const i = satZ.indexOf(w); if (i >= 0) satZ.splice(i, 1);
 // AD1 (18.10.): aktiv = zuletzt angeklicktes Overlay – bleibt aktiv, auch wenn danach EVE den Fokus hat; das OmniCom zählt nie als aktiv
 function satActiveSet(w){
   const id = Object.keys(sats).find(k => sats[k] === w); if (!id || id === 'neocom') return;
-  Object.keys(sats).forEach(k => { const o = sats[k]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'active', id }); });
+  const ids = (stackOf(id) || { ids: [id] }).ids.slice();   // AK: aktives Stapelfenster = alle seine Reiter aktiv (Nutzer 19.10.)
+  Object.keys(sats).forEach(k => { const o = sats[k]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'active', id, ids }); });
+  extActSet('');
+}
+// Aktiv-Balken (20.10., Nutzer): Discord- und Browser-Fenster zählen beim „aktiven Overlay“ mit – angeklickt = aktiv, alle Overlays inaktiv
+let extAct = '';
+function extActSet(k){
+  if (k === extAct) return; extAct = k;
+  if (k) Object.keys(sats).forEach(id => { const o = sats[id]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'active', id: k, ids: [k] }); });
+  dcBarPush(); browserPush();
 }
 function satIdsByZ(){ return Object.keys(sats).sort((a, b) => satZ.indexOf(sats[a]) - satZ.indexOf(sats[b])); }
 function ownedResync(){ satIdsByZ().forEach(id => applySatState(sats[id])); Object.keys(pvWins).forEach(h => zSet(pvWins[h], true)); }
@@ -618,6 +643,7 @@ function satPark(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
   if (id === 'neocom' || quitting){ w.close(); return; }
   S.windows[id] = Object.assign({}, S.windows[id], { open: false, bounds: w.getBounds() });
+  stackDrop(id, w.getBounds());   // AK
   delete sats[id]; w.hide(); satParked[id] = w; saveSettings(); pushSettings();
   // YY8: höchstens 8 versteckt behalten (je ~150 MB) – das am längsten geparkte wirklich schließen; Zerstören baut kein Fenster (Taskleiste bleibt unten)
   const ks = Object.keys(satParked);
@@ -625,9 +651,108 @@ function satPark(id){
 }
 function satParkedDrop(){ Object.keys(satParked).forEach(id => { const w = satParked[id]; delete satParked[id]; if (w && !w.isDestroyed()) w.destroy(); }); }
 function closeSat(id){ satPark(id); }
+/* AK (19.10.): Overlays stapeln wie in EVE – S.stacks = [{ ids, tab }]. Jede Ansicht behält ihr eigenes Fenster (kein Neuladen, kein neues
+   Fenster über EVE). Hintere Reiter sind nicht versteckt, sondern unsichtbar (Deckkraft 0, Klicks gehen durch) genau unter dem vorderen –
+   so zeichnen sie weiter und der Wechsel tauscht nur die Deckkraft (vorher Verstecken/Zeigen → Neuzeichnen, Blinken; Nutzer 19.10.). */
+const STACK_NO = ['neocom', 'karte', 'spiel', 'alarm'];
+const STACK_BAR = 34;   // Kopfleiste (Bildschirm-Pixel), über der ein gezogenes Overlay zum Reiter wird
+function stackOf(id){ return (S.stacks || []).find(s => s.ids.includes(id)) || null; }
+function stackHidden(id){ const s = stackOf(id); return !!s && s.tab !== id; }
+function stackClean(){
+  const seen = new Set();
+  S.stacks = (Array.isArray(S.stacks) ? S.stacks : []).map(s => ({ ids: (s && Array.isArray(s.ids) ? s.ids : []).filter(id => VIEWS[id] && !STACK_NO.includes(id) && !seen.has(id) && seen.add(id) && ((S.windows[id] || {}).open || sats[id])), tab: s && s.tab }))   // noch offenes Fenster nimmt erst satPark → stackDrop heraus (nächster Reiter rückt nach)
+    .filter(s => s.ids.length > 1).map(s => ({ ids: s.ids, tab: s.ids.includes(s.tab) ? s.tab : s.ids[0] }));
+}
+function stackSave(){ stackClean(); saveSettings(); pushSettings(); }
+// AK3: ein Stapel ist ein Fenster – Sperren, Durchklicken, Vordergrund, Schließen nach Zeit gelten für alle Reiter
+const STACK_SHARE = ['lock', 'ct', 'top', 'autoClose'];
+function stackShare(win){
+  Object.keys(win || {}).forEach(id => { const s = stackOf(id), p = win[id] || {}; if (!s) return;
+    const keys = STACK_SHARE.filter(k => k in p); if (!keys.length) return;
+    s.ids.forEach(k => { if (k === id) return; const o = S.windows[k] = Object.assign({}, S.windows[k]); keys.forEach(x => { o[x] = p[x]; }); applySatState(sats[k]); });
+  });
+}
+// Schließen: ganzer Stapel (✕ in der Leiste, Schließen nach Zeit) – hintere Reiter zuerst, damit keiner kurz nach vorn rückt
+function stackCloseAll(id){ const s = stackOf(id); (s ? s.ids.filter(k => k !== s.tab).concat([s.tab]) : [id]).forEach(k => closeSat(k)); }
+function sameBounds(a, b){ return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height; }
+// Lage des vorderen Reiters auf die hinteren übertragen (nach Ziehen/Größe ändern)
+function stackSync(id){
+  const s = stackOf(id), w = sats[id]; if (!s || s.tab !== id || !w || w.isDestroyed()) return;
+  const b = w.getBounds();
+  s.ids.forEach(k => { const o = sats[k]; if (k !== id && o && !o.isDestroyed() && !sameBounds(o.getBounds(), b)) o.setBounds(b); });
+}
+// Fenster wird vorderer Reiter an Stelle b: zeichnet es schon an genau der Stelle → nur Deckkraft, sonst unsichtbar zeigen und nach dem ersten Bild einblenden
+function stackFront(w, b, done){
+  if (!w || w.isDestroyed()) return;
+  const ready = w.isVisible() && (!b || (w.getBounds().width === b.width && w.getBounds().height === b.height));   // nur verschieben zeichnet nicht neu
+  if (b && !sameBounds(w.getBounds(), b)) w.setBounds(b);
+  if (ready){ applySatState(w); if (done) done(); } else satShowSoft(w, done);
+}
+// hinterer Reiter: sichtbar, aber unsichtbar (applySatState setzt Deckkraft 0)
+function stackBack(w){ if (!w || w.isDestroyed()) return; applySatState(w); if (!w.isVisible()) w.showInactive(); }
+// Reiter wechseln: neues Fenster nach vorn, erst danach das alte nach hinten
+function stackShow(id){
+  const s = stackOf(id); if (!s || s.tab === id) return;
+  const old = sats[s.tab], b = old && !old.isDestroyed() ? old.getBounds() : null;
+  s.tab = id;
+  const w = openSat(id, false); if (!w) return;
+  stackFront(w, b, () => { stackBack(old); satZTouch(w); satActiveSet(w); });
+  stackSave();
+}
+// Overlay a (samt seinem Stapel) als Reiter auf Overlay t legen; a wird der aktive Reiter
+function stackJoin(a, t){
+  if (a === t || STACK_NO.includes(a) || STACK_NO.includes(t) || !sats[a] || !sats[t]) return;
+  const sa = stackOf(a), add = sa ? sa.ids : [a];
+  if (sa && sa.ids.includes(t)) return;
+  let st = stackOf(t);
+  if (!st){ st = { ids: [t], tab: t }; S.stacks = (S.stacks || []).concat([st]); }
+  if (sa) S.stacks = S.stacks.filter(s => s !== sa);
+  const b = sats[t].getBounds();
+  add.forEach(id => { if (!st.ids.includes(id)) st.ids.push(id); });
+  st.tab = a;
+  const tw = S.windows[t] || {}, sh = {}; STACK_SHARE.forEach(k => { if (k in tw) sh[k] = tw[k]; }); const pw = {}; pw[t] = sh; stackShare(pw);   // AK3: Einstellungen des Ziels
+  send({ type: 'satAction', view: t, action: { type: 'stackLook', ids: st.ids } });   // Hintergrund-Deckkraft des Ziels für alle
+  stackFront(sats[a], b, () => st.ids.forEach(id => { if (id !== a) stackBack(sats[id]); }));
+  st.ids.forEach(id => { const w = sats[id]; if (id !== a && w && !w.isDestroyed() && !sameBounds(w.getBounds(), b)) w.setBounds(b); });
+  neoTraceAdd('Stapel ' + st.ids.join('+'));
+  stackSave(); satActiveSet(sats[a]);
+}
+// Reiter herauslösen: eigenes Fenster (an der Maus, sonst etwas versetzt); im Stapel rückt der nächste Reiter nach
+function stackOut(id, x, y){
+  const s = stackOf(id), w = sats[id]; if (!s || !w || w.isDestroyed()) return;
+  const host = sats[s.tab], b = (host && !host.isDestroyed() ? host : w).getBounds();
+  s.ids = s.ids.filter(k => k !== id);
+  if (s.tab === id){ s.tab = s.ids[0]; stackFront(sats[s.tab], b); }
+  const nb = isFinite(x) && isFinite(y) ? { x: Math.round(x) - 60, y: Math.round(y) - 12 } : { x: b.x + 30, y: b.y + 30 };
+  stackFront(w, clampToWork(Object.assign({ width: b.width, height: b.height }, nb)));
+  stackSave(); satActiveSet(w);
+}
+// Overlay wird geschlossen: aus dem Stapel nehmen, war es vorne → nächster Reiter an seine Stelle
+function stackDrop(id, b){
+  const s = stackOf(id); if (!s) return;
+  s.ids = s.ids.filter(k => k !== id);
+  if (s.tab === id){ s.tab = s.ids[0]; stackFront(sats[s.tab], b); }
+  stackClean();
+  const n = sats[s.ids[0]]; if (s.ids.length === 1 && n && !n.isDestroyed()) applySatState(n);   // letzter Reiter: wieder normales Fenster
+}
+// Beim Ziehen: über der Kopfleiste welches anderen Overlays steht die Maus? (nur stapelbare, sichtbare)
+function stackTarget(w, c){
+  const me = Object.keys(sats).find(k => sats[k] === w);
+  if (!me || STACK_NO.includes(me)) return null;
+  return satIdsByZ().reverse().find(k => {
+    const o = sats[k]; if (k === me || STACK_NO.includes(k) || stackHidden(k) || !o || o.isDestroyed() || !o.isVisible()) return false;
+    const b = o.getBounds(); return c.x >= b.x && c.x < b.x + b.width && c.y >= b.y && c.y < b.y + STACK_BAR;
+  }) || null;
+}
+function stackHover(w, k){
+  if (w.__stackT === k) return;
+  [w.__stackT, k].forEach((id, i) => { const o = id && sats[id]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'stackHover', on: i === 1 }); });
+  w.__stackT = k;
+}
 // front: vom Nutzer geoeffnet (OmniCom-Klick, Einstellungen) -> nach vorne, auch wenn EVE gerade nicht vorne ist
 // (sonst legt „nur ueber EVE“ es hinter das aktive Programm – Fenster scheint nicht aufzugehen; Nutzer 06.10.2026)
 function syncSats(show, front){
+  stackClean();   // AK: Stapel nur aus offenen Overlays (auch beim Start)
   // O2: Hauling + Hub-Handel sind jetzt ein Fenster „Hauling“ (SS5)
   ['hauling', 'hubhandel'].forEach(o => { if (S.windows[o]){ if (S.windows[o].open && !S.windows.handel) S.windows.handel = { open: true }; delete S.windows[o]; } });
   Object.keys(VIEWS).forEach(id => {
@@ -815,7 +940,7 @@ function browserZoom(wc){ const z = Number(S.browser.zoom) || 1; if (Math.abs(wc
 function browserState(){
   const wc = bview.webContents, h = wc.navigationHistory, c = S.windows.browser || {};
   return { url: wc.getURL(), title: wc.getTitle(), back: h.canGoBack(), fwd: h.canGoForward(), loading: wc.isLoading(), bookmarks: S.browser.bookmarks,
-    tabs: btabs.map(v => ({ t: v.webContents.getTitle() || v.webContents.getURL() || 'Neuer Tab', l: v.webContents.isLoading() })), act: bact, lock: !!c.lock, home: browserHome(),
+    look: S.popLook || null, actv: extAct === 'browser' ? (S.ovMark ?? 'full') : '', tabs: btabs.map(v => ({ t: v.webContents.getTitle() || v.webContents.getURL() || 'Neuer Tab', l: v.webContents.isLoading() })), act: bact, lock: !!c.lock, home: browserHome(),
     marked: !!bmFind(wc.getURL()), manage: bmanage, edit: bedit, en: uiLang() === 'en', ic: S.icColor || '' };
 }
 // CC7: Tabs merken (nach Neustart wieder offen)
@@ -828,6 +953,7 @@ function browserSaveTabs(){
 function browserView(url){
   const v = new WebContentsView({ webPreferences: { partition: 'persist:browser', contextIsolation: true, nodeIntegration: false, sandbox: true } });
   const wc = v.webContents;
+  wc.on('focus', () => extActSet('browser'));   // Aktiv-Balken: Klick in die Seite
   wc.session.setPermissionRequestHandler((c, perm, cb) => cb(perm === 'fullscreen' || perm === 'clipboard-sanitized-write'));
   wc.setWindowOpenHandler(({ url, disposition }) => {   // CC7: Links für neue Fenster → neuer Tab
     if (disposition === 'new-window' && /^https?:\/\//.test(url)) return { action: 'allow', overrideBrowserWindowOptions: { parent: bwin, autoHideMenuBar: true, width: 520, height: 720 } };   // 17.10.: Anmelde-Popups (Google/Claude …) brauchen window.opener → echtes Fenster
@@ -1010,10 +1136,12 @@ async function bmImport(src){
 // P2: Hauptfenster erfaehrt, ob das Browser-Fenster offen ist (Markierung im OmniCom-Overlay)
 function browserOpenPush(){ send({ type: 'browserOpen', open: !!(bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) }); }
 function browserPush(){ if (bwin && !bwin.isDestroyed() && bview){ bwin.webContents.send('browser:state', browserState()); bedit = ''; } }   // BM: „bearbeiten“ nur einmal schicken
+// AI2 (18.10.): nach dem Zeigen neu einpassen + neu zeichnen (ein WebContentsView, der bei verstecktem/minimiertem Fenster angehängt wurde, malt sonst nicht)
+function browserRepaint(){ [0, 80, 300].forEach(ms => setTimeout(() => { if (!bwin || bwin.isDestroyed() || !bview) return; browserLayout(); try{ bview.webContents.invalidate(); }catch(e){} }, ms)); }
 function browserLayout(){
   if (!bwin || bwin.isDestroyed() || !bview) return;
   const [w, h] = bwin.getContentSize();
-  bview.setBounds(bmanage ? { x: 0, y: h, width: 0, height: 0 } : { x: 0, y: BROWSER_BAR_H, width: w, height: Math.max(0, h - BROWSER_BAR_H) });   // BM: Verwaltung zeigt die Liste statt der Seite
+  bview.setBounds(bmanage ? { x: 0, y: h, width: 0, height: 0 } : (f => ({ x: f, y: BROWSER_BAR_H, width: w - 2 * f, height: Math.max(0, h - BROWSER_BAR_H - f) }))(S.popLook && S.popLook.eve ? 1 : 0));   /* Stil EVE: 1 px Rahmen */   // BM: Verwaltung zeigt die Liste statt der Seite
 }
 // DD5: offiziellen EVE-Launcher öffnen (Anmeldung bleibt bei CCP); fehlt er, Download-Seite
 function launchEve(){
@@ -1045,6 +1173,7 @@ function openBrowser(url){
     if (url) browserTab(url);   // CC7: neuer Tab statt die offene Seite zu ersetzen
     if (bwin.isMinimized()) bwin.restore();   // PR4
     bwin.show(); bwin.focus();
+    browserRepaint();   // AI2: neuer Tab, während das Fenster versteckt/minimiert war, blieb grau bis zum Tab-Wechsel
     return bwin;
   }
   const wa = screen.getPrimaryDisplay().workArea;
@@ -1063,9 +1192,11 @@ function openBrowser(url){
   w.on('move', remember);
   w.on('resize', () => { browserLayout(); remember(); });
   w.on('maximize', remember); w.on('unmaximize', remember);
+  w.on('focus', () => extActSet('browser')); w.webContents.on('focus', () => extActSet('browser'));
   w.webContents.on('will-navigate', ev => ev.preventDefault());
   w.on('closed', () => { const tabs = btabs; if (bwin === w){ bwin = null; bview = null; btabs = []; bact = 0; } tabs.forEach(v => { try{ v.webContents.close(); }catch(e){} }); browserOpenPush(); });   // Tabs bleiben in S.browser.tabs gemerkt
   ['show', 'hide', 'minimize', 'restore'].forEach(e => w.on(e, browserOpenPush));
+  w.on('show', browserRepaint); w.on('restore', browserRepaint);   // AI2
   w.once('ready-to-show', () => { if (S.browser.max) w.maximize(); w.show(); browserLayout(); browserPush(); });
   w.loadFile(path.join(__dirname, 'browser.html'));
   // CC7: gemerkte Tabs wieder öffnen (alte Einstellungen: nur die letzte Seite)
@@ -1774,6 +1905,7 @@ function startClipWatch(){
 function showView(id){
   if (!VIEWS[id]) return;
   if (!(S.windows[id] && S.windows[id].open)){ S.windows[id] = Object.assign({}, S.windows[id], { open: true }); saveSettings(); pushSettings(); updateTray(); }
+  if (stackHidden(id)){ stackShow(id); return; }   // AK: Reiter nach vorn holen
   const w = openSat(id, true);
   if (w && !w.isDestroyed() && !w.isVisible() && w.webContents && !w.webContents.isLoading()) w.showInactive();
 }
@@ -1826,13 +1958,13 @@ function discordLook(){
   dcBarPush();
 }
 // SS2 (15.10.2026): Leiste wie die Overlay-Fenster – Knöpfe zeigen Durchklicken / Vordergrund / Sperre
-function dcBarPush(){ if (dwin && !dwin.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock } }); } }
+function dcBarPush(){ if (dwin && !dwin.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock }, look: S.popLook || null, act: extAct === 'discord' ? (S.ovMark ?? 'full') : '' }); } }   // AN2: look
 function dcSet(p){ S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); }
 // AG2 (18.10.): Discord wie ein Overlay skaliert (Overlay-Skalierung der Seite × eigener Zoom per Strg + Mausrad, gemerkt in windows.discord.zoom)
 function dcZoom(){ if (!dview) return; const z = Math.max(0.3, Math.min(4, (Number(S.ovScale) || 1) * (Number((S.windows.discord || {}).zoom) || 1))); if (Math.abs(dview.webContents.getZoomFactor() - z) > 0.001) dview.webContents.setZoomFactor(z); }
 function dcZoomStep(dir){ const z0 = Number((S.windows.discord || {}).zoom) || 1; dcSet({ zoom: Math.round(Math.max(0.5, Math.min(2.5, z0 + (dir > 0 ? 0.1 : -0.1))) * 10) / 10 }); dcZoom(); }
 const DC_WHEEL_JS = "if (!window.__eoz){ window.__eoz = 1; addEventListener('wheel', function(e){ if (!e.ctrlKey) return; e.preventDefault(); console.log('__eozoom:' + (e.deltaY < 0 ? 1 : -1)); }, { passive: false, capture: true }); }";
-function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); dview.setBounds({ x: 0, y: DISCORD_BAR_H, width: w, height: Math.max(0, h - DISCORD_BAR_H) }); } }
+function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); const f = S.popLook && S.popLook.eve ? 1 : 0; dview.setBounds({ x: f, y: DISCORD_BAR_H, width: w - 2 * f, height: Math.max(0, h - DISCORD_BAR_H - f) });   /* Stil EVE: 1 px für den Rahmen */ } }
 function discordOpenPush(){ send({ type: 'discordOpen', open: !!(dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) }); }
 function discordMenu(){
   if (!dwin || dwin.isDestroyed()) return;
@@ -1876,6 +2008,7 @@ function openDiscord(){
   discordLook();
   const v = dview = new WebContentsView({ webPreferences: { partition: 'persist:discord', contextIsolation: true, nodeIntegration: false, sandbox: true } });
   const wc = v.webContents, ses = wc.session;
+  wc.on('focus', () => extActSet('discord'));   // Aktiv-Balken: Klick in den Chat
   ses.setPermissionRequestHandler((x, perm, cb) => cb(perm === 'clipboard-sanitized-write' || perm === 'fullscreen'));   // kein Mikrofon, keine Kamera, keine Meldungen
   ses.setPermissionCheckHandler((x, perm) => perm === 'clipboard-sanitized-write');
   wc.setUserAgent(wc.getUserAgent().replace(/ Electron\/\S+/, '').replace(/\) \S+\/[\d.]+ Chrome\//, ') Chrome/'));   // wie ein normaler Chrome, sonst meldet Discord „Browser nicht unterstützt“
@@ -1905,6 +2038,7 @@ function openDiscord(){
   w.on('closed', () => { if (dwin === w){ dwin = null; try{ v.webContents.close(); }catch(e){} dview = null; dcUnread = -1; send({ type: 'discordCount', n: 0 }); } discordOpenPush(); });
   ['show', 'hide', 'minimize', 'restore'].forEach(e => w.on(e, discordOpenPush));
   w.once('ready-to-show', () => { w.show(); discordLayout(); });
+  w.on('focus', () => extActSet('discord')); w.webContents.on('focus', () => extActSet('discord'));   // Aktiv-Balken
   w.loadFile(path.join(__dirname, 'discord.html'), { hash: uiLang() });
   w.webContents.on('did-finish-load', dcBarPush);   // SS2
   wc.loadURL(S.discordLast && !process.env.EVECORE_DISCORD_URL ? S.discordLast : DISCORD_URL);   // VV1: dort weiter, wo du warst
@@ -2112,7 +2246,7 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
   if (patch.windows) neoClickAt = Date.now();   // NW2: Overlay auf/zu
   if (patch.windows) neoTraceAdd('setSettings windows ' + JSON.stringify(patch.windows).slice(0, 160));
-  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'linksInBrowser', 'cycle', 'preview', 'deck', 'icColor', 'ovScale', 'popLook'];
+  const allowed = ['lang', 'splash', 'eveSaveAuto', 'alwaysOnTop', 'alwaysOnTopFull', 'transparent', 'opacity', 'opacityFull', 'clickThrough', 'hotkeys', 'autostart', 'startMain', 'eveAutoShow', 'eveAutoHide', 'closeToTray', 'taskbar', 'htmlPath', 'backup', 'windows', 'snap', 'snapEdge', 'snapGap', 'snapMatch', 'localWatch', 'overlayOnlyEve', 'linksInBrowser', 'cycle', 'preview', 'deck', 'icColor', 'ovScale', 'popLook', 'ovMark'];
   const before = { transparent: S.transparent, htmlPath: S.htmlPath, lang: S.lang };
   if ('lang' in patch) installLang = '';   // PU1: Seite hat die Installer-Sprache übernommen – Neuladen/Einzelfenster folgen ab jetzt eve-zentrale-lang-v1
   Object.keys(patch).forEach(k => {
@@ -2120,7 +2254,9 @@ ipcMain.handle('evecore:setSettings', (ev, patch) => {
     if (k === 'hotkeys' || k === 'backup' || k === 'windows' || k === 'cycle' || k === 'preview' || k === 'deck') S[k] = merge(S[k] || {}, patch[k] || {});
     else S[k] = patch[k];
   });
+  if (patch.windows) stackShare(patch.windows);   // AK3
   if (S.backup) { delete S.backup.dirEffective; }
+  if ('popLook' in patch || 'ovMark' in patch){ browserPush(); dcBarPush(); browserLayout(); discordLayout(); }   // AN2: Leisten von Browser und Discord in der Designfarbe
   if ('icColor' in patch){ S.icColor = /^#[0-9a-f]{6}$/i.test(String(S.icColor)) ? S.icColor : ''; browserPush(); Object.values(pvWins).forEach(w => { if (w && !w.isDestroyed() && w.__chk) pvChkApply(w.__chk); }); }   // MM3: Ordner-Farbe im Browser
   if ('ovScale' in patch){ S.ovScale = Math.max(0.6, Math.min(2, Number(S.ovScale) || 1)); dcZoom(); }   // AG2: Overlay-Skalierung gilt auch für Discord
   if ('opacity' in patch) S.opacity = Math.max(0.3, Math.min(1, Number(S.opacity) || 1));
@@ -2172,7 +2308,7 @@ function deckStart(){
         if (!a || typeof a.type !== 'string'){ res.writeHead(400, cors); return res.end(); }
         if (a.type === 'showMain') toggleMainFromDeck();
         else if (a.type === 'toggleAll') toggleShow();
-        else if (a.type === 'front'){ const w = sats[String(a.arg || '')]; if (w && !w.isDestroyed()){ w.showInactive(); w.moveTop(); } }   // SD-D: Knopf 3 drücken
+        else if (a.type === 'front'){ const w = sats[String(a.arg || '')]; if (stackHidden(String(a.arg || ''))) stackShow(String(a.arg)); else if (w && !w.isDestroyed()){ w.showInactive(); w.moveTop(); } }   // SD-D: Knopf 3 drücken; AK: Reiter nach vorn
         else if (a.type === 'ov' && a.arg === 'musik' && jbDeckStep()){}   // PQ3: Jukebox-Taste zu → Mini → groß → zu
         else if (a.type === 'clickThrough'){ S.clickThrough = !S.clickThrough; applyWindowState(); saveSettings(); pushSettings(); }
         else send({ type: 'satAction', view: 'deck', action: a });
@@ -2200,7 +2336,8 @@ function deckWriteLang(kind, dst){
   fs.writeFileSync(path.join(dst, 'plugin', 'config.js'), '// von EVE Omni geschrieben'+'\n' + 'window.EVEOMNI = ' + JSON.stringify({ port: c.port, key: c.key, lang: lang }) + ';'+'\n');
 }
 // Sprachwechsel in EVE Omni: installierte Plugins nachziehen (Tasten wechseln sofort, Namen in der Tasten-Software nach deren Neustart)
-function deckLangSync(){ ['dock', 'elgato'].forEach(kind => { const dst = path.join(deckBase(kind), 'plugins', DECK_ID); try{ if (fs.existsSync(path.join(dst, 'plugin'))) deckWriteLang(kind, dst); }catch(e){} }); }
+// AN3 (20.10.): nur wenn die Stream-Tasten an sind und nie aus einer Testinstanz – sonst schrieb ein Sprachwechsel dort deren Schlüssel ins echte Plugin (Mirabox „offline“, nur Neuinstallation half)
+function deckLangSync(){ if (TEST || !(S.deck && S.deck.on)) return; ['dock', 'elgato'].forEach(kind => { const dst = path.join(deckBase(kind), 'plugins', DECK_ID); try{ if (fs.existsSync(path.join(dst, 'plugin'))) deckWriteLang(kind, dst); }catch(e){} }); }
 ipcMain.handle('evecore:deckInstall', (ev, kind) => {
   const c = deckCfg(), src = path.join(__dirname, 'deck', DECK_ID);
   const base = deckBase(kind);
@@ -2228,24 +2365,31 @@ ipcMain.on('evecore:ready', ev => {
   if (sid){ ev.sender.send('evecore:cmd', { type: 'settings', settings: publicSettings() }); send({ type: 'publishSatellites', view: sid }); return; }
   pushSettings();
 });
-ipcMain.on('evecore:publishView', (ev, id, data) => { const w = sats[id]; if (w && !w.isDestroyed()) w.webContents.send('evecore:cmd', { type: 'view', data }); });
+ipcMain.on('evecore:publishView', (ev, id, data) => { const w = sats[id]; if (w && !w.isDestroyed()) w.webContents.send('evecore:cmd', { type: 'view', data }); if (data && data.html !== undefined) stackBadge(id, data.badge); });
+// AK (19.10., Nutzer): Warnzahl (gelbe Zahl im Titel) auch am hinteren Reiter – merken und an alle Fenster des Stapels geben
+const satBadges = {};
+function stackBadge(id, b){
+  b = b ? String(b) : ''; if ((satBadges[id] || '') === b) return; satBadges[id] = b;
+  const s = stackOf(id); if (s) s.ids.forEach(k => { const o = sats[k]; if (o && !o.isDestroyed()) o.webContents.send('evecore:cmd', { type: 'stackBadges', badges: satBadges }); });
+}
 // U2: Kopieren aus Overlay-Fenstern (nicht fokussierbar -> navigator.clipboard schlaegt fehl)
 ipcMain.handle('evecore:copyText', (ev, t) => { clipboard.writeText(String(t || '')); return true; });
 const neoTrace = [];   // Diagnose 07.10.: was das Programm nach einem Klick tut (geht mit nach neocom-log.txt)
-function neoTraceAdd(s){ const d = new Date(); neoTrace.push(d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0') + ' ' + s); if (neoTrace.length > 120) neoTrace.shift(); }
+function neoTraceAdd(s){ const d = new Date(); neoTrace.push(d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0') + ' ' + s); if (neoTrace.length > 400) neoTrace.shift(); }
 ipcMain.on('evecore:satAction', (ev, action) => {
   const sid = satIdOf(ev.sender); if (!sid) return;
   if (sid === 'neocom') neoClickAt = Date.now();
+  if (action && sid !== 'neocom' && action.type !== 'resize') neoTraceAdd('satAction ' + action.type + ' von ' + sid);   // AI4
   if (action && sid === 'neocom') neoTraceAdd('satAction ' + action.type + ' ' + (action.target || '') + (action.big ? ' gross' : '') + ' → Hauptfenster ' + (win && !win.isDestroyed() ? (win.webContents.isCrashed() ? 'abgestürzt' : 'da') : 'fehlt'));
   if (action && (action.type === 'openMain' || action.type === 'openSettings' || (action.type === 'jb' && /^st:/.test(action.cmd || '')))) showWin(true);   // BB1: Streaming-Player spielt in der grossen Ansicht
   send({ type: 'satAction', view: sid, action });
 });
-ipcMain.on('evecore:closeSelf', ev => { const sid = satIdOf(ev.sender); if (sid){ neoClickAt = Date.now(); closeSat(sid); } });   // NW2: auch ✕ am Overlay
+ipcMain.on('evecore:closeSelf', ev => { const sid = satIdOf(ev.sender); if (sid){ neoClickAt = Date.now(); stackCloseAll(sid); } });   // AK3: ✕ in der Leiste = ganzer Stapel   // NW2: auch ✕ am Overlay
 // T8: OmniCom hat keine Leiste mit Zahnrad – Rechtsklick auf freie Flaeche = Mini-Menue (wie Zahnrad der anderen Overlays)
 function satMenu(id){
   const w = sats[id]; if (!w || w.isDestroyed()) return;
   const cfg = S.windows[id] || {}, act = a => send({ type: 'satAction', view: id, action: a });
-  const setWin = p => { const o = {}; o[id] = p; S.windows = merge(S.windows || {}, o); saveSettings(); pushSettings(); };
+  const setWin = p => { const o = {}; o[id] = p; S.windows = merge(S.windows || {}, o); stackShare(o); saveSettings(); pushSettings(); };
   eoMenuAt([
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!cfg.lock, click: () => setWin({ lock: !cfg.lock }) },
     { label: 'Hintergrund', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2].map(a => ({ label: Math.round(a * 100) + ' %', click: () => act({ type: 'alpha', v: a }) })) },
@@ -2282,12 +2426,17 @@ function satDrag(w, phase){
   const old = selfDrags.get(w);
   if (old){ clearInterval(old.t); selfDrags.delete(w); }
   dragEnd(w);
-  if (phase !== 'start'){ if (old) snapMatch(w); return; }
+  if (phase !== 'start'){
+    const t = w.__stackT; stackHover(w, null);   // AK: über einer fremden Kopfleiste losgelassen → Reiter
+    if (t && old){ stackJoin(Object.keys(sats).find(k => sats[k] === w), t); return; }
+    if (old) snapMatch(w); return;
+  }
   if (winLocked(w)) return;
   const b0 = w.getBounds(), c0 = screen.getCursorScreenPoint(), t0 = Date.now();
   const st = { t: setInterval(() => {
     if (w.isDestroyed() || Date.now() - t0 > 60000){ clearInterval(st.t); selfDrags.delete(w); return; }
     const c = screen.getCursorScreenPoint(), b = w.getBounds();
+    stackHover(w, stackTarget(w, c));
     const nb = { x: b0.x + c.x - c0.x, y: b0.y + c.y - c0.y, width: b.width, height: b.height };
     const s = S.snap === false ? nb : dragStep(w, nb, c);
     if (s.x !== b.x || s.y !== b.y) w.setBounds({ x: s.x, y: s.y, width: b.width, height: b.height });
@@ -2295,6 +2444,11 @@ function satDrag(w, phase){
   selfDrags.set(w, st);
 }
 ipcMain.on('evecore:satDrag', (ev, phase) => { const sid = satIdOf(ev.sender); if (sid) satDrag(sats[sid], phase); });
+// AK: Reiter anklicken = nach vorn, Reiter herausziehen/„Lösen“ = eigenes Fenster (x/y = Mausposition, sonst versetzt)
+ipcMain.on('evecore:stackTab', (ev, id) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)) stackShow(id); });
+ipcMain.on('evecore:stackClose', (ev, id) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)){ neoClickAt = Date.now(); closeSat(id); } });   // AK3: ✕ am Reiter = nur diese Ansicht
+ipcMain.on('evecore:stackFront', (ev, id) => { if (stackHidden(String(id))) stackShow(String(id)); });   // AK3: OmniCom-Kachel holt den Reiter nach vorn
+ipcMain.on('evecore:stackOut', (ev, id, x, y) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)) stackOut(id, Number(x), Number(y)); });
 // Diagnose OmniCom-Linksklick (07.10.): letzte Maus-Ereignisse des OmniCom-Overlays + Zustand im Programm nach neocom-log.txt (Einstellungsordner)
 ipcMain.on('evecore:neoLog', (ev, text) => {
   if (satIdOf(ev.sender) !== 'neocom') return;

@@ -39,11 +39,12 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     // neu gezeichnet: Diagramm hängt wieder dran
     tab.remove(); tab = table(); await tick();
     assert(tab.querySelector('tr.hc-box svg'), 'nach Neuzeichnen der Liste wieder aufgeklappt');
-    // Overlays: Trades + Watchlist
+    // Overlays: Trades + Watchlist (AN1 20.10.: per CSS #ov-root ausgeblendet, nur Hauptfenster zeigt ihn)
+    assert(/#ov-root :is\(\.hc-btn, \.hc-box\)\{display:none !important\}/.test(html), 'AN1: Preisverlauf in Overlays ausgeblendet');
     const view = id => { const b = d.createElement('div'); T.ovRenderViewInto(id, b); return b; };
     const tv = view('trades');
     assert(tv.querySelector('.ov-card .hc-btn.on') && tv.querySelector('.ov-card .hc-box svg'), 'Trades-Overlay: Diagramm klappt in der Karte auf');
-    assert(view('track').querySelector('.trk-trade .hc-btn'), 'Watchlist-Overlay: Kurven-Knopf');
+    assert(view('track').querySelector('.trk-trade .hc-btn'), 'Watchlist-Overlay: Kurven-Knopf im Aufbau (gleicher Code)');
     T.trRender(); await tick();
     assert(d.querySelector('#trades-list .tr-card .hc-btn'), 'Meine Trades: Kurven-Knopf');
     // Overlay-Fenster schickt die Aktion ans Programm

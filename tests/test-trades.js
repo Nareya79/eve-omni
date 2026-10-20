@@ -132,21 +132,23 @@ function makeWindow(extra){
     // alles verkauft -> automatisch erledigt (vorher Knopf „Abschließen“)
     assert(/omplett verkauft → erledigt/.test($$('trades-status').textContent) && JSON.parse(w.localStorage.getItem('eve-zentrale-trades-v1'))[0].finalResult > 0, 'alles verkauft -> automatisch erledigt, Ergebnis gespeichert');
     assert(!$$('trades-list').querySelector('.tr-card') && $$('tsc-view-trades').textContent === 'Meine Trades', 'erledigter Trade ausgeblendet, Zähler 0');
-    $$('trades-showdone').checked = true; $$('trades-showdone').onchange(); await tick(20);
+    $$('trades-tabs').querySelector('[data-trv="done"]').click(); await tick(20);
     card = $$('trades-list').querySelector('.tr-card');
     assert(card && card.classList.contains('done') && /erledigt/.test(card.textContent), 'Erledigte zeigbar');
     assert(card.classList.contains('tr-ok') && !card.classList.contains('tr-ob'), 'U8: erledigte Kachel grün umrandet');
     // I6: erledigten Trade wieder öffnen
     [...card.querySelectorAll('button')].find(b => /Wieder öffnen/.test(b.textContent)).click(); await tick(20);
     assert($$('tsc-view-trades').textContent === 'Meine Trades (1)', 'I6: erledigter Trade wieder aktiv');
+    $$('trades-tabs').querySelector('[data-trv="active"]').click(); await tick(20);
     [...$$('trades-list').querySelector('.tr-card').querySelectorAll('button')].find(b => /Erledigt|Abschließen/.test(b.textContent)).click(); await tick(20);
     // BB10: Löschen (nur im Verlauf) → Papierkorb, ohne Nachfrage
     const del = () => [...$$('trades-list').querySelector('.tr-card').querySelectorAll('button')].find(b => /Löschen/.test(b.textContent));
+    $$('trades-tabs').querySelector('[data-trv="done"]').click(); await tick(20);
     del().click(); await tick(20);
     assert(!$$('trades-list').querySelector('.tr-card') && JSON.parse(w.localStorage.getItem('eve-zentrale-trades-v1')).length === 0 && JSON.parse(w.localStorage.getItem('eve-zentrale-trash-v1')).length === 1, 'BB10: Löschen → Papierkorb');
 
     // --- Automatisch erkannte Kaufaufträge ---
-    $$('trades-showdone').checked = false;
+    $$('trades-tabs').querySelector('[data-trv="active"]').click(); await tick(20);
     BOOK = [ ord(1002, true, 30340000, 3, 50), ord(1002, false, 39000000, 2, 50) ];
     const AUTO = Object.assign(ord(1002, true, 30350000, 4, 3), { volume_total: 4, volume_remain: 3 });
     MYORDERS = [ AUTO ];
@@ -176,13 +178,15 @@ function makeWindow(extra){
     $$('trades-refresh').click(); await tick(900);
     list = JSON.parse(w.localStorage.getItem('eve-zentrale-trades-v1')).filter(t => t.tid === 1002);
     assert(list.length === 1 && list[0].status === 'done' && list[0].cancelled, 'I6: abgebrochener Auftrag im Verlauf, nicht erneut aufgenommen');
-    $$('trades-showdone').checked = true; $$('trades-showdone').onchange(); await tick(20);
+    $$('trades-tabs').querySelector('[data-trv="done"]').click(); await tick(20);
+    assert(!$$('trades-list').querySelector('.tr-card'), 'AL3: abgebrochener nicht unter Erledigt');
+    $$('trades-tabs').querySelector('[data-trv="cancelled"]').click(); await tick(20);
     card = $$('trades-list').querySelector('.tr-card');
     assert(/abgebrochen/.test(card.textContent), 'I6: als abgebrochen markiert');
     [...card.querySelectorAll('button')].find(b => /Wieder öffnen/.test(b.textContent)).click(); await tick(20);
     assert(JSON.parse(w.localStorage.getItem('eve-zentrale-trades-v1')).find(t => t.tid === 1002).status === 'active', 'I6: abgebrochener Trade wieder aktivierbar');
+    $$('trades-tabs').querySelector('[data-trv="active"]').click(); await tick(20);
     cancel().click(); await tick(20);
-    $$('trades-showdone').checked = false; $$('trades-showdone').onchange(); await tick(20);
     // Scanner-Vorschlag + Kaufauftrag in EVE ohne Merken -> Plan wird übernommen
     BOOK = [ ord(1001, true, 99500, 50), ord(1001, false, 120300, 30), ord(1001, false, 121000, 10) ];
     MYORDERS = [];

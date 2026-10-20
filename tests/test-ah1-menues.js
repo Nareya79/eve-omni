@@ -9,7 +9,7 @@ const tick = ms => new Promise(r => setTimeout(r, ms || 80));
 (async () => {
   try{
     // main.js
-    assert(/'ovScale', 'popLook'\]/.test(main) && /payload\.look = S\.popLook \|\| null;/.test(main), 'main.js nimmt popLook an und gibt es jedem Menüfenster mit');
+    assert(/'ovScale', 'popLook', 'ovMark']/.test(main) && /payload\.look = S\.popLook \|\| null;/.test(main), 'main.js nimmt popLook an und gibt es jedem Menüfenster mit');
     assert(/if \(P\.look && P\.look\.eve\)\{ var de = document\.documentElement; de\.className = "eve";/.test(main), 'Menüfenster schaltet auf Stil EVE');
     assert(/html\.eve \.m\{background:var\(--bg,#0a1214\);border:1px solid var\(--bd,#1f2827\);border-radius:0/.test(main) && /html\.eve \.i\.on\{background:var\(--sel,#27444b\)/.test(main), 'Stil EVE: eckig, Grundfarbe, 1-px-Kante, Auswahl Akzent');
     // Seite schickt popLook (Stil EVE) bzw. null (EVE Omni)

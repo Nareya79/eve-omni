@@ -70,7 +70,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     w.localStorage.setItem('eve-zentrale-characters', JSON.stringify(tk.concat({ character_id: 222, character_name: 'Zwei' })));
     const g4 = T.hrProgress(run);
     assert(g4.bought === 100 && g4.sold === 100 && g4.phase === 'verkauft', 'M4: gekauft ' + g4.bought + ', verkauft ' + g4.sold);
-    assert(/Hauling-Läufe \(1 aktiv\)/.test($('hr-sum').textContent) && /1 Lauf aktiv/.test($('hr-list').textContent) && $('hr-list').querySelector('[data-go-track]'), 'BB11: Hauling zeigt nur den Hinweis → Watchlist');
+    assert(/Hauling-Läufe \(1 aktiv\)/.test($('hr-sum').textContent) && $('hr-list').querySelectorAll('[data-hr-card]').length === 1, 'AL7: Meine Läufe zeigt den Lauf als Karte (vorher nur Verweis → Watchlist)');
     console.log('\nALL WUENSCHE-I TESTS PASSED'); process.exit(0);
   }catch(e){ console.error(e); process.exit(1); }
 })();

@@ -24,7 +24,7 @@ function makeWindow(url, host){
     assert(nc && nc.title === 'OmniCom', 'OmniCom-Fenster bekommt seine Symbolleiste');
     const tmp = d.createElement('div'); tmp.innerHTML = nc.html;
     const ids = [...tmp.querySelectorAll('[data-neo]')].map(b => b.getAttribute('data-neo')).filter(x => x !== 'clock' && x !== 'mode');   // X3: Uhr steht davor
-    assert(ids.length === 39 && ids.indexOf('workbench') === ids.indexOf('piplan') + 1 && ids.indexOf('prod') === ids.indexOf('workbench') + 1 && ids.indexOf('game') === ids.indexOf('music') + 1 && ids.indexOf('mail') >= 0 && ids.indexOf('market') >= 0 && ids.indexOf('home') >= 0 && ids.indexOf('wormhole') >= 0 && ids.indexOf('timer') === ids.indexOf('perf') + 1 && ids.indexOf('dscan') === ids.indexOf('timer') + 1 && ids.indexOf('scanplan') === ids.indexOf('dscan') + 1 && ids.indexOf('appraisal') >= 0 && ids.indexOf('notes') >= 0 && ids.indexOf('perf') >= 0 && ids.indexOf('main') === ids.length - 3 && ids.indexOf('radar') >= 0 && ids.indexOf('pi') >= 0 && ids.indexOf('report') >= 0 && ids.indexOf('map') >= 0 && ids.indexOf('alarm') >= 0 && ids[0] === 'station' && ids.indexOf('assets') >= 0 && ids.indexOf('intel') >= 0 && ids[ids.length - 2] === 'settings' && ids[ids.length - 1] === 'quit', 'Alle Bereiche in OmniCom-Reihenfolge (mit Assets, Intel, Einstellungen): ' + ids.join());
+    assert(ids.length === 38 && ids.indexOf('fits') >= 0 && ids.indexOf('orders') < 0 && ids.indexOf('timer') < 0 && ids.indexOf('workbench') === ids.indexOf('piplan') + 1 && ids.indexOf('prod') === ids.indexOf('workbench') + 1 && ids.indexOf('game') === ids.indexOf('music') + 1 && ids.indexOf('mail') >= 0 && ids.indexOf('market') >= 0 && ids.indexOf('home') >= 0 && ids.indexOf('wormhole') >= 0 && ids.indexOf('dscan') === ids.indexOf('perf') + 1 && ids.indexOf('scanplan') === ids.indexOf('dscan') + 1 && ids.indexOf('appraisal') >= 0 && ids.indexOf('notes') >= 0 && ids.indexOf('perf') >= 0 && ids.indexOf('main') === ids.length - 3 && ids.indexOf('radar') >= 0 && ids.indexOf('pi') >= 0 && ids.indexOf('report') >= 0 && ids.indexOf('map') >= 0 && ids.indexOf('alarm') >= 0 && ids[0] === 'station' && ids.indexOf('assets') >= 0 && ids.indexOf('intel') >= 0 && ids[ids.length - 2] === 'settings' && ids[ids.length - 1] === 'quit', 'Alle Bereiche in OmniCom-Reihenfolge (mit Assets, Intel, Einstellungen; AL5: Orders steckt unter Trading): ' + ids.join());
     assert(tmp.querySelector('[data-neo="intel"] svg') && /Local Report/.test(tmp.querySelector('[data-neo="intel"]').textContent), 'Gleiche Symbole und Namen wie das OmniCom');
     assert(tmp.querySelector('[data-neo="intel"]').getAttribute('data-name') === 'Local Report' && /große Ansicht/.test(tmp.querySelector('[data-neo="settings"]').getAttribute('data-hint')), 'Jedes Symbol trägt Namen und Hinweis für den Tooltip');
     assert(!ids.includes('account'), 'Konto ist anfangs nicht im OmniCom-Overlay');
@@ -33,8 +33,8 @@ function makeWindow(url, host){
     assert(!noIcon.length && ids.includes('dscan') && ids.includes('scanplan'), 'BB12: jede Overlay-Ansicht hat ein OmniCom-Symbol (fehlt: ' + noIcon.join() + ')');
     // P2: offen-Markierung auch fuer Browser und die im grossen Fenster gezeigte Seite
     const onOf = id => { const t = d.createElement('div'); t.innerHTML = H.pub.neocom.html; return t.querySelector('[data-neo="' + id + '"]'); };
-    T.switchTab('orders'); await tick(80);
-    assert(onOf('orders').classList.contains('on') && onOf('orders').getAttribute('data-hint') === 'offen' && !onOf('station').classList.contains('on'), 'P2: offene Seite (Orders) ist markiert');
+    T.switchTab('wallet'); await tick(80);
+    assert(onOf('wallet').classList.contains('on') && onOf('wallet').getAttribute('data-hint') === 'offen' && !onOf('station').classList.contains('on'), 'P2: offene Seite (Wallet) ist markiert');   // AL5: Orders hat kein Symbol mehr
     H.cmd({ type: 'browserOpen', open: true }); await tick(80);
     assert(onOf('browser').classList.contains('on'), 'P2: Browser offen -> markiert');
     H.cmd({ type: 'browserOpen', open: false }); await tick(80);
@@ -45,14 +45,14 @@ function makeWindow(url, host){
     const o0 = ovOrder();
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neoIns', a: o0[0], b: o0[3] } }); await tick(80);
     let sw = ovOrder();
-    assert(sw.slice(0, 4).join() === [o0[1], o0[2], o0[3], o0[0]].join() && sw.slice(4).join() === o0.slice(4).join() && d.querySelector('#neocom > .neo-btn').id === 'neo-btn-' + o0[1], 'PR2: nach hinten einfügen, Rest rückt auf, hinten bleibt alles gleich');
+    assert(sw.slice(0, 4).join() === [o0[1], o0[2], o0[3], o0[0]].join() && sw.slice(4).join() === o0.slice(4).join() && d.querySelector('#neocom > .neo-btn').id === 'neo-btn-' + o0[1], 'PR2: nach hinten einfügen, Rest rückt auf, hinten bleibt alles gleich | ' + o0.slice(0,8).join() + ' → ' + sw.slice(0,8).join() + ' | erster ' + d.querySelector('#neocom > .neo-btn').id);
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neoIns', a: o0[0], b: o0[1] } }); await tick(80);
     assert(ovOrder().join() === o0.join(), 'PR2: nach vorne einfügen stellt die alte Reihenfolge wieder her');
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neoIns', a: 'station', b: 'settings' } }); await tick(80);
     assert(d.querySelector('#neocom > .neo-btn').id === 'neo-btn-station', 'T18: Einstellungen bleiben unten, zurückgetauscht');
     // Auswahl der Symbole (Einstellungen)
     const picks = [...d.querySelectorAll('#neo-order [data-neo-pick]')];
-    assert(picks.length === 39 && !picks.find(c => c.getAttribute('data-neo-pick') === 'account') && picks.find(c => c.getAttribute('data-neo-pick') === 'assets').checked, 'Einstellungen: Liste aller Symbole zum An-/Abwählen');
+    assert(picks.length === 39 && !picks.find(c => c.getAttribute('data-neo-pick') === 'orders') && !picks.find(c => c.getAttribute('data-neo-pick') === 'account') && picks.find(c => c.getAttribute('data-neo-pick') === 'assets').checked, 'Einstellungen: Liste aller Symbole zum An-/Abwählen');
     const pa = picks.find(c => c.getAttribute('data-neo-pick') === 'assets'); pa.checked = false; pa.onchange();
     // Konto gibt es im OmniCom nicht mehr (Einstellungen › Konto)
     await tick(80);
@@ -88,7 +88,7 @@ function makeWindow(url, host){
     assert(S.windows.karte.open === false, 'U6: nochmal klicken schließt das Karten-Overlay');
     // Orders -> grosse Ansicht (N6: Assets hat jetzt ein eigenes Overlay)
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neo', target: 'orders', big: false } }); await tick(100);
-    assert(H.main === 1 && $('panel-orders').classList.contains('active'), 'Orders (ohne Overlay): große Ansicht öffnet sich bei Orders');
+    assert(H.main === 1 && $('panel-station').classList.contains('active') && !$('orders-view').hidden, 'Orders (ohne Overlay): große Ansicht öffnet sich bei Orders');
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neo', target: 'haul', big: true } }); await tick(100);
     assert(H.main === 2 && $('panel-intensiv').classList.contains('active') && !(S.windows.handel && S.windows.handel.open), 'Rechtsklick auf Handel: große Handel-Suche statt Overlay');
     // Einstellungen-Symbol: 1. Klick oeffnet das Hauptfenster bei Einstellungen, 2. Klick schliesst es wieder
@@ -111,7 +111,7 @@ function makeWindow(url, host){
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neo', target: 'settings', big: false } }); await tick(100);
     assert(H.vis && H.hidden === 1, 'Dritter Klick: wieder offen');
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neo', target: 'orders', big: false } }); await tick(100);
-    assert(H.vis && H.hidden === 1 && $('panel-orders').classList.contains('active'), 'Offen bei Einstellungen, Klick auf Orders: wechselt nur den Bereich');
+    assert(H.vis && H.hidden === 1 && $('panel-station').classList.contains('active') && !$('orders-view').hidden, 'Offen bei Einstellungen, Klick auf Orders: wechselt nur den Bereich');
     // Beenden: erst rot "Wirklich?", zweiter Klick beendet
     H.cmd({ type: 'satAction', view: 'neocom', action: { type: 'neo', target: 'quit', big: false } }); await tick(80);
     const tq = d.createElement('div'); tq.innerHTML = H.pub.neocom.html;
@@ -149,9 +149,9 @@ function makeWindow(url, host){
     const lay = (wd, ht) => { Object.defineProperty(ob, 'clientWidth', { configurable: true, value: wd }); Object.defineProperty(ob, 'clientHeight', { configurable: true, value: ht }); w.dispatchEvent(new w.Event('resize'));
       const g = d.querySelector('.neo-ov'); return { cols: Number(/repeat\((\d+)/.exec(g.style.gridTemplateColumns)[1]), s: parseInt(g.style.getPropertyValue('--s'), 10) }; };
     let L1 = lay(50, 950);   // MB: + Markt, EM: + Mail, + OmniBreaker, + Workbench, + Produktion = 40 Symbole mit Uhr
-    assert(L1.cols === 1 && L1.s >= 20 && L1.s * 40 + 39 * 3 <= 950, 'Schmal und hoch: eine Spalte, alle 40 Symbole (mit Uhr) passen (' + L1.s + ' px)');
+    assert(L1.cols === 1 && L1.s >= 20 && L1.s * 39 + 38 * 3 <= 950, 'Schmal und hoch: eine Spalte, alle 39 Symbole (mit Uhr) passen (' + L1.s + ' px)');
     L1 = lay(740, 40);
-    assert(L1.cols === 40 && L1.s * 40 <= 740, 'Breit und flach: eine Reihe (' + L1.cols + ' x ' + L1.s + ')');
+    assert(L1.cols === 39 && L1.s * 39 <= 740, 'Breit und flach: eine Reihe (' + L1.cols + ' x ' + L1.s + ')');
     L1 = lay(300, 300);
     assert(L1.cols >= 4 && L1.cols <= 7 && L1.s >= 38, 'Quadratisch: Raster mit ' + L1.cols + ' Spalten, große Symbole (' + L1.s + ' px)');
     L1 = lay(130, 540);

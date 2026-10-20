@@ -64,15 +64,15 @@ const w = new JSDOM(html, { runScripts:'dangerously', url:'https://claude.ai/art
     // Vergleich im großen Fenster
     await T.asAction({ type: 'asFitCmp', arg: '7' }); await tick(400);
     let D = JSON.parse(w.localStorage.getItem('eve-zentrale-fitcmp-v1'));
-    assert(D.a === EFT && D.last && D.last.A && !D.last.B && JSON.parse(w.localStorage.getItem('eve-zentrale-assetview-v1')).tab === 'fit', 'AA12: ⤢ übernimmt das Fitting als A und öffnet Assets › Fittings');
+    assert(D.a === EFT && D.last && D.last.A && !D.last.B && JSON.parse(w.localStorage.getItem('eve-zentrale-assetview-v1')).ft === 'fit', 'AA12/AL9: ⤢ übernimmt das Fitting als A und öffnet Fittings › Meine Fittings');
     const B = '[Drake, Speed]\nNanofiber Internal Structure II\nNanofiber Internal Structure II\nNanofiber Internal Structure II';
     await T.asAction({ type: 'asFcGo', form: { fca: EFT, fcb: B, fcas: '', fcbs: '', fccid: '' } }); await tick(400);
     D = JSON.parse(w.localStorage.getItem('eve-zentrale-fitcmp-v1'));
     assert(D.last.A && D.last.B && D.last.B.speed > D.last.A.speed && D.last.B.ehp < D.last.A.ehp, 'AA12: B schneller, A mehr EHP');
     assert(near(D.last.A.price, 50e6 + 5 * 1e6) && near(D.last.A.ins, 35e6) && near(D.last.A.loss, D.last.A.price - 35e6) && D.last.A.insLv === 'Platin', 'AA12: Kaufpreis Jita (AA2), beste Versicherung (AA10), Verlust netto');
-    const pg = $('as-body'); T.switchTab('assets'); T.asPageRender();
+    const pg = $('fits-page'); $('neo-btn-fits').click();   // AL9: eigener Bereich Fittings
     const t = pg.querySelector('.fc-t');
-    assert(t && pg.querySelector('textarea[data-ovf="fca"]') && pg.querySelector('[data-ova="asTab"][data-arg="fit"][aria-pressed="true"]'), 'AA12: Reiter Fittings mit zwei Feldern im großen Fenster');
+    assert(t && pg.querySelector('textarea[data-ovf="fca"]') && pg.querySelector('[data-ova="fitTab"][data-arg="fit"][aria-selected="true"]'), 'AA12/AL9: Fittings › Meine Fittings mit zwei Feldern im großen Fenster');
     const row = n => [...t.querySelectorAll('tr')].find(r => r.children[0].textContent.indexOf(n) === 0);
     assert(row('Geschwindigkeit').children[3].className === 'pos' && row('EHP').children[3].className === 'neg' && row('Ausrichtzeit').children[3].className === 'pos', 'AA12: B − A farbig (grün besser, rot schlechter, Ausrichtzeit kleiner = besser)');
     assert(pg.querySelector('select[data-ovf="fcas"] option[value="7"]'), 'AA12: Schiffe aus den Assets wählbar');

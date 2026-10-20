@@ -43,7 +43,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
   // NX3: Funktionsliste unter Einstellungen › Funktionen, Suche, Klick öffnet die Seite
   d.querySelector('[data-set="features"]').click(); await tick(100);
   { const rows = d.querySelectorAll('#fx-list .fx-r'); const q = d.getElementById('fx-q');
-    q.value = 'beenden'; q.dispatchEvent(new w.Event('input')); const hit = d.querySelectorAll('#fx-list .fx-r');
+    q.value = 'Clients beenden'; q.dispatchEvent(new w.Event('input')); const hit = d.querySelectorAll('#fx-list .fx-r');
     assert(rows.length >= 50 && hit.length === 1 && /EVE-Clients beenden/.test(hit[0].textContent), 'NX3: Funktionsliste mit Suche (' + rows.length + ')');
     q.value = 'Marktbrowser'; q.dispatchEvent(new w.Event('input')); d.querySelector('#fx-list .fx-r').click(); await tick(100);
     assert(d.getElementById('panel-market').classList.contains('active'), 'NX3: Klick öffnet die Seite'); }

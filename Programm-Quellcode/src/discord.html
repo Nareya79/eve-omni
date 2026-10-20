@@ -2,22 +2,41 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
 <title>EVE Omni – Discord</title>
 <style>
   /* DC: schmale Leiste über dem Discord-Chat – ziehen = verschieben. SS2 (15.10.2026): aufgebaut wie die Titelleiste der Overlay-Fenster
      (links ⟳, Mitte Symbol + Titel, rechts ⌗ 📌 ⚙ 🔓, dazu ⤡ Größe – ✕); ⚙ öffnet das Fenster-Menü (vorher ☰). */
   *{box-sizing:border-box}
-  html,body{margin:0;height:26px;overflow:hidden;background:#101215;color:#c8d2dc;font:12px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
-  .row{position:relative;display:flex;align-items:center;gap:1px;height:26px;padding:0 3px;background:rgba(255,255,255,.035);border-bottom:1px solid rgba(255,255,255,.07)}
+  html,body{margin:0;height:26px;overflow:hidden;background:var(--lk-bg,#101215);color:var(--lk-tx,#c8d2dc);font:12px "Segoe UI",system-ui,sans-serif;user-select:none;-webkit-app-region:drag}
+  .row{position:relative;display:flex;align-items:center;gap:1px;height:26px;padding:0 3px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--lk-bd,rgba(255,255,255,.07))}
   .sp{flex:1}
-  .t{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;letter-spacing:.02em;color:#e6edf3;white-space:nowrap;pointer-events:none}
+  .t{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--lk-tx,#e6edf3);white-space:nowrap;pointer-events:none}
   .t svg{width:16px;height:16px;flex:none;filter:drop-shadow(0 0 3px rgba(88,101,242,.6))}
   button{-webkit-app-region:no-drag;display:inline-grid;place-items:center;width:23px;height:22px;padding:0;border:0;border-radius:0;background:none;color:rgba(255,255,255,.5);cursor:pointer;font:inherit;font-size:13px}
   button:hover{color:#fff;background:rgba(255,255,255,.09)}
-  button[aria-pressed="true"]{color:#fff;background:rgba(255,255,255,.13)}
+  button[aria-pressed="true"]{color:#fff;background:var(--lk-sel,rgba(255,255,255,.13));box-shadow:inset 0 -2px 0 var(--lk-ac,transparent)}
   #close:hover{background:#7a1f1f}
   #grip{cursor:nwse-resize;touch-action:none}
+  /* Aktiv-Balken (20.10.): zuletzt angeklickt = aktiv wie die Overlays (Einstellung „Aktives Overlay“: full = Leiste getönt + Kante, bg = nur getönt) */
+  html[data-act] .row{background-image:linear-gradient(color-mix(in srgb, var(--lk-ac,#4fa3d1) 16%, transparent), color-mix(in srgb, var(--lk-ac,#4fa3d1) 6%, transparent))}
+  html[data-act="full"] .row{box-shadow:inset 0 2px 0 color-mix(in srgb, var(--lk-ac,#4fa3d1) 75%, transparent)}
+  /* EVE-Stil wie die Overlay-Fenster (20.10., Nutzer): 1-px-Rahmen ums ganze Fenster, Leiste wie .ov-bar, Symbole ⋮ Schloss — ✕ als Masken (aus EVE-Omni.html) */
+  /* Rahmen (20.10.): vier 1-px-Streifen an den Fensterkanten – nichts über Seite/Leiste (große Flächen dort = Zieh-/Sperrfläche, Hintergrund bleibt für durchsichtiges Discord) */
+  html.eve::before, html.eve::after, html.eve body::before, html.eve body::after{content:"";position:fixed;background:color-mix(in srgb, #fff 13%, var(--lk-bg,#090b0e));pointer-events:none;z-index:99}
+  html.eve::before{left:0;right:0;top:0;height:1px} html.eve::after{left:0;right:0;bottom:0;height:1px}
+  html.eve body::before{left:0;top:0;bottom:0;width:1px} html.eve body::after{right:0;top:0;bottom:0;width:1px}
+  html.eve .row{background-color:rgba(255,255,255,.035);border-bottom:1px solid rgba(255,255,255,.07)}
+  html.eve[data-act="full"]::before{background:color-mix(in srgb, var(--lk-ac,#4fa3d1) 65%, var(--lk-bg,#090b0e))}
+  html.eve button.eic{font-size:0;color:rgba(255,255,255,.72);background:none;border:0;border-radius:0;width:23px;height:22px;min-width:0;padding:0;display:inline-grid;place-items:center}
+  html.eve button.eic::before{content:"";width:13px;height:13px;background:currentColor;-webkit-mask:var(--eic) center/contain no-repeat;mask:var(--eic) center/contain no-repeat}
+  html.eve button.eic:hover{color:#fff;background:rgba(255,255,255,.09)}
+  html.eve #menu{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20x%3D%226.75%22%20y%3D%222%22%20width%3D%222.5%22%20height%3D%222.5%22%2F%3E%3Crect%20x%3D%226.75%22%20y%3D%226.75%22%20width%3D%222.5%22%20height%3D%222.5%22%2F%3E%3Crect%20x%3D%226.75%22%20y%3D%2211.5%22%20width%3D%222.5%22%20height%3D%222.5%22%2F%3E%3C%2Fsvg%3E")}
+  html.eve #min{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%2210%22%20height%3D%222%22%2F%3E%3C%2Fsvg%3E")}
+  html.eve #close{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.6%203.6l8.8%208.8M12.4%203.6l-8.8%208.8%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22square%22%2F%3E%3C%2Fsvg%3E")}
+  html.eve #close:hover{background:#7a1f1f}
+  html.eve #lock{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%207.5V5.2a3%203%200%200%201%205.6-1.5%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%227.2%22%20width%3D%2210%22%20height%3D%227.3%22%20rx%3D%22.6%22%2F%3E%3C%2Fsvg%3E")}
+  html.eve #lock.on, html.eve #lock[aria-pressed="true"]{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%207.5V5.2a3%203%200%200%201%206%200v2.3%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%227.2%22%20width%3D%2210%22%20height%3D%227.3%22%20rx%3D%22.6%22%2F%3E%3C%2Fsvg%3E");color:#fff;background:rgba(255,255,255,.14)}
   .sep{width:1px;height:14px;margin:0 3px;background:rgba(255,255,255,.1)}
 </style>
 </head>
@@ -28,12 +47,12 @@
   <span class="sp"></span>
   <button id="ct" title="Durchklicken ein/aus (Mausklicks gehen auf EVE) – ausschalten: Einstellungen › Programm" aria-pressed="false">&#x2317;</button>
   <button id="top" title="Immer im Vordergrund ein/aus" aria-pressed="false">&#x1F4CC;&#xFE0E;</button>
-  <button id="menu" title="Fenster-Optionen: Deckkraft, Hintergrund, Abmelden">&#x2699;&#xFE0E;</button>
-  <button id="lock" title="Position und Größe sperren" aria-pressed="false">&#x1F513;&#xFE0E;</button>
+  <button id="menu" class="eic" title="Fenster-Optionen: Deckkraft, Hintergrund, Abmelden">&#x2699;&#xFE0E;</button>
+  <button id="lock" class="eic" title="Position und Größe sperren" aria-pressed="false">&#x1F513;&#xFE0E;</button>
   <span class="sep"></span>
   <button id="grip" title="Größe ändern: ziehen">&#x2921;</button>
-  <button id="min" title="Minimieren">&#x2013;</button>
-  <button id="close" title="Schließen (Discord läuft weiter)">&#x2715;</button>
+  <button id="min" class="eic" title="Minimieren">&#x2013;</button>
+  <button id="close" class="eic" title="Schließen (Discord läuft weiter)">&#x2715;</button>
 </div>
 <script>
   ["reload", "menu", "min", "close", "ct", "top", "lock"].forEach(function(id){ document.getElementById(id).onclick = function(){ browserHost.cmd(id); }; });
@@ -44,10 +63,11 @@
     g.onpointerup = g.onpointercancel = function(){ d = null; }; })();
   var EN = /^en/.test(location.hash.slice(1));
   // SS2: Zustand der Knöpfe vom Programm (main.js dcBarPush)
-  if (window.browserHost && browserHost.onState) browserHost.onState(function(st){ var c = st && st.dc; if (!c) return;
+  function lookApply(k){ document.documentElement.classList.toggle("eve", !!(k && k.eve)); if (!k) return; var r = document.documentElement.style; [["bg", k.bg], ["bd", k.bd], ["sel", k.sel], ["ac", k.ac], ["tx", k.tx]].forEach(function(x){ if (x[1]) r.setProperty("--lk-" + x[0], x[1]); }); }   // AN2: Designfarben (popLook) wie die Overlays
+  if (window.browserHost && browserHost.onState) browserHost.onState(function(st){ lookApply(st && st.look); var ACT = st && st.act; document.documentElement.toggleAttribute("data-act", !!ACT); if (ACT) document.documentElement.setAttribute("data-act", ACT); var c = st && st.dc; if (!c) return;
     document.getElementById("ct").setAttribute("aria-pressed", String(!!c.ct));
     document.getElementById("top").setAttribute("aria-pressed", String(!!c.top));
-    var l = document.getElementById("lock"); l.setAttribute("aria-pressed", String(!!c.lock)); l.innerHTML = c.lock ? "&#x1F512;&#xFE0E;" : "&#x1F513;&#xFE0E;";
+    var l = document.getElementById("lock"); l.setAttribute("aria-pressed", String(!!c.lock)); l.innerHTML = c.lock ? "&#x1F512;&#xFE0E;" : "&#x1F513;&#xFE0E;";   /* Stil EVE: Maske je aria-pressed */
     l.title = c.lock ? (EN ? "Locked – click to unlock" : "Gesperrt – Klick gibt Position und Größe frei") : (EN ? "Lock position and size" : "Position und Größe sperren");
     document.getElementById("grip").disabled = !!c.lock;
   });

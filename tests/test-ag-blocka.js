@@ -27,7 +27,7 @@ try{
   const j = html.indexOf('function ovPfB(n)'), pf = html.slice(j, html.indexOf('\n', j));
   const ovPfB = new Function('ovSigned', pf + ';return ovPfB;')(n => (n >= 0 ? '+' : '') + n);
   assert(ovPfB(5) === '<b class="ov-pf">+5</b>' && ovPfB(-3) === '<b class="ov-ls">-3</b>' && ovPfB(0) === '<b class="">+0</b>', 'AG8: Gewinn grün, Verlust rot, 0 neutral');
-  assert((html.match(/" \+ ovPfB\(/g) || []).length >= 17 && !/<b>" \+ ovSigned\(/.test(html), 'AG8: alle fetten Gewinnzahlen in Ergebniszeilen über ovPfB');
+  assert((html.match(/ovPfB\(/g) || []).length >= 18 && !/<b>" \+ ovSigned\(/.test(html), 'AG8: alle fetten Gewinnzahlen in Ergebniszeilen über ovPfB');
   assert(/#ov-root b\.ov-pf, \.ov-pf\{color:var\(--profit\)\}/.test(html), 'AG8: Farbe = Gewinnfarbe des Schemas');
   console.log('\nALL AG BLOCK A TESTS PASSED');
 }catch(e){ console.error(e); process.exit(1); }
