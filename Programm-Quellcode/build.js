@@ -41,7 +41,7 @@ vi.setFileVersion(v[0], v[1], v[2], 0, 1033);
 vi.setProductVersion(v[0], v[1], v[2], 0, 1033);
 vi.setStringValues({ lang: 1033, codepage: 1200 }, {
   FileDescription: 'EVE Omni', ProductName: 'EVE Omni', CompanyName: 'EVE Omni (privat)', InternalName: 'EVE Omni',
-  OriginalFilename: 'EVE-Omni.exe', LegalCopyright: 'Privates Werkzeug für EVE Online. Enthält Electron (MIT) und Chromium.',
+  OriginalFilename: 'EVE-Omni.exe', LegalCopyright: 'Privates Tool für EVE Online. Enthält Electron (MIT) und Chromium.',
   FileVersion: VERSION, ProductVersion: VERSION
 });
 vi.outputToResourceEntries(res.entries);

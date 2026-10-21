@@ -37,7 +37,7 @@
 - **Klick auf eine Vorschau** holt den Client nach vorne; ein goldener Rahmen zeigt den aktiven.
 - **Fair Play:** ein Tastendruck wechselt ein Fenster. EVE Omni sendet nie Tasten oder Klicks ans Spiel und verteilt nie Eingaben auf mehrere Clients.
 
-### 🪟 Overlay im Spiel – deine Werkzeuge direkt über EVE
+### 🪟 Overlay im Spiel – deine Tools direkt über EVE
 - Kleine, durchsichtige Fenster, die über dem Spiel schweben – nur solange EVE vorne ist.
 - Ansichten: Trades · Hauling · Watchlist · Handel · Wallet · Assets · Fittings · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
 - Ein kompaktes Fenster oder jede Ansicht als eigenes Fenster, rastet am Bildschirmrand ein; Deckkraft je Fenster, Position sperren, automatisch ausblenden.

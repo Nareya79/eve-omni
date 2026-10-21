@@ -1774,7 +1774,7 @@ const kf = { on: false, seq: null, timer: null, busy: false };
 const KF_BASE = 'https://r2z2.zkillboard.com/ephemeral/';
 function kfStatus(t){ send({ type: 'killfeed', status: t }); }
 async function kfGet(url){
-  const r = await fetch(url, { headers: { 'User-Agent': 'EVE Omni (privates EVE-Werkzeug, Electron)', 'Accept': 'application/json' }, cache: 'no-store' });
+  const r = await fetch(url, { headers: { 'User-Agent': 'EVE Omni (privates EVE-Tool, Electron)', 'Accept': 'application/json' }, cache: 'no-store' });
   return { status: r.status, ok: r.ok, json: r.ok ? await r.json() : null };
 }
 async function kfLoop(){
