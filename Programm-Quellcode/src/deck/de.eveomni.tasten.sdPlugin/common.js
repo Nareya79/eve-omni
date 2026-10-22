@@ -1,6 +1,6 @@
 /* SD-C: Listen für Plugin und Einstellungsfenster (eine Stelle). [id, Text, Symbol, drücken-Standard] */
 window.EO = {
-  VIEWS: [["trades", "Trades"], ["track", "Watchlist"], ["route", "Navigation"], ["karte", "Karte"], ["radar", "Radar"], ["dscan", "D-Scan"], ["uhr", "Uhr & Timer"], ["mining", "Mining"],
+  VIEWS: [["trades", "Trades"], ["track", "Watchlist"], ["route", "Navigation"], ["karte", "Karte"], ["radar", "Radar"], ["dscan", "D-Scan"], ["sound", "Sound"], ["uhr", "Uhr & Timer"], ["mining", "Mining"],
     ["skills", "Skills"], ["wallet", "Wallet"], ["handel", "Handel"], ["local", "Local Report"], ["musik", "Jukebox"], ["notiz", "Notizen"], ["assets", "Assets"], ["industrie", "Industrie"],
     ["appraisal", "Wertschätzer"], ["courier", "Kurier"], ["chars", "Charaktere"], ["pi", "Planeten"], ["alarm", "Alert"], ["gangreport", "Gang-Report"], ["leistung", "Leistung"], ["scanner", "Scanner-Plan"]],
   // Aktionen: Befehl an EVE Omni; open = Overlay dazu öffnen (Ergebnis sehen)
@@ -19,7 +19,10 @@ window.EO = {
     ["dt", "Downtime-Alarm an/aus", "uhr", { type: "tmDt" }],
     ["jbToggle", "Jukebox Play/Pause", "musik", { type: "jb", cmd: "toggle" }],
     ["jbNext", "Jukebox weiter", "musik", { type: "jb", cmd: "next" }],
-    ["jbPrev", "Jukebox zurück", "musik", { type: "jb", cmd: "prev" }]
+    ["jbPrev", "Jukebox zurück", "musik", { type: "jb", cmd: "prev" }],
+    ["sndMute", "Sound: alle stumm / Ton an", "sound", { type: "sndAllMute" }],   // AO1
+    ["sndUp", "Sound: vorderer Client lauter", "sound", { type: "sndUp" }],
+    ["sndDown", "Sound: vorderer Client leiser", "sound", { type: "sndDown" }]
   ],
   // Anzeigen: [id, Text, Symbol, Overlay beim Drücken (Standard), Charakter wählbar]
   SHOWS: [

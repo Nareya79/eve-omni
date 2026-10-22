@@ -51,6 +51,9 @@ def main():
     if not arg('--src'): subprocess.run([sys.executable, str(R / 'Programm-Quellcode/paket-neu.py'), v], cwd=R, check=True)
     app_v = json.loads((SRC / 'resources/app/package.json').read_text(encoding='utf-8'))['version']
     if app_v != v: raise SystemExit('Programm-Version ' + app_v + ' ≠ ' + v + ' – package.json nach Programm-Download kopieren')
+    # AU3: exe trägt Symbol + Version aus src/icon.ico (Programm-Download behielt sonst das alte Symbol B von 03.10.)
+    if subprocess.call(['node', str(R / 'tools/exe-symbol.js'), str(SRC / 'EVE-Omni.exe'), str(R / 'Programm-Quellcode/src/icon.ico'), v]) != 0:
+        raise SystemExit('EVE-Omni.exe: Symbol/Version nicht gesetzt – siehe oben')
     if out.exists(): shutil.rmtree(out)
     out.mkdir(parents=True)
     # 2) portable ZIP (ohne alte exe-Reste)
@@ -104,6 +107,13 @@ def main():
             c3 = 'EVE Omni/EVE-Omni.exe' in n and pv == v and 'EVE Omni/resources/app/evecore/EVE-Omni.html' in n and not any(x.endswith('.alt') for x in n)
         say(('  OK    ' if c3 else '  FEHLER ') + 'portable ZIP (exe, Version ' + pv + ', HTML)')
         ok = ok and c3
+        # AU3: Symbol der exe im fertigen Paket nachprüfen
+        tz = Path(tempfile.mkdtemp(prefix='eveomni-exe-'))
+        try:
+            with zipfile.ZipFile(pz) as z: z.extract('EVE Omni/EVE-Omni.exe', tz)
+            ok = subprocess.call(['node', str(R / 'tools/exe-symbol.js'), str(tz / 'EVE Omni/EVE-Omni.exe'), str(R / 'Programm-Quellcode/src/icon.ico'), v, '--pruefen']) == 0 and ok
+        finally:
+            shutil.rmtree(tz, ignore_errors=True)
     ok = pruefen(out, v) and ok
     # 7) Englisch-Check (4.0.73, Meldung „almost 50% German“): ganzes Programm im EN-Modus + Tray/Menüs/Dialoge aus main.js
     say('\nEnglisch-Check:')

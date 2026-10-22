@@ -7,7 +7,7 @@ assert(!/Menu\.buildFromTemplate|dialog\.showMessageBox/.test(bs), 'F: Browser o
 assert((main.match(/eoMenu\(bwin/g) || []).length === 5 && (main.match(/eoAsk\(bwin/g) || []).length === 5, 'F: 5 Menüs + 5 Rückfragen im EVE-Omni-Stil');
 const js = /const EO_POP_JS = `([\s\S]*?)`;/.exec(main)[1];
 new Function(js); ok++;
-assert(/function eoConv\(tpl, fns\)\{[\s\S]*?return conv\(tMenu\(tpl\)\);/.test(main) && /function eoMenu\(parent, tpl\)\{\s*const fns = \{\}, items = eoConv\(tpl, fns\)/.test(main) && /function eoAsk\(parent, o\)\{\s*o = tDlg\(o\);/.test(main), 'F: Texte DE/EN wie bei den Windows-Menüs');
+assert(/function eoConv\(tpl, fns\)\{[\s\S]*?return conv\(tMenu\(tpl\)\);/.test(main) && /function eoMenu\(parent, tpl\)\{\s*const fns = \{\}, items = eoConv\(tpl, fns\)/.test(main) && /function eoAskP\(o\)\{\s*o = tDlg\(o\);/.test(main) && /function eoAsk\(parent, o\)\{\s*const p = eoAskP\(o\);/.test(main), 'F: Texte DE/EN wie bei den Windows-Menüs');
 assert(!/📁/.test(main) && !/📁/.test(br) && br.indexOf('var FOLDER_SVG = ') > 0, 'F: Ordner-Symbol statt 📁');
 assert(br.indexOf('"Neuer Ordner": "New folder"') > 0, 'F: Neuer Ordner auf Englisch');
 // MM2b

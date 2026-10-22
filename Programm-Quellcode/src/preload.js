@@ -53,7 +53,8 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   popMenu: items => ipcRenderer.invoke('evecore:popMenu', items),   // AH2
   satDrag: phase => ipcRenderer.send('evecore:satDrag', String(phase)),
   stackTab: id => ipcRenderer.send('evecore:stackTab', String(id)),   // AK
-  stackOut: (id, x, y) => ipcRenderer.send('evecore:stackOut', String(id), Number(x), Number(y)),
+  stackOut: (id, x, y, drag) => ipcRenderer.send('evecore:stackOut', String(id), Number(x), Number(y), !!drag),
+  stackOutEnd: id => ipcRenderer.send('evecore:stackOutEnd', String(id)),   // AS
   stackClose: id => ipcRenderer.send('evecore:stackClose', String(id)),   // AK3
   stackFront: id => ipcRenderer.send('evecore:stackFront', String(id)),
   neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose OmniCom-Linksklick (07.10.)
@@ -69,7 +70,9 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   showView: id => ipcRenderer.send('evecore:showView', String(id)),
   openBrowser: url => ipcRenderer.send('evecore:openBrowser', url ? String(url) : ''),
   launchEve: () => ipcRenderer.send('evecore:launchEve'),   // DD5
-  quitEve: () => ipcRenderer.send('evecore:quitEve'),   // FF5
+  quitEve: () => ipcRenderer.send('evecore:quitEve'),
+  ask: o => ipcRenderer.invoke('evecore:ask', o),   // AT: Rückfrage im Design   // FF5
+  restartApp: () => ipcRenderer.send('evecore:restart'),
   toggleBrowser: () => ipcRenderer.send('evecore:toggleBrowser'),
   toggleDiscord: () => ipcRenderer.send('evecore:toggleDiscord'),   // DC
   showMain: () => ipcRenderer.send('evecore:showMain'),

@@ -61,7 +61,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     assert(T.jbxTracks()[T.getJbxIdx()].url === playing, 'laufender Titel bleibt erhalten');
     click(ck(0)); $('jb-sel-none').click();
     assert($('jb-selbar').hidden && !$('jb-list').querySelector('.jb-sel'), 'Auswahl aufheben');
-    click(ck(0)); $('jb-sel-del').click();
+    click(ck(0)); $('jb-sel-del').click(); await tick();   // AT: Rückfrage ist jetzt asynchron
     assert(asked === 1 && !(store().lists || []).length, 'Playlist löschen mit Rückfrage');
     console.log('\nALL JB-MEHRFACH TESTS PASSED'); process.exit(0);
   }catch(e){ console.error(e); process.exit(1); }

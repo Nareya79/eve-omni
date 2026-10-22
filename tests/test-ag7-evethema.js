@@ -18,7 +18,7 @@ const tick = ms => new Promise(r => setTimeout(r, ms || 80));
     const m = new Function('fs', 'path', main.slice(i, j) + '\nreturn eveThemes;')(fs, path)();
     process.env.LOCALAPPDATA = old; fs.rmSync(tmp, { recursive: true, force: true });
     assert(m['111'] === 'Amarr' && m['222'] === 'Gallente' && Object.keys(m).length === 2, 'je Charakter die neueste Datei aus allen Profilordnern (111 Amarr statt Caldari), core_user/leere ignoriert');
-    assert(/if \(eve && fg\.lastEve !== fg\.hwnd\)\{ fg\.lastEve = fg\.hwnd; const fc = fg\.clients\.find\(c => c\.hwnd === fg\.hwnd\); if \(fc && fc\.name\) send\(\{ type: 'eveFront', name: fc\.name \}\); \}/.test(main), 'main.js meldet den Wechsel des vorderen Clients');
+    assert(/if \(eve && fg\.lastEve !== fg\.hwnd\)\{ fg\.lastEve = fg\.hwnd; const fc = fg\.clients\.find\(c => c\.hwnd === fg\.hwnd\); if \(fc && fc\.name\) send\(\{ type: 'eveFront', name: fc\.name \}\); sndApply\(\); pushSettingsSoon\(\); \}/.test(main), 'main.js meldet den Wechsel des vorderen Clients');
     assert(/ipcMain\.handle\('evecore:eveThemes', \(\) => eveThemes\(\)\)/.test(main) && /eveThemes: \(\) => ipcRenderer\.invoke\('evecore:eveThemes'\)/.test(fs.readFileSync('/home/claude/preload.js', 'utf-8')), 'IPC + preload');
 
     // Seite

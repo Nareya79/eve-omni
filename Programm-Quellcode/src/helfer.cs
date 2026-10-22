@@ -12,6 +12,9 @@
 //   ORDER <name>\t<name>...        gewuenschte Reihenfolge (Charakternamen)
 //   SKIP <name>\t<name>...         LL6: diese Clients beim Umschalten auslassen (Vorschau-Haken aus)
 //   ACTIVATE <hwnd>                 diesen EVE-Client nach vorne holen (nur bekannte EVE-Fenster)
+//   VOL <hwnd> <0..100> <stumm 0|1>  AO1: Windows-Lautstärke des EVE-Prozesses zu diesem Fenster (wie Lautstärkemixer);
+//                                   gemerkt und alle 2 s erneut gesetzt (Windows legt die Ton-Sitzung erst beim ersten Ton an)
+//   VOLOFF                          AO1: alles gemerkte zurück auf 100 %, nicht stumm, und vergessen
 // Mods: 1 = Strg, 2 = Umschalt, 4 = Alt, 8 = Win
 using System;
 using System.Collections.Generic;
@@ -239,6 +242,17 @@ public static class EcFg {
     }
     if (p[0] == "ORDER"){ string[] o = ParseOrder(l); lock (L){ order = o; ring = Arrange(clients, order, skipLogin, skipNames); } return; }
     if (p[0] == "SKIP"){ string[] o = ParseOrder(l); lock (L){ skipNames = o; ring = Arrange(clients, order, skipLogin, skipNames); } return; }   // LL6
+    if (p.Length == 4 && p[0] == "VOL"){   // AO1
+      long h; int lv; if (!long.TryParse(p[1], out h) || !int.TryParse(p[2], out lv)) return;
+      uint pid; GetWindowThreadProcessId(new IntPtr(h), out pid); if (pid == 0 || ProcName(pid) != "exefile") return;
+      lock (volWant){ volLvl[pid] = Math.Max(0, Math.Min(100, lv)); volWant[pid] = p[3] == "1" ? -1 : volLvl[pid]; }
+      VolTick(); return;
+    }
+    if (p[0] == "VOLOFF"){
+      Dictionary<uint, int> w0 = new Dictionary<uint, int>(), l0 = new Dictionary<uint, int>();
+      lock (volWant){ foreach (uint k in volWant.Keys){ w0[k] = 100; l0[k] = 100; } volWant.Clear(); volLvl.Clear(); }
+      try{ VolApply(w0, l0); }catch{} return;
+    }
     if (p.Length == 2 && p[0] == "ACTIVATE"){
       long h; if (!long.TryParse(p[1], out h)) return;
       QueueActivate(h);
@@ -265,6 +279,58 @@ public static class EcFg {
     if (known) wake.Set();
   }
   public static void Report(string s){ Out(s); }
+
+  // ---------- AO1: Lautstärke je EVE-Prozess (Windows Core Audio, alle aktiven Wiedergabegeräte) ----------
+  [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")] class MMDeviceEnumeratorCo { }
+  [ComImport, Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IMMDeviceEnumerator { [PreserveSig] int EnumAudioEndpoints(int flow, int mask, out IMMDeviceCollection c); }
+  [ComImport, Guid("0BD7A1BE-7A1A-44DB-8397-CC5392387B5E"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IMMDeviceCollection { [PreserveSig] int GetCount(out int n); [PreserveSig] int Item(int i, out IMMDevice d); }
+  [ComImport, Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IMMDevice { [PreserveSig] int Activate(ref Guid iid, int ctx, IntPtr p, [MarshalAs(UnmanagedType.IUnknown)] out object o); }
+  [ComImport, Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IAudioSessionManager2 { [PreserveSig] int GetAudioSessionControl(IntPtr a, int b, out IntPtr c); [PreserveSig] int GetSimpleAudioVolume(IntPtr a, int b, out IntPtr c); [PreserveSig] int GetSessionEnumerator(out IAudioSessionEnumerator e); }
+  [ComImport, Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IAudioSessionEnumerator { [PreserveSig] int GetCount(out int n); [PreserveSig] int GetSession(int i, [MarshalAs(UnmanagedType.IUnknown)] out object s); }
+  [ComImport, Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface IAudioSessionControl2 {
+    [PreserveSig] int GetState(out int s); [PreserveSig] int GetDisplayName(out IntPtr n); [PreserveSig] int SetDisplayName(IntPtr n, IntPtr g);
+    [PreserveSig] int GetIconPath(out IntPtr n); [PreserveSig] int SetIconPath(IntPtr n, IntPtr g); [PreserveSig] int GetGroupingParam(out Guid g); [PreserveSig] int SetGroupingParam(IntPtr g, IntPtr c);
+    [PreserveSig] int RegisterAudioSessionNotification(IntPtr n); [PreserveSig] int UnregisterAudioSessionNotification(IntPtr n);
+    [PreserveSig] int GetSessionIdentifier(out IntPtr s); [PreserveSig] int GetSessionInstanceIdentifier(out IntPtr s); [PreserveSig] int GetProcessId(out uint pid);
+  }
+  [ComImport, Guid("87CE5498-68D6-44E5-9215-6DA47EF883D8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+  interface ISimpleAudioVolume { [PreserveSig] int SetMasterVolume(float v, ref Guid ctx); [PreserveSig] int GetMasterVolume(out float v); [PreserveSig] int SetMute(bool m, ref Guid ctx); [PreserveSig] int GetMute(out bool m); }
+  static readonly Dictionary<uint, int> volWant = new Dictionary<uint, int>();   // Prozess-ID → 0..100, -1 = stumm (Lautstärke bleibt)
+  static readonly Dictionary<uint, int> volLvl = new Dictionary<uint, int>();
+  // Lautstärke-Ziel: Stufe 0..100 und stumm; gibt die Zahl der gefundenen Ton-Sitzungen zurück
+  public static int VolApply(Dictionary<uint, int> want, Dictionary<uint, int> lvl){
+    int hit = 0; Guid none = Guid.Empty, iid = typeof(IAudioSessionManager2).GUID;
+    IMMDeviceEnumerator en = (IMMDeviceEnumerator)new MMDeviceEnumeratorCo(); IMMDeviceCollection col;
+    if (en.EnumAudioEndpoints(0, 1, out col) != 0) return 0;   // eRender, DEVICE_STATE_ACTIVE
+    int nd; col.GetCount(out nd);
+    for (int d = 0; d < nd; d++){
+      IMMDevice dev; if (col.Item(d, out dev) != 0) continue;
+      object o; if (dev.Activate(ref iid, 23, IntPtr.Zero, out o) != 0) continue;   // CLSCTX_ALL
+      IAudioSessionEnumerator se; if (((IAudioSessionManager2)o).GetSessionEnumerator(out se) != 0) continue;
+      int ns; se.GetCount(out ns);
+      for (int i = 0; i < ns; i++){
+        object so; if (se.GetSession(i, out so) != 0) continue;
+        uint pid; if (((IAudioSessionControl2)so).GetProcessId(out pid) != 0 || !want.ContainsKey(pid)) continue;
+        ISimpleAudioVolume v = (ISimpleAudioVolume)so; float cur; bool mu;
+        float t = lvl[pid] / 100f; bool m = want[pid] < 0;
+        if (v.GetMasterVolume(out cur) == 0 && Math.Abs(cur - t) > 0.004f) v.SetMasterVolume(t, ref none);
+        if (v.GetMute(out mu) == 0 && mu != m) v.SetMute(m, ref none);
+        hit++;
+      }
+    }
+    return hit;
+  }
+  static void VolTick(){
+    Dictionary<uint, int> w, l;
+    lock (volWant){ if (volWant.Count == 0) return; w = new Dictionary<uint, int>(volWant); l = new Dictionary<uint, int>(volLvl); }
+    try{ VolApply(w, l); }catch{}
+  }
 
   [DllImport("user32.dll")] static extern bool SetProcessDPIAware();
   // Overlays, die ueber EVE liegen sollen. Der Helfer sieht den Wechsel zu EVE als Erster und hebt sie sofort (und 0,3 s spaeter
@@ -322,6 +388,7 @@ public static class EcFg {
       uint c = GetClipboardSequenceNumber();
       if (c != clip){ clip = c; Out("CLIP " + c); }
       if (tick++ % 20 == 0){ try{ Scan(); }catch{} }   // EVE-Fenster jede Sekunde neu suchen
+      if (tick % 40 == 1) VolTick();   // AO1: alle 2 s – neue Ton-Sitzungen (Client spielt erst jetzt Ton) bekommen ihren Wert
       Thread.Sleep(50);   // Vordergrund-Wechsel schnell melden (Rahmen der Vorschau)
     }
   }

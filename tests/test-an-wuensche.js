@@ -25,14 +25,17 @@ function assert(c, m){ if(!c) throw new Error('ASSERTION FAILED: ' + m); console
     await p.goto('file:///tmp/eve-zentrale-test14.html'); await p.waitForTimeout(1000);
     const r = await p.evaluate(() => { const T = window.__test, calls = [];
       window.__evh = { launchEve: () => calls.push('start'), quitEve: () => calls.push('quit') };
-      const off = T.neoOverlayHtml ? T.neoOverlayHtml() : null;
-      const c = document.getElementById('neo-evebtn'); c.checked = true; c.onchange();
+      const c = document.getElementById('neo-evebtn'), def = c.checked && T.ovLoad().neoEve !== false; c.checked = false; c.onchange();
+      const off = T.neoOverlayHtml ? T.neoOverlayHtml() : null; c.checked = true; c.onchange();
       const on = T.neoOverlayHtml ? T.neoOverlayHtml() : null;
-      return { hasBox: !!c, saved: !!T.ovLoad().neoEve, off: off && /data-neo="eveStart"/.test(off), on: on && /class="neo-evek"><button[^>]*data-neo="eveStart"[^>]*><\/button><button[^>]*data-neo="eveQuit"/.test(on) }; });
+      return { def, hasBox: !!c, saved: !!T.ovLoad().neoEve, off: off && /data-neo="eveStart"/.test(off), on: on && /class="neo-evek"><button[^>]*data-neo="eveStart"[^>]*><\/button><button[^>]*data-neo="eveQuit"/.test(on) }; });
+    assert(r.def, 'AN4: Knöpfe ab Werk eingeschaltet');
     assert(r.hasBox && r.saved, 'AN4: Haken in den Einstellungen speichert neoEve');
     if (r.on !== null){ assert(r.off === false && r.on === true, 'AN4: Knöpfe nur mit Haken im OmniCom-Kopf'); }
     assert(/if \(\/\^eve\(Start\|Quit\)\$\/\.test\(target\)\)\{ if \(!\(window\.EVE_DEMO && window\.EVE_DEMO\.on\) && EVH\)/.test(html) && /\[data-neo="eveStart"\],\[data-neo="eveQuit"\]/.test(html), 'AN4: Aktion ruft launchEve/quitEve, in der Demo gesperrt');
     assert(/\.neo-hd \.neo-evek button\{width:11px;height:11px;padding:0;border-radius:50%/.test(html), 'AN4: kleine runde Knöpfe (11 px, kleiner als die 18-px-Symbole im Balken)');
+    const dp = await p.evaluate(() => { const e = document.getElementById('hl-depth'); e.value = 3000; e.dispatchEvent(new Event('change')); const v = e.value; e.value = 300; return v + '|' + document.querySelector('label[for=is-depth]').textContent; });
+    assert(dp === '2000|Waren prüfen (Anzahl, max. 2000)', 'Waren prüfen: Hinweis max. 2000, Eingabe darüber wird sichtbar auf 2000 gesetzt (' + dp + ')');
     // AN1
     assert(/#ov-root :is\(\.hc-btn, \.hc-box\)\{display:none !important\}/.test(html) && /m\.lastChild\.appendChild\(mkBtn\(x\.tid\)\);/.test(html), 'AN1: Preisverlauf im Overlay aus, im Hauptfenster auch bei Läufen');
     // EN

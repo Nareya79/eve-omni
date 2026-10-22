@@ -39,7 +39,7 @@ const { chromium } = require('playwright');
   ok(await p.evaluate(() => ['station','haul','wallet','skills','jump','chars','settings','account'].every(id => document.querySelector('#neo-btn-' + id + ' svg.ic2')) && !!document.querySelector('#neo-quit svg.ic2')), 'T27: neue Symbole in allen Knöpfen inkl. Beenden');
   const rows = await p.evaluate(() => document.querySelectorAll('#neo-order input[type=color], #neo-color-extra input[type=color]').length);
   const nBtn = await p.evaluate(() => document.querySelectorAll('#neocom .neo-btn:not(#neo-quit):not(#neo-btn-account):not(#neo-btn-orders)').length);   // AL5: Orders steckt unter Trading
-  ok(rows === nBtn + 10, 'Farbfeld fuer jedes Symbol inkl. Alert/Gang-Report/Notizen/Leistung/Timer/D-Scan/Scanner-Plan/PI-Planer/Workbench/Produktion (' + rows + ')');
+  ok(rows === nBtn + 11, 'Farbfeld fuer jedes Symbol inkl. Alert/Gang-Report/Notizen/Leistung/Timer/D-Scan/Sound/Scanner-Plan/PI-Planer/Workbench/Produktion (' + rows + ')');
   await p.evaluate(() => { const i = document.querySelector('[data-neo-color="neo-btn-haul"]'); i.value = '#ff0000'; i.dispatchEvent(new Event('input')); i.dispatchEvent(new Event('change')); });
   ok(await col('#neo-btn-haul svg') === 'rgb(255, 0, 0)' && await p.evaluate(() => !!document.getElementById('ic-l-ff0000')), 'eigene Farbe je Symbol (Ausnahme) sofort, mit eigenem Verlauf');
   ok(await p.evaluate(() => JSON.parse(localStorage.getItem('eve-zentrale-neocom-colors-v1'))['neo-btn-haul'] === '#ff0000'), 'eigene Farbe gespeichert (eve-zentrale-neocom-colors-v1)');

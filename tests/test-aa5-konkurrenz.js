@@ -22,6 +22,14 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     $('tsc-hotmid').value = '5'; assert(T.tscCompetition(book, now).level === 'ruhig', 'Grenze einstellbar');
     $('tsc-hotmid').value = '2'; $('tsc-hothi').value = '3'; assert(T.tscCompetition(book, now).level === 'heiß', 'heiß-Grenze einstellbar (mindestens mittel + 1)');
     $('tsc-hotmid').value = '3'; $('tsc-hothi').value = '6';
+    // 22.10.: eigene Orders (alle Charaktere) zählen nicht als Konkurrenz – Suche „mittel“, angenommener Trade blieb sonst „heiß“
+    const own1 = o(true, 100.5, 2), own2 = o(false, 109.5, 3), own3 = o(true, 100.6, 1), own4 = o(false, 109.4, 1), withOwn = { buys: book.buys.concat([own1, own3]), sells: book.sells.concat([own2, own4]) };
+    assert(T.tscCompetition(withOwn, now).level === 'heiß', 'ohne Kenntnis: frische eigene Orders treiben auf heiß');
+    T.compOwnIds()[own1.order_id] = true; T.compOwnIds()[own2.order_id] = true; T.compOwnIds()[own3.order_id] = true; T.compOwnIds()[own4.order_id] = true;
+    c = T.tscCompetition(withOwn, now);
+    assert(c.level === 'mittel' && c.n1 === 2 && c.n6 === 3, 'eigene Orders herausgerechnet → gleiche Stufe wie in der Suche (mittel)');
+    for (let i = 0; i < 4; i++){ T.compOwnIds()['own' + i] = true; T.compObserve([['jita:35', { buys: [o(true, 100, 3000), Object.assign(o(true, 101 + i, 5), { order_id: 'own' + i })], sells: [o(false, 110, 3000)] }]], now - (4 - i) * 20 * 60000); }
+    assert(T.tscCompetition({ buys: [o(true, 100, 3000)], sells: [o(false, 110, 3000)] }, now, 'jita:35').obs === 0, 'eigenes Überbieten zählt nicht als Preiswechsel (Beobachtung)');
     // Eigene Beobachtung: bester Preis wechselt zwischen Aktualisierungen
     const quiet = { buys: [o(true, 100, 3000)], sells: [o(false, 110, 3000)] };
     for (let i = 0; i < 7; i++){ const b = { buys: [o(true, 100 + i, 3000)], sells: quiet.sells }; T.compObserve([['jita:34', b]], now - (7 - i) * 20 * 60000); }

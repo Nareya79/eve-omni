@@ -807,6 +807,10 @@ html.ov-eve .ov-mini .btn{color:inherit;border-color:rgba(255,255,255,.22)}
 /* BB3: Glocke je Charakter (Skill-Alarm an/aus) */
 .fit-note{color:var(--accent2)}
 .pill.ds-w{background:color-mix(in srgb, var(--loss) 16%, transparent);color:var(--loss);border-color:var(--loss)}
+.snd-c{padding:6px 2px;border-bottom:1px solid var(--border)} .snd-c.off{opacity:.55} .snd-h{display:flex;align-items:center;gap:7px;margin-bottom:4px} .snd-h img,.snd-h .snd-pi{width:32px;height:32px;flex:none;border-radius:3px;background:rgba(255,255,255,.08);display:inline-flex;align-items:center;justify-content:center;font-weight:700} .snd-h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .snd-r{display:grid;grid-template-columns:7.5em 1fr 3.4em;align-items:center;gap:6px;font-size:.85em} .snd-r input{width:100%;margin:0} .snd-r em{font-style:normal;text-align:right} .tr-esi-l{margin:4px 0 2px} .tr-esi .pill{font-size:.72em}   /* AQ1 */
+.st-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--border)}   /* AO2 */
+#ov-root .ovm-top .ovm-clr{margin-left:auto;padding:0 6px;font-size:.75em;line-height:1.6;opacity:.75} #ov-root .ovm-top .ovm-clr:hover{opacity:1} #ov-root .ovm-top .ovm-clr + .ovm-tog{margin-left:4px}   /* AR1 */
+.snd-top{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px} .snd-all{display:flex;align-items:center;gap:6px} .snd-all .snd-r{flex:1}   /* AO1 */
 .ds-warn{flex-wrap:wrap;gap:4px} .ds-h{margin-top:6px} .ov-l.txt.ds-c{display:grid;grid-template-columns:1.8em minmax(6em, max-content) 1fr;gap:8px;align-items:baseline;padding-block:1px} .ov-l.txt.ds-c b{text-align:right}
 #or-sum{margin-bottom:12px} .ov-l.tm-r{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-flow:column;grid-auto-columns:auto;gap:8px;align-items:center;flex-wrap:nowrap} .tm-r > b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)} .tm-r .mono{text-align:right} .tm-r .btn{padding:0 6px;font-size:.75rem} .tm-done{opacity:.6} .tm-form{display:flex;flex-wrap:wrap;gap:4px} .tm-form input{flex:1 1 90px;min-width:0} .tm-list{display:flex;flex-direction:column;gap:2px;max-width:560px} .sn-c{margin:8px 0} .sn-c .wrap-table{margin-top:4px} .ox-t.bad{color:var(--loss);font-weight:600} .ox-t.warn{color:var(--warn);font-weight:600} .or-sum-tot td{font-weight:700;border-top:2px solid var(--border)}
 .sq-head>.sq-name{flex:0 1 auto}.sq-head>.pill{margin-left:auto}
@@ -863,6 +867,7 @@ html.ov-eve .ov-mini .btn{color:inherit;border-color:rgba(255,255,255,.22)}
 .trk-list{display:grid;gap:4px;margin-bottom:10px}
 .trk-list .trk-g{margin-top:6px;font-size:.8rem}.trk-g.trk-lv-bad button{color:var(--st-bad,var(--loss))}.trk-list .trk-g button{font-size:.8rem}
 .trk-list .ov-card.trk-sm{padding:6px 10px;cursor:pointer}.trk-list .ov-card.trk-sm:hover{filter:brightness(1.15)}
+.trk-nm{display:inline-block;max-width:13em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}.tk-next{white-space:nowrap}   /* BB1 */
 .trk-list .trk-r{font-size:.82rem}.trk-list .ov-bar-mini{margin-top:4px}
 .trk-list .tr-card{margin:0 0 4px 14px}
 /* Reiseroute (ohne DOTLAN) */
@@ -1087,6 +1092,19 @@ html.ov-eve.ov-active[data-ovmark="full"]:not(.sat-neo) #ov-root:has(> .ov-bar) 
 html.ov-eve.ov-active[data-ovmark="full"] #ov-root .ov-tab[aria-selected="true"]:not(.sat-title){border-bottom-color:color-mix(in srgb, var(--accent2) 88%, #fff)}
 html.ov-omni.ov-active[data-ovmark="full"] #ov-root{border-color:var(--accent);box-shadow:inset 0 0 8px rgba(var(--accent-rgb),.45)}
 html.ov-active.ov-active[data-ovmark="bg"] #ov-root > :is(.ov-bar, .ov-body, .ov-foot){background-image:linear-gradient(rgba(var(--accent-rgb), calc(.12 * var(--ov-alpha, 1))), rgba(var(--accent-rgb), calc(.12 * var(--ov-alpha, 1))))}
+/* AW (22.10.): Punktraster wie im aktiven EVE-Fenster – nur aktives Overlay, nur Fläche unter der Leiste, beide Stile. Gemessen im EVE-Bild: alle 24 Bildschirm-Pixel
+   ein Punkt 2×2 px, ~5 % weiß. In echten Pixeln gerechnet (÷ Windows-Skalierung --dpr, ÷ Overlay-Zoom --ov-scale) → gleich wie in EVE bei jeder Auflösung/Zoom;
+   steht beim Scrollen still (Hintergrund der Scrollfläche). OmniCom ohne (Leiste, kein Fenster). Vierfaches .ov-active: muss die Flächenregeln (background-Kurzform) schlagen. */
+/* AX (22.10.): Leiste mit Reitern und Knöpfen immer in EVE-Größe – nur der Inhalt unter der Leiste zoomt (--ov-scale), die Leiste rechnet nur die Windows-Skalierung (--dpr) heraus;
+   nur der Inhalt zoomt. Im Stapel sind so alle Reiter gleich groß, egal wie weit ein einzelnes Overlay gezoomt ist. OmniCom hat keine Leiste. */
+html.sat-boot:not(.sat-neo) #ov-root{zoom:1}   /* AX Nachtrag: nicht mehr alles zoomen + Leiste zurückrechnen (Rundung ließ die Reiter beim Mausrad um Bruchteile springen) */
+html.sat-boot:not(.sat-neo) #ov-root > :not(.ov-bar){zoom:var(--ov-scale, 1)}
+html.sat-boot #ov-root > .ov-bar{zoom:calc(1 / var(--dpr, 1))}
+html.ov-eve.sat-boot:not(.jb-mini) #ov-root > .ov-bar{box-sizing:border-box;min-height:32px}   /* AX: EVE-Leiste gemessen 32 px (Stapel-Bild 19.10., EVE-UI 100 %) */
+html.sat-boot{--dot:calc(24px / var(--dpr, 1) / var(--ov-scale, 1));--dot-r:calc(1.1px / var(--dpr, 1) / var(--ov-scale, 1));
+  --dots:radial-gradient(circle at calc(var(--dot-r) * .9) calc(var(--dot-r) * .9), rgba(255,255,255,.05) var(--dot-r), transparent calc(var(--dot-r) + .4px))}
+html.sat-boot.ov-active.ov-active.ov-active.ov-active:not(.sat-neo) #ov-root:has(> .ov-bar) > :is(.ov-body, .ov-foot){background-image:var(--dots);background-size:var(--dot) var(--dot)}
+html.sat-boot.ov-active.ov-active.ov-active.ov-active[data-ovmark="bg"]:not(.sat-neo) #ov-root:has(> .ov-bar) > :is(.ov-body, .ov-foot){background-image:var(--dots), linear-gradient(rgba(var(--accent-rgb), calc(.12 * var(--ov-alpha, 1))), rgba(var(--accent-rgb), calc(.12 * var(--ov-alpha, 1))));background-size:var(--dot) var(--dot), auto}
 /* AE + AF1 (18.10.): Schrift im Stil EVE wie im Spiel. Echte „EVE Sans Neue“ aus der eigenen EVE-Installation (html.eve-font), sonst Ersatz
    „Saira Semi Condensed“ (frei, Google Fonts wie Barlow) mit etwas mehr Buchstabenabstand. Rollen wie in EVE: Abschnitte normal statt GROSS,
    Spaltenköpfe klein grau, Knöpfe/Reiter ohne Großbuchstaben, Zahlen fett. Stil „EVE Omni“ bleibt Barlow (Rückweg). */
@@ -1428,8 +1446,11 @@ html.sat-win #ov-root .sat-title{position:absolute;left:50%;top:50%;transform:tr
 /* AK (19.10.): Stapel – Reiter links in der Leiste statt Titel mittig; Ziel beim Ziehen leuchtet auf */
 html.sat-stack #ov-root .ov-tabs{flex-wrap:nowrap;min-width:0;overflow:hidden}
 html.sat-stack #ov-root .sat-title{transform:none;position:static;left:auto;top:auto;max-width:none;cursor:grab}
-html.sat-stack #ov-root .ov-tab{white-space:nowrap;cursor:grab;flex:0 1 auto;min-width:26px;overflow:hidden;text-overflow:ellipsis;display:block}
-html.sat-stack #ov-root .ov-tab.sat-title{flex:none;display:inline-flex}
+/* AP (21.10.): alle Reiter gleich gebaut – aktiv ändert nur Farbe + Strich, Breite und Abstände bleiben; Name kürzt sich mit „…“, gelbe Zahl + ✕ behalten ihren Platz */
+html.sat-stack #ov-root .ov-tab{white-space:nowrap;cursor:grab;flex:0 1 auto;min-width:26px;overflow:hidden;display:inline-flex;align-items:center;gap:4px}
+html.sat-stack #ov-root .ov-tab .st-n{min-width:0;overflow:hidden;text-overflow:ellipsis}
+html.sat-stack #ov-root .ov-tab .ov-badge, html.sat-stack #ov-root .ov-tab .st-x{flex:none;margin-left:0}
+html.sat-stack #ov-root .ov-tab.sat-title svg.ic2{display:none}
 /* Stil EVE wie das EVE-Bild (Zwischenablagebild-EVE-Stapel-19-10.png): Reiter links, nur Text, gleiche Schrift; aktiv weiß mit kurzem Strich unter dem Text */
 html.ov-eve.sat-stack #ov-root .ov-lgrp{display:none}
 html.ov-eve.sat-stack #ov-root .ov-tab{position:relative;font-size:.8rem;font-weight:400;padding:2px 9px 4px;border-bottom:0;color:rgba(255,255,255,.55)}
@@ -1459,9 +1480,14 @@ html.ov-eve.sat-stack.ov-active[data-ovmark="full"] #ov-root .ov-tab.sat-title::
 .pi-img{vertical-align:middle;margin-right:6px;border-radius:50%;flex:none}   /* AL11 */
 /* 19.10. Nutzer: Gewinn/Verlust im Hauptfenster etwas kräftiger (dunkle Schemata; Overlays unverändert) */
 html:not([data-scheme="light"]) body:not(.ov-mode){--profit:#3ee07c;--loss:#ff5252}
+/* AZ3 (22.10., Nutzer wählte Variante C, Grün aus seinem Bild gemessen #00ff00): im Stil EVE ALLE grünen Elemente gleich – Gewinn, „vorne“, ✓ ruhig, Gank sicher,
+   Pillen, grüne Linien – Neongrün mit leichtem Schein (Hauptfenster und Overlays). */
+html.ov-eve:not([data-scheme="light"]), html.ov-eve:not([data-scheme="light"]) body{--profit:#00ff00;--profit-bg:rgba(0,255,0,.12)}
+html.ov-eve:not([data-scheme="light"]) :is(.pos, .ok, .ov-pf, .profit, .pill.profit, .pill.gk-ok, .gk-ok, .sl-profit, .stat-value.pos, b.pos):not(button):not(.ov-bar-mini){text-shadow:0 0 4px rgba(0,255,0,.55)}
+html.ov-eve:not([data-scheme="light"]) .ov-card:not(.dn-neg) > .ov-bar-mini.dn{background:#00ff00;box-shadow:0 0 5px rgba(0,255,0,.55)}
 .pi-row .pi-img{border-radius:2px}
 #ov-root .st-x{display:none}
-html.sat-stack #ov-root .ov-tab .st-x{display:inline-block;margin-left:5px;font-size:.62rem;opacity:0;cursor:pointer;color:inherit}
+html.sat-stack #ov-root .ov-tab .st-x{display:inline-block;margin-left:0;font-size:.62rem;opacity:0;cursor:pointer;color:inherit}
 html.sat-stack #ov-root .ov-tab:hover .st-x{opacity:.7}
 html.sat-stack #ov-root .ov-tab .st-x:hover{opacity:1;color:#fff}
 html.stack-drop #ov-root .ov-bar{box-shadow:inset 0 0 0 2px var(--accent-line);background:var(--accent-soft)}
@@ -1681,6 +1707,28 @@ html.ov-eve.sat-win #ov-root #ov-lock{--eic:url("data:image/svg+xml,%3Csvg%20xml
 html.ov-eve.sat-win #ov-root #ov-lock[aria-pressed="true"]{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%207.5V5.2a3%203%200%200%201%206%200v2.3%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%227.2%22%20width%3D%2210%22%20height%3D%227.3%22%20rx%3D%22.6%22%2F%3E%3C%2Fsvg%3E");color:#fff;background:rgba(255,255,255,.14)}
 html.ov-eve.sat-win #ov-root #ov-roll{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%2210%22%20height%3D%222%22%2F%3E%3C%2Fsvg%3E")}
 html.ov-eve.sat-win #ov-root #ov-hide{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.6%203.6l8.8%208.8M12.4%203.6l-8.8%208.8%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22square%22%2F%3E%3C%2Fsvg%3E")}
+/* AY (22.10.): Leiste 1:1 wie die EVE-Leiste (gemessen: Zwischenablagebild-EVE-Leiste-22-10.png, -Stapel-19-10, -Schloss-Lokal-22-10; EVE-UI 100 %).
+   33 px hoch; Symbole 12 px auf 12-px-Raster, Knöpfe 24 px breit ohne Lücke, rechts 13 px bis zur Kante; ⋮ 2×2-Punkte; Schloss immer nur Umriss
+   (gesperrt = Bügel zu, offen = Bügel auf); Farben gemessen: Symbole #cfcecc, aktiver Reiter/Titel #e4e4e4, inaktiv #868685; Schrift 11 px Ober- bis
+   Unterlänge (≈ 14,3 px), Text-Mitte 2,5 px unter Leistenmitte; Unterstrich des aktiven Reiters liegt AUF der unteren Leistenlinie, so breit wie der Text. Nur Stil EVE. */
+html.ov-eve.sat-boot:not(.jb-mini) #ov-root > .ov-bar{min-height:33px;gap:0;padding:0 6px 0 13px;align-items:stretch}
+html.ov-eve.sat-win #ov-root > .ov-bar > :is(#ov-more, #ov-lock, #ov-roll, #ov-hide){width:24px;min-width:24px;height:auto;padding:0;margin:0;color:#cfcecc;background:none;display:inline-flex;align-items:center;justify-content:center}
+html.ov-eve.sat-win #ov-root > .ov-bar > :is(#ov-more, #ov-lock, #ov-roll, #ov-hide)::before{width:12px;height:12px;-webkit-mask-size:12px 12px;mask-size:12px 12px;margin-top:1px}
+html.ov-eve.sat-win #ov-root > .ov-bar > :is(#ov-more, #ov-lock, #ov-roll, #ov-hide):hover{color:#fff;background:rgba(255,255,255,.06)}
+html.ov-eve.sat-win #ov-root #ov-more{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%2012%22%3E%3Crect%20x%3D%225%22%20y%3D%221%22%20width%3D%222%22%20height%3D%222%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%222%22%20height%3D%222%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%229%22%20width%3D%222%22%20height%3D%222%22%2F%3E%3C%2Fsvg%3E")}
+html.ov-eve.sat-win #ov-root #ov-lock{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M0%205h12v7H0zM2%207v3h8V7z%22%2F%3E%3Cpath%20d%3D%22M2%203.4V2.5A2.5%202.5%200%200%201%204.5%200h3A2.5%202.5%200%200%201%2010%202.5V5H8V2.6a.6.6%200%200%200-.6-.6H4.6a.6.6%200%200%200-.6.6v.8z%22%2F%3E%3C%2Fsvg%3E")}
+html.ov-eve.sat-win #ov-root #ov-lock[aria-pressed="true"]{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M0%205h12v7H0zM2%207v3h8V7z%22%2F%3E%3Cpath%20d%3D%22M2%205V2.5A2.5%202.5%200%200%201%204.5%200h3A2.5%202.5%200%200%201%2010%202.5V5H8V2.6a.6.6%200%200%200-.6-.6H4.6a.6.6%200%200%200-.6.6V5z%22%2F%3E%3C%2Fsvg%3E");background:none}
+html.ov-eve.sat-win #ov-root #ov-roll{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%2012%22%3E%3Crect%20x%3D%220%22%20y%3D%225%22%20width%3D%2212%22%20height%3D%222%22%2F%3E%3C%2Fsvg%3E")}
+html.ov-eve.sat-win #ov-root #ov-hide{--eic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20d%3D%22M1.5%201.5l9%209M10.5%201.5l-9%209%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22square%22%2F%3E%3C%2Fsvg%3E")}
+html.ov-eve.sat-win #ov-root > .ov-bar .ov-tabs{align-self:stretch;display:flex;align-items:stretch;gap:26px;margin-bottom:-1px}   /* 1 px in die Leistenlinie: Unterstrich liegt auf der Linie */
+html.ov-eve.sat-win #ov-root > .ov-bar .ov-tab, html.ov-eve.sat-win #ov-root > .ov-bar .ov-tab *{font-weight:400 !important}   /* 22.10. Nutzer-Bild Schrift: EVE normal (1-px-Striche), Großbuchstaben 9 px, x-Höhe 7 px */
+html.ov-eve.sat-win #ov-root > .ov-bar .ov-tab{font-size:13px;color:#868685;padding:4px 0 0;align-items:center;border-bottom:0}
+html.ov-eve.sat-win #ov-root > .ov-bar .ov-tab:hover{color:#bdbdbc}
+html.ov-eve.sat-win #ov-root > .ov-bar .ov-tab.sat-title{color:#e4e4e4}
+html.ov-eve.sat-stack #ov-root > .ov-bar .ov-tab.sat-title::after{left:0;right:0;bottom:0;height:1px;--ul:var(--accent2, #e4e4e4);background:var(--ul) !important;box-shadow:0 -4px 10px 3px color-mix(in srgb, var(--ul) 30%, transparent), 0 0 3px 1px color-mix(in srgb, var(--ul) 55%, transparent)}
+/* Unterstrich wie EVE „Lokal“ (Zwischenablagebild 22.10.): Linie fast weiß mit Farbstich (#fef5b1 bei gelbem Thema), weicher Schein ~12 px nach oben, ~5 px nach unten. Der Reiter darf dafür nicht abschneiden. */
+/* 22.10. Nutzer-Bild Caldari: Linie = reine Theme-Farbe (#55d4ce), Schein in derselben Farbe – in allen Designs, auch wenn das Overlay nicht aktiv ist */
+html.ov-eve.sat-stack #ov-root > .ov-bar .ov-tab.sat-title, html.ov-eve.sat-stack #ov-root > .ov-bar .ov-tabs{overflow:visible}
 /* AI1 (18.10.): Timer-Overlay aufgeräumt – Formular in zwei Zeilen, Wochentage als kleine Knöpfe, Stoppuhr groß */
 .tm-form{display:flex;flex-direction:column;gap:4px}.tm-fr{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.tm-fr > input:not([type=checkbox]),.tm-fr > select{flex:1 1 7rem;min-width:0}
 .tm-days{display:inline-flex;gap:2px;flex-wrap:wrap}.tm-days label{display:inline-flex;align-items:center;justify-content:center;min-width:1.7rem;padding:1px 3px;border:1px solid var(--border-strong);font-size:.72rem;cursor:pointer;user-select:none}
@@ -7138,6 +7186,11 @@ if (typeof document !== 'undefined') {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ui); else ui();
 })();
 </script>
+<script>/* AT2 (22.10.): kurze Meldung von main.js (eoNote) im Hauptfenster und in den Overlays, unten mittig, Rahmen in Akzentfarbe */
+window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note"); if (o) o.remove(); var d = document.createElement("div"); d.id = "eo-note"; d.textContent = t;
+  d.style.cssText = "position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:2147483000;max-width:calc(100vw - 12px);box-sizing:border-box;padding:6px 12px;background:rgba(9,12,16,.96);color:#e6edf3;border:1px solid var(--accent,#4fa3d1);font:12px 'Segoe UI',sans-serif;text-align:center;pointer-events:none";
+  document.body.appendChild(d); setTimeout(function(){ d.remove(); }, ms || 3000); };
+</script>
 <script>
 (function(){
   try{
@@ -7740,7 +7793,7 @@ if (typeof document !== 'undefined') {
     <div class="controls opt-group">
       <div class="opt-h">Suche</div>
       <div class="field">
-        <label for="hl-depth">Waren pr&uuml;fen (Anzahl)</label>
+        <label for="hl-depth">Waren pr&uuml;fen (Anzahl, max. 2000)</label>
         <input type="number" id="hl-depth" value="300" min="20" max="2000" step="10">
       </div>
       <div class="field">
@@ -7938,7 +7991,7 @@ if (typeof document !== 'undefined') {
       <select id="is-gksafe" data-gksafe="is"><option value="0">aus</option><option value="1500">vorsichtig</option><option value="2000">normal</option><option value="3000">knapp</option></select>
     </div>
     <div class="field">
-      <label for="is-depth">Waren pr&uuml;fen (Anzahl)</label>
+      <label for="is-depth">Waren pr&uuml;fen (Anzahl, max. 2000)</label>
       <input type="number" id="is-depth" value="300" min="20" max="2000" step="10">
     </div>
     <div class="field">
@@ -8868,7 +8921,7 @@ if (typeof document !== 'undefined') {
       <span class="mono">esi-location.read_location.v1</span>, <span class="mono">esi-location.read_online.v1</span>,
       <span class="mono">esi-location.read_ship_type.v1</span>, <span class="mono">esi-planets.manage_planets.v1</span>,
       <span class="mono">esi-clones.read_clones.v1</span>, <span class="mono">esi-characters.read_standings.v1</span>,
-      <span class="mono">esi-characters.read_contacts.v1</span>, <span class="mono">esi-ui.write_waypoint.v1</span>, <span class="mono">esi-ui.open_window.v1</span>, <span class="mono">esi-killmails.read_killmails.v1</span>
+      <span class="mono">esi-characters.read_contacts.v1</span>, <span class="mono">esi-ui.write_waypoint.v1</span>, <span class="mono">esi-ui.open_window.v1</span>, <span class="mono">esi-killmails.read_killmails.v1</span>, <span class="mono">esi-markets.structure_markets.v1</span>, <span class="mono">esi-search.search_structures.v1</span>
       (Charaktere, Planeten, Klone, Standings f&uuml;r die Broker-Geb&uuml;hr, Freund/Feind-Farben, Autopilot-Ziel, Marktfenster in EVE).
       <strong>Falls deine Anwendung schon existiert:</strong> neue Scopes dort nachtr&auml;glich aktivieren und danach jeden
       Charakter einmal &uuml;ber &bdquo;+ Charakter hinzuf&uuml;gen&ldquo; neu einloggen &ndash; alte Logins kennen diese
@@ -8946,6 +8999,15 @@ if (typeof document !== 'undefined') {
     Aktive Order-Slots: <span id="sk-slots-out"></span>
   </div>
 </div>
+<h3 class="acc-h">Markt-Strukturen (Keepstar, Fortizar …)</h3>
+<div class="acc-grid"><div class="controls" id="st-box" style="flex:1 1 100%;max-width:44rem">
+  <p class="note" style="margin:0">Markt einer Spieler-Struktur (z. B. Allianz-Keepstar im 0.0) wie einen Hub nutzen: Trades scannen, Preise, eigene Trades dort. Geht nur mit einem Charakter, der dort andocken darf. Neue Berechtigung: einmal neu einloggen.</p>
+  <div class="field"><label for="st-char">Charakter</label><select id="st-char"></select></div>
+  <div class="field" style="flex:1 1 14rem"><label for="st-q">Struktur suchen (Name, mind. 3 Zeichen)</label><input id="st-q" type="text" placeholder="z. B. 1DQ1-A oder Tranquility Trading Tower"></div>
+  <button type="button" class="btn" id="st-go">Suchen</button>
+  <div id="st-res" style="flex:1 1 100%"></div>
+  <div id="st-list" style="flex:1 1 100%"></div>
+</div></div>
 
 
 </div>
@@ -9080,6 +9142,8 @@ if (typeof document !== 'undefined') {
 </div>
 </div>
 <div class="set-pane" data-pane="clients" id="set-pane-clients">
+<h3 class="acc-h host-only">Sound-Lautstärke</h3>
+<div class="acc-grid host-only"><div id="snd-big" style="max-width:34rem;flex:1 1 100%"></div></div>
 <h3 class="acc-h">EVE-Clients umschalten</h3>
 <p class="note not-host" style="margin-top:0">Umschalten und Vorschau gibt es nur im Programm <b>EVE-Omni.exe</b>, der Einstellungs-Sync unten geht auch hier.</p>
 <div class="acc-grid">
@@ -9290,6 +9354,7 @@ if (typeof document !== 'undefined') {
     <label class="chk"><input type="checkbox" id="hs-eve-show"> Overlay automatisch zeigen, sobald EVE l&auml;uft</label>
     <label class="chk"><input type="checkbox" id="hs-eve-hide"> Overlay ausblenden, wenn EVE beendet wird</label>
     <label class="chk"><input type="checkbox" id="hs-tray-close"> Schlie&szlig;en-Knopf versteckt nur (Programm l&auml;uft unten rechts weiter)</label>
+    <span class="field" style="flex:1 1 100%"><button type="button" id="hs-restart" title="Beendet EVE Omni und startet es gleich wieder – nach einem Update läuft dann die neue Version">EVE Omni neu starten</button></span>
     <label class="chk"><input type="checkbox" id="hs-taskbar"> Symbol in der Taskleiste zeigen (Klick holt das gro&szlig;e Fenster, anheftbar)</label>
     <div class="field" style="flex:1 1 100%">
       <label>EVE-Omni.html, die das Programm l&auml;dt</label>
@@ -9360,7 +9425,8 @@ if (typeof document !== 'undefined') {
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – Karte auch als Universum-Schema wie im Atlas (Live-Ebenen Schiffe/Kapseln/NPC/Sprünge/Souveränität mit Top 20, Regionskarte mit Kästchen und Konstellationen, PNG speichern); Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, Jump Planner, Jump Bridges, Regionskarte mit Route, Kills und Charakteren.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, OmniCom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), OmniCom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen), Equalizer, Lautstärke angleichen, Balken; Spotify, Deezer und Apple Music auch im Overlay.</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
 <p class="note pn-en">Patch notes are written in German. English summaries of every version: <a href="https://github.com/Nareya79/eve-omni/releases" target="_blank" rel="noopener">github.com/Nareya79/eve-omni/releases</a></p>
-<details class="skills-more" open><summary>Beta 5.1.0 · 20.10.2026</summary><ul class="about-list"><li>Neu: Overlays stapeln wie in EVE – ein Overlay an der Kopfleiste auf ein anderes ziehen macht daraus Reiter; einen Reiter herausziehen gibt wieder ein eigenes Fenster. Deckkraft, Sperren, Durchklicken und Vordergrund gelten für den ganzen Stapel.</li><li>Neu: Hauptfenster aufgeräumt – Vor/Zurück oben links (auch Maustasten 4/5 und Alt + ←/→), Name des Bereichs in der Kopfleiste, Unterreiter aller Bereiche als Liste links; Kopfleiste, Neocom-Leiste und Inhalt im Stil der Overlays.</li><li>Neu: Trading und Hauling mit gleichem Aufbau (Suchen · Ergebnisse · Meine Trades bzw. Meine Läufe · Gewinne), Hauling-Ergebnisse als Karten wie im Overlay, Meine Trades mit Reitern Laufend/Erledigt/Abgebrochen. „Markt-Scanner“ heißt jetzt „Trades scannen“. Orders an allen Stationen werden Trades; Orders und Order-Verlauf sind Reiter unter Trading.</li><li>Neu: Trades- und Hauling-Overlay gleich aufgebaut (Handelscharakter oben, „Suchoptionen“ immer an derselben Stelle); das Hauling-Overlay zeigt deine laufenden Läufe mit Summe, Sortieren und Zuklappen.</li><li>Neu: Eigener Bereich „Fittings“ (Meine Fittings + Workbench) mit OmniCom-Symbol und Overlay.</li><li>Neu: Uhr &amp; Timer – Timer mit Wochentagen und Wiederholung, Stoppuhr; Linksklick auf die OmniCom-Uhr öffnet die Timer.</li><li>Neu: OmniCom-Overlay mit zwei kleinen Knöpfen EVE starten (grün) / beenden (rot), einschaltbar unter Einstellungen › OmniCom.</li><li>Neu: Discord- und Browser-Fenster im Stil EVE – Rahmen, Symbole und Designfarbe wie die Overlays, das zuletzt angeklickte Fenster wird als aktiv markiert.</li><li>Neu: Kurier sucht die Region des Piloten automatisch mit, Filter „ab hier“. PI mit Bildern von Planeten und Anlagen. Watchlist-Lauf zeigt das empfohlene Fitting und die Gank-Ampel. Trades-Karte zeigt beim Einkauf schon den Verkaufspreis zum Kopieren. Symbolfarbe und Overlay-Stil als Knöpfe unter Darstellung.</li><li>Geändert: Preisverlauf (Kurven-Knopf) nur noch im Hauptfenster – dort auch bei Läufen, in den Overlays nicht mehr.</li><li>Behoben: Bei vielen Hauling-Läufen reagierten Hauptfenster und Overlays träge (Bereichswechsel bis 1 Sekunde) – jetzt unter 0,1 Sekunden.</li><li>Behoben: Ein Trade sprang auf erledigt, wenn die Kauforder voll war, EVE die letzten Käufe aber noch nicht gebucht hatte.</li><li>Behoben: Neuer Browser-Tab blieb grau; Overlays blitzten beim Öffnen kurz auf; Auswahllisten in den Einstellungen waren fensterbreit; in der Demo wirkte der Sprachwechsel nicht.</li></ul></details>
+<details class="skills-more" open><summary>Beta 5.2.0 · 22.10.2026</summary><ul class="about-list"><li>Neu: Sound – Lautstärke je EVE-Client mit Portrait, Gesamtregler „Alle Clients“, hintere Clients automatisch leiser oder stumm; als Overlay, OmniCom-Kachel und unter Einstellungen › EVE-Clients. Tastenkürzel und Stream-Tasten: alle stumm, lauter, leiser.</li><li>Neu: Markt-Strukturen (Keepstar, Fortizar …) unter Einstellungen › Konto – Marktbuch der Struktur für Preise, Trades scannen und Trades; Hub-Handel mit Struktur als Einkaufs- oder Verkaufsort, Route ins 0.0 mit Routen-Prüfung (Camp, Aktivität, ruhig). Einmal neu einloggen (neue Berechtigung).</li><li>Neu: Trade-Gewinn rechnet zum aktuellen Marktpreis, ein kopierter neuer Preis zählt sofort; „Bei Abbruch jetzt“ zeigt auf der aufgeklappten Karte, was ein Abbruch gerade bringt oder kostet.</li><li>Neu: Versehentlich sofort verkauft? Die Trade-Karte bietet „nachkaufen?“ an – Ziel erhöhen, die neue Kauforder wird mit überwacht.</li><li>Neu: An Trades und Läufen steht, von wann die EVE-Daten sind und ab wann neue kommen („neu: 14:40“) – auch zugeklappt; „wartet auf EVE“, solange Käufe noch nicht gebucht sind.</li><li>Neu: Discord-Fenster – Rechtsklick auf ein falsch geschriebenes Wort zeigt Vorschläge und „Zum Wörterbuch hinzufügen“; Rechtschreibprüfung im ⚙-Menü abschaltbar.</li><li>Neu: Suchergebnis löschen (kleines ✕ neben „Suchoptionen“) in Trades, Hauling und Hub-Handel. „EVE Omni neu starten“ im Infobereich und unter Einstellungen.</li><li>Neu: Stil EVE noch näher am Spiel – Kopfleiste, Symbole, Reiter und Unterstrich 1:1 wie in EVE, Punktraster im aktiven Overlay, Grün wie in EVE. Kopfleiste und Reiter bleiben beim Zoomen gleich groß, nur der Inhalt zoomt.</li><li>Neu: Rückfragen und das Rechtsklick-Menü im Infobereich im EVE-Omni-Design.</li><li>Geändert: Gestapelte Reiter springen nicht mehr in Größe und Abstand; ein herausgezogener Reiter erscheint sofort als eigenes Fenster an der Maus. Overlays gleichen beim Einrasten und Größe-Ändern Höhe bzw. Breite an, wenn sie höchstens 10 px abweichen.</li><li>Geändert: Konkurrenz zählt deine eigenen Orders nicht mehr mit. Ort in der Watchlist nur noch aufgeklappt. Programm-Symbol überall gleich und etwas größer.</li><li>Geändert: „Waren prüfen“ springt sichtbar auf max. 2000; EVE starten/beenden im OmniCom-Overlay ab Werk an.</li><li>Behoben: Trades aus Orders hießen manchmal „#17871“ statt des Warennamens.</li></ul></details>
+<details class="skills-more"><summary>Beta 5.1.0 · 20.10.2026</summary><ul class="about-list"><li>Neu: Overlays stapeln wie in EVE – ein Overlay an der Kopfleiste auf ein anderes ziehen macht daraus Reiter; einen Reiter herausziehen gibt wieder ein eigenes Fenster. Deckkraft, Sperren, Durchklicken und Vordergrund gelten für den ganzen Stapel.</li><li>Neu: Hauptfenster aufgeräumt – Vor/Zurück oben links (auch Maustasten 4/5 und Alt + ←/→), Name des Bereichs in der Kopfleiste, Unterreiter aller Bereiche als Liste links; Kopfleiste, OmniCom-Leiste und Inhalt im Stil der Overlays.</li><li>Neu: Trading und Hauling mit gleichem Aufbau (Suchen · Ergebnisse · Meine Trades bzw. Meine Läufe · Gewinne), Hauling-Ergebnisse als Karten wie im Overlay, Meine Trades mit Reitern Laufend/Erledigt/Abgebrochen. „Markt-Scanner“ heißt jetzt „Trades scannen“. Orders an allen Stationen werden Trades; Orders und Order-Verlauf sind Reiter unter Trading.</li><li>Neu: Trades- und Hauling-Overlay gleich aufgebaut (Handelscharakter oben, „Suchoptionen“ immer an derselben Stelle); das Hauling-Overlay zeigt deine laufenden Läufe mit Summe, Sortieren und Zuklappen.</li><li>Neu: Eigener Bereich „Fittings“ (Meine Fittings + Workbench) mit OmniCom-Symbol und Overlay.</li><li>Neu: Uhr &amp; Timer – Timer mit Wochentagen und Wiederholung, Stoppuhr; Linksklick auf die OmniCom-Uhr öffnet die Timer.</li><li>Neu: OmniCom-Overlay mit zwei kleinen Knöpfen EVE starten (grün) / beenden (rot), einschaltbar unter Einstellungen › OmniCom.</li><li>Neu: Discord- und Browser-Fenster im Stil EVE – Rahmen, Symbole und Designfarbe wie die Overlays, das zuletzt angeklickte Fenster wird als aktiv markiert.</li><li>Neu: Kurier sucht die Region des Piloten automatisch mit, Filter „ab hier“. PI mit Bildern von Planeten und Anlagen. Watchlist-Lauf zeigt das empfohlene Fitting und die Gank-Ampel. Trades-Karte zeigt beim Einkauf schon den Verkaufspreis zum Kopieren. Symbolfarbe und Overlay-Stil als Knöpfe unter Darstellung.</li><li>Geändert: Preisverlauf (Kurven-Knopf) nur noch im Hauptfenster – dort auch bei Läufen, in den Overlays nicht mehr.</li><li>Behoben: Bei vielen Hauling-Läufen reagierten Hauptfenster und Overlays träge (Bereichswechsel bis 1 Sekunde) – jetzt unter 0,1 Sekunden.</li><li>Behoben: Ein Trade sprang auf erledigt, wenn die Kauforder voll war, EVE die letzten Käufe aber noch nicht gebucht hatte.</li><li>Behoben: Neuer Browser-Tab blieb grau; Overlays blitzten beim Öffnen kurz auf; Auswahllisten in den Einstellungen waren fensterbreit; in der Demo wirkte der Sprachwechsel nicht.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.0.7 · 18.10.2026</summary><ul class="about-list"><li>Neu: Overlay-Stil „EVE“ sieht aus wie die Fenster im Spiel – echte EVE-Schrift aus deiner eigenen EVE-Installation (nur gelesen, sonst eine ähnliche freie Schrift), Schrift-Rollen wie in EVE, Knöpfe/Reiter/Karten/Kanten wie im Spiel, Leuchten beim Darüberfahren, Kopfleiste mit ⋮-Menü (Aktualisieren, Durchklicken, Vordergrund, Fenster-Optionen) und — zum Einklappen. Menüs und aufgeklappte Auswahllisten wie das EVE-Menü. Stil „EVE Omni“ bleibt wie bisher.</li><li>Neu: Sechs EVE-Farbthemen (Amarr, Caldari, Gallente, Kohle, Minmatar, ORE) genau wie im Spiel gemessen. Das zuletzt angeklickte Overlay wird wie das aktive EVE-Fenster markiert (Einstellungen › Darstellung › „Aktives Overlay“).</li><li>Neu: Farbthema automatisch aus EVE – EVE Omni liest das Thema des Charakters, dessen Client gerade vorne ist, und wechselt beim Durchtabben mit (Einstellungen › Darstellung, abschaltbar).</li><li>Neu: Gank-Systeme in der Rechnung – führt ein Hauling- oder Hub-Handel-Weg über Uedama, Sivala &amp; Co. (Liste änderbar), rechnet der Gank-Schutz dort mit 75 % der Grenze und lädt weniger; Hinweis „⚠ über …“ an der Ampel.</li><li>Neu: „Schiff verloren …“ beim Prüfen eines Laufs – holt den Abschussbericht direkt von EVE (einmal neu einloggen, neue Berechtigung), sonst von zKillboard, sonst Schätzung aus Schiff + Fitting; Betrag änderbar, zählt ins Ergebnis des Laufs.</li><li>Neu: Produktion – Kostenindex von Hand (z. B. Wurmloch, dort liefert EVE keinen) und Anlagensteuer mit Nachkommastellen (1,9 % wurde zu 19 %). Danke an aaronmaynard (GitHub #6, #7).</li><li>Neu: Discord-Fenster skaliert mit der Overlay-Skalierung, Strg + Mausrad zoomt zusätzlich. Gewinn in allen Ergebniszeilen der Overlays grün. Trades: „läuft ab“ in der Ortszeile. Hauling-/Hub-Overlay: „Ergebnis verwerfen“, eine neue Suche leert das alte Ergebnis sofort.</li><li>Behoben: Markt-Knopf im Overlay zeigte nie, ob das Marktfenster in EVE aufging – jetzt ✓/✗ mit Charakter bzw. Grund; kurz nach dem Start nimmt er den laufenden Client.</li><li>Behoben: OmniCom-Uhr-Menü wurde im schmalen OmniCom abgeschnitten; Menüs von OmniCom und Client-Vorschau im Stil EVE (eigenes Menüfenster, sonst Windows-Menü). Englisch: „Destination“ ragt nicht mehr ins Feld.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.0.6 · 17.10.2026</summary><ul class="about-list"><li>Behoben: „Als Ziel setzen“ im Hauling-Overlay kam manchmal nicht oder sehr verzögert an, ohne dass man es sah. Das Overlay zeigt jetzt sofort „Setze Ziel …“ und danach, für welchen Charakter das Ziel gesetzt wurde oder warum nicht. Antwortet EVE nicht, kommt nach 15 Sekunden eine Meldung statt endlos zu warten; die Station wird beim zweiten Klick nicht mehr neu nachgeschlagen.</li><li>Behoben: OmniBreaker zeichnete nach dem Schließen unsichtbar weiter (bis zu 60 % Grafikkarten-Last, bis zum Neustart) – jetzt ruht es, solange das Spielfeld nicht zu sehen ist. Gilt auch in der Handy-App.</li><li>Weniger Arbeitsspeicher: geschlossene Overlays bleiben nur noch für die 8 zuletzt geschlossenen versteckt bereit (sofort wieder da), ältere werden wirklich beendet – vorher blieb jedes je geöffnete Overlay mit ~150 MB im Speicher.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.0.5 · 17.10.2026</summary><ul class="about-list"><li>Einrichtungs-Assistent: zuerst den Overlay-Stil wählen (EVE oder EVE Omni), danach das Farbschema – der Stil bringt sein Standard-Schema mit (EVE → Caldari, EVE Omni → EVE Omni). Neues Standard-Farbschema ohne eigene Wahl: Caldari (vorher Photon).</li><li>Farbschema „EVE Omni“ (vorher „EVE Omni · Homepage“) hat neue Standardfarben: Gold-Akzent auf Dunkelblau. Wer den Overlay-Stil „EVE Omni“ wählt, bekommt dieses Schema automatisch.</li><li>Einstellungen › Daten: Profile und Sicherungen der EVE-Einstellungen stehen in getrennten Auswahlen – „Profil laden“ zeigt nur Profile, „Sicherung wiederherstellen“ nur Sicherungen, jeweils mit eigenem Laden- und Löschen-Knopf.</li><li>Produktions-Planer: Erfindung (T2) mit Chance aus deinen Skills, Decryptoren, Datenkernen und Kosten je T2-Lauf – bei T2-Produkten lassen sich die Erfindungskosten einrechnen. Reaktionen (Athanor/Tatara, eigener Kostenindex, auch im Bauteile-Baum). Kopieren und Forschen (ME/TE) mit Kosten und Dauer. Neu: Der Planer rechnet deine echten Industrie-Jobs der letzten 30 Tage nach und zeigt „geprüft“ – weichen sie ab, richtet er die Rechnung danach aus.</li><li>OmniCom-Overlay: Symbole lassen sich wie auf dem Handy in Gruppen hineinziehen (auf das Gruppen-Symbol oder ein Symbol der Gruppe) und wieder herausziehen (auf „Zurück“, ein Symbol oben oder freie Fläche). Gilt für Favoriten + Ordner, Gruppen aufklappen und „Fenster wächst“; leere Gruppen bleiben als Ablageziel stehen.</li><li>Behoben: EVE-Omni-Browser – bei Anmeldungen mit Popup-Fenster (z. B. Claude, „Mit Google anmelden“) kam „A JavaScript error occurred in the main process“. Anmelde-Popups öffnen jetzt als eigenes kleines Fenster und schließen sich nach der Anmeldung; schließt sich ein Tab selbst, verschwindet er sauber.</li><li>OmniBreaker: Level werden jetzt freigespielt – wählbar sind die geschafften Level und das nächste, der Rest ist mit Schloss gesperrt. Neuer Knopf „Kampagne löschen“ (zweiter Klick bestätigt) setzt Spielstand und Level-Bestwerte zurück; Highscores und weltweite Bestenliste bleiben. Im Menü steht die Bestenliste jetzt oben, die Level-Auswahl darunter. Gilt auch in der Handy-App.</li><li>Behoben: OmniBreaker – das Leuchten getroffener Erzbrocken war eckig (vom Bildrand abgeschnitten), jetzt rund; Steine auf den Bahnen leuchten weich statt als Rechteck. Gilt auch in der Handy-App.</li><li>Neocom heißt jetzt OmniCom. Das OmniCom-Overlay hat oben das Omni-Symbol mit „OMNICOM“ (hochkant nur das Symbol) und einen Miniknopf, der den Aufbau umschaltet: Raster (alle Symbole), Favoriten + Ordner (meistbenutzte Ansichten oben, Gruppen öffnen wie ein Handy-Ordner), Gruppen aufklappen, oder Gruppen aufklappen mit Fenster, das nach rechts wächst. Auch unter Einstellungen › OmniCom. Die Gruppen im Overlay sind getrennt von der Leiste im großen Fenster.</li><li>Jukebox: die Darstellung „Weltraum“ ist jetzt Standard. Links aus EVE Omni (Workbench, zKillboard, DOTLAN, Discord-Chat …) öffnen im EVE-Omni-Browser über EVE; eigene Seiten (Homepage, GitHub, Discord-Einladung, YouTube) im normalen Browser. Abschaltbar unter Einstellungen › EVE Omni › Fenster & Overlays.</li><li>OmniBreaker schwerer: mehr orange Erzadern (normale Level etwas, Finale deutlich), Finale-Level ohne Extra-Drohne. Gilt auch in der Handy-App.</li><li>OmniBreaker: Getroffene Erze und Steine der Bahnen lösen sich nach 3 Sekunden auf – die Drohne bleibt nicht mehr ewig in einer U-Bahn oder Mulde liegen. Nach dem letzten orangen Erz läuft die Zeitlupe, bis die letzte Drohne unten ankommt. Der Fang-Bonus leuchtet jetzt am Umriss des Frachters statt als Kasten. Im Programm gibt es nur noch die weltweite Bestenliste, sie lädt gleich beim Öffnen.</li><li>Neu: Produktions-Planer – Bauteile selbst bauen oder kaufen. Jedes herstellbare Material (z. B. Kapital-Bauteile) lässt sich aufklappen: Kaufen oder Bauen, Kosten beider Wege, ME/TE aus deiner eigenen Blaupause (sonst 0, änderbar), darunter die Unterbauteile. Voreinstellung ist der günstigere Weg. Dazu „Alles kaufen“ gegen „Mit Bauteilen selbst bauen“ mit Ersparnis, Gesamtzeit und eine Einkaufsliste nur mit dem, was wirklich gekauft wird.</li><li>Workbench: im Overlay gibt es jetzt den kleinen Knopf „Alle Fits laden“ (Index), dazu „Weiter indexieren“, „Aktualisieren“ und „Abbrechen“. Beim Aufklappen eines Fits ist die Einkaufsliste gleich offen. „Preis“ sortieren lädt die Preise der angezeigten Fits (mit Fortschritt).</li><li>Jukebox „Weltraum“: läuft jetzt auch im Jukebox-Overlay und im Miniplayer (dort brach die Zeichnung ab) und liegt dort hinter dem ganzen Player – Cover, Knöpfe, Playlists und Titelliste. Neu: Szenen wechseln per Zufall zur Musik – andere Farbwelten, Nebel kommt und geht, die Linie wechselt zwischen EKG, Welle und Punkten.</li><li>OmniCom: der Knopf „Handel“ (Hauling und Hub-Handel) heißt jetzt „Hauling“ – im OmniCom, im Overlay-Titel, in den Einstellungen und in der Funktionsliste. Die Gruppe „Handel“ bleibt.</li><li>Hauling-Läufe: Verlust im Direktverkauf (Verkaufs-Check) färbt den Lauf nur noch gelb (Ebene „Problem“). Rot bleibt er bei Minus in der Prognose oder vergessener Ware.</li><li>Neu: Jukebox-Darstellung „Weltraum“ – Nebel, fliegende Sterne und eine EKG-Linie liegen als Hintergrund hinter der ganzen Jukebox-Karte (Overlay und Miniplayer); der Bass lässt den Nebel pulsieren und die Linie ausschlagen, die Lautstärke treibt die Sterne an, die Farben wandern laufend. Wählbar per Klick auf die Darstellung oder unter Klang & Extras.</li><li>Neu: Glocke 🔔 je Trade und Lauf in der Watchlist (Hauptfenster und Overlay) – ausgeschaltet 🔕 gibt es für diesen Auftrag keinen Ton, keine Windows- oder Handy-Meldung und kein Blinken mehr; die Karte zeigt den Stand weiter. Discord-Fenster hat jetzt die Titelleiste der anderen Overlays (Symbol und Titel in der Mitte, Durchklicken, Vordergrund, ⚙ Optionen, Sperren). Browser zeigt oben links das Omni-Symbol. Fenster rasten sanfter ein (erst ab 8 px, lösen nach 25 px) und übernehmen die Breite des Nachbarn nur noch, wenn sie fast gleich breit sind.</li><li>Neu: Produktions-Planer (Industrie › Produktion und Overlay „Produktion“) – lohnt sich die Herstellung, oder bringt es mehr, die Materialien direkt zu verkaufen? Eigene Blaupause (mit Besitzer-Porträt, ME/TE übernommen) oder beliebiges Item, Läufe, Anlage-Profile (NPC-Station, Raitaru, Azbel, Sotiyo, Sicherheit, Rigs, Anlagensteuer), Systemkostenindex live, Jita-Preise; Kostenaufstellung wie im Spiel (EIV, Grundkosten, Strukturbonus, Anlagensteuer, SCC 4 %), Gewinn netto pro Stück und gesamt, ROI, Break-even- und Verkaufspreis zum Kopieren, Einkaufsliste (Multibuy), „habe ich schon“ je Material. Rezepte aus den EVE-Spieldaten (4.053 Blaupausen) sind eingebaut.</li><li>OmniBreaker schwerer: 10 statt 12 Drohnen je Level (Finale +1 wie bisher) – vorher blieben meist 2–5 Drohnen übrig. Gilt auch in der Handy-App.</li><li>Neu: Discord auch im OmniCom des Hauptfensters (Gruppe „Sonstiges“), Symbol im Stil und in der Farbe der anderen; ungelesene Discord-Nachrichten als Zahl am Symbol, roter Punkt an der Gruppe und im OmniCom-Overlay. Jukebox: Balken, Welle und Kreise laufen jetzt flüssig (mit der Bildrate statt 14 Bildern pro Sekunde).</li></ul></details>
@@ -9707,6 +9773,21 @@ if (typeof document !== 'undefined') {
     "Keine laufenden Läufe. Beim Ergebnis „＋ Lauf merken“, dann siehst du sie hier.": "No running hauling runs. Use “＋ Save run” on a result and it shows up here.",
     "Mindestmarge für Trade-Warnungen": "Minimum margin for trade warnings", "0 % (nur Verlust)": "0 % (loss only)",
     "Gelbe Warnung in „Meine Trades“ und im Trades-Overlay, wenn die Marge nach Gebühren unter diesen Wert fällt. Danach richtet sich auch „Nicht über“ (Höchstkaufpreis). 0 % = nur bei Verlust warnen.": "Yellow warning in “My trades” and the trades overlay when the margin after fees drops below this value. “Not above” (maximum buy price) follows it too. 0 % = warn only on a loss.",
+    "Neuer Preis": "New price", "Zum Marktpreis": "At market price",   // AV
+    "nachkaufen?": "buy again?", "Das Einkaufsziel steigt um diese Menge – die neue Kauforder wird wieder überwacht (überboten, nicht über)": "Raises the buy target by this amount – the new buy order is monitored again (outbid, not above)",
+    "Kasse bisher – die Maklergebühr einer offenen Kauforder ist schon bezahlt und kommt nicht zurück": "Cash so far – the broker fee of an open buy order is already paid and won't come back",
+    "Kasse bisher + Ware im Lager sofort an die beste Kauforder verkauft (nach Steuer)": "Cash so far + stock sold right away to the best buy order (after tax)",
+    "Kasse bisher + Ware im Lager als Verkaufsorder zum Marktpreis (nach Steuer und Maklergebühr) – dauert, bis sie verkauft ist": "Cash so far + stock listed as sell order at market price (after tax and broker fee) – takes until it sells",
+    "Bei Abbruch jetzt:": "If cancelled now:", "Bei Abbruch jetzt, sofort verkauft:": "If cancelled now, sold right away:", "zum Marktpreis eingestellt:": "listed at market price:",
+    "Je Stück: Kauf = Ø deiner Käufe bzw. Kauforder, Verkauf = gerade kopierter neuer Preis (bis EVE die Order meldet). Gesamt = gekauft × Ø-Kauf + Rest × Orderpreis, nach Steuer und Gebühren.": "Per unit: buy = average of your buys or buy order, sell = new price just copied (until EVE reports the order). Total = bought × avg buy + rest × order price, after tax and fees.",
+    "Je Stück: Kauf = Ø deiner Käufe bzw. Kauforder, Verkauf = deine Verkaufsorder. Gesamt = gekauft × Ø-Kauf + Rest × Orderpreis, nach Steuer und Gebühren.": "Per unit: buy = average of your buys or buy order, sell = your sell order. Total = bought × avg buy + rest × order price, after tax and fees.",
+    "Je Stück: Kauf = Ø deiner Käufe bzw. Kauforder, Verkauf = aktueller Marktpreis. Gesamt = gekauft × Ø-Kauf + Rest × Orderpreis, nach Steuer und Gebühren.": "Per unit: buy = average of your buys or buy order, sell = current market price. Total = bought × avg buy + rest × order price, after tax and fees.",
+    "Je Stück: Kauf = Ø deiner Käufe bzw. Kauforder, Verkauf = Plan. Gesamt = gekauft × Ø-Kauf + Rest × Orderpreis, nach Steuer und Gebühren.": "Per unit: buy = average of your buys or buy order, sell = plan. Total = bought × avg buy + rest × order price, after tax and fees.",
+    "Route: Camp": "Route: camp", "Route: Aktivität": "Route: activity", "Route: ruhig": "Route: calm", "⛔ Camp": "⛔ Camp", "⚠ Aktivität": "⚠ Activity", "✓ ruhig": "✓ calm",   // AO2 Block D
+    "Route Low/Null, letzte Stunde": "Route low/null, last hour", "keine Kills": "no kills", "EVE-Daten gerade nicht erreichbar": "EVE data currently unavailable",
+    "Keine reine Highsec-Route möglich – gerechnet mit der kürzesten.": "No highsec-only route possible – calculated with the shortest.",
+    "Ansiblex-Brücken und Jump-Frachter-Sprünge fehlen in der Route – echte Sprünge können weniger sein. Gank-Ampel gilt hier nur für Highsec.": "Ansiblex bridges and jump freighter jumps are not in the route – real jumps may be fewer. The gank light only applies to highsec.",
+    "Struktur-Markt: Preise live aus": "Structure market: live prices from", ", Tagesumsatz nur aus der Region (Schätzung) – Maklergebühr der Struktur unter Einstellungen › Konto.": ", daily volume only from the region (estimate) – structure broker fee under Settings › Account.",
     "Nicht über": "Not above", "nicht über": "not above", "Höchstpreis kopieren": "Copy maximum price", "Markt leer – kein Vergleich möglich": "Market empty – no comparison possible",
     "Unter deiner Mindestmarge": "Below your minimum margin", "beim aktuellen Kaufpreis nur": "at the current buy price only", "beim Marktpreis": "at the market price",
     "Markt liegt": "Market is", "unter deinem Plan": "below your plan", "über deinem Plan": "above your plan", "Stk": "unit",
@@ -11562,7 +11643,9 @@ if (typeof document !== 'undefined') {
     "eigener Wert": "own value",
     "Eigener Wert (Laderaum-Feld)": "Own value (cargo field)",
     "Eigenes": "Own",
-    "Ein-/Ausblenden": "Show/hide",
+    "Ein-/Ausblenden": "Show/hide", "Sound: alle EVE-Clients stumm / Ton an": "Sound: mute / unmute all EVE clients", "Sound: vorderer Client lauter": "Sound: front client louder", "Sound: vorderer Client leiser": "Sound: front client quieter",
+    "EVE Omni neu starten": "Restart EVE Omni", "Beendet EVE Omni und startet es gleich wieder – nach einem Update läuft dann die neue Version": "Closes EVE Omni and starts it again right away – after an update the new version runs",
+    "Sound-Lautstärke": "Sound volume", "Nicht laufende Charaktere zum Voreinstellen – sie bekommen ihre Werte, sobald sie starten.": "Characters not running, to preset – they get their values as soon as they start.",
     "Eine Playlist „": "A playlist “",
     "Eingegebene Wegpunkte": "Entered waypoints",
     "eingeloggt": "logged in",
@@ -12215,6 +12298,21 @@ if (typeof document !== 'undefined') {
     "Platz freihalten (m³)": "Keep free (m³)",
     "Nur kleine Waren (m³/Stück)": "Small items only (m³/unit)",
     "Waren prüfen (Anzahl)": "Items to check (count)",
+    "Waren prüfen (Anzahl, max. 2000)": "Items to check (count, max. 2000)",
+    "Automatik: hintere Clients leiser": "Auto: background clients quieter", "Wenn hinten": "In background", "vorne": "in front", "stumm": "muted",
+    "Alles zurück auf 100 %": "Reset all to 100 %", "Suchergebnis löschen": "Clear search result",
+    "Markt-Strukturen (Keepstar, Fortizar …)": "Market structures (Keepstar, Fortizar …)", "Struktur suchen (Name, mind. 3 Zeichen)": "Search structure (name, at least 3 characters)", "Suchen": "Search",
+    "Markt einer Spieler-Struktur (z. B. Allianz-Keepstar im 0.0) wie einen Hub nutzen: Trades scannen, Preise, eigene Trades dort. Geht nur mit einem Charakter, der dort andocken darf. Neue Berechtigung: einmal neu einloggen.": "Use the market of a player structure (e.g. an alliance Keepstar in null-sec) like a hub: scan trades, prices, your trades there. Only works with a character that can dock there. New permission: log in again once.",
+    "Deine Markt-Strukturen": "Your market structures", "Noch keine Struktur eingetragen.": "No structure added yet.", "Maklergebühr %": "Broker fee %", "Entfernen": "Remove", "Hinzufügen": "Add",
+    "Die Maklergebühr setzt der Besitzer der Struktur – steht im Markt-Fenster in EVE": "The structure owner sets the broker fee – shown in EVE's market window",
+    "prüfe Zugriff …": "checking access …", "suche …": "searching …", "Mindestens 3 Zeichen und einen Charakter wählen.": "Enter at least 3 characters and pick a character.",
+    "Nichts gefunden – nur Strukturen, an denen der Charakter andocken darf.": "Nothing found – only structures the character can dock at.", "Nichts gefunden.": "Nothing found.",
+    "Suche nicht erlaubt – einmal neu einloggen (neue Berechtigung).": "Search not allowed – log in again once (new permission).", "Für diese Struktur ist kein Charakter gewählt.": "No character selected for this structure.", "wartet auf EVE (Buchungen bis ~60 Min.)": "waiting for EVE (transactions up to ~60 min)", "Marktpreise: alle 5 Min.": "Market prices: every 5 min.",
+    "EVE liefert eigene Orders höchstens alle 20 Min. und Buchungen (Käufe/Verkäufe) höchstens alle 60 Min. neu – Änderungen erscheinen erst dann hier.": "EVE refreshes your own orders at most every 20 min and transactions (buys/sells) at most every 60 min – changes only show up here after that.", "Alle Clients": "All clients", "Gesamtlautstärke aller EVE-Clients": "Master volume of all EVE clients", "Alle Clients stumm / Ton an": "Mute / unmute all clients", "Kein EVE-Client läuft.": "No EVE client running.",
+    "Stumm schalten / Ton an": "Mute / unmute", "Lautstärke, wenn dieser Client vorne ist": "Volume while this client is in front",
+    "Lautstärke, wenn ein anderer Client vorne ist (nur mit Automatik; ganz links = stumm)": "Volume while another client is in front (auto only; far left = muted)",
+    "Windows-Lautstärke je EVE-Client (wie der Lautstärkemixer). EVEs eigene Regler bleiben unverändert.": "Windows volume per EVE client (like the volume mixer). EVE's own sliders stay unchanged.",
+    "Sound: Lautstärke je EVE-Client, hintere Clients automatisch leiser oder stumm": "Sound: volume per EVE client, background clients automatically quieter or muted",
     "Verkaufssteuer % (aus Skills)": "Sales tax % (from skills)",
     "Verkauf darf dauern (Tage)": "Selling may take (days)",
     "Flugzeit je Sprung (Min.)": "Flight time per jump (min.)",
@@ -12356,6 +12454,10 @@ if (typeof document !== 'undefined') {
     [/^Gesendet um (\S+) \((\d+) Trades, (\d+) Läufe, (\d+) Merklisten-Einträge\)\.$/, "Sent at $1 ($2 trades, $3 runs, $4 watchlist entries)."], [/^Senden ging nicht: (.+)$/, "Sending failed: $1"], [/^Push: zuletzt gesendet um (\S+)\.$/, "Push: last sent at $1."], [/^Push ging nicht: (.+)$/, "Push failed: $1"],   // 13.10.: Mit Handy abgleichen
     [/^Broker ([\d.,]+) % · Steuer ([\d.,]+) %$/, "Broker $1 % · tax $2 %"],
     [/^(\d+) T$/, "$1 d"], [/^(\d+) Std$/, "$1 h"],   // MB: Restlaufzeit im Orderbuch
+    [/^(?:(\d+) Lowsec)?(?: \+ )?(?:(\d+) Nullsec)? · letzte Stunde$/, function(m, l, n){ return [l ? l + " lowsec" : "", n ? n + " nullsec" : ""].filter(Boolean).join(" + ") + " · last hour"; }],   // AO2 Block D
+    [/^(.+)-Tor in (.+) \((\d+) Kills, vor (?:(\d+) Std\. )?(\d+) Min\.(, .+)?\)$/, function(m, g, sy, n, h, mi, tg){ return g + " gate in " + sy + " (" + n + " kills, " + (h ? h + " h " : "") + mi + " min ago" + (tg || "") + ")"; }],
+    [/^(.+) \((\d+) Kills, (\d+) Sprünge\)$/, "$1 ($2 kills, $3 jumps)"],
+    [/^([\d.]+) sofort verkauft$/, "$1 sold right away"],   // BA
     [/^Keine Ware gefunden: (.+)$/, "No item found: $1"], [/^Mail ist noch nicht aktiviert für: (.+)$/, "Mail is not activated yet for: $1"], [/^Nicht gefunden: (.+)$/, "Not found: $1"], [/^Nicht gesendet: (.+)$/, "Not sent: $1"], [/^In EVE öffnen ging nicht: (.+)$/, "Opening in EVE failed: $1"], [/^Mail: (\d+) ungelesen$/, "Mail: $1 unread"], [/^EVE Omni: Neue EVE-Mail \((\d+)\)$/, "EVE Omni: New EVE mail ($1)"], [/^Mail „(.+)“ in EVE löschen\?$/, "Delete mail “$1” in EVE?"], [/^📍 Einkauf = Standort von (.+) \((.+)\)$/, "📍 Buying at the location of $1 ($2)"], [/^📍 (.+) ist in (.+) – nicht in einem Hub, Einkauf bleibt\.$/, "📍 $1 is in $2 – not in a hub, buying location stays."], [/^Nach Broker ([\d.,]+) % \(Kauf und Verkauf\) und Steuer ([\d.,]+) % – (.+)\. Ändern unter Handel › Station-Trading\.$/, function(m, a, b, c){ return "After broker " + a + " % (buy and sell) and tax " + b + " % – " + (c === "Skills aus Konto" ? "skills from account" : c) + ". Change under Trading › Station trading."; }], [/^Lohnt ab ([\d.,]+) % Marge und ([\d.,]+) Stück Umsatz am Tag \(wie unter Handel › Station-Trading eingestellt\)$/, "Worth it from $1 % margin and $2 units traded per day (as set under Trading › Station trading)"], [/^„(.+)“ steht in der Preis-Merkliste \(Handel › Station-Trading\)\.$/, "“$1” is on the price watchlist (Trading › Station trading)."], [/^(✓ lohnt|~ Marge knapp|~ wenig Umsatz|✗ Verlust) · Gewinn je Stück (.+)$/, function(m, a, b){ return { "✓ lohnt": "✓ worth it", "~ Marge knapp": "~ thin margin", "~ wenig Umsatz": "~ low volume", "✗ Verlust": "✗ loss" }[a] + " · profit per unit " + b; }], [/^Markt nicht geladen: (.+)$/, "Market not loaded: $1"], [/^Warengruppen nicht geladen: (.+)$/, "Market groups not loaded: $1"],   // MB
     [/^Warengruppen werden einmalig von EVE geladen( \([\d \/]+\))? …$/, "Loading market groups from EVE once$1 …"], [/^Umkreis um (.+) – Sprünge über Stargates\.$/, "Radius around $1 – jumps via stargates."],
     [/^Speicher: ([\d,]+) von (\d+) MB belegt \((\d+) %\)\.( Fast voll.*?\.| Zwischenspeicher.*?\.)( Freigegeben: (\d+) Zwischenspeicher\.)?$/, function(m, a, mx, b, c, d, e){   // S1
@@ -12384,7 +12486,7 @@ if (typeof document !== 'undefined') {
     [/^läuft seit (.+)$/, function(m, a){ return "running for " + U(a); }], [/^läuft ab in (.+)$/, function(m, a){ return "expires in " + U(a); }], [/^in (\d+ T .+)$/, function(m, a){ return "in " + U(a); }],
     [/^läuft noch (.+)$/, function(m, a){ return "running for " + U(a); }], [/^Extraktor noch (.+)$/, function(m, a){ return "Extractor left " + U(a); }],
     [/^(\d+) Min vorher$/, "$1 min before"], [/^([\d.]+) \/ Std$/, "$1 / h"],
-    [/^Stand (\d\d:\d\d(?::\d\d)?)$/, "As of $1"], [/^· Stand (.+)$/, "· as of $1"], [/^Stand (\d\d\.\d\d\., \d\d:\d\d)$/, "As of $1"], [/^Stand (\d\d\.\d\d\., \d\d:\d\d) · Ausbaustufe (\d)$/, "As of $1 · upgrade level $2"],
+    [/^✓ (.+) eingetragen – erscheint unter Trading › Trades scannen als Hub\.$/, "✓ $1 added – shows up under Trading › Scan trades as a hub."], [/^Kein Zugriff auf den Markt von (.+) – darf der Charakter dort andocken\? Sonst einmal neu einloggen \(neue Berechtigung\)\.$/, "No access to the market of $1 – can the character dock there? Otherwise log in again once (new permission)."], [/^(.+) \(Struktur\)$/, "$1 (structure)"], [/^(.*)· liest (.+)$/, "$1· read by $2"], [/^Aus deinen Orders:$/, "From your orders:"], [/^(.+) übernehmen$/, "Add $1"], [/^neu: (.+)$/, "new: $1"], [/^EVE-Daten: (.+)$/, function(m, x){ return "EVE data: " + x.replace(/Buchungen/g, "Transactions").replace(/, neu ab /g, ", new from "); }], [/^Stand (\d\d:\d\d(?::\d\d)?)$/, "As of $1"], [/^· Stand (.+)$/, "· as of $1"], [/^Stand (\d\d\.\d\d\., \d\d:\d\d)$/, "As of $1"], [/^Stand (\d\d\.\d\d\., \d\d:\d\d) · Ausbaustufe (\d)$/, "As of $1 · upgrade level $2"],
     [/^Stand (.+)\. Standort\/Schiff aktualisiert EVE etwa alle 5 Sekunden, online-Status jede Minute\.$/, "As of $1. EVE updates location/ship about every 5 seconds, online status every minute."],
     [/^\((\S+) (.+)\) · ([\d.]+) SP\/Std$/, function(m, d, t, n){ return "(" + (DAYS[d] || d) + " " + t + ") · " + n + " SP/h"; }],
     [/^Alle Skills anzeigen \((\d+)\)$/, "Show all skills ($1)"], [/^Warteschlange anzeigen \((\d+)\)$/, "Show queue ($1)"], [/^Alle Titel \((\d+)\)$/, "All tracks ($1)"],
@@ -12905,7 +13007,7 @@ if (typeof document !== 'undefined') {
     root.addEventListener("mousedown", selOpen); root.addEventListener("input", selOpen);
     root.addEventListener("keydown", function(ev){ if (ev.key === "ArrowDown" || ev.key === "ArrowUp" || ev.key === " ") selOpen(ev); });
     root.addEventListener("change", function(ev){ var t = ev.target; selDone();
-      if (t && t.hasAttribute && t.hasAttribute("data-ova-change")){ send({ type: t.getAttribute("data-ova-change"), arg: t.value }); return; }   // HO2
+      if (t && t.hasAttribute && t.hasAttribute("data-ova-change")){ send({ type: t.getAttribute("data-ova-change"), arg: t.value, key: t.getAttribute("data-arg") }); return; }   // HO2 (AO1: data-arg = wofür)
       if (t && t.hasAttribute && t.hasAttribute("data-ov-now")) send({ type: "mirrorSet", form: (function(o){ o[t.getAttribute("data-ovf")] = ovFormVal(t); return o; })({}) }); });   // Schiff/Fitting sofort übernehmen → Laderaum zieht nach
     root.addEventListener("focusout", selDone);
     root.addEventListener("keydown", function(ev){ if (ev.key === "Escape") selDone(); });
@@ -12971,7 +13073,8 @@ if (typeof document !== 'undefined') {
     var tabs = $("ov-tabs"), body = $("ov-body");
     tabs.innerHTML = '<span class="ov-tab sat-title" aria-selected="true"></span>';
     var hostS = {}, lookAlpha = 1, lookMapBg = null, lookScale = 1, satZoom = 1, satZoomT = 0;
-    function satScale(){ de.style.setProperty("--ov-scale", String(Math.round(lookScale * satZoom * 100) / 100)); }   // LL3: Overlay-Größe (Einstellungen) × eigener Zoom
+    function satScale(){ de.style.setProperty("--ov-scale", String(Math.round(lookScale * satZoom * 100) / 100)); de.style.setProperty("--dpr", String(window.devicePixelRatio || 1)); }   // AW: --dpr für das Punktraster
+    window.addEventListener("resize", function(){ de.style.setProperty("--dpr", String(window.devicePixelRatio || 1)); });   // ponytail: Monitorwechsel mit anderer Skalierung kommt über resize – matchMedia(resolution), falls das nicht reicht   // LL3: Overlay-Größe (Einstellungen) × eigener Zoom
     ovMiniWire({
       get: function(){ var w = (hostS.windows || {})[view] || {}; return { alpha: lookAlpha, lock: w.lock, close: w.autoClose, map: view === "karte", mapBg: lookMapBg }; },
       alpha: function(v){ lookAlpha = v; H.satAction({ type: "alpha", v: v }); },
@@ -13052,7 +13155,7 @@ if (typeof document !== 'undefined') {
       st.ids.forEach(function(id){
         if (id === view){ tabs.appendChild(own); return; }
         var t = document.createElement("span"); t.className = "ov-tab st-tab"; t.setAttribute("role", "tab"); t.setAttribute("aria-selected", "false"); t.setAttribute("data-stab", id);
-        t.textContent = (s.viewNames || {})[id] || id; tabs.appendChild(t);
+        var tn = document.createElement("span"); tn.className = "st-n"; tn.textContent = (s.viewNames || {})[id] || id; t.appendChild(tn); tabs.appendChild(t);   // AP: Name in eigenem Feld wie beim aktiven Reiter
         var bg = (s.satBadges || {})[id]; if (bg){ var bb = document.createElement("span"); bb.className = "ov-badge"; bb.textContent = bg; t.appendChild(bb); }   // Warnzahl auch am hinteren Reiter
       });
       own.setAttribute("data-stab", view);
@@ -13068,13 +13171,20 @@ if (typeof document !== 'undefined') {
       ev.stopPropagation();
       var sx = ev.target.closest(".st-x"); if (sx){ if (H.stackClose) H.stackClose(sx.getAttribute("data-stx")); return; } stDown = { id: t.getAttribute("data-stab"), x: ev.screenX, y: ev.screenY }; try{ tabs.setPointerCapture(ev.pointerId); }catch(e){}
     });
+    function stOutside(ev){ var r = $("ov-bar").getBoundingClientRect(); return ev.clientY > r.bottom + 24 || ev.clientY < r.top - 24 || ev.clientX < 0 || ev.clientX > innerWidth; }
+    // AS (21.10.): sobald der Reiter aus der Leiste gezogen ist, springt sein Fenster heraus und folgt der Maus (vorher erst beim Loslassen)
+    tabs.addEventListener("pointermove", function(ev){
+      var d = stDown; if (!d || d.out || !H.stackOutEnd || !stOutside(ev)) return;
+      d.out = true; H.stackOut(d.id, ev.screenX, ev.screenY, true);
+    });
     tabs.addEventListener("pointerup", function(ev){
       var d = stDown; stDown = null; if (!d) return;
-      var r = $("ov-bar").getBoundingClientRect(), out = ev.clientY > r.bottom + 24 || ev.clientY < r.top - 24 || ev.clientX < 0 || ev.clientX > innerWidth;
+      if (d.out){ H.stackOutEnd(d.id); return; }
+      var out = stOutside(ev);
       if (out && H.stackOut) H.stackOut(d.id, ev.screenX, ev.screenY);
       else if (Math.abs(ev.screenX - d.x) + Math.abs(ev.screenY - d.y) < 6 && d.id !== view && H.stackTab) H.stackTab(d.id);
     });
-    tabs.addEventListener("pointercancel", function(){ stDown = null; });
+    tabs.addEventListener("pointercancel", function(){ var d = stDown; stDown = null; if (d && d.out) H.stackOutEnd(d.id); });
     tabs.addEventListener("contextmenu", function(ev){
       var t = ev.target.closest && ev.target.closest("[data-stab]"); if (!t || !de.classList.contains("sat-stack") || !H.stackOut) return;
       ev.preventDefault(); var id = t.getAttribute("data-stab"), T = window.evTr || function(x){ return x; };
@@ -13306,7 +13416,7 @@ if (typeof document !== 'undefined') {
       (de.__vars || []).forEach(function(k){ de.style.removeProperty(k); }); de.__vars = L.vars ? Object.keys(L.vars) : []; de.__vars.forEach(function(k){ de.style.setProperty(k, L.vars[k]); });
       var ttl = tabs.querySelector(".sat-title");   // AK: im Stapel ist der eigene Titel nicht mehr der erste Reiter
       ttl.innerHTML = d.icon || "";
-      ttl.appendChild(document.createTextNode(d.title || view));
+      var tn = document.createElement("span"); tn.className = "st-n"; tn.textContent = d.title || view; ttl.appendChild(tn);   // AP: gleicher Aufbau wie die hinteren Reiter
       if (d.badge){ var b = document.createElement("span"); b.className = "ov-badge"; b.textContent = String(d.badge); ttl.appendChild(b); }
       if (de.classList.contains("sat-stack")) stackX();
       // T2: nur der gemerkte Karten-Ausschnitt ist neu -> nichts neu bauen (die Karte zeigt ihn schon)
@@ -13357,7 +13467,8 @@ if (typeof document !== 'undefined') {
       var b = ev.target.closest ? ev.target.closest(".tsc-cp-b:not(.hc-btn)") : null;
       if (b){
         ev.stopPropagation();
-        var t = b.getAttribute("data-copy") || "";
+        var t = b.getAttribute("data-copy") || "", tp = b.getAttribute("data-trpend");
+        if (tp){ tp = tp.split("|"); H.satAction({ type: "trPend", id: tp[0], side: tp[1], p: Number(tp[2]) }); }   // AV2
         var ok = function(v){ b.classList.add(v ? "ok" : "fail"); setTimeout(function(){ b.classList.remove("ok"); b.classList.remove("fail"); }, 900); };
         if (H.copyText) H.copyText(t).then(function(){ ok(true); }, function(){ ok(false); });   // U2: ueber das Programm, Overlay hat keinen Fokus
         else if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ ok(true); }, function(){ ok(false); });
@@ -13402,16 +13513,18 @@ if (typeof document !== 'undefined') {
     body.innerHTML = '<div class="ov-empty">Warte auf Daten vom Hauptfenster …</div>';   // 4.0.32: VOR onCommand – preload reicht schon vorliegende Daten sofort weiter, danach darf nichts mehr „Warte …“ drüberschreiben
     H.onCommand(function(cmd){
       if (!cmd) return;
+      if (cmd.type === "eoNote") return eoNoteShow(cmd.text, cmd.ms);   // AT2
       if (cmd.type === "view" && cmd.data && cmd.data.viz){ jbxVizV = cmd.data.viz; var jv = body.querySelector(".ov-jbviz"); if (jv) jbxVizSet(jv, cmd.data.viz); return; }   // JB4
       if (cmd.type === "view" && cmd.data && cmd.data.lookOnly){ lookAlpha = Number(cmd.data.alpha) || 1; de.style.setProperty("--ov-alpha", String(lookAlpha)); return; }   // 4.0.33
       if (cmd.type === "view"){ try{ render(cmd.data); }catch(e){ body.innerHTML = '<div class="ov-empty">Fehler beim Zeichnen: ' + String(e && e.message || e).replace(/</g, "&lt;") + "</div>"; satHtml = ""; } }   // 4.0.31: nicht stumm bei „Warte …“ hängen
       else if (cmd.type === "settings") applySettings(cmd.settings);
       else if (cmd.type === "stackHover") de.classList.toggle("stack-drop", !!cmd.on);
       else if (cmd.type === "stackBadges"){ hostS.satBadges = cmd.badges || {}; stackTabs(hostS); }   // AK: Warnzahl der anderen Reiter   // AK: hier loslassen = Reiter
-      else if (cmd.type === "active"){ var acts = cmd.ids || [cmd.id]; de.classList.toggle("ov-active", acts.indexOf(view) >= 0);   // AD1: zuletzt angeklicktes Overlay; AK: ganzer Stapel
+      else if (cmd.type === "active"){ var acts = cmd.ids || [cmd.id]; de.classList.toggle("ov-active", view === "neocom" || acts.indexOf(view) >= 0);   // AD1: zuletzt angeklicktes Overlay; AK: ganzer Stapel; Nutzer 21.10.: OmniCom immer mit Aktiv-Rand (Farbe folgt dem Farbthema/Client)
         if (view === "neocom"){ var nst = document.getElementById("neo-act-css") || document.head.appendChild(Object.assign(document.createElement("style"), { id: "neo-act-css" })); nst.textContent = acts.map(function(a){ return 'html.ov-eve:not([data-ovmark="off"]) .neo-ov button.on[data-view="' + String(a).replace(/[^\w-]/g, "") + '"]'; }).join(",") + '{border-color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.9)}'; } }   // AF3: OmniCom-Kachel des aktiven Overlays weiß wie im EVE-Neocom; AK: alle Reiter des Stapels
     });
     ovFormWire(body, function(a){ H.satAction(a); });
+    if (view === "neocom") de.classList.add("ov-active");   // Nutzer 21.10.: OmniCom immer aktiv markiert
     H.getSettings().then(applySettings);
     H.ready();
     var askT = setInterval(function(){ if (satHtml !== null || satPending) clearInterval(askT); else H.ready(); }, 2000);   // 4.0.30: bis Daten da sind (ready → Hauptfenster schickt alles neu)
@@ -13579,6 +13692,32 @@ if (typeof document !== 'undefined') {
     rens:     { label:"Rens (Heimatar)",               sys:30002510, region:10000030, station:60004588, stationName:"Rens VI - Moon 8 - Brutor Tribe Treasury" },
     hek:      { label:"Hek (Metropolis)",              sys:30002053, region:10000042, station:60005686, stationName:"Hek VIII - Moon 12 - Boundless Creation Factory" }
   };
+  /* AO2 (21.10.): Markt-Strukturen (Keepstar, Fortizar, Astrahus …) – nur mit Andock-Recht des gewählten Charakters.
+     Gespeichert { id, name, sys, region, cid, brk (Maklergebühr % – setzt der Besitzer) }; Schlüssel "st<id>" wie ein Hub. */
+  var ST_KEY = "eve-zentrale-structs-v1";
+  var stCache = null;   // trHub läuft sehr oft → Liste nur beim Speichern neu lesen
+  function stList(){ if (stCache) return stCache; try{ var l = JSON.parse(localStorage.getItem(ST_KEY) || "[]"); stCache = Array.isArray(l) ? l.filter(function(x){ return x && x.id && x.region; }) : []; }catch(e){ stCache = []; } return stCache; }
+  function stSave(l){ stCache = null; try{ localStorage.setItem(ST_KEY, JSON.stringify(l)); }catch(e){} try{ hubStFill(); }catch(e){} }   // AO2 Block D: Hub-Handel/Hauling-Knöpfe nachziehen
+  function stHub(x){ return { label: x.name + " (Struktur)", sys: x.sys, region: x.region, station: x.id, stationName: x.name, struct: true, cid: x.cid, brk: x.brk }; }
+  function hubKeys(){ return Object.keys(HUBS).concat(stList().map(function(x){ return "st" + x.id; })); }   // AO2 Block D: Hubs + eingetragene Markt-Strukturen
+  function hubGet(k){ if (HUBS[k]) return HUBS[k]; var m = /^st(\d+)$/.exec(String(k || "")), x = m && stList().filter(function(y){ return String(y.id) === m[1]; })[0]; return x ? stHub(x) : null; }
+  // ganzes Marktbuch einer Struktur (mit Login), 5 Min. gemerkt – ESI kann dort nicht nach Ware filtern
+  var stBookC = {};
+  async function stOrders(hub, force){
+    var c = stBookC[hub.station]; if (c && !force && Date.now() - c.t < 5 * 60000) return c.o;
+    if (!hub.cid) throw new Error("Für diese Struktur ist kein Charakter gewählt.");
+    var o;
+    try{ o = await esiAuthAllPages("/markets/structures/" + hub.station + "/", hub.cid); }
+    catch(e){ if (/ESI 403/.test(e.message)) throw new Error("Kein Zugriff auf den Markt von " + hub.stationName + " – darf der Charakter dort andocken? Sonst einmal neu einloggen (neue Berechtigung)."); throw e; }
+    stBookC[hub.station] = { t: Date.now(), o: o }; return o;
+  }
+  // Orders einer Ware an einem Hub oder einer Struktur (wie getOrders, aber nur dieser Ort)
+  async function hubOrders(hub, tid){
+    var all = hub.struct ? (await stOrders(hub)).filter(function(o){ return o.type_id === tid; }) : null, res;
+    if (all){ res = { buy: all.filter(function(o){ return o.is_buy_order; }).sort(function(a, b){ return b.price - a.price; }), sell: all.filter(function(o){ return !o.is_buy_order; }).sort(function(a, b){ return a.price - b.price; }) }; }
+    else res = await getOrders(hub.region, tid);
+    return { buy: res.buy.filter(function(o){ return o.location_id === hub.station; }), sell: res.sell.filter(function(o){ return o.location_id === hub.station; }) };
+  }
   var PRESETS = [
     {id:34,name:"Tritanium"},{id:35,name:"Pyerite"},{id:36,name:"Mexallon"},
     {id:37,name:"Isogen"},{id:38,name:"Nocxium"},{id:39,name:"Zydrine"},
@@ -13916,7 +14055,8 @@ if (typeof document !== 'undefined') {
   (function(){
     var v = isSaved;
     if (v){
-      if (HUBS[v.src]) isSrc.value = v.src;
+      hubStFill();
+      if (hubGet(v.src)) isSrc.value = v.src;
       if (Array.isArray(v.dst)) [].forEach.call(isDst.querySelectorAll("input"), function(i){ i.checked = v.dst.indexOf(i.value) >= 0; });
       IS_FIELDS.forEach(function(id){
         var x = v[id.slice(3)], e = document.getElementById(id);
@@ -14237,7 +14377,7 @@ if (typeof document !== 'undefined') {
   }
   var GK_NAME = { 1500: "vorsichtig", 2000: "normal", 3000: "knapp" };
   function sbRoute(pre){   // KK5: wohin – als erster Teil von „Gerechnet wird mit“
-    var nm = function(k){ return HUBS[k] ? HUBS[k].label.split(" (")[0] : k; };
+    var nm = function(k){ var h = hubGet(k); return h ? h.label.split(" (")[0] : k; };
     if (pre === "is"){ var d = isDstKeys(); return { t: "Kaufe in " + nm(isSrc.value) + " → " + (d.length ? d.map(nm).join(", ") : "kein Ziel"), warn: d.length ? "" : "Mindestens ein Ziel zum Verkaufen anhaken." }; }
     var hub = document.getElementById("hl-hub").value, st = document.getElementById("hl-start").value.trim(), tg = document.getElementById("hl-target").value, ts = document.getElementById("hl-target-sys").value.trim(), w = "";
     var from = hub ? nm(hub) : st || "?", to = tg === "" ? "alles im Umkreis von " + (document.getElementById("hl-radius").value || 5) + " Sprüngen" : tg === "sys" ? ts || "?" : nm(tg);
@@ -15068,7 +15208,8 @@ if (typeof document !== 'undefined') {
     return tscRound((Math.ceil(p / t - 1e-7) - 1) * t);
   }
 
-  function tscFees(cfg){
+  function tscFees(cfg, hub){ var f = tscFees0(cfg); if (hub && hub.struct && hub.brk != null && isFinite(hub.brk)){ var b = Math.max(0, Number(hub.brk)) / 100; f.relist = f.relist / (f.brk || 1) * b; f.brk = b; } return f; }   // AO2: Maklergebühr der Struktur (setzt der Besitzer)
+  function tscFees0(cfg){
     var brkLvl = cfg.brokerLevel, accLvl = cfg.accountingLevel, abrLvl = cfg.abrLevel;
     var brk = Math.max(1, 3 - 0.3*brkLvl - 0.03*(cfg.factionStanding||0) - 0.02*(cfg.corpStanding||0));
     var tax = 7.5 * (1 - 0.11*accLvl);
@@ -15117,6 +15258,9 @@ if (typeof document !== 'undefined') {
   // dazu eigene Beobachtung: bester Kauf-/Verkaufspreis je Scan bzw. Trade-Aktualisierung (max. 48 je Ware, 3 Tage)
   var COMP_KEY = "eve-zentrale-compete-v1";
   function compLoad(){ try{ return JSON.parse(localStorage.getItem(COMP_KEY)) || {}; }catch(e){ return {}; } }
+  // 22.10. (Nutzer: Suche „mittel“, angenommener Trade „heiß“): eigene Orders aller Charaktere sind keine Konkurrenz – sonst zählt das eigene Einstellen/Überbieten mit
+  var compOwnIds = {};
+  function compBook(t){ return t ? { buys: (t.buys || []).filter(function(o){ return !compOwnIds[o.order_id]; }), sells: (t.sells || []).filter(function(o){ return !compOwnIds[o.order_id]; }) } : t; }
   function compBest(t){
     var bb = null, bs = null;
     (t.buys || []).forEach(function(o){ if (bb === null || o.price > bb) bb = o.price; });
@@ -15128,7 +15272,7 @@ if (typeof document !== 'undefined') {
     var d = compLoad(), cut = now - 3 * 864e5;
     list.forEach(function(x){
       if (!x[1]) return;
-      var b = compBest(x[1]), a = (d[x[0]] || []).filter(function(e){ return e[0] > cut; }), l = a[a.length - 1];
+      var b = compBest(compBook(x[1])), a = (d[x[0]] || []).filter(function(e){ return e[0] > cut; }), l = a[a.length - 1];
       if (l && now - l[0] < 60000) a.pop();   // gleicher Moment (Scan + Trade) nur einmal
       a.push([now, b[0], b[1]]); d[x[0]] = a.slice(-48);
     });
@@ -15144,6 +15288,7 @@ if (typeof document !== 'undefined') {
     return { mid: mid, hi: Math.max(mid + 1, parseInt(h && h.value, 10) || 6) };
   }
   function tscCompetition(t, now, key, d){
+    t = compBook(t);
     var b = compBest(t), n = [1, 6, 24].map(function(h){
       var win = h * 3600e3, c = 0;
       (t.buys || []).forEach(function(o){ if (b[0] !== null && o.price >= b[0] * 0.99 && now - Date.parse(o.issued) < win) c++; });
@@ -15302,7 +15447,7 @@ if (typeof document !== 'undefined') {
     b.type = "button"; b.title = title || ("Kopieren: " + copyText);
     b.setAttribute("data-copy", String(copyText));
     b.setAttribute("aria-label", b.title);
-    b.onclick = function(ev){ ev.stopPropagation(); tscCopy(copyText, b); };
+    b.onclick = function(ev){ ev.stopPropagation(); tscCopy(copyText, b); var tp = b.getAttribute("data-trpend"); if (tp){ tp = tp.split("|"); trPendSet(tp[0], tp[1], tp[2]); } };   // AV2
     wrap.appendChild(v); wrap.appendChild(b);
     return wrap;
   }
@@ -15588,6 +15733,7 @@ if (typeof document !== 'undefined') {
   }
 
   async function tscLoadBook(hub, onProgress){
+    if (hub.struct){ if (onProgress) onProgress(1, 1); return tscGroupBook(await stOrders(hub, true), hub.station); }   // AO2
     return tscGroupBook(await tscLoadPages(ESI + "/markets/" + hub.region + "/orders/?datasource=tranquility&order_type=all&page=", onProgress), hub.station);
   }
   // alle Seiten einer ESI-Liste, 12 parallel, je Seite 3 Versuche; base endet auf "page="
@@ -15651,7 +15797,7 @@ if (typeof document !== 'undefined') {
     var btn = document.getElementById("tsc-start"), status = document.getElementById("tsc-status");
     btn.disabled = true;
     tscSaveState();
-    var cfg = tscReadCfg(), fees = tscFees(cfg), hub = HUBS[cfg.hub] || HUBS.jita, now = Date.now();
+    var cfg = tscReadCfg(), hub = hubGet(cfg.hub) || HUBS.jita, fees = tscFees(cfg, hub), now = Date.now();   // AO2: Struktur-Gebühr
     try{
       if (cfg.capital <= 0) throw new Error("Bitte Kapital angeben.");
       status.textContent = "Lade Orderbuch " + hub.label + " …";
@@ -15946,6 +16092,7 @@ if (typeof document !== 'undefined') {
     var hubSel = document.getElementById("tsc-hub");
     if (!hubSel) return;
     Object.keys(HUBS).forEach(function(k){ var o = document.createElement("option"); o.value = k; o.textContent = HUBS[k].label; hubSel.appendChild(o); });
+    stFillSel(hubSel);   // AO2
     var st = tscLoadState();
     tscIds.forEach(function(id){ var e = document.getElementById(id); if (e && st[id] !== undefined) e.value = st[id]; });
     if (st.hidehot !== undefined) document.getElementById("tsc-hidehot").checked = !!st.hidehot;
@@ -16310,7 +16457,53 @@ if (typeof document !== 'undefined') {
     return t;
   }
   // BB23: Trade an beliebiger Station (Verkaufs-Trade aus einem Hauling-Lauf) – sonst einer der 5 Hubs
-  function trHub(t){ return HUBS[t.hub] || (t.st ? { station: t.st, region: t.reg, sys: t.sys, stationName: t.stName, label: String(t.stName || "").split(" - ")[0] } : HUBS.jita); }
+  // AO2: Strukturen in Auswahllisten (Scanner) und Einstellungen › Konto › Markt-Strukturen
+  function stFillSel(sel){ if (!sel) return; [].slice.call(sel.querySelectorAll("option[data-st]")).forEach(function(o){ o.remove(); }); stList().forEach(function(x){ var o = document.createElement("option"); o.value = "st" + x.id; o.textContent = x.name + " (Struktur)"; o.setAttribute("data-st", "1"); sel.appendChild(o); }); }
+  async function stRegion(sys){ var s = await (await fetch(ESI + "/universe/systems/" + sys + "/?datasource=tranquility")).json(), c = await (await fetch(ESI + "/universe/constellations/" + s.constellation_id + "/?datasource=tranquility")).json(); return { region: c.region_id, sysName: s.name, sec: s.security_status }; }
+  async function stInfo(id, cid){ var d = await esiAuthGetJson("/universe/structures/" + id + "/", cid), r = await stRegion(d.solar_system_id); return { id: Number(id), name: d.name, sys: d.solar_system_id, region: r.region, sysName: r.sysName, sec: r.sec, cid: String(cid) }; }
+  function stRender(){
+    var box = document.getElementById("st-box"); if (!box) return;
+    var sel = document.getElementById("st-char"), cur = sel.value, toks = loadAllTokens();
+    sel.innerHTML = toks.map(function(t){ return '<option value="' + t.character_id + '">' + escapeHtml(t.character_name) + "</option>"; }).join("");
+    if (cur) sel.value = cur;
+    var l = stList(), out = document.getElementById("st-list");
+    // Vorschläge: Strukturen, in denen du schon Orders hast (Trades mit Struktur-Ort)
+    var seen = {}; l.forEach(function(x){ seen[x.id] = 1; });
+    var sug = trLoad().filter(function(t){ return t.st > 1e12 && !seen[t.st] && (seen[t.st] = 1); });
+    out.innerHTML = (l.length ? "<b>Deine Markt-Strukturen</b>" : '<span class="item-sub">Noch keine Struktur eingetragen.</span>') + l.map(function(x){
+      return '<div class="st-row"><b>' + escapeHtml(x.name) + '</b> <span class="item-sub">' + escapeHtml(x.sysName || "") + " · liest " + escapeHtml(charNameById(x.cid) || x.cid) + '</span> <label class="item-sub" title="Die Maklergebühr setzt der Besitzer der Struktur – steht im Markt-Fenster in EVE">Maklergebühr % <input type="number" min="0" max="100" step="0.1" style="width:5em" data-st-brk="' + x.id + '" value="' + (x.brk != null ? x.brk : "") + '" placeholder="Skills"></label> <button type="button" class="btn ghost" data-st-del="' + x.id + '">Entfernen</button></div>';
+    }).join("") + (sug.length ? '<div class="item-sub" style="margin-top:6px">Aus deinen Orders: ' + sug.map(function(t){ return '<button type="button" class="btn ghost" data-st-add="' + t.st + '">' + escapeHtml(String(t.stName || t.st).split(" - ")[0]) + " übernehmen</button>"; }).join(" ") + "</div>" : "");
+  }
+  async function stAdd(id, cid){
+    var res = document.getElementById("st-res"); res.textContent = "prüfe Zugriff …";
+    try{
+      var x = await stInfo(id, cid);
+      await stOrders(stHub(x), true);   // Markt erreichbar? (403 = kein Andock-Recht / alte Berechtigung)
+      var l = stList().filter(function(y){ return String(y.id) !== String(x.id); }); l.push(x); stSave(l);
+      res.textContent = "✓ " + x.name + " eingetragen – erscheint unter Trading › Trades scannen als Hub."; stFillSel(document.getElementById("tsc-hub")); stRender();
+    }catch(e){ res.innerHTML = '<span class="bad">' + escapeHtml(e.message) + "</span>"; }
+  }
+  (function(){
+    var box = document.getElementById("st-box"); if (!box) return;
+    box.addEventListener("click", function(ev){
+      var b = ev.target.closest("button"); if (!b) return;
+      var cid = document.getElementById("st-char").value, res = document.getElementById("st-res");
+      if (b.id === "st-go"){
+        var q = document.getElementById("st-q").value.trim(); if (q.length < 3 || !cid){ res.textContent = "Mindestens 3 Zeichen und einen Charakter wählen."; return; }
+        res.textContent = "suche …";
+        esiAuthGetJson("/characters/" + cid + "/search/?categories=structure&strict=false&search=" + encodeURIComponent(q), cid).then(async function(d){
+          var ids = (d.structure || []).slice(0, 12); if (!ids.length){ res.textContent = "Nichts gefunden – nur Strukturen, an denen der Charakter andocken darf."; return; }
+          var rows = await Promise.all(ids.map(function(id){ return esiAuthGetJson("/universe/structures/" + id + "/", cid).then(function(s){ return { id: id, name: s.name }; }).catch(function(){ return null; }); }));
+          res.innerHTML = rows.filter(Boolean).map(function(r){ return '<div class="st-row">' + escapeHtml(r.name) + ' <button type="button" class="btn ghost" data-st-add="' + r.id + '">Hinzufügen</button></div>'; }).join("") || "Nichts gefunden.";
+        }).catch(function(e){ res.innerHTML = '<span class="bad">' + escapeHtml(/ESI 403/.test(e.message) ? "Suche nicht erlaubt – einmal neu einloggen (neue Berechtigung)." : e.message) + "</span>"; });
+      } else if (b.hasAttribute("data-st-add")) stAdd(b.getAttribute("data-st-add"), cid);
+      else if (b.hasAttribute("data-st-del")){ stSave(stList().filter(function(y){ return String(y.id) !== b.getAttribute("data-st-del"); })); stFillSel(document.getElementById("tsc-hub")); stRender(); }
+    });
+    box.addEventListener("change", function(ev){ var i = ev.target.closest("[data-st-brk]"); if (!i) return; var l = stList(); l.forEach(function(x){ if (String(x.id) === i.getAttribute("data-st-brk")) x.brk = i.value === "" ? null : Math.max(0, Math.min(100, Number(i.value))); }); stSave(l); });
+    box.addEventListener("keydown", function(ev){ if (ev.key === "Enter" && ev.target.id === "st-q") document.getElementById("st-go").click(); });
+    setTimeout(stRender, 0);
+  })();
+  function trHub(t){ return HUBS[t.hub] || hubGet(t.hub) || (t.st && hubGet("st" + t.st)) || (t.st ? { station: t.st, region: t.reg, sys: t.sys, stationName: t.stName, label: String(t.stName || "").split(" - ")[0] } : HUBS.jita); }
   // BB30: Verkaufs-Trade aus einem Lauf nimmt Verkaufsorders jedes eingeloggten Charakters (bis eine angehängt ist), sonst nur den eigenen
   function trCharOk(t, cid, buy){ return String(t.charId) === String(cid) || (!!t.run && !buy && !t.sellOrderId); }
   var trRunMemo = { raw: null, by: {} };   // DD0: Läufe einmal je gespeichertem Stand lesen, nicht je Trade
@@ -16411,6 +16604,8 @@ if (typeof document !== 'undefined') {
     // W3: Verkauf unter halbem Ø-Einkaufspreis (z. B. für 1 ISK in eine Kauforder)
     var avg = p.bought ? p.boughtVal / p.bought : t.buy;
     sells.forEach(function(a){ if (avg && a[3] < avg / 2) p.low += a[2]; });
+    var so = live && live.own && live.own.sell, sAt = t.sellAt || (so ? Date.parse(so.issued) : 0);   // BA1 (22.10.): verkauft, bevor eine eigene Verkaufsorder stand = sofort an eine Kauforder
+    if (!t.run) sells.forEach(function(a){ if (!sAt || a[0] < sAt - 60000) p.instant = (p.instant || 0) + a[2]; });
     // S7: Kasse = Verkaeufe nach Steuer − Einkaeufe − Maklergebuehren; Gebuehr fehlt im Journal → mit Satz geschaetzt
     if (!p.brk && (p.bought || p.sold)){ p.brk = (p.boughtVal + p.soldVal) * fr.brk; p.est = true; }
     p.cash = p.soldVal - p.tax - p.boughtVal - p.brk;
@@ -16477,8 +16672,41 @@ if (typeof document !== 'undefined') {
   function twSellMarginHtml(ev){ return "<span>Unter deiner Mindestmarge</span> (<b>" + twPct(ev.minMargin) + "</b>): <span>beim Marktpreis</span> <b>" + tscFmtPrice(ev.sellMarket) + "</b> <span>nur</span> <b>" + twPct(ev.mktMargin) + "</b>"; }
   function twPlanHtml(ev, t, sg){ var c = ev.planUnit >= 0 ? "pos ok" : "neg bad"; return "<span>Markt liegt</span> <b>" + twPct(Math.abs(ev.planDev)) + "</b> <span>" + (ev.planDev < 0 ? "unter deinem Plan" : "über deinem Plan") + "</span> · <span>Gewinn netto</span> <b class=\"" + c + "\">" + sg(ev.planUnit) + "</b>/<span>Stk</span> · <span>gesamt</span> <b class=\"" + c + "\">" + sg(ev.planUnit * t.qty) + "</b>"; }
   var TR_TX_LAG = 90 * 60000;   // so lange nach dem Verschwinden der Kauforder auf die Buchungen warten
+  // AQ1 (21.10.): wann EVE die Orders/Buchungen DIESES Charakters zuletzt erneuert hat und ab wann es neue gibt (esiStamps je Abfrage-Pfad)
+  var TR_ESI_TIP = "EVE liefert eigene Orders höchstens alle 20 Min. und Buchungen (Käufe/Verkäufe) höchstens alle 60 Min. neu – Änderungen erscheinen erst dann hier.";
+  function esiCharStand(cid, key){ var es = esiStamps[key], best = null; if (!es || !cid) return null; Object.keys(es).forEach(function(p){ if (p.indexOf("/" + cid + "/") >= 0 && (!best || es[p].at > best.at)) best = es[p]; }); return best; }
+  function trEsiHtml(cid, wait){
+    var parts = [];
+    [["/characters/orders", "Orders"], ["/characters/wallet/transactions", "Buchungen"]].forEach(function(k){ var st = esiCharStand(cid, k[0]); if (st) parts.push(k[1] + " " + fmtT(st.lm) + (st.ex ? ", neu ab " + fmtT(st.ex) : "")); });
+    if (!parts.length && !wait) return "";
+    return '<span class="item-sub tr-esi" title="' + TR_ESI_TIP + '">' + (wait ? '<span class="pill warn">wartet auf EVE (Buchungen bis ~60 Min.)</span> ' : "") + (parts.length ? "EVE-Daten: " + parts.join(" · ") : "") + "</span>";
+  }
+  function trEsiWait(t, ev){ return !!(t.status !== "done" && t.buyGone && Date.now() - t.buyGone < TR_TX_LAG && ev && ev.p && ev.p.bought < t.qty * tkThr()); }
   function tkThr(){ var v = Number(ovLoad().tkThr); return (v > 0 && v <= 100 ? v : 90) / 100; }
+  // AV2 (22.10.): gerade kopierter neuer Preis zählt sofort, bis EVE die Order mit diesem Preis meldet (höchstens 30 Min.)
+  function trPendGet(t, side, order){ var x = t["pend" + side]; if (!x || Date.now() - x.t > 30 * 60000) return null; if (order && order.price === x.p) return null; return x.p; }
+  function trPendSet(id, side, price){ var o = {}; o["pend" + side] = { p: Number(price), t: Date.now() }; trUpdate(id, o); setTimeout(function(){ trRender(); trkRender(); ovRender(); }, 0); }
+  function trPendCp(cell, id, side, price){ var b = cell.querySelector(".tsc-cp-b"); if (b) b.setAttribute("data-trpend", id + "|" + side + "|" + price); return cell; }
+  // BA2 (22.10.): versehentlich sofort verkauft → Einkaufsziel um diese Menge anheben, neue Kauforder wird wieder zugeordnet und überwacht
+  function trRebuyN(t, ev){ return t.status !== "done" && !t.run ? Math.max(0, (ev.p.instant || 0) - (t.rebuy || 0)) : 0; }
+  function trRebuy(id){
+    var t = trLoad().find(function(x){ return String(x.id) === String(id); }); if (!t) return;
+    var ev = trEvaluate(t, trLive[t.id], tscFees(tscReadCfg())), n = trRebuyN(t, ev); if (!n) return;
+    trUpdate(t.id, { qty: t.qty + n, rebuy: (t.rebuy || 0) + n, buyDone: false, buyGone: 0, buyOrderId: null });
+    trRender(); trkRender(); ovRender();
+  }
+  function trRebuyHtml(t, ev){ var n = trRebuyN(t, ev); return n ? '<span class="warn">' + fmtNum(n) + ' sofort verkauft</span> <button type="button" class="btn ghost" data-trrebuy="' + escapeHtml(t.id) + '" data-ova="trRebuy" data-arg="' + escapeHtml(t.id) + '" title="Das Einkaufsziel steigt um diese Menge – die neue Kauforder wird wieder überwacht (überboten, nicht über)">nachkaufen?</button>' : ""; }
+  function trSrcTip(ev){ return "Je Stück: Kauf = Ø deiner Käufe bzw. Kauforder, Verkauf = " + (ev.sellSrc === "pend" ? "gerade kopierter neuer Preis (bis EVE die Order meldet)" : ev.sellSrc === "order" ? "deine Verkaufsorder" : ev.sellSrc === "markt" ? "aktueller Marktpreis" : "Plan") + ". Gesamt = gekauft × Ø-Kauf + Rest × Orderpreis, nach Steuer und Gebühren."; }
+  // AV4: zwei Zeilen „bei Abbruch jetzt“ (nur aufgeklappt)
+  function trAbortHtml(ev){
+    if (ev.abortNow === undefined) return "";
+    var f = function(v){ return v === null ? "–" : '<b class="' + (v >= 0 ? "pos ok" : "neg bad") + '">' + (v >= 0 ? "+" : "") + shortIsk(v) + "</b>"; };
+    if (!ev.stock) return '<span title="Kasse bisher – die Maklergebühr einer offenen Kauforder ist schon bezahlt und kommt nicht zurück"><span>Bei Abbruch jetzt:</span> ' + f(ev.abortNow) + "</span>";
+    return '<span title="Kasse bisher + Ware im Lager sofort an die beste Kauforder verkauft (nach Steuer)"><span>Bei Abbruch jetzt, sofort verkauft:</span> ' + f(ev.abortNow) + "</span><br>" +
+      '<span title="Kasse bisher + Ware im Lager als Verkaufsorder zum Marktpreis (nach Steuer und Maklergebühr) – dauert, bis sie verkauft ist"><span>zum Marktpreis eingestellt:</span> ' + f(ev.abortOrder) + "</span>";
+  }
   function trEvaluate(t, live, fees){
+    var th = trHub(t); if (th && th.struct) fees = tscFees(tscReadCfg(), th);   // AO2: Maklergebühr der Struktur
     var p = trProgress(t, live), thr = tkThr();
     var avgBuy = p.bought ? p.boughtVal / p.bought : t.buy;
     var ev = { p: p, avgBuy: avgBuy, breakEven: trBreakEven(avgBuy, fees), toBuy: Math.max(0, t.qty - p.bought), stock: Math.max(0, p.bought - p.sold - p.lost) };
@@ -16490,13 +16718,7 @@ if (typeof document !== 'undefined') {
     // fehlen die letzten Käufe noch in den Buchungen → dann nur mit ≥ Schwelle der Planmenge gekauft als „fertig gekauft“ zählen
     var buyFin = p.bought >= t.qty * thr || (t.buyDone && !(t.buyGone && Date.now() - t.buyGone < TR_TX_LAG));
     ev.allSold = p.bought > 0 && p.sold + p.lost >= p.bought * thr && buyFin;
-    // R4: Gewinn netto folgt den echten Preisen – Ø-Kaufpreis (bzw. eigene Kauforder) und eigener Verkaufspreis, sonst der Plan
-    var own0 = (live && live.own) || {}, buyP = p.bought ? avgBuy : own0.buy ? own0.buy.price : t.buy, sellP = own0.sell ? own0.sell.price : t.sell;
-    var real = p.bought || own0.buy || own0.sell;
-    ev.unit = real && sellP !== null && sellP !== undefined && buyP ? tscUnitProfit(buyP, sellP, fees, 0) : (t.unit !== undefined ? t.unit : null);
-    ev.margin = real && ev.unit !== null && buyP ? ev.unit / (buyP * (1 + fees.brk)) * 100 : t.margin;
-    // S7: wenn der Restbestand zum eigenen Verkaufspreis weggeht
-    ev.forecast = ev.result !== null && ev.stock && sellP ? ev.result + ev.stock * sellP * (1 - fees.tax - (own0.sell ? 0 : fees.brk)) : null;
+    var own0 = (live && live.own) || {};
     if (live && live.types){
       var tt = live.types, own = live.own || {};
       ev.bestBuy = tt.buys.length ? tt.buys[0].price : null;
@@ -16514,6 +16736,27 @@ if (typeof document !== 'undefined') {
       ev.sellMarket = others.length ? tscBelow(others[0].price) : null;
       ev.belowBreakEven = ev.sellMarket !== null && ev.sellMarket < ev.breakEven;
       ev.sellEmpty = ev.sellMarket === null; ev.buyEmpty = ev.bestBuy === null;   // Markt leer: Hinweis statt Schweigen
+    }
+    // R4 + AV1/AV2 (22.10.): Gewinn netto folgt den echten Preisen – Kauf: Ø echter Käufe, sonst gerade kopierter neuer Preis, eigene Kauforder, Plan;
+    // Verkauf: gerade kopierter neuer Preis, eigene Verkaufsorder, sonst AKTUELLER MARKT (vorher Plan), zuletzt Plan
+    var pb = trPendGet(t, "buy", own0.buy), ps = trPendGet(t, "sell", own0.sell);
+    var ordBuy = pb !== null ? pb : own0.buy ? own0.buy.price : t.buy, buyP = p.bought ? avgBuy : ordBuy;
+    var sellP = ps !== null ? ps : own0.sell ? own0.sell.price : ev.sellMarket != null ? ev.sellMarket : t.sell;
+    ev.sellSrc = ps !== null ? "pend" : own0.sell ? "order" : ev.sellMarket != null ? "markt" : "plan"; ev.pend = pb !== null || ps !== null;
+    var real = p.bought || own0.buy || own0.sell || ev.pend || ev.sellSrc === "markt";   // ohne echte Daten bleibt der geplante Gewinn (R4)
+    ev.unit = real && sellP !== null && sellP !== undefined && buyP ? tscUnitProfit(buyP, sellP, fees, 0) : (t.unit !== undefined ? t.unit : null);
+    ev.margin = real && ev.unit !== null && buyP ? ev.unit / (buyP * (1 + fees.brk)) * 100 : t.margin;
+    // AV3: gesamt = schon gekauft × Ø-Kauf + noch zu kaufen × Orderpreis (nicht mehr Stück × Planmenge)
+    var rest = ev.buyPhase ? ev.toBuy : 0;
+    if (sellP && buyP && (p.bought || rest)) ev.total = (p.bought ? p.bought * tscUnitProfit(avgBuy, sellP, fees, 0) : 0) + (rest && ordBuy ? rest * tscUnitProfit(ordBuy, sellP, fees, 0) : 0);
+    else ev.total = ev.unit !== null ? ev.unit * t.qty : null;
+    // S7: wenn der Restbestand zum eigenen Verkaufspreis weggeht
+    ev.forecast = ev.result !== null && ev.stock && sellP ? ev.result + ev.stock * sellP * (1 - fees.tax - (own0.sell ? 0 : fees.brk)) : null;
+    // AV4: bei Abbruch jetzt – Kasse bisher + Ware im Lager (a) sofort an die beste Kauforder, (b) als Verkaufsorder zum Marktpreis
+    if (t.status !== "done"){   // 22.10. (Nutzer): immer zeigen, auch ohne Käufe – dann ist nur die Maklergebühr der Kauforder weg
+      var cash = ev.result !== null ? ev.result : -(p.brk || 0);
+      ev.abortNow = ev.stock && ev.bestBuy ? cash + ev.stock * ev.bestBuy * (1 - fees.tax) : ev.stock ? null : cash;
+      ev.abortOrder = ev.stock && ev.sellMarket != null ? cash + ev.stock * ev.sellMarket * (1 - fees.tax - (own0.sell ? 0 : fees.brk)) : null;
     }
     // Trade-Warnungen (14.10.): Mindestmarge; Höchstkaufpreis gegen eigenen Verkaufspreis → Markt → Plan
     var mg = trWarnMargin(), keep = 1 - fees.brk - fees.tax, ref = own0.sell ? own0.sell.price : ev.sellMarket != null ? ev.sellMarket : t.sell;
@@ -16543,6 +16786,7 @@ if (typeof document !== 'undefined') {
       return esiAuthGetJson("/characters/" + tk.character_id + "/orders/", tk.character_id).then(function(list){
         out.ok[String(tk.character_id)] = true;
         oxFeed(tk.character_id, tk.character_name, list);   // AA4
+        list.forEach(function(o){ compOwnIds[o.order_id] = true; });   // 22.10.: eigene Orders keine Konkurrenz
         list.forEach(function(o){   // AL5 (19.10.): Orders an allen Stationen/Strukturen, nicht nur an den Hubs
           out.list.push({ charId: String(tk.character_id), charName: tk.character_name, hub: stations[o.location_id] || "", order: o });
         });
@@ -16552,6 +16796,9 @@ if (typeof document !== 'undefined') {
     var loc = {}; out.list.forEach(function(m){ if (!m.hub && !loc[m.order.location_id]) loc[m.order.location_id] = m.charId; });
     out.names = {};
     await tscPool(Object.keys(loc), 6, async function(id){ var st = Number(id) > 1e12; try{ out.names[id] = await resolveLocationName(Number(id), st, st ? loc[id] : undefined); }catch(e){} });
+    // 21.10.: Warennamen vor trSync auflösen (sonst bekam ein neuer Trade „#17871“ als Namen), auch für alte Trades mit „#…“
+    var tids = {}; out.list.forEach(function(m){ tids[m.order.type_id] = 1; }); trLoad().forEach(function(t){ if (/^#\d+$/.test(t.name || "")) tids[t.tid] = 1; });
+    try{ await tscNames(Object.keys(tids).map(Number).filter(function(id){ return !/^#/.test(nameCache[id] || ""); })); }catch(e){}
     return out;
   }
 
@@ -16565,6 +16812,7 @@ if (typeof document !== 'undefined') {
     var planByTid = {};
     (tscRows || []).forEach(function(r){ planByTid[r.tid] = r; });
     var scanHub = tscBook ? tscBook.hub : null;
+    list.forEach(function(t){ var n = nameCache[t.tid]; if (/^#\d+$/.test(t.name || "") && n && n.charAt(0) !== "#"){ t.name = n; changed = true; } });   // 21.10.: „#17871“ nachträglich benennen
     orders.list.forEach(function(m){
       var o = m.order;
       var known = list.some(function(t){ return t.buyOrderId === o.order_id || t.sellOrderId === o.order_id; });
@@ -16572,7 +16820,7 @@ if (typeof document !== 'undefined') {
       var t = list.filter(function(x){ return x.status !== "done" && x.tid === o.type_id && trHub(x).station === o.location_id && trCharOk(x, m.charId, o.is_buy_order); })[0];   // BB30
       if (t){
         if (o.is_buy_order && !t.buyOrderId){ t.buyOrderId = o.order_id; t.buy = o.price; t.qty = Math.max(t.qty || 0, o.volume_total); changed = true; }
-        else if (!o.is_buy_order && !t.sellOrderId){ t.sellOrderId = o.order_id; if (t.run && String(t.charId) !== m.charId){ t.charId = m.charId; t.charName = m.charName; } changed = true; }   // BB30: Lauf-Trade gehört dann dem Charakter der Order
+        else if (!o.is_buy_order && !t.sellOrderId){ t.sellOrderId = o.order_id; t.sellAt = Date.parse(o.issued) || Date.now(); if (t.run && String(t.charId) !== m.charId){ t.charId = m.charId; t.charName = m.charName; } changed = true; }   // BB30: Lauf-Trade gehört dann dem Charakter der Order   // BA1: Zeitpunkt der Verkaufsorder
         return;
       }
       if (ignored[o.order_id]) return;
@@ -16659,8 +16907,8 @@ if (typeof document !== 'undefined') {
     var hub = trHub(t);
     trLive[t.id] = Object.assign({}, lv, { busy: true }); trRender(); trkRender(); ovRender();
     try{
-      var res = await getOrders(hub.region, t.tid);
-      trLive[t.id] = { types: { buys: res.buy.filter(function(o){ return o.location_id === hub.station; }), sells: res.sell.filter(function(o){ return o.location_id === hub.station; }) },
+      var res = await hubOrders(hub, t.tid);   // AO2: Struktur-Markt mit Login
+      trLive[t.id] = { types: { buys: res.buy, sells: res.sell },
         own: (lv && lv.own) || {}, time: Date.now() };
     }catch(e){ trLive[t.id] = { error: e.message, time: Date.now() }; }
     compTradesObserve();   // AA5
@@ -16690,9 +16938,8 @@ if (typeof document !== 'undefined') {
       await tscPool(active, 6, async function(t){
         var hub = trHub(t);
         try{
-          var res = await getOrders(hub.region, t.tid);
-          var types = { buys: res.buy.filter(function(o){ return o.location_id === hub.station; }),
-                        sells: res.sell.filter(function(o){ return o.location_id === hub.station; }) };
+          var res = await hubOrders(hub, t.tid);   // AO2
+          var types = { buys: res.buy, sells: res.sell };
           var own = {};
           orders.list.forEach(function(m){
             if (m.order.location_id !== trHub(t).station || m.order.type_id !== t.tid || (t.charId && !trCharOk(t, m.charId, m.order.is_buy_order) && m.charId !== String(t.charId))) return;   // BB30
@@ -16808,8 +17055,8 @@ if (typeof document !== 'undefined') {
           if (ev.buyCheck && ev.buyCheck.status !== "überboten")
             sb.appendChild(trLine("Deine Order", '<span class="pill profit">vorne</span> ' + tscFmtPrice(live.own.buy.price) + " · offen " + fmtNum(live.own.buy.volume_remain), null, null));
           else if (ev.buyNow !== null){
-            sb.appendChild(trLine(ev.buyCheck ? "Überboten – neuer Preis" : "Jetzt setzen zu", tscFmtPrice(ev.buyNow), tscCopyPrice(ev.buyNow),
-              "Aktuellen Kaufpreis kopieren", ev.buyCheck ? "warn" : ""));
+            trPendCp(sb.appendChild(trLine(ev.buyCheck ? "Überboten – neuer Preis" : "Jetzt setzen zu", tscFmtPrice(ev.buyNow), tscCopyPrice(ev.buyNow),
+              "Aktuellen Kaufpreis kopieren", ev.buyCheck ? "warn" : "")), t.id, "buy", ev.buyNow);   // AV2
             if (ev.buyCheck && ev.buyCheck.note) sb.appendChild(el("div", "item-sub", escapeHtml(ev.buyCheck.note)));
           }
           if (ev.buyLoss) sb.appendChild(el("div", "tr-alert", "Kaufen lohnt beim aktuellen Preis nicht mehr – Order lieber stehen lassen oder den Trade beenden."));
@@ -16836,8 +17083,8 @@ if (typeof document !== 'undefined') {
           ss.appendChild(trLine("Verkaufsorder", os ? "steht: " + fmtNum(os.volume_remain) + " Stück zu " + tscFmtPrice(os.price) + ' <span class="pill ' + (ahead ? "profit" : "warn") + '">' + (ahead ? "vorne" : "unterboten") + "</span>"
             : '<span class="pill warn">noch keine Verkaufsorder</span>', null, null));
           if (!ahead && ev.sellNow !== null && !ev.belowBreakEven)
-            ss.appendChild(trLine(ev.sellCheck ? "Unterboten – neuer Preis" : "Jetzt einstellen zu", tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow),
-              "Aktuellen Verkaufspreis kopieren", ev.sellCheck ? "warn" : ""));
+            trPendCp(ss.appendChild(trLine(ev.sellCheck ? "Unterboten – neuer Preis" : "Jetzt einstellen zu", tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow),
+              "Aktuellen Verkaufspreis kopieren", ev.sellCheck ? "warn" : "")), t.id, "sell", ev.sellNow);   // AV2
         }
         ss.appendChild(trLine("Nicht unter", tscFmtPrice(ev.breakEven), tscCopyPrice(ev.breakEven), "Mindestpreis kopieren", "muted"));
         if (ev.belowBreakEven && t.status !== "done")
@@ -16848,13 +17095,16 @@ if (typeof document !== 'undefined') {
         card.appendChild(ss);
       }
 
+      var eh = t.status !== "done" ? trEsiHtml(t.charId, trEsiWait(t, ev)) : ""; if (eh) card.appendChild(el("div", "tr-esi-l", eh));   // AQ1
       // Ergebnis
       var res = el("div", "tr-res");
-      var planned = ev.unit !== null ? ev.unit * t.qty : null;
-      res.innerHTML = (planned !== null ? "Geplant " + '<b class="' + (planned >= 0 ? "pos" : "neg") + '">' + (planned >= 0 ? "+" : "") + shortIsk(planned) + "</b> (" + fmtNum(ev.margin, 1) + " %)" : "Plan folgt nach dem Aktualisieren") +
+      var planned = ev.total;   // AV3
+      res.innerHTML = (planned !== null ? '<span title="' + escapeHtml(trSrcTip(ev)) + '">' + (ev.pend ? "Neuer Preis" : ev.sellSrc === "markt" ? "Zum Marktpreis" : "Geplant") + "</span> " + '<b class="' + (planned >= 0 ? "pos" : "neg") + '">' + (planned >= 0 ? "+" : "") + shortIsk(planned) + "</b> (" + fmtNum(ev.margin, 1) + " %)" : "Plan folgt nach dem Aktualisieren") +
         (ev.result !== null ? " · Kasse <b class=\"" + (ev.result >= 0 ? "pos" : "neg") + "\" title=\"Echte Ein- und Ausgaben: Verkäufe nach Steuer minus Einkäufe und Maklergebühren (inkl. Preisänderungen)" + (ev.p.est ? ". ≈ = Gebühr noch nicht im Journal, mit Satz geschätzt" : "") + "\">" + (ev.p.est ? "≈" : "") + (ev.result >= 0 ? "+" : "") + shortIsk(ev.result) + "</b>" : "") +
         (ev.forecast !== null ? " · wenn alles verkauft <b class=\"" + (ev.forecast >= 0 ? "pos" : "neg") + "\">" + (ev.forecast >= 0 ? "+" : "") + shortIsk(ev.forecast) + "</b>" : "");
       card.appendChild(res);
+      var ab = trAbortHtml(ev); if (ab) card.appendChild(el("div", "tr-abort item-sub", ab));
+      var rb = trRebuyHtml(t, ev); if (rb){ var rbe = card.appendChild(el("div", "tr-abort item-sub", rb)); rbe.querySelector("[data-trrebuy]").onclick = function(){ trRebuy(t.id); }; }   // BA2   // AV4 – nur aufgeklappt (tr-fold blendet aus)
 
       // Aktionen
       var act = el("div", "tr-actions");
@@ -17310,7 +17560,7 @@ if (typeof document !== 'undefined') {
       status.textContent = "Bitte mindestens einen Verkaufs-Hub wählen (nicht den Einkaufs-Hub).";
       startBtn.disabled = false; isRunning=false; return;
     }
-    var src = HUBS[srcKey], dst;
+    var src = hubGet(srcKey), dst;
     var cargo = sbCargoEff("is");   // 5.0 (#3)
     var budget = parseGroupedInt("is-budget"), walletTxt = "";
     if (!(budget > 0)){ status.textContent = "Lese Wallet …"; budget = await gkWallet(); walletTxt = budget ? " Budget = Wallet " + shortIsk(budget) + "." : ""; }   // FF6a
@@ -17342,7 +17592,7 @@ if (typeof document !== 'undefined') {
       var srcBook = await tscLoadBook(src, function(d, p){ status.textContent = "Lade Orderbuch " + src.label + " … Seite " + d + " / " + p; });
       var perDst = [], checked=0, found=0;
       for (var di=0; di<dstKeys.length; di++){
-      dst = HUBS[dstKeys[di]];
+      dst = hubGet(dstKeys[di]);
       var dstBook = await tscLoadBook(dst, function(d, p){ status.textContent = "Lade Orderbuch " + dst.label + " … Seite " + d + " / " + p; });
       var cands = [];
       Object.keys(srcBook).forEach(function(tid){
@@ -17452,6 +17702,10 @@ if (typeof document !== 'undefined') {
         if (opt.ship && opt.ship.fit){ var gq = gkMk(opt.ship.ehp, 0, opt.res.spend, opt.ship.name.split(" (")[0], opt.ship.fit); sumBox.appendChild(el("div", "gk-line gk-" + gq.lvl, gkPill(gq))); }   // FF6
         else sumBox.appendChild(gkWarnEl(isShipName() || (opt.ship && opt.ship.name) || "", opt.res.gv || opt.res.spend, opt.res.volUsed, opt.res.spend));   // EF6, FF3: besseres Schiff
         if (opt.gkSys) sumBox.appendChild(el("div", "gk-line gk-warn", gkRouteTag(opt.gkSys) + " " + escapeHtml(gkRouteTip(opt.gkSys))));   // AG9
+        if (src.struct || dst.struct) sumBox.appendChild(el("div", "sl-sub", "<span>Struktur-Markt: Preise live aus</span> <b>" + escapeHtml((dst.struct ? dst : src).stationName) + "</b><span>, Tagesumsatz nur aus der Region (Schätzung) – Maklergebühr der Struktur unter Einstellungen › Konto.</span>"));   // AO2 Block D
+        (function(box, a, b, idx){ var rl = el("div", "gk-line", ""); rl.hidden = true; box.appendChild(rl);
+          hubRoute(a, b).then(rtRouteCheck).then(function(r){ if (!r) return rl.remove(); rl.hidden = false; rl.className = "gk-line gk-" + rtCheckCls(r); rl.innerHTML = rtCheckHtml(r);
+            var oh = ovHubLast && ovHubLast.opts && ovHubLast.opts[idx]; if (oh){ oh.rc = r; ovRender(); } }, function(){ rl.remove(); }); })(sumBox, src.sys, dst.sys, optIdx);   // AO2d (+ Overlay)
         var upB = el("button", "btn ghost", "Preise aktualisieren"); upB.type = "button"; upB.style.padding = "4px 10px"; upB.style.fontSize = ".78rem"; upB.style.marginLeft = "4px";
         upB.title = "Nur die Orders dieser Waren neu laden und Gewinn, Menge und Einkaufspreis neu rechnen – ohne neue Suche";
         upB.onclick = function(){ hubRefresh(optIdx); }; sumBox.appendChild(upB);
@@ -18220,6 +18474,13 @@ if (typeof document !== 'undefined') {
     }).join("");
   }
   /* SS7 (15.10.2026): Alarm je Trade/Lauf aus – t.mute / run.mute. Aus = kein Ton, keine Windows-/Handy-Meldung, kein Blinken; die Karte zeigt den Zustand weiter. */
+  // Nutzer 21.10.: hinter der Glocke „neu: 14:40“ = wann EVE die Orders/Buchungen dieses Charakters frühestens neu liefert (Zeit nach Einstellung Ortszeit/EVE-Zeit)
+  function trkNm(n){ return '<span class="trk-nm" title="' + escapeHtml(n) + '">' + escapeHtml(n) + "</span>"; }   // BB1: Name kürzt sich (…), „neu:“ bleibt sichtbar
+  function tkNextHtml(x){
+    if (!x || x.state !== "active" || !x.charId) return "";
+    var now = Date.now(), at = ["/characters/orders", "/characters/wallet/transactions"].map(function(k){ var st = esiCharStand(x.charId, k); return st && st.ex > now ? st.ex : 0; }).filter(Boolean);
+    return at.length ? ' <span class="item-sub tk-next" title="' + TR_ESI_TIP + '">neu: ' + fmtT(Math.min.apply(null, at)) + "</span>" : "";
+  }
   function tkMuteBtn(x){ if (x.state !== "active") return ""; var k = escapeHtml(x.kind + ":" + x.id);
     return ' <button type="button" class="tk-mute' + (x.mute ? " off" : "") + '" data-ova="trkMute" data-arg="' + k + '" data-trk-mute="' + k + '" aria-pressed="' + !x.mute + '" title="' + (x.mute ? "Alarm für diesen Auftrag ist aus – Klick: wieder an" : "Alarm für diesen Auftrag an – Klick: aus (kein Ton, keine Meldung, kein Blinken)") + '">' + (x.mute ? "🔕" : "🔔") + "&#xFE0E;</button>"; }
   function tkMuteToggle(arg){
@@ -18459,7 +18720,7 @@ if (typeof document !== 'undefined') {
   var TRK_SORT = { t: function(x){ return x.state === "active" ? x.t : x.end || x.t; }, profit: function(x){ return x.res; }, name: function(x){ return x.name; },
     where: function(x){ return x.where || null; }, state: function(x){ return ["bad", "buy", "way", "sell", "done", "cancel"].indexOf(trkLv(x)); },   // FF4
     gk: function(x){ if (x.kind !== "Lauf" || x.state !== "active") return null; var run = hrLoad().find(function(r){ return String(r.id) === String(x.id); }), g = run && gkRunCalc(run); return g && !g.unk && g.q > 0 ? g.q : null; } };
-  function trkWhere(x){ return x.kind === "Trade" && x.where ? ' <span class="trk-where" title="Ort">📍 ' + escapeHtml(x.where) + "</span>" : ""; }   // FF4
+  function trkWhere(x){ return x.kind === "Trade" && x.where ? ' <span class="trk-where" title="Ort">📍 ' + escapeHtml(x.where) + "</span>" : ""; }   // FF4; AZ1 (22.10.): nur aufgeklappt (Aufrufer prüfen)
   function trkOb(x){ return x.state === "active" && (x.kind === "Trade" ? !!ovAlarmKeys[x.id] : !!x.warn); }   // 19.10. Nutzer: erledigte/abgebrochene nie gelb   // gelb: Trade-Alarm oder Lauf mit Verlust im Direktverkauf (SS9)
   function trkLv(x){ return x.state === "cancelled" ? "cancel" : x.state === "active" && trkOb(x) ? "bad" : x.st.trim().replace("st-", "") || "buy"; }
   // BB19: Standard nach Art (Trades, Läufe, Erledigt) – Probleme zeigt die Farbe (gelb/rot); „nach Status“ wie Z9 wählbar
@@ -18532,13 +18793,13 @@ if (typeof document !== 'undefined') {
   function trkRow(x){
     var k = x.kind + ":" + x.id;
     return '<div class="ov-card trk-sm' + x.st + (trkOb(x) ? " trk-ob" : "") + (x.kind === "Trade" ? " trk-trade" : " trk-run") + (x.mute ? " al-mute" : "") + '" data-trk-row="' + escapeHtml(k) + '" title="Klick: Details auf-/zuklappen">' +
-      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + escapeHtml(x.name) + trkWhere(x) + (trkOpen[k] ? vcDots(x) : "") + tkKeepPill(x) + tkMuteBtn(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? " " + compPill(compTrade(x.id), true) + hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x)) + '</span>' +
-      '<span class="trk-r">' + (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, tkRedraw) + " " : "") + '<b title="' + TK_TIP + '">' + ovSigned(x.res) + "</b> · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) + (x.state !== "active" && (x.end || x.t) ? ' · <span class="tk-dd" title="' + tkWhenTxt(x) + '">' + (x.state === "done" ? "erledigt " : "abgebr. ") + tkDay(x.end || x.t) + "</span>" : "") + (x.tm ? " · " + tkTimeHtml(x.tm, true) : "") + "</span></div>" +
+      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpen[k] ? trkWhere(x) : "") + (trkOpen[k] ? vcDots(x) : "") + tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? " " + compPill(compTrade(x.id), true) + hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x)) + '</span>' +
+      '<span class="trk-r">' + (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, tkRedraw) + " " : "") + '<b title="' + TK_TIP + '">' + ovSigned(x.res) + "</b> · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) + (x.state !== "active" && (x.end || x.t) ? ' · <span class="tk-dd" title="' + tkWhenTxt(x) + '">' + (x.state === "done" ? "erledigt " : "abgebr. ") + tkDay(x.end || x.t) + "</span>" : "") + (x.tm && trkOpen[k] ? " · " + tkTimeHtml(x.tm, true) : "") + "</span></div>" +   // BB1: zugeklappt ohne Zeit hinten
       '<div class="ov-bar-mini"><span style="width:' + (x.plan ? Math.min(100, (x.bought + x.sold) / (2 * x.plan) * 100) : 0).toFixed(0) + '%"></span></div></div>';
   }
   function trkCard(x){
     return '<div class="tr-card' + x.st + (x.state === "active" && trkOb(x) ? " tr-ob" : "") + (x.state === "done" ? " tr-ok" : "") + (x.mute ? " al-mute" : "") + '"><div class="tr-head"><span class="tr-title">' + tkNr(x) + escapeHtml(x.name) + (ctAny(x.items) ? ' <span class="ct-tag" title="Enthält Schmuggelware – Details bei den Waren">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? " " + compPill(compTrade(x.id), true) + hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x)) + '</span><span class="pill warn">' + x.kind + "</span></div>" +
-      '<div class="tr-meta">' + trkPics(x.charId, x.items, 8) + " " + escapeHtml(x.charName || "") + " · " + tkWhenTxt(x) + (x.tm ? " · " + tkTimeHtml(x.tm) : "") + (x.kind === "Trade" && x.state === "active" && oxTrade(x.id) ? " · " + oxTrade(x.id) : "") + "</div>" +
+      '<div class="tr-meta">' + trkPics(x.charId, x.items, 8) + " " + escapeHtml(x.charName || "") + " · " + tkWhenTxt(x) + (x.tm ? " · " + tkTimeHtml(x.tm) : "") + (x.kind === "Trade" && x.state === "active" && oxTrade(x.id) ? " · " + oxTrade(x.id) : "") + (x.state === "active" && trEsiHtml(x.charId) ? "<br>" + trEsiHtml(x.charId) : "") + "</div>" +   // AQ1
       '<div class="tr-bar"><span style="width:' + Math.min(100, x.plan ? x.bought / x.plan * 100 : 0) + '%"></span></div><div class="tr-prog-txt">gekauft <b>' + fmtNum(x.bought) + " / " + fmtNum(x.plan) + "</b></div>" +
       '<div class="tr-bar sell"><span style="width:' + Math.min(100, x.bought ? x.sold / x.bought * 100 : 0) + '%"></span></div><div class="tr-prog-txt">verkauft <b>' + fmtNum(x.sold) + " / " + fmtNum(x.bought) + "</b> · Kasse <b title=\"" + TK_TIP + "\">" + doneIsk(x.res) + "</b></div>" +
       (x.rest ? '<div class="tr-prog-txt hr-rest">⚠ Nicht verkauft: ' + escapeHtml(x.rest) + " – noch im Laderaum?</div>" : "") +
@@ -18738,7 +18999,8 @@ if (typeof document !== 'undefined') {
   async function hubRoute(a, b){   // AG9: ganze Route (Gank-Systeme), gleiche Abfrage wie hubJumps
     if (!a || !b) return null;
     var k = a + ":" + b + ":" + haulPref();
-    if (hubJumpCache[k] === undefined){ try{ var r = await rtFetchRoute(a, b, haulPref()); hubJumpCache[k] = r && r.length ? r : null; }catch(e){ hubJumpCache[k] = null; } }
+    if (hubJumpCache[k] === undefined){ try{ var r = await rtFetchRoute(a, b, haulPref()); hubJumpCache[k] = r && r.length ? r : null; }catch(e){ hubJumpCache[k] = null; }
+      if (!hubJumpCache[k] && haulPref() === "secure"){ try{ r = await rtFetchRoute(a, b, "shortest"); if (r && r.length){ r.noHigh = true; hubJumpCache[k] = r; } }catch(e){} } }   // AO2 Block D: ins 0.0 gibt es keine reine Highsec-Route → kürzeste, mit Hinweis
     return hubJumpCache[k];
   }
   async function hubJumps(a, b){ var r = await hubRoute(a, b); return r ? r.length - 1 : null; }
@@ -18942,6 +19204,9 @@ if (typeof document !== 'undefined') {
     "esi-industry.read_corporation_mining.v1",
     // seit 18.10.2026: eigene Abschussberichte (GL: Schiff im Lauf verloren – direkt von EVE, ohne zKillboard)
     "esi-killmails.read_killmails.v1",
+    // seit 21.10.2026: Märkte von Spieler-Strukturen (AO2, Keepstar/Fortizar … mit Andock-Recht) + Strukturen per Name suchen
+    "esi-markets.structure_markets.v1",
+    "esi-search.search_structures.v1",
   ].join(" ");
   // EVE-Mail (EM) lesen, schreiben, gelesen/löschen: nur beim Login über „Mail aktivieren“ – die drei sind in der gemeinsamen
   // Developer-App nicht immer freigeschaltet, im normalen Login ließen sie EVE mit invalid_scope abbrechen (GitHub #1, #2)
@@ -19311,9 +19576,9 @@ if (typeof document !== 'undefined') {
       box.addEventListener("change", function(ev){ var id = ev.target.getAttribute && ev.target.getAttribute("data-acct"); if (!id) return;
         var m = acctLoad(), v = ev.target.value.trim(); if (v) m[id] = v.slice(0, 30); else delete m[id];
         try{ localStorage.setItem(ACCT_KEY, JSON.stringify(m)); }catch(e){} acctRender(); });
-      box.addEventListener("click", function(ev){ var b = ev.target.closest ? ev.target.closest("[data-acct-out]") : null; if (!b) return;
+      box.addEventListener("click", async function(ev){ var b = ev.target.closest ? ev.target.closest("[data-acct-out]") : null; if (!b) return;
         var t = loadAllTokens().find(function(x){ return String(x.character_id) === b.getAttribute("data-acct-out"); });
-        if (!t || !confirm(t.character_name + " aus EVE Omni ausloggen?")) return;
+        if (!t || !(await eoConfirm(t.character_name + " aus EVE Omni ausloggen?"))) return;
         removeCharacter(t.character_id); renderCharacterChips(); ssoSetStatus(t.character_name + " ausgeloggt."); });
     }
   }
@@ -22084,13 +22349,13 @@ if (typeof document !== 'undefined') {
     function fill(cid){
       b.disabled = true; b.title = "Lese Standort …";
       myLocSys(cid).then(function(n){ input.value = n; input.dispatchEvent(new Event("input")); input.dispatchEvent(new Event("change")); b.title = "Mein Standort eintragen (" + charNameById(cid) + ": " + n + ")"; },
-        function(e){ b.title = e.message; alert(e.message); }).then(function(){ b.disabled = false; });
+        function(e){ b.title = e.message; eoAlert(e.message); }).then(function(){ b.disabled = false; });
     }
     b.onclick = function(ev){
       ev.preventDefault();
       if (menu){ menu.remove(); menu = null; return; }
       var cid = myLocChar(input); if (cid){ fill(cid); return; }
-      var toks = loadAllTokens(); if (!toks.length){ alert("Erst einloggen."); return; }
+      var toks = loadAllTokens(); if (!toks.length){ eoAlert("Erst einloggen."); return; }
       menu = document.createElement("div"); menu.className = "sys-ac"; menu.setAttribute("role", "listbox");
       toks.slice().sort(function(a, c){ var on = function(t){ var d = chData[String(t.character_id)]; return d && d.online && d.online.online ? 0 : 1; }; return on(a) - on(c); }).forEach(function(t){
         var d = document.createElement("div"); d.className = "sys-ac-item"; d.setAttribute("role", "option");
@@ -23531,7 +23796,7 @@ if (typeof document !== 'undefined') {
   }
   function neoGrpRank(id){ var n = id.replace(/^neo-btn-/, ""), g = 0; while (g < NEO_GROUPS.length - 1 && NEO_GROUPS[g][2].indexOf(n) < 0) g++; return g * 100 + NEO_GROUPS[g][2].indexOf(n); }
   var NEO_DEFAULT = neoTopButtons().map(function(b){ return b.id; }).sort(function(a, b){ return neoGrpRank(a) - neoGrpRank(b); });
-  var NEO_OV_ONLY = ["neo-btn-alarm", "neo-btn-report", "neo-btn-notes", "neo-btn-perf", "neo-btn-timer", "neo-btn-dscan", "neo-btn-scanplan", "neo-btn-piplan", "neo-btn-workbench", "neo-btn-prod", "neo-btn-browser", "neo-btn-main"];   // P1: nur im OmniCom-Overlay, stehen aber in derselben Reihenfolge
+  var NEO_OV_ONLY = ["neo-btn-alarm", "neo-btn-report", "neo-btn-notes", "neo-btn-perf", "neo-btn-timer", "neo-btn-dscan", "neo-btn-sound", "neo-btn-scanplan", "neo-btn-piplan", "neo-btn-workbench", "neo-btn-prod", "neo-btn-browser", "neo-btn-main"];   // P1: nur im OmniCom-Overlay, stehen aber in derselben Reihenfolge
   // 14.10.: NEU-Markierung – neue OmniCom-Symbole leuchten, bis man sie einmal anklickt. Erster Start: alles Vorhandene gilt als bekannt.
   var NEO_SEEN_KEY = "eve-zentrale-neoseen-v1";
   function neoSeen(){
@@ -23686,13 +23951,13 @@ if (typeof document !== 'undefined') {
     if (v && v.buy && v.dest) return v;
     if (hdMode() === "hub") return { buy: isSrc.value, dest: "hubs", hubs: isDstKeys() };   // aus dem bisherigen Stand ableiten
     var hb = document.getElementById("hl-hub").value, tg = document.getElementById("hl-target").value;
-    return { buy: hb || "sys", dest: tg === "" ? "umkreis" : tg === "sys" ? "sys" : "hubs", hubs: HUBS[tg] ? [tg] : [] };
+    return { buy: hb || "sys", dest: tg === "" ? "umkreis" : tg === "sys" ? "sys" : "hubs", hubs: hubGet(tg) ? [tg] : [] };
   }
   function kkwSave(v){ try{ localStorage.setItem(KKW_KEY, JSON.stringify(v)); }catch(e){} }
-  function kkwMode(v){ return v.dest === "hubs" && HUBS[v.buy] ? "hub" : "haul"; }
+  function kkwMode(v){ return v.dest === "hubs" && hubGet(v.buy) ? "hub" : "haul"; }
   function kkwApply(v, fromUser){
     var $ = function(id){ return document.getElementById(id); }, fire = function(e){ e.dispatchEvent(new Event("change", { bubbles: true })); };
-    v.hubs = (v.hubs || []).filter(function(k){ return HUBS[k] && k !== v.buy; });
+    v.hubs = (v.hubs || []).filter(function(k){ return hubGet(k) && k !== v.buy; });
     kkwSave(v);
     var m = kkwMode(v), onPage = ["panel-haul", "panel-intensiv"].some(function(p){ var e = $(p); return e && e.classList.contains("active"); });
     if (m === "hub"){
@@ -23701,7 +23966,7 @@ if (typeof document !== 'undefined') {
       isDstSync(); isSave();
     } else {
       var hh = $("hl-hub"), ht = $("hl-target");
-      hh.value = HUBS[v.buy] ? v.buy : ""; hh.onchange();
+      hh.value = hubGet(v.buy) ? v.buy : ""; hh.onchange();
       ht.value = v.dest === "umkreis" ? "" : v.dest === "sys" ? "sys" : (v.hubs[0] || ""); ht.onchange();
       hlSave();
     }
@@ -23723,7 +23988,7 @@ if (typeof document !== 'undefined') {
     var sid = chData[cid].loc.solar_system_id;
     if (nwBuyMine){ if (nwBuyMine === true) nwBuyMine = nwBuySid || sid; if (nwBuyMine === sid) return; nwBuyMine = false; }   // eigene Wahl gilt im System, in dem sie getroffen wurde
     nwBuySid = sid;
-    var hub = Object.keys(HUBS).filter(function(k){ return HUBS[k].sys === sid; })[0], v = kkwLoad(), who = charNameById(cid), info = document.getElementById("kk-here");
+    var hub = Object.keys(HUBS).filter(function(k){ return hubGet(k).sys === sid; })[0], v = kkwLoad(), who = charNameById(cid), info = document.getElementById("kk-here");
     if (hub){ v.buy = hub; info.textContent = "📍 Einkauf = Standort von " + who + " (" + n + ")"; }
     else if (kkwMode(v) === "hub"){ info.textContent = "📍 " + who + " ist in " + n + " – nicht in einem Hub, Einkauf bleibt."; kkwRender(); return; }
     else { v.buy = "sys"; document.getElementById("hl-start").value = n; hlSave(); info.textContent = "📍 Einkauf = Standort von " + who + " (" + n + ")"; }
@@ -23745,13 +24010,13 @@ if (typeof document !== 'undefined') {
     var m = kkwMode(v), hint = document.getElementById("kk-where-hint");
     hint.textContent = m === "hub" ? "→ Vergleicht " + (v.hubs.length > 1 ? "die Ziel-Hubs und zeigt je Ziel die beste Ladung." : "die drei Lade-Strategien für diesen Hub.") :
       v.dest === "umkreis" ? "→ Durchsucht alle NPC-Handelsposten im Umkreis, mit Schiffsempfehlung." :
-      v.dest === "hubs" && v.hubs.length > 1 ? "→ Von einem eigenen System aus wird nur der erste Hub gerechnet (" + HUBS[v.hubs[0]].label.split(" (")[0] + ")." : "→ Sucht die beste Ladung für genau dieses Ziel, mit Schiffsempfehlung.";
-    hint.classList.toggle("sb-warn", v.dest === "hubs" && !HUBS[v.buy] && v.hubs.length > 1);
+      v.dest === "hubs" && v.hubs.length > 1 ? "→ Von einem eigenen System aus wird nur der erste Hub gerechnet (" + hubGet(v.hubs[0]).label.split(" (")[0] + ")." : "→ Sucht die beste Ladung für genau dieses Ziel, mit Schiffsempfehlung.";
+    hint.classList.toggle("sb-warn", v.dest === "hubs" && !hubGet(v.buy) && v.hubs.length > 1);
   }
   function kkwAct(k){   // Klick auf ein Ziel (auch aus dem Overlay)
     var v = kkwLoad();
     if (k === "sys" || k === "umkreis"){ v.dest = k; }
-    else if (HUBS[k]){
+    else if (hubGet(k)){
       if (v.dest !== "hubs"){ v.dest = "hubs"; v.hubs = [k]; }
       else { var i = v.hubs.indexOf(k); if (i >= 0){ if (v.hubs.length > 1) v.hubs.splice(i, 1); } else v.hubs.push(k); }
     }
@@ -23761,8 +24026,8 @@ if (typeof document !== 'undefined') {
     var g1 = ["#panel-haul", "#panel-intensiv"].map(function(p){ return document.querySelector(p + " .kk-steps > .opt-group"); });
     if (!g1[0] || !g1[1]) return;
     var box = el("div", "controls opt-group", '<div class="opt-h">① Wo kaufen → wohin verkaufen</div>' +
-      '<div class="field"><label for="kk-buy">Einkaufen in</label><select id="kk-buy">' + Object.keys(HUBS).map(function(k){ return '<option value="' + k + '">' + escapeHtml(HUBS[k].label) + "</option>"; }).join("") + '<option value="sys">Eigenes System …</option></select></div>' +
-      '<div class="field" style="flex:1 1 100%"><label>Verkaufen in</label><div class="sb-mode kk-dest" id="kk-dest">' + Object.keys(HUBS).map(function(k){ return '<button type="button" data-kkd="' + k + '">' + escapeHtml(HUBS[k].label.split(" (")[0]) + "</button>"; }).join("") +
+      '<div class="field"><label for="kk-buy">Einkaufen in</label><select id="kk-buy">' + Object.keys(HUBS).map(function(k){ return '<option value="' + k + '">' + escapeHtml(hubGet(k).label) + "</option>"; }).join("") + '<option value="sys">Eigenes System …</option></select></div>' +
+      '<div class="field" style="flex:1 1 100%"><label>Verkaufen in</label><div class="sb-mode kk-dest" id="kk-dest">' + Object.keys(HUBS).map(function(k){ return '<button type="button" data-kkd="' + k + '">' + escapeHtml(hubGet(k).label.split(" (")[0]) + "</button>"; }).join("") +
       '<button type="button" data-kkd="sys">Eigenes System</button><button type="button" data-kkd="umkreis">Alles im Umkreis</button></div></div>' +
       '<div class="sb-info" id="kk-where-hint" style="flex:1 1 100%"></div><div class="item-sub" id="kk-here" style="flex:1 1 100%"></div>');
     box.id = "kk-where";
@@ -23779,6 +24044,19 @@ if (typeof document !== 'undefined') {
     var hdOld = hdSetMode; hdSetMode = function(m, noSwitch){ hdOld(m, noSwitch); kkwPlace(); };
     setTimeout(function(){ var s = null; try{ s = localStorage.getItem(KKW_KEY); }catch(e){} if (s) kkwApply(kkwLoad(), false); else { kkwPlace(); kkwRender(); } }, 0);   // ohne eigene Wahl nichts an den gemerkten Feldern ändern
   })();
+  // AO2 Block D (22.10.): eingetragene Markt-Strukturen als Einkaufs-/Verkaufsort – in ① (Hauptfenster, Overlay spiegelt) und in der Hub-Handel-Auswahl
+  function hubStFill(){
+    var L = stList(), lb = function(x){ return x.name + " (Struktur)"; }, $ = function(id){ return document.getElementById(id); };
+    [$("kk-buy"), $("kk-dest"), isSrc, isDst].forEach(function(b){ if (b) [].slice.call(b.querySelectorAll("[data-st]")).forEach(function(e){ e.remove(); }); });
+    L.forEach(function(x){ var k = "st" + x.id, o, bt;
+      if ($("kk-buy")){ o = document.createElement("option"); o.value = k; o.textContent = lb(x); o.setAttribute("data-st", ""); $("kk-buy").insertBefore(o, $("kk-buy").querySelector('option[value="sys"]')); }
+      if ($("kk-dest")){ bt = document.createElement("button"); bt.type = "button"; bt.setAttribute("data-kkd", k); bt.setAttribute("data-st", ""); bt.title = lb(x); bt.textContent = x.name.split(" - ")[0]; $("kk-dest").insertBefore(bt, $("kk-dest").querySelector('[data-kkd="sys"]')); }
+      o = document.createElement("option"); o.value = k; o.textContent = lb(x); o.setAttribute("data-st", ""); isSrc.appendChild(o);
+      var l2 = document.createElement("label"), cb = document.createElement("input"); cb.type = "checkbox"; cb.value = k; l2.title = lb(x); l2.setAttribute("data-st", ""); l2.appendChild(cb); l2.appendChild(document.createTextNode(x.name.split(" - ")[0])); isDst.appendChild(l2);
+    });
+    try{ isDstSync(); kkwRender(); }catch(e){}
+  }
+  hubStFill();
   jjAdv("nav", "#rt-extra", [], ["rt-auto", "rt-jb-on", "rt-jb-box", "rt-gank-box"]);
   function neoLabel(b){ var l = b.querySelector(".neo-label"); return (l ? l.textContent : b.id).replace(/\u00ad/g, ""); }
   /* A2: OmniCom-Farben (Einstellungen › Darstellung). Gespeichert werden nur eigene Farben {Knopf-ID: "#rrggbb"}.
@@ -23826,6 +24104,7 @@ if (typeof document !== 'undefined') {
     workbench: "<path d=\"M24 5 7 15v18l17 10 17-10V15z\" stroke-linejoin=\"round\"/><path d=\"M24 25v18M7 15l17 10 17-10\" stroke-linejoin=\"round\"/>",   // WB
     fitting: "<path d=\"M24 4 34 16v20l-10 8-10-8V16z\" stroke-linejoin=\"round\"/><path d=\"M14 22H6v8h8M34 22h8v8h-8\" stroke-linejoin=\"round\"/><circle cx=\"24\" cy=\"20\" r=\"3\" fill=\"url(#ic-cyan)\" stroke=\"none\"/><circle cx=\"24\" cy=\"30\" r=\"3\" fill=\"url(#ic-cyan)\" stroke=\"none\"/>",   // AL9: Fittings – Rumpf mit Modul-Steckplätzen
     prod: "<circle cx=\"18\" cy=\"28\" r=\"10\"/><circle cx=\"18\" cy=\"28\" r=\"3.2\" fill=\"url(#ic-cyan)\" stroke=\"none\"/><path d=\"M28 18h14v24H24M34 26h4M34 34h4\" stroke-linejoin=\"round\"/><path d=\"M28 18V8l-6 6\" stroke-linejoin=\"round\"/>",   // PROD
+    sound: "<path d=\"M8 18h8l10-8v28l-10-8H8z\" stroke-linejoin=\"round\"/><path d=\"M10 20h6l8-6v20l-8-6h-6z\" fill=\"url(#ic-cyan)\" opacity=\".5\" stroke=\"none\"/><path d=\"M32 18a9 9 0 0 1 0 12M37 13a16 16 0 0 1 0 22\"/>",   // AO1
     dscan: "<path d=\"M24 42L8 12a26 26 0 0 1 32 0z\" stroke-linejoin=\"round\"/><path d=\"M24 42L16 14a20 20 0 0 1 16 0z\" fill=\"url(#ic-cyan)\" opacity=\".5\" stroke=\"none\"/><path d=\"M13 21a18 18 0 0 1 22 0M17 29a10 10 0 0 1 14 0\"/><circle cx=\"24\" cy=\"42\" r=\"2.5\" fill=\"url(#ic-cyan)\"/>",
     scanplan: "<path d=\"M8 6h22v14\"/><path d=\"M8 6v36h16\"/><path d=\"M13 14h12M13 21h8M13 28h6\"/><circle cx=\"32\" cy=\"32\" r=\"8\"/><circle cx=\"32\" cy=\"32\" r=\"4\" fill=\"url(#ic-cyan)\" stroke=\"none\"/><path d=\"M38 38l6 6\" stroke-width=\"3\"/>"
   };
@@ -24244,6 +24523,31 @@ if (typeof document !== 'undefined') {
     return (route || []).map(function(id){ var x = c.sys[id] || {}, g = gankInfo(id, x.n), kk = k.kills[id];
       return { id: id, n: x.n || "#" + id, s: x.s, g: g, k: kk ? kk.s + kk.p : 0, sc: (g ? (g.list ? 50 : 0) + g.n * 10 : 0) + (kk ? kk.s + kk.p : 0) * 2 + (typeof x.s === "number" ? Math.max(0, 1 - x.s) * 10 : 0) }; })
       .filter(function(x){ return x.g || x.k || (typeof x.s === "number" && x.s < 0.5); }).sort(function(a, b){ return b.sc - a.sc; }).slice(0, 3);
+  }
+  /* AO2 Block D (22.10.): Routen-Prüfung für Low-/Nullsec – Kills + Sprünge der letzten Stunde (EVE, ohne Login), in Systemen mit Kills die
+     Kills von zKillboard je Stargate (wie das Radar): Camp = ≥ 2 Kills am selben Tor oder Gefahr ≥ 50. Highsec-Routen → null (dort gilt die Gank-Ampel). */
+  async function rtRouteCheck(route){
+    if (!route || !route.length) return null;
+    var c = await rtSystems(route), k = await rtLoadKills();
+    var ln = route.filter(function(id){ var x = c.sys[id]; return x && rtSecClass(x.s) !== "high"; });
+    if (!ln.length) return null;
+    var act = ln.map(function(id){ var kk = k.kills[id] || {}; return { id: id, n: (c.sys[id] || {}).n || "#" + id, s: (c.sys[id] || {}).s, k: (kk.s || 0) + (kk.p || 0), j: k.jumps[id] || 0 }; }).filter(function(x){ return x.k > 0; });
+    var camps = act.length ? (await radarCamps(act.map(function(x){ return x.id; }), 1)).filter(function(x){ return x.n >= 2 || radarDanger(x, 1) >= 50; }) : [];
+    camps.forEach(function(x){ x.sn = (c.sys[x.sys] || {}).n || "#" + x.sys; });
+    var low = ln.filter(function(id){ return rtSecClass(c.sys[id].s) === "low"; }).length;
+    return { lvl: camps.length ? "camp" : act.length ? "akt" : "ruhig", low: low, nul: ln.length - low, act: act.sort(function(a, b){ return b.k - a.k; }), camps: camps, ok: k.ok, noHigh: !!route.noHigh };
+  }
+  function rtCheckCls(r){ return r.lvl === "camp" ? "bad" : r.lvl === "akt" ? "warn" : "ok"; }
+  function rtCheckPill(r){ return r ? ' <span class="pill ' + (r.lvl === "camp" ? "loss" : r.lvl === "akt" ? "warn" : "profit") + '" title="Route Low/Null, letzte Stunde">' + (r.lvl === "camp" ? "⛔ Camp" : r.lvl === "akt" ? "⚠ Aktivität" : "✓ ruhig") + "</span>" : ""; }   // EN über das Wörterbuch
+  function rtCheckHtml(r){   // je Teil ein eigenes Textstück (Übersetzung EN zeilenweise)
+    var sp = function(t){ return "<span>" + escapeHtml(t) + "</span>"; };
+    var head = r.lvl === "camp" ? "Route: Camp" : r.lvl === "akt" ? "Route: Aktivität" : "Route: ruhig";
+    var sec = [r.low ? r.low + " Lowsec" : "", r.nul ? r.nul + " Nullsec" : ""].filter(Boolean).join(" + ") + " · letzte Stunde";
+    var det = r.camps.length ? r.camps.slice(0, 3).map(function(x){ return sp(x.gate + "-Tor in " + x.sn + " (" + x.n + " Kills, vor " + radarAgo(x.last) + (x.tags.length ? ", " + x.tags.join(" ") : "") + ")"); }) :
+      r.act.length ? r.act.slice(0, 3).map(function(x){ return sp(x.n + " (" + x.k + " Kills, " + x.j + " Sprünge)"); }) : [sp("keine Kills")];
+    return "<b>" + head + "</b> · " + sp(sec) + " · " + det.join(" · ") + (r.ok ? "" : " · " + sp("EVE-Daten gerade nicht erreichbar")) +
+      (r.noHigh ? "<br>" + sp("Keine reine Highsec-Route möglich – gerechnet mit der kürzesten.") : "") +
+      '<br><span class="sl-sub">' + escapeHtml("Ansiblex-Brücken und Jump-Frachter-Sprünge fehlen in der Route – echte Sprünge können weniger sein. Gank-Ampel gilt hier nur für Highsec.") + "</span>";
   }
   function rtDangerHtml(d){ return d.map(function(x){ return sysLink(x.id, x.n) + escapeHtml(rtDangerTxt([x]).slice(x.n.length)); }).join(" · "); }   // EE1
   function rtDangerTxt(d){ return d.map(function(x){ return x.n + " (" + [typeof x.s === "number" ? x.s.toFixed(1) : "", x.g ? (x.g.list ? "Gank-System" : "") + (x.g.n ? (x.g.list ? ", " : "") + x.g.n + " Verluste" : "") : "", x.k ? x.k + " Kills" : ""].filter(Boolean).join(", ") + ")"; }).join(" · "); }
@@ -24718,11 +25022,15 @@ if (typeof document !== 'undefined') {
      ===================================================================== */
   var OV_KEY = "eve-zentrale-overlay-v1";
   var OV_VIEWS = { trades: "Trades", route: "Navigation", skills: "Skills", wallet: "Wallet", scanner: "Scanner-Plan", handel: "Hauling", track: "Watchlist",
-                   local: "Local Report", mail: "Mail", chars: "Charaktere", pi: "Planeten", musik: "Jukebox", karte: "Karte", alarm: "Alert", gangreport: "Gang-Report", radar: "Radar", assets: "Assets", industrie: "Industrie", notiz: "Notizen", leistung: "Leistung", appraisal: "Wertschätzer", courier: "Kurier", mining: "Mining", dscan: "D-Scan", uhr: "Uhr & Timer", piplan: "PI-Planer", wurmloch: "Wurmlöcher", markt: "Markt", spiel: "OmniBreaker", workbench: "Workbench", produktion: "Produktion" };   // 09.10.: Übersicht nur noch große Seite, kein Overlay
+                   local: "Local Report", mail: "Mail", chars: "Charaktere", pi: "Planeten", musik: "Jukebox", karte: "Karte", alarm: "Alert", gangreport: "Gang-Report", radar: "Radar", assets: "Assets", industrie: "Industrie", notiz: "Notizen", leistung: "Leistung", appraisal: "Wertschätzer", courier: "Kurier", mining: "Mining", dscan: "D-Scan", sound: "Sound", uhr: "Uhr & Timer", piplan: "PI-Planer", wurmloch: "Wurmlöcher", markt: "Markt", spiel: "OmniBreaker", workbench: "Workbench", produktion: "Produktion" };   // 09.10.: Übersicht nur noch große Seite, kein Overlay
   if (window.evecoreHost && evecoreHost.noGame) delete OV_VIEWS.spiel;
-  var OV_VIEWS_DEFAULT_OFF = { piplan: true, industrie: true, notiz: true, leistung: true, scanner: true, handel: true, track: true, chars: true, pi: true, musik: true, karte: true, alarm: true, gangreport: true, radar: true, assets: true, appraisal: true, courier: true, mining: true, dscan: true, uhr: true, wurmloch: true, markt: true, mail: true, spiel: true, workbench: true, produktion: true };   // als Tab anfangs aus (als Einzelfenster jederzeit)
+  var OV_VIEWS_DEFAULT_OFF = { piplan: true, industrie: true, notiz: true, leistung: true, scanner: true, handel: true, track: true, chars: true, pi: true, musik: true, karte: true, alarm: true, gangreport: true, radar: true, assets: true, appraisal: true, courier: true, mining: true, dscan: true, sound: true, uhr: true, wurmloch: true, markt: true, mail: true, spiel: true, workbench: true, produktion: true };   // als Tab anfangs aus (als Einzelfenster jederzeit)
   var ovScanTime = 0, ovHaulLast = null, ovHubLast = null;
   var EVH = window.evecoreHost || null;
+  // AT (22.10.): Rückfragen/Meldungen im Design (Hauptfenster, sonst Menüfenster an der Maus) statt Windows-Fenster; im Browser wie bisher
+  window.eoConfirm = function(m, ok){ var h = window.evecoreHost; if (!(h && h.ask)) return Promise.resolve(confirm(m)); m = window.evTr ? evTr(m) : m;
+    return h.ask({ message: m, buttons: [ok || "OK", "Abbrechen"], defaultId: 0, cancelId: 1 }).then(function(r){ return r === 0; }, function(){ return confirm(m); }); };
+  window.eoAlert = function(m){ var h = window.evecoreHost; if (!(h && h.ask)){ alert(m); return Promise.resolve(); } return h.ask({ message: window.evTr ? evTr(m) : m }).catch(function(){}); };
   if (EVH) document.documentElement.classList.add("in-host");
   function ovDefaults(){
     return { views: [{id:"trades", on:true}, {id:"route", on:true}, {id:"skills", on:true}, {id:"wallet", on:true}],
@@ -25996,7 +26304,7 @@ if (typeof document !== 'undefined') {
     if (!loadAllTokens().length){ body.appendChild(el("div", "ov-empty", "Nicht eingeloggt. In der großen Ansicht unter Einstellungen › Konto einen Charakter einloggen.")); return; }
     if (!list.length){ body.appendChild(el("div", "ov-empty", "Keine offenen Trades. Neue Kaufaufträge in Jita werden automatisch erkannt, oder unter „Trades scannen“ „＋ Merken“.")); return; }
     var outbid = 0, planned = 0, hasPlan = false;
-    list.forEach(function(x){ if (ovAlarmKeys[x.t.id]) outbid++; if (x.ev.unit !== null){ planned += x.ev.unit * x.t.qty; hasPlan = true; } });
+    list.forEach(function(x){ if (ovAlarmKeys[x.t.id]) outbid++; if (x.ev.total !== null){ planned += x.ev.total; hasPlan = true; } });
     var sum = el("div", "ov-sum");
     sum.innerHTML = "<span><b>" + list.length + "</b> Trade" + (list.length > 1 ? "s" : "") + "</span>" +
       (outbid ? '<span style="color:var(--warn)"><b style="color:var(--warn)">' + outbid + "</b> überboten</span>" : "<span>alle vorne</span>") +
@@ -26016,7 +26324,7 @@ if (typeof document !== 'undefined') {
       var tmT = tkTimes()["Trade" + t.id], card = el("div", "ov-card" + (ovAlarmKeys[t.id] ? " alarm" : tkStCls(trPh(t, ev), trBad(ev) || !!(tmT && tmT.slow))) + (String(t.id) === fid ? " ov-focus" : "") + (fold && fold[t.id] ? " tr-fold" : ""));
       card.setAttribute("data-bk", "Trade:" + t.id);   // BB6
       var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid)); nm.insertAdjacentHTML("beforeend", " " + compPill(compTrade(t.id), true) + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23
+      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid)); nm.insertAdjacentHTML("beforeend", (t.status !== "done" ? tkNextHtml({ state: "active", charId: t.charId }) : "") + " " + compPill(compTrade(t.id), true) + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23
       var phase = ev.allSold ? ["fertig", "profit"] : (ev.buyPhase && ev.sellPhase ? ["Kauf+Verk.", "warn"] : (ev.buyPhase ? ["Kauf", "warn"] : ["Verkauf", "warn"]));
       h.appendChild(el("span", "pill " + phase[1], phase[0]));
       if (fold){ h.setAttribute("data-ova", "trFold"); h.setAttribute("data-arg", t.id); h.title = "Klick: Karte zu- oder aufklappen"; }
@@ -26031,7 +26339,7 @@ if (typeof document !== 'undefined') {
         lb.appendChild(el("span", "", "Kauf:"));
         if (own.buy && ev.buyCheck && ev.buyCheck.status === "überboten"){
           lb.appendChild(el("span", "warn", "überboten →"));
-          lb.appendChild(ovCp(tscFmtPrice(ev.buyCheck.newPrice), tscCopyPrice(ev.buyCheck.newPrice), "Neuen Kaufpreis kopieren"));
+          lb.appendChild(trPendCp(ovCp(tscFmtPrice(ev.buyCheck.newPrice), tscCopyPrice(ev.buyCheck.newPrice), "Neuen Kaufpreis kopieren"), t.id, "buy", ev.buyCheck.newPrice));   // AV2
           var lk = el("span", "", ovLockHtml(own.buy)); lb.appendChild(lk);
         } else if (own.buy){
           lb.appendChild(el("span", "ok", "vorne"));
@@ -26065,7 +26373,7 @@ if (typeof document !== 'undefined') {
           if (ev.belowBreakEven){ ls.appendChild(el("span", "bad", "unterboten, Markt unter Mindestpreis")); }
           else {
             ls.appendChild(el("span", "warn", "unterboten →"));
-            ls.appendChild(ovCp(tscFmtPrice(ev.sellCheck.newPrice), tscCopyPrice(ev.sellCheck.newPrice), "Neuen Verkaufspreis kopieren"));
+            ls.appendChild(trPendCp(ovCp(tscFmtPrice(ev.sellCheck.newPrice), tscCopyPrice(ev.sellCheck.newPrice), "Neuen Verkaufspreis kopieren"), t.id, "sell", ev.sellCheck.newPrice));   // AV2
             ls.appendChild(el("span", "", ovLockHtml(own.sell)));
           }
         } else if (own.sell){
@@ -26098,11 +26406,13 @@ if (typeof document !== 'undefined') {
       // Gewinn netto pro Stueck und gesamt
       var lg = ovLine("txt"); lg.classList.add("ov-keep");
       if (ev.unit !== null){
-        lg.innerHTML = "<span title=\"Je Stück aus Kauf- und Verkaufspreis dieses Auftrags nach Steuer/Gebühren (noch offen = Plan)\">Gewinn netto " + ovPfB(ev.unit) + "/Stk · gesamt " + ovPfB(ev.unit * t.qty) + "</span>" +
+        lg.innerHTML = "<span title=\"" + escapeHtml(trSrcTip(ev)) + "\">Gewinn netto " + ovPfB(ev.unit) + "/Stk · gesamt " + ovPfB(ev.total) + "</span>" +
           (ev.result !== null ? " · Kasse <b title=\"" + TK_TIP + "\" class=\"" + (ev.result >= 0 ? "ok" : "bad") + "\">" + ovSigned(ev.result) + "</b>" : "") +
           (ev.forecast !== null ? " → <b class=\"" + (ev.forecast >= 0 ? "ok" : "bad") + "\" title=\"wenn alles verkauft\">" + ovSigned(ev.forecast) + "</b>" : "");
       } else lg.innerHTML = "Gewinn: folgt nach dem Aktualisieren" + (ev.result !== null ? " · Kasse " + ovPfB(ev.result) + "" : "");
       card.appendChild(lg);
+      var ab2 = trAbortHtml(ev); if (ab2) card.appendChild(el("div", "ov-l txt", ab2));
+      var rb2 = trRebuyHtml(t, ev); if (rb2) card.appendChild(el("div", "ov-l txt", rb2.replace(/<button[\s\S]*<\/button>/, function(b){ return '<span class="ov-rbtn">' + b.replace(' class="btn ghost"', "") + "</span>"; })));   // BA2   // AV4 – ohne ov-keep: nur aufgeklappt
       if (t.status !== "done"){   // T11, BB10: Erledigt · Prüfen · Abbrechen wie überall
         card.appendChild(el("div", "ov-l", '<span class="ov-rbtn">' + (ev.buyPhase && ev.p.bought ? '<button type="button" data-ova="trGo" data-arg="' + escapeHtml(t.id) + '" title="Einkauf ist fertig (auch wenn weniger als geplant) – weiter zum Verkauf">weiter</button>' : "") +
           tkBtnsHtml({ kind: "Trade", id: t.id, state: "active" }, true) + "</span>"));
@@ -26114,6 +26424,7 @@ if (typeof document !== 'undefined') {
       card.appendChild(lp);
       var bar = el("div", "ov-bar-mini", '<span style="width:' + pct.toFixed(0) + '%"></span>');
       card.appendChild(bar);
+      var eh = t.status !== "done" ? trEsiHtml(t.charId, trEsiWait(t, ev)) : ""; if (eh) card.appendChild(ovLine("txt")).innerHTML = eh;   // AQ1
       return card;
   }
 
@@ -26134,7 +26445,7 @@ if (typeof document !== 'undefined') {
     if (v !== "active" && v !== "trash") body.appendChild(el("div", "ovn-mode", doneDaysBtns('data-ova="doneDays" data-arg')));   // BB13
     var closed = all.filter(function(x){ return x.state !== "active"; }), sum = doneSum(closed);
     var ob = Object.keys(ovAlarmKeys).length, planned = null;   // BB11: überboten + geplant netto wie im Trades-Overlay
-    ovTradeChecks().forEach(function(c){ if (c.ev.unit !== null) planned = (planned || 0) + c.ev.unit * c.t.qty; });
+    ovTradeChecks().forEach(function(c){ if (c.ev.total !== null) planned = (planned || 0) + c.ev.total; });
     body.appendChild(el("div", "ov-sum", "<span><b>" + (all.length - closed.length) + "</b> aktiv</span>" + (ob ? '<span style="color:var(--warn)"><b style="color:var(--warn)">' + ob + "</b> überboten</span>" : "") +
       (planned !== null ? '<span title="Summe Gewinn netto × Planmenge der aktiven Trades">geplant netto <b>' + ovSigned(planned) + "</b></span>" : "") + "<span title=\"Summe der erledigten Aufträge – " + TK_TIP + "\">Ergebnis erledigt " + ovPfB(sum) + "</span>"));
     if (v === "trash"){ body.insertAdjacentHTML("beforeend", tkTrashHtml(true)); return; }   // BB10
@@ -26159,15 +26470,15 @@ if (typeof document !== 'undefined') {
         }
         var card = full || el("div", "ov-card trk-sm" + (x.state === "active" ? x.st + (trkOb(x) ? " trk-ob" : "") :
           x.state === "done" ? x.st + (x.res < 0 ? " dn-neg" : " dn-pos") + (Date.now() - (x.end || 0) < 90000 ? " st-flash" : "") : x.res >= 0 ? " good" : " bad"));   // U12: überboten gelb; Z4: erledigt grün, kurz aufleuchten
-        if (full){ var fn = full.querySelector(".ov-name"); if (fn){ if (x.nr) fn.insertAdjacentHTML("afterbegin", tkNr(x)); fn.insertAdjacentHTML("beforeend", tkKeepPill(x) + tkMuteBtn(x)); } }   // BB10, SS7
+        if (full){ var fn = full.querySelector(".ov-name"); if (fn){ if (x.nr) fn.insertAdjacentHTML("afterbegin", tkNr(x)); fn.insertAdjacentHTML("beforeend", tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x)); } }   // BB10, SS7
         card.classList.add(x.kind === "Trade" ? "trk-trade" : "trk-run"); if (x.mute) card.classList.add("al-mute");   // S10, SS7: Trades / Läufe farbig unterscheiden
         card.setAttribute("data-ova", "trkDet"); card.setAttribute("data-arg", x.id); card.setAttribute("data-ovrc", "trkPage");
         if (x.kind === "Trade") card.setAttribute("data-bk", "Trade:" + x.id);   // BB11: Blinken wie im Trades-Overlay
         card.title = (x.state !== "active" ? tkWhenTxt(x) + "\n" : "") + "Klick: Details auf-/zuklappen · Rechtsklick: in EVE Omni öffnen";
         if (!full){
           var h = el("div", "ov-h");
-          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + escapeHtml(x.name) + trkWhere(x) + tkKeepPill(x) + tkMuteBtn(x) + (x.kind === "Trade" && x.state === "active" ? " " + compPill(compTrade(x.id), true) : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x))));   // AA5, BB23
-          h.appendChild(el("span", "trk-r", (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, ovRender) + " " : "") + ovPfB(x.res) + "" + (x.state === "active" ? " · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) : " · " + (x.state === "done" ? "" : "abgebr. ") + tkDay(x.end || x.t)) + (x.tm ? " · " + tkTimeHtml(x.tm, true) : "")));   // AI3: Ampel rechts, nicht im abgeschnittenen Namen
+          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpenIds(o).indexOf(String(x.id)) >= 0 ? trkWhere(x) : "") + tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x) + (x.kind === "Trade" && x.state === "active" ? " " + compPill(compTrade(x.id), true) : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x))));   // AA5, BB23
+          h.appendChild(el("span", "trk-r", (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, ovRender) + " " : "") + ovPfB(x.res) + "" + (x.state === "active" ? " · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) : " · " + (x.state === "done" ? "" : "abgebr. ") + tkDay(x.end || x.t)) + (x.tm && x.state !== "active" ? " · " + tkTimeHtml(x.tm, true) : "")));   // AI3; BB1: laufend zugeklappt ohne Zeit hinten (dafür „neu:“): Ampel rechts, nicht im abgeschnittenen Namen
           card.appendChild(h);
           // II2: Punkte und „herausnehmen“ nur aufgeklappt (ovRunCard/vcCard) – zugeklappt zeigt der rote Rahmen den Verlust
           var oxs = x.kind === "Trade" && x.state === "active" ? oxTrade(x.id, true) : "";   // AA4: nur unter 24 Std
@@ -26194,10 +26505,11 @@ if (typeof document !== 'undefined') {
   function ovRunCard(run){
       var tmR = tkTimes()["Lauf" + run.id], g = hrProgress(run), rBad = hrBad(run, g), card = el("div", "ov-card lf-run" + tkStCls(g.phase, rBad) + (!rBad && (vcRed(run) || !!(tmR && tmR.slow)) ? " trk-ob" : ""));   // SS9/ZZ1: Sell-Order besser, einzelne Ware im Minus oder zu langsam = gelb; rot nur hrBad
       var h = el("div", "ov-h");
-      h.appendChild(el("span", "ov-name", escapeHtml(run.fromName.replace(/ \(.*/, "").split(" - ")[0]) + " → " + escapeHtml(run.toName.split(" - ")[0])));
+      h.appendChild(el("span", "ov-name", escapeHtml(run.fromName.replace(/ \(.*/, "").split(" - ")[0]) + " → " + escapeHtml(run.toName.split(" - ")[0]) + (run.status !== "done" ? tkNextHtml({ state: "active", charId: run.charId }) : "")));   // BB2
       h.appendChild(el("span", "pill " + (g.phase === "verkauft" ? "profit" : "warn"), g.phase));
       card.appendChild(h);
       card.appendChild(ovLine("txt")).innerHTML = trkPics(run.charId, run.items, 8) + " " + tkTimeHtml(tmR);
+      var rh = run.status !== "done" ? trEsiHtml(run.charId) : ""; if (rh) card.appendChild(ovLine("txt")).innerHTML = rh;   // AQ1
       [["Kauf", run.fromName], ["Verkauf", run.toName]].forEach(function(k){ var st = ovLine("ov-st"); st.appendChild(el("span", "ov-lbl", k[0])); st.appendChild(stCell(k[1])); card.appendChild(st); });   // T13
       if (run.ship) card.appendChild(el("div", "ov-l txt", "Schiff <b>" + escapeHtml(String(run.ship).split(" (")[0]) + "</b>" + (run.fit ? " · " + runFitHtml(run) : "") + (run.ehp ? ' · <span class="muted">' + shortIsk(run.ehp).replace(" ISK", "") + " EHP</span>" : "") + " " + gkRunPill(run.id, ovRender)));   // AI3
       card.appendChild(el("div", "ov-l", ovRouteBtns("run:" + escapeHtml(run.id))));
@@ -26727,7 +27039,9 @@ if (typeof document !== 'undefined') {
     // AM2: „Suchoptionen“ fest rechts in der ersten Zeile unter Handelscharakter – zu und offen an derselben Stelle (vorher in der Knopfleiste, sprang beim Öffnen nach unten)
     var f = ovMirrorFields(act, !open), lab = '<div class="ovn-row"><span class="ovm-l">Einkaufen in</span></div>', lead = "";
     if (f.indexOf(lab) === 0){ f = f.slice(lab.length); lead = '<span class="ovm-l">Einkaufen in</span>'; }
-    return el("div", "ov-form ovn ovm", '<div class="ovn-row ovm-top">' + lead + '<button type="button" class="ovm-tog" data-ova="mirrorTog" data-arg="' + act + '">Suchoptionen ' + (open ? "▴" : "▾") + "</button></div>" + f + bar);
+    var rk = { "haul-run": "haul", "hub-run": "hub", "scan-run": "scan" }[act], has = rk === "haul" ? !!ovHaulLast : rk === "hub" ? !!ovHubLast : rk === "scan" ? !!(tscRows && tscRows.length) : false;   // AR1
+    var clr = has && !busy ? '<button type="button" class="ovm-clr" data-ova="resClear" data-arg="' + rk + '" title="Suchergebnis löschen">✕</button>' : "";
+    return el("div", "ov-form ovn ovm", '<div class="ovn-row ovm-top">' + lead + clr + '<button type="button" class="ovm-tog" data-ova="mirrorTog" data-arg="' + act + '">Suchoptionen ' + (open ? "▴" : "▾") + "</button></div>" + f + bar);
   }
   function ovAct(act){
     var a = OV_ACTS[act]; if (!a) return;
@@ -26765,6 +27079,7 @@ if (typeof document !== 'undefined') {
     '<button type="button" data-ova="resClear" data-arg="' + k + '" title="Ergebnis ausblenden – die nächste Suche rechnet neu">Ergebnis verwerfen</button></span>'; }
   function resClear(k){
     if (k === "haul"){ ovHaulLast = null; hlDestinations = []; hlLotsByStation = {}; var w = document.getElementById("hl-dest-wrap"); if (w) w.hidden = true; var dt = document.getElementById("hl-detail"); if (dt) dt.hidden = true; var st = document.getElementById("hl-status"); if (st) st.textContent = ""; }
+    else if (k === "scan"){ tscRows = []; tscBook = null; ovScanTime = 0; var tw = document.getElementById("tsc-result-wrap"); if (tw) tw.hidden = true; var tsu = document.getElementById("tsc-summary"); if (tsu){ tsu.innerHTML = ""; tsu.hidden = true; } var tst = document.getElementById("tsc-status"); if (tst) tst.textContent = ""; }   // AR1: eigene Trades bleiben
     else { ovHubLast = null; var ob = document.getElementById("is-options"); if (ob) ob.innerHTML = ""; var si = document.getElementById("is-status"); if (si) si.textContent = ""; }
     ovRender();
   }
@@ -26780,10 +27095,11 @@ if (typeof document !== 'undefined') {
     (H.opts || [H]).forEach(function(o, i){
       var on = i === (H.opts ? H.sel : 0), hd = el("div", "ov-card ov-opt" + (i === 0 ? " good" : ""));
       hd.innerHTML = '<button type="button" class="ov-opt-h" data-ova="hubSel" data-arg="' + i + '" aria-expanded="' + on + '">' + (on ? "▾" : "▸") + " Option " + (i + 1) + ": " + ovPfB(o.profit) + " Gewinn" +
-        (o.spend ? " · Einsatz <b>" + shortIsk(o.spend) + "</b>" : "") + (o.jumps != null ? " · Sprünge: <b>" + o.jumps + "</b>" : "") + (o.iskh != null ? " · <b>" + shortIsk(o.iskh) + "</b>/Std." : "") + (o.at && o.profit < o.prev * 0.85 ? ' <span class="bad">⚠</span>' : "") + (o.busy ? " …" : "") + " · → " + escapeHtml(o.dst.label.replace(/ \(.*/, "")) + gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend) + gkRouteTag(o.gkSys) + (i === 0 ? ' <span class="pill profit">empfohlen</span>' : "") + "</button>";
+        (o.spend ? " · Einsatz <b>" + shortIsk(o.spend) + "</b>" : "") + (o.jumps != null ? " · Sprünge: <b>" + o.jumps + "</b>" : "") + (o.iskh != null ? " · <b>" + shortIsk(o.iskh) + "</b>/Std." : "") + (o.at && o.profit < o.prev * 0.85 ? ' <span class="bad">⚠</span>' : "") + (o.busy ? " …" : "") + " · → " + escapeHtml(o.dst.label.replace(/ \(.*/, "")) + gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend) + gkRouteTag(o.gkSys) + rtCheckPill(o.rc) + (i === 0 ? ' <span class="pill profit">empfohlen</span>' : "") + "</button>";
       body.appendChild(hd);
       if (on) ovRenderLoad(body, H, ovRouteBtns("hub") + ovHrBtn(H.t + "-" + (H.sel || 0), "hub") +
         '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="' + H.sel + '" title="Nur die Orders dieser Waren neu laden und neu rechnen – ohne neue Suche"' + (H.busy ? " disabled" : "") + '>Preise aktualisieren</button></span>', hubUpdTxt(H, ovHubLast.t));
+      if (on && o.rc) body.appendChild(el("div", "ov-l txt gk-line gk-" + rtCheckCls(o.rc), rtCheckHtml(o.rc)));   // AO2d
     });
   }
   // AM3: laufende Läufe im Hauling-Overlay wie die Trades im Trades-Overlay (Erledigte → Watchlist)
@@ -27446,7 +27762,7 @@ if (typeof document !== 'undefined') {
     if (a.type === "emSend") return emSend(f);
     if (a.type === "emDel" && m){
       if (!tokHasScope(rfTok(m.cid), "esi-mail.organize_mail.v1")){ emErr = "Zum Löschen einmal neu einloggen."; emUi(); return; }
-      if (!confirm("Mail „" + m.subject + "“ in EVE löschen?")) return;
+      if (!(await eoConfirm("Mail „" + m.subject + "“ in EVE löschen?"))) return;
       try{ await esiAuthSend("DELETE", "/characters/" + m.cid + "/mail/" + m.id + "/", m.cid); emHeads = emHeads.filter(function(x){ return x !== m; }); emOpen = null; emErr = "Mail gelöscht."; }catch(e){ emErr = e.message; }
       emUi(); return;
     }
@@ -28488,6 +28804,7 @@ if (typeof document !== 'undefined') {
     else if (id === "courier") ovRenderCourier(body);   // AA1
     else if (id === "mining") ovRenderMining(body, false);   // MI1
     else if (id === "dscan") ovRenderDscan(body);   // AA11
+    else if (id === "sound") ovRenderSound(body);   // AO1
     else if (id === "wurmloch") ovRenderWormhole(body);   // EE3
     else if (id === "workbench") wbView(body, false);   // WB
     else if (id === "produktion") pdView(body, false);   // PROD
@@ -28555,7 +28872,9 @@ if (typeof document !== 'undefined') {
     if (!cd.length){ var es = esiStandTxt(ESI_AREAS[cur]); if (es) txt = (txt && !/^Stand/.test(txt) ? txt + " · " : "") + es; }
     else if (/^Stand/.test(txt)) txt = "";
     if (document.documentElement.classList.contains("ct-on")) next = "Durchklicken aktiv";
-    return { age: txt, next: next, cd: cd, tip: esiTaktTxt(ESI_AREAS[cur]) };   // Z10: voll im Tooltip
+    var tip = esiTaktTxt(ESI_AREAS[cur]);
+    if (cur === "trades" || cur === "track"){ txt = "ⓘ " + txt; tip = TR_ESI_TIP + " Marktpreise: alle 5 Min." + (tip ? " · " + tip : ""); }   // AQ1
+    return { age: txt, next: next, cd: cd, tip: tip };   // Z10: voll im Tooltip
   }
   function ovFoot(){
     var age = document.getElementById("ov-age"), nx = document.getElementById("ov-next");
@@ -28605,7 +28924,7 @@ if (typeof document !== 'undefined') {
     return n && IC_BODY && IC_BODY[n] ? icSvg(n, icLine()) : "";
   }
   /* OmniCom als Overlay-Fenster: Klick = Overlay-Fenster der Ansicht ein/aus (falls es eins gibt), sonst grosse Ansicht; Rechtsklick = immer grosse Ansicht */
-  var NEO_VIEW = { station: "trades", haul: "handel", track: "track", wallet: "wallet", skills: "skills", jump: "route", intel: "local", chars: "chars", pi: "pi", music: "musik", map: "karte", alarm: "alarm", report: "gangreport", radar: "radar", appraisal: "appraisal", courier: "courier", mining: "mining", assets: "assets", industry: "industrie", notes: "notiz", perf: "leistung", timer: "uhr", dscan: "dscan", scanplan: "scanner", piplan: "piplan", wormhole: "wurmloch", market: "markt", mail: "mail", game: "spiel", workbench: "workbench", prod: "produktion" };
+  var NEO_VIEW = { station: "trades", haul: "handel", track: "track", wallet: "wallet", skills: "skills", jump: "route", intel: "local", chars: "chars", pi: "pi", music: "musik", map: "karte", alarm: "alarm", report: "gangreport", radar: "radar", appraisal: "appraisal", courier: "courier", mining: "mining", assets: "assets", industry: "industrie", notes: "notiz", perf: "leistung", timer: "uhr", dscan: "dscan", sound: "sound", scanplan: "scanner", piplan: "piplan", wormhole: "wurmloch", market: "markt", mail: "mail", game: "spiel", workbench: "workbench", prod: "produktion" };
   // Zusaetzliche Symbole nur fuer das OmniCom-Overlay (Karte und Gang-Alarm als eigene Fenster)
   var NEO_EXTRA = (function(){
     function mk(id, label, svg){ var b = document.createElement("button"); b.id = "neo-btn-" + id; b.innerHTML = svg + '<span class="neo-label">' + label + "</span>"; return b; }
@@ -28616,6 +28935,7 @@ if (typeof document !== 'undefined') {
       mk("perf", "Leistung", '<svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M3 15l4-5 4 3 4-7 6 6"/></svg>'),   // T20
       mk("timer", "Timer", '<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6M12 2v3"/></svg>'),   // Z7
       mk("dscan", "D-Scan", '<svg viewBox="0 0 24 24"><path d="M12 21 4 6a13 13 0 0 1 16 0z"/></svg>'),   // BB12
+      mk("sound", "Sound", '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>'),   // AO1
       mk("scanplan", "Scanner-Plan", '<svg viewBox="0 0 24 24"><path d="M4 3h11v7M4 3v18h8"/><circle cx="16" cy="16" r="4"/><path d="m19 19 3 3"/></svg>'),   // BB12
       mk("piplan", "PI-Planer", '<svg viewBox="0 0 24 24"><circle cx="10" cy="13" r="6"/><path d="M2 15c4 3 13 2 17-3"/><path d="M15 3h6v6M21 3l-6 6"/></svg>'),   // DD3
       mk("workbench", "Workbench", '<svg viewBox="0 0 24 24"><path d="M12 3 4 8v8l8 5 8-5V8z"/><path d="M12 8v13M4 8l8 5 8-5"/></svg>'),   // WB: Fits von EVE Workbench
@@ -28643,7 +28963,8 @@ if (typeof document !== 'undefined') {
     var d = new Date(ms), o = { hour: "2-digit", minute: "2-digit" }, loc = d.toLocaleTimeString("de-DE", o), eve = d.toLocaleTimeString("de-DE", Object.assign({ timeZone: "UTC" }, o));
     return m === "local" ? '<span class="clk">' + loc + '</span><span class="l">Lokal</span>' : '<span class="clk">' + (m === "eve" ? eve : loc) + '</span><span class="clk e">EVE' + (m === "both" ? " " + eve : "") + "</span>";
   }
-  (function(){ var c = document.getElementById("neo-evebtn"); if (!c) return; c.checked = !!ovLoad().neoEve; c.onchange = function(){ var o = ovLoad(); o.neoEve = c.checked; ovSave(o); ovPublishSatellites(); }; })();   // AN4
+  (function(){ var c = document.getElementById("neo-evebtn"); if (!c) return; c.checked = ovLoad().neoEve !== false; c.onchange = function(){ var o = ovLoad(); o.neoEve = c.checked; ovSave(o); ovPublishSatellites(); }; })();   // AN4
+  ["hl-depth", "is-depth"].forEach(function(id){ var e = document.getElementById(id); if (e) e.addEventListener("change", function(){ var v = parseInt(e.value, 10); if (v > 2000) e.value = 2000; else if (v < 20) e.value = 20; }); });   // höchstens 2000 sichtbar machen statt still kürzen
   (function(){ var sel = document.getElementById("neo-mode"); if (!sel) return; sel.value = neoOvMode(); sel.onchange = function(){ var o = ovLoad(); o.neoMode = sel.value; ovSave(o); ovPublishSatellites(); }; })();
   (function(){ var sel = document.getElementById("neo-clock"); if (!sel) return; sel.value = neoClockMode(); sel.onchange = function(){ var o = ovLoad(); o.neoClock = sel.value; ovSave(o); ovPublishSatellites(); }; })();
   // Y13: Uhrfarbe – Standard (Textfarbe), Vorlagen wie bei der Symbolfarbe oder eigene Farbe
@@ -28670,7 +28991,7 @@ if (typeof document !== 'undefined') {
     if (mode === "grid") body = btns.map(neoOvBtnHtml).join("");
     else {   // 16.10.: Gruppen (feste Standardgruppen, getrennt von der Leiste im großen Fenster) – welche offen ist, merkt sich das Overlay-Fenster selbst (neoLayout blendet aus)
       // WW5: per Ziehen geänderte Gruppen (nur Overlay, ovLoad().neoOvGrp) überschreiben die Standardgruppen
-      var gc = { grp: Object.assign({ "neo-btn-alarm": "nav", "neo-btn-report": "nav", "neo-btn-dscan": "nav", "neo-btn-scanplan": "handel", "neo-btn-piplan": "chars", "neo-btn-workbench": "besitz", "neo-btn-prod": "besitz" }, ovLoad().neoOvGrp || {}) }, use = ovLoad().neoUse || {}, tag = function(b, g){ return neoOvBtnHtml(b).replace("<button ", '<button data-g="' + g + '" '); };
+      var gc = { grp: Object.assign({ "neo-btn-alarm": "nav", "neo-btn-report": "nav", "neo-btn-dscan": "nav", "neo-btn-sound": "misc", "neo-btn-scanplan": "handel", "neo-btn-piplan": "chars", "neo-btn-workbench": "besitz", "neo-btn-prod": "besitz" }, ovLoad().neoOvGrp || {}) }, use = ovLoad().neoUse || {}, tag = function(b, g){ return neoOvBtnHtml(b).replace("<button ", '<button data-g="' + g + '" '); };
       var fav = mode !== "folder" ? [] : btns.slice().sort(function(a, b){ return (use[b.id.replace("neo-btn-", "")] || 0) - (use[a.id.replace("neo-btn-", "")] || 0); }).slice(0, 6).filter(function(b){ return use[b.id.replace("neo-btn-", "")]; });
       body = btns.filter(function(b){ return fav.indexOf(b) >= 0 || !neoGroupOf(b.id, gc); }).map(function(b){ return tag(b, ""); }).join("") +   // Favoriten = meistbenutzte, in alter Reihenfolge
         (mode === "folder" ? '<button type="button" data-neo-g="" class="neo-back" data-name="Zurück"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span class="l">Zurück</span></button>' : "") +
@@ -28680,7 +29001,7 @@ if (typeof document !== 'undefined') {
         }).join("");
     }
     var logo = document.querySelector(".brand-ic"), mn = { grid: "Raster (alle Symbole)", folder: "Favoriten + Ordner", acc: "Gruppen aufklappen", grow: "Gruppen aufklappen, Fenster wächst nach rechts" }[mode];
-    var eve = ovLoad().neoEve ? '<span class="neo-evek"><button type="button" class="neo-eve-s" data-neo="eveStart" data-name="EVE starten" data-hint="öffnet den Launcher" aria-label="EVE starten"></button><button type="button" class="neo-eve-q" data-neo="eveQuit" data-name="Alle EVE-Clients beenden" data-hint="mit Rückfrage" aria-label="Alle EVE-Clients beenden"></button></span>' : "";   // AN4
+    var eve = ovLoad().neoEve !== false ? '<span class="neo-evek"><button type="button" class="neo-eve-s" data-neo="eveStart" data-name="EVE starten" data-hint="öffnet den Launcher" aria-label="EVE starten"></button><button type="button" class="neo-eve-q" data-neo="eveQuit" data-name="Alle EVE-Clients beenden" data-hint="mit Rückfrage" aria-label="Alle EVE-Clients beenden"></button></span>' : "";   // AN4
     return '<div class="neo-hd">' + eve + '<img alt="" src="' + (logo ? logo.getAttribute("src") : "") + '"><span>OMNICOM</span>' +
       '<button type="button" class="neo-mode" data-neo="mode" data-name="Aufbau wechseln" data-hint="' + mn + '" aria-label="Aufbau wechseln"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17.5h7M18 14.5l3 3-3 3"/></svg></button></div>' +   // 16.10.: Kopf, hochkant nur das Symbol
       '<div class="neo-ov"' + (mode === "grid" ? "" : ' data-mode="' + mode + '"') + '>' + clk + body + (withQuit ? neoQuitHtml() : "") + "</div>" +
@@ -28751,7 +29072,7 @@ if (typeof document !== 'undefined') {
     if (target === "browser"){ if (EVH && EVH.toggleBrowser) EVH.toggleBrowser(); else if (EVH && EVH.openBrowser) EVH.openBrowser(); return; }   // L5: zweiter Klick schliesst
     if (target === "discord"){ if (EVH && EVH.toggleDiscord) EVH.toggleDiscord(); return; }   // DC
     var v = NEO_VIEW[target];
-    if (target === "notes" || target === "perf" || target === "timer" || target === "dscan") big = false;   // T19/T20: gibt es nur als Overlay
+    if (target === "notes" || target === "perf" || target === "timer" || target === "dscan" || target === "sound") big = false;   // T19/T20: gibt es nur als Overlay
     if (target === "scanplan" && big) target = "station";   // BB12: große Ansicht = Trading
     if (target === "prod" && big){ document.getElementById("in-view-prod").onclick(); target = "industry"; }   // PROD: große Ansicht = Industrie › Produktion
     if (target === "workbench" && big){ var wv = asVLoad(); wv.ft = "wb"; try{ localStorage.setItem(AS_VKEY, JSON.stringify(wv)); }catch(e){} target = "fits"; }   // WB → AL9: große Ansicht = Fittings › Workbench
@@ -28898,6 +29219,49 @@ if (typeof document !== 'undefined') {
       sx[1].forEach(function(c){ body.appendChild(el("div", "ov-l txt ds-c", '<b class="mono">' + c.n + '</b><span class="' + (c.w ? "bad" : c.ship ? "" : "item-sub") + '">' + escapeHtml(c.name) + '</span><span class="item-sub">' + escapeHtml(c.types) + "</span>")); });
     });
   }
+  /* AO1: Sound – Windows-Lautstärke je EVE-Client (main.js sndApply über den Helfer). Gespeichert in den Programm-Einstellungen
+     (S.sound = { auto, off, ch: { Name: { a, i, m } } }); Clients ohne Eintrag fasst das Programm nicht an. Overlay zeigt nur laufende Clients. */
+  var SND_DEF = { a: 100, i: 30, m: false }, sndSig = "";
+  function sndCfg(){ var s = (cyLast && cyLast.sound) || {}; return { auto: !!s.auto, off: !!s.off, all: s.all == null ? 100 : Number(s.all), am: !!s.am, ch: Object.assign({}, s.ch || {}) }; }
+  function sndSave(c){ if (cyLast) cyLast.sound = c; if (EVH && EVH.setSettings) EVH.setSettings({ sound: c }); sndSig = ""; ovPublishSatellites(); sndBig(); }
+  function sndOnSettings(s){ var g = JSON.stringify([s.eveClients, s.eveFront, s.sound]); if (g === sndSig) return; sndSig = g; if (ovSatOpen.sound) ovPublishSatellites(); sndBig(); }
+  function sndBig(){   // Hauptfenster: Einstellungen › EVE-Clients › Sound-Lautstärke
+    var box = document.getElementById("snd-big"); if (!box) return;
+    if (!box.__w){ box.__w = 1; ovFormWire(box, function(a){ sndAction(a); }); }
+    box.innerHTML = ""; ovRenderSound(box, true); if (typeof i18nApply === "function") try{ i18nApply(box); }catch(e){}
+  }
+  function sndRun(){ return ((cyLast && cyLast.eveClients) || []).filter(function(c){ return c.name; }); }
+  function sndAction(a){
+    var c = sndCfg(), n = String(a.key || a.arg || "");
+    if (a.type === "sndAuto"){ c.auto = !c.auto; c.off = false; if (c.auto) sndRun().forEach(function(x){ if (!c.ch[x.name]) c.ch[x.name] = Object.assign({}, SND_DEF); }); }
+    else if (a.type === "sndReset"){ c = { auto: false, off: true, all: 100, am: false, ch: {} }; }
+    else if (a.type === "sndAll" || a.type === "sndAllMute"){ if (a.type === "sndAll") c.all = Math.max(0, Math.min(100, Math.round(Number(a.arg) || 0))); else c.am = !c.am; c.off = false; sndRun().forEach(function(x){ if (!c.ch[x.name]) c.ch[x.name] = Object.assign({}, SND_DEF); }); }   // Gesamtregler gilt für alle laufenden Clients
+    else if (a.type === "sndUp" || a.type === "sndDown"){ var fc = sndRun().filter(function(x){ return x.hwnd === ((cyLast && cyLast.eveFront) || ""); })[0]; if (!fc) return; var g = c.ch[fc.name] = Object.assign({}, SND_DEF, c.ch[fc.name]); g.a = Math.max(0, Math.min(100, g.a + (a.type === "sndUp" ? 10 : -10))); g.m = false; c.off = false; }   // AO1: Tastenkürzel/Stream-Taste, 10er-Schritte
+    else if (a.type === "sndMute" && n){ var e = c.ch[n] = Object.assign({}, SND_DEF, c.ch[n]); e.m = !e.m; c.off = false; }
+    else if ((a.type === "sndA" || a.type === "sndI") && n){ var f = c.ch[n] = Object.assign({}, SND_DEF, c.ch[n]); f[a.type === "sndA" ? "a" : "i"] = Math.max(0, Math.min(100, Math.round(Number(a.arg) || 0))); c.off = false; }
+    else return;
+    sndSave(c);
+  }
+  function ovRenderSound(body, big){
+    var c = sndCfg(), run = sndRun(), front = (cyLast && cyLast.eveFront) || "", ids = {}, runN = {};
+    run.forEach(function(x){ runN[x.name.toLowerCase()] = 1; });
+    if (big) loadAllTokens().forEach(function(t){ var nm = String(t.character_name || ""); if (nm && !runN[nm.toLowerCase()]){ runN[nm.toLowerCase()] = 1; run.push({ hwnd: "", name: nm, idle: true }); } });   // Hauptfenster: auch nicht laufende zum Voreinstellen
+    loadAllTokens().forEach(function(t){ ids[String(t.character_name || "").toLowerCase()] = t.character_id; });
+    body.appendChild(el("div", "snd-top", '<button type="button" data-ova="sndAuto" aria-pressed="' + c.auto + '" title="Lautstärke, wenn ein anderer Client vorne ist (nur mit Automatik; ganz links = stumm)">Automatik: hintere Clients leiser</button><button type="button" data-ova="sndReset">Alles zurück auf 100 %</button>'));
+    body.appendChild(el("div", "snd-c snd-all" + (c.am ? " off" : ""), '<label class="snd-r" title="Gesamtlautstärke aller EVE-Clients"><b>Alle Clients</b><input type="range" min="0" max="100" step="5" value="' + c.all + '" data-ova-change="sndAll"><em>' + (c.am || !c.all ? "stumm" : c.all + " %") + '</em></label><button type="button" data-ova="sndAllMute" aria-pressed="' + c.am + '" title="Alle Clients stumm / Ton an">' + (c.am ? "&#x1F507;" : "&#x1F50A;") + "</button>"));   // Gesamtregler + alle stumm
+    if (!run.length) body.appendChild(el("div", "ov-empty", "Kein EVE-Client läuft."));
+    if (big && run.some(function(x){ return x.idle; })) body.appendChild(el("div", "item-sub", "Nicht laufende Charaktere zum Voreinstellen – sie bekommen ihre Werte, sobald sie starten."));
+    run.forEach(function(x){
+      var e = Object.assign({}, SND_DEF, c.ch[x.name]), id = ids[x.name.toLowerCase()], nm = escapeHtml(x.name), isF = x.hwnd === front;
+      var pic = id ? '<img src="https://images.evetech.net/characters/' + encodeURIComponent(id) + '/portrait?size=64" alt="">' : '<span class="snd-pi">' + escapeHtml(x.name.charAt(0)) + "</span>";
+      var row = function(k, lbl, tip, v, dis){ return '<label class="snd-r" title="' + tip + '"><span>' + lbl + '</span><input type="range" min="0" max="100" step="5" value="' + v + '" data-ova-change="' + k + '" data-arg="' + nm + '"' + (dis ? " disabled" : "") + "><em>" + (v ? v + " %" : "stumm") + "</em></label>"; };
+      body.appendChild(el("div", "snd-c" + (e.m || x.idle ? " off" : ""),
+        '<div class="snd-h">' + pic + "<b>" + nm + "</b>" + (isF ? '<span class="item-sub">vorne</span>' : "") + '<button type="button" data-ova="sndMute" data-arg="' + nm + '" aria-pressed="' + e.m + '" title="Stumm schalten / Ton an">' + (e.m ? "&#x1F507;" : "&#x1F50A;") + "</button></div>" +
+        row("sndA", "Lautstärke", "Lautstärke, wenn dieser Client vorne ist", e.a) +
+        row("sndI", "Wenn hinten", "Lautstärke, wenn ein anderer Client vorne ist (nur mit Automatik; ganz links = stumm)", e.i, !c.auto)));
+    });
+    body.appendChild(el("div", "item-sub", "Windows-Lautstärke je EVE-Client (wie der Lautstärkemixer). EVEs eigene Regler bleiben unverändert."));
+  }
   /* SD: Befehle von den Stream-Tasten und Zustand für ihre Anzeigen (jede Sekunde, nur bei Änderung weitergegeben) */
   var deckAlphaT = 0;
   function deckAction(a){
@@ -28958,6 +29322,8 @@ if (typeof document !== 'undefined') {
   function deckPushSoon(){ if (!EVH || !EVH.deckState || deckPushT) return; deckPushT = setTimeout(function(){ deckPushT = 0; try{ EVH.deckState(deckState()); }catch(e){} }, 30); }   // nach einem Tasten-Befehl gleich melden
   function ovStackIds(v){ var st = (ovHostS.stacks || []).filter(function(x){ return x.ids.indexOf(v) >= 0; })[0]; return st ? st.ids.slice() : [v]; }   // AK3
   function ovSatAction(view, a){
+    if (a && a.type === "trPend"){ trPendSet(a.id, a.side, a.p); return; }   // AV2: neuer Preis aus dem Overlay kopiert
+    if (a && a.type === "trRebuy"){ trRebuy(a.arg); return; }   // BA2
     if (!a) return;
     if (view === "deck" && deckAction(a)){ deckPushSoon(); return; }   // SD
     if (ovNavAction(a)) return;
@@ -28971,6 +29337,7 @@ if (typeof document !== 'undefined') {
     if (/^sp[A-Z]/.test(a.type)){ spAction(a); return; }   // AA13
     if (/^mi[A-Z]/.test(a.type)){ miAction(a); return; }   // MI1
     if (/^ds[A-Z]/.test(a.type)){ dsAction(a); return; }   // AA11
+    if (/^snd[A-Z]/.test(a.type)){ sndAction(a); return; }   // AO1
     if (/^wh[A-Z]/.test(a.type)){ whAction(a); return; }   // EE3
     if (/^wb[A-Z]/.test(a.type)){ wbAction(a); return; }   // WB
     if (/^pd[A-Z]/.test(a.type)){ pdAction(a); return; }   // PROD
@@ -29312,7 +29679,10 @@ if (typeof document !== 'undefined') {
     { id: "musicToggle", label: "Jukebox: Abspielen / Pause" },
     { id: "musicNext", label: "Jukebox: Nächster Titel" },
     { id: "musicPrev", label: "Jukebox: Vorheriger Titel" },
-    { id: "discordToggle", label: "Discord-Chat ein/aus" }   // DC
+    { id: "discordToggle", label: "Discord-Chat ein/aus" },   // DC
+    { id: "soundMute", label: "Sound: alle EVE-Clients stumm / Ton an" },   // AO1
+    { id: "soundUp", label: "Sound: vorderer Client lauter" },
+    { id: "soundDown", label: "Sound: vorderer Client leiser" }
   ];
   function hsAccelText(a){
     if (!a) return "– kein Kürzel –";
@@ -29364,10 +29734,11 @@ if (typeof document !== 'undefined') {
       .forEach(function(n){ order.push(n); });
     return order;
   }
+  (function(){ var b = document.getElementById("hs-restart"); if (b){ if (!(EVH && EVH.restartApp)) b.parentNode.style.display = "none"; else b.onclick = function(){ EVH.restartApp(); }; } })();   // Neustart (AO1 Block B)
   function cySave(patch){ return EVH.setSettings({ cycle: patch }).then(hsRender); }
   function cyRender(s){
     var box = document.getElementById("cy-box"); if (!box || !s) return;
-    cyLast = s;
+    cyLast = s; sndOnSettings(s);   // AO1
     var c = s.cycle || {}, $ = function(id){ return document.getElementById(id); };
     $("cy-on").checked = !!c.on;
     $("cy-skip").checked = c.skipLogin !== false;
@@ -29505,7 +29876,7 @@ if (typeof document !== 'undefined') {
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "5.1.0";
+  var EVECORE_VERSION = "5.2.0";
   (function(){ var bt = document.getElementById("beta-tag"); if (bt) bt.textContent = "Beta " + EVECORE_VERSION; })();   // AJ (18.10.): Version im Titel
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   // NX3: Funktionsliste (Einstellungen › Funktionen) – [Bereich, Funktion DE, Funktion EN, wo DE, wo EN, Ziel (OmniCom-Knopf oder set:<Einstellungsbereich>), Overlay-Ansicht]
@@ -29517,6 +29888,7 @@ if (typeof document !== 'undefined') {
     ["Handel", "Gewinn-Historie aus der Wallet (Tag, Woche, Monat)", "Profit history from the wallet (day, week, month)", "Handel › Station-Trading › Gewinn", "Trading › Station trading › Profit", "station", ""],
     ["Handel", "Hauling: beste Ladung im Umkreis oder zu einem Ziel, mit Schiffsempfehlung", "Hauling: best cargo in a radius or to a target, with ship recommendation", "Hauling", "Hauling", "haul", "handel"],
     ["Handel", "Hub-Handel: beste Ladung zwischen Hubs nach Budget und Laderaum", "Hub trading: best cargo between hubs by budget and cargo space", "Hauling › Zu festem Hub", "Hauling › To a fixed hub", "haul", "handel"],
+    ["Handel", "Markt-Strukturen (Keepstar, Fortizar …): Preise, Trades und Hauling ins 0.0 mit Routen-Prüfung (Camps, Aktivität)", "Market structures (Keepstar, Fortizar …): prices, trades and hauling into nullsec with route check (camps, activity)", "Einstellungen › Konto › Markt-Strukturen", "Settings › Account › Market structures", "set:chars", ""],
     ["Handel", "Einkauf startet am Standort des aktiven EVE-Clients", "Buying starts at the location of the active EVE client", "Hauling › Wo kaufen", "Hauling › Where to buy", "haul", ""],
     ["Handel", "Gank-Schutz: Ladungswert passend zum Schiff (ISK/EHP-Ampel)", "Gank protection: cargo value matched to the ship (ISK/EHP light)", "Hauling › Wie viel ISK", "Hauling › How much ISK", "haul", ""],
     ["Handel", "Marktbrowser: eine Ware in den 5 Hubs, Orderbuch, Preisverlauf, Marge", "Market browser: one item in the 5 hubs, order book, price history, margin", "Handel › Markt", "Trading › Market", "market", "markt"],
@@ -29576,6 +29948,7 @@ if (typeof document !== 'undefined') {
     ["Besitz", "Workbench: alle Community-Fits einmal indexieren, danach jedes Schiff sofort finden", "Workbench: index all community fits once, then find any ship instantly", "Besitz › Fittings › Workbench", "Assets › Fittings › Workbench", "fits", ""],
     ["Extras", "Discord-Chat als Overlay-Fenster neben EVE (OmniCom-Overlay)", "Discord chat as an overlay window next to EVE (OmniCom overlay)", "OmniCom-Overlay › Discord", "OmniCom overlay › Discord", "", ""],
     ["Extras", "Jukebox: Musik als Balken, Welle oder Kreise", "Jukebox: music as bars, wave or circles", "Sonstiges › Jukebox › Klang & Extras", "Other › Jukebox › Sound & extras", "music", "musik"],
+    ["Extras", "Sound: Lautstärke je EVE-Client, hintere Clients automatisch leiser oder stumm", "Sound: volume per EVE client, background clients automatically quieter or muted", "OmniCom-Overlay › Sound", "OmniCom overlay › Sound", "", "sound"],
     ["Extras", "Uhr und Timer (EVE-Zeit, Downtime, eigene Timer)", "Clock and timers (EVE time, downtime, own timers)", "OmniCom-Overlay › Uhr & Timer", "OmniCom overlay › Clock & timers", "", "uhr"],
     ["Extras", "Notizen", "Notes", "OmniCom-Overlay › Notizen", "OmniCom overlay › Notes", "", "notiz"],
     ["Extras", "Leistung: CPU, RAM, GPU des PCs", "Performance: CPU, RAM, GPU of the PC", "OmniCom-Overlay › Leistung", "OmniCom overlay › Performance", "", "leistung"],
@@ -29614,7 +29987,7 @@ if (typeof document !== 'undefined') {
   /* UU1 (16.10.2026): jeder Bereich der Einstellungen (Überschrift h3.acc-h + alles bis zur nächsten) wird ein einklappbarer Kasten
      mit Symbol; offen/zu je Bereich gemerkt (eve-zentrale-setsec-v1, fehlt = offen). Knoten werden nur verschoben – IDs und Handler bleiben. */
   var SETSEC_KEY = "eve-zentrale-setsec-v1";
-  var SETSEC_IC = [[/Account|Konto/, "account"], [/Anmeldung|Login|Sign/, "chars"], [/skill/i, "skills"], [/Demo/, "evecore"], [/Minispiel|Minigame/, "game"],
+  var SETSEC_IC = [[/^Sound/, "sound"], [/Account|Konto/, "account"], [/Anmeldung|Login|Sign/, "chars"], [/skill/i, "skills"], [/Demo/, "evecore"], [/Minispiel|Minigame/, "game"],
     [/Sprache|Language/, "home"], [/Uhrzeit|^Time|Uhr \(|Clock/, "timer"], [/automatisch laden|automatically/, "perf"], [/Jukebox/, "music"], [/OmniCom/, "home"],
     [/Overlay/, "browser"], [/Darstellung|Appearance|Symbolfarbe|Icon col/, "settings"], [/umschalten|Switch EVE/, "evecore"], [/Sync/, "chars"], [/sichern|Back up|Profil/, "assets"],
     [/Trade/, "station"], [/Planet/, "pi"], [/Discord/, "discord"], [/Alert|zKill/, "gangalarm"], [/Intel/, "intel"], [/Updates/, "perf"], [/Programm|App \(|Fenster|Window/, "evecore"], [/Tastenk|Hotkey|Shortcut/, "settings"], [/^Start/, "perf"], [/Stream/, "music"],
@@ -29892,6 +30265,8 @@ if (typeof document !== 'undefined') {
     else if (cmd.type === "localPaste") ltFromText(cmd.text, { auto: !!cmd.auto });
     else if (cmd.type === "apPaste") apFromText(cmd.text, true);   // AA2
     else if (cmd.type === "dscanPaste") dsFromText(cmd.text, true);   // AA11
+    else if (cmd.type === "snd") sndAction(cmd.a || {});   // AO1: Tastenkürzel
+    else if (cmd.type === "eoNote") eoNoteShow(cmd.text, cmd.ms);   // AT2
     else if (cmd.type === "music") jbxCommand(String(cmd.cmd || ""));
     else if (cmd.type === "kill") gaOnKill(cmd.data);
     else if (cmd.type === "intel") gaOnIntel(cmd);   // HZ23
@@ -33212,9 +33587,9 @@ if (typeof document !== 'undefined') {
       };
       $("jb-sel-del").onclick = function(){ $("jb-pl-del").click(); };
     })();
-    document.getElementById("jb-pl-del").onclick = function(){
+    document.getElementById("jb-pl-del").onclick = async function(){
       var x = jbxLoad(), m = /^p(\d+)$/.exec(x.list || ""); if (!m || !x.lists[m[1]]) return;
-      if (!confirm("Playlist „" + x.lists[m[1]].name + "“ löschen? Die Musikdateien selbst bleiben.")) return;
+      if (!(await eoConfirm("Playlist „" + x.lists[m[1]].name + "“ löschen? Die Musikdateien selbst bleiben."))) return;
       var cu = jbxCurUrl();
       x.lists.splice(Number(m[1]), 1); x.list = ""; x.plTarget = 0; jbxSave(x); jbxReindex(cu);
       jbxRenderList(); jbxUpdateUi(); ovRender(); ovPublishSatellites();
@@ -34058,21 +34433,21 @@ if (typeof document !== 'undefined') {
     EVH.getSettings().then(function(s){ a.checked = s.eveSaveAuto !== false; }, function(){});
     a.onchange = function(){ EVH.setSettings({ eveSaveAuto: a.checked }); };
     document.getElementById("esv-now").onclick = function(){ esvDo({ op: "save" }, function(r){ return "Gesichert: " + r.done.files + " Dateien (" + r.done.folder + ")."; }); };
-    document.getElementById("esv-prof").onclick = function(){
+    document.getElementById("esv-prof").onclick = async function(){
       var n = document.getElementById("esv-name").value.trim(); if (!n){ document.getElementById("esv-st").textContent = "Bitte einen Profilnamen eingeben."; return; }
-      if (esvLast && esvLast.saves.some(function(s){ return s.kind === "profil" && s.label.toLowerCase() === n.toLowerCase(); }) && !confirm("Profil „" + n + "“ gibt es schon – überschreiben?")) return;
+      if (esvLast && esvLast.saves.some(function(s){ return s.kind === "profil" && s.label.toLowerCase() === n.toLowerCase(); }) && !(await eoConfirm("Profil „" + n + "“ gibt es schon – überschreiben?"))) return;
       esvDo({ op: "profil", name: n }, function(r){ return "Profil „" + n + "“ gespeichert (" + r.done.files + " Dateien)."; });
     };
     document.getElementById("esv-open").onclick = function(){ esvDo({ op: "open" }); };
-    function load(id){
+    async function load(id){
       var name = document.getElementById(id).value; if (!name) return;
       var chars = [].map.call(document.querySelectorAll("#esv-chars input[data-esv]:checked"), function(i){ return i.value; });
       var lbl = document.getElementById(id).selectedOptions[0].textContent;
-      if (!confirm("„" + lbl + "“ laden" + (chars.length ? " für " + chars.map(esvCharName).join(", ") : " (alles)") + "?\nAlle EVE-Clients müssen geschlossen sein. Der jetzige Stand wird vorher gesichert.")) return;
+      if (!(await eoConfirm("„" + lbl + "“ laden" + (chars.length ? " für " + chars.map(esvCharName).join(", ") : " (alles)") + "?\nAlle EVE-Clients müssen geschlossen sein. Der jetzige Stand wird vorher gesichert."))) return;
       esvDo({ op: "restore", name: name, chars: chars.length ? chars : null }, function(r){ return "Geladen: " + r.done.files + " Dateien. Vorheriger Stand gesichert als „" + r.done.before + "“."; });
     }
-    function del(id){
-      var name = document.getElementById(id).value; if (!name || !confirm("„" + document.getElementById(id).selectedOptions[0].textContent + "“ löschen?")) return;
+    async function del(id){
+      var name = document.getElementById(id).value; if (!name || !(await eoConfirm("„" + document.getElementById(id).selectedOptions[0].textContent + "“ löschen?"))) return;
       esvDo({ op: "remove", name: name }, "Gelöscht.");
     }
     document.getElementById("esv-load").onclick = function(){ load("esv-pick"); };

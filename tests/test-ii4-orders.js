@@ -34,6 +34,7 @@ const NOW = Date.now(), H = 3600000, JITA = 60003760;
     assert(added.length === 0 && !T.trLoad().some(t => t.sellOrderId === 902), 'gelöschter Verkaufs-Trade kommt nicht wieder');
     const src = fs.readFileSync('/home/claude/EVECore.html', 'utf-8');
     assert(/function esiTaktTick\(\)\{\s*if \(!loadAllTokens\(\)\.length\) return;\s*if \(Date\.now\(\) - trAutoLast > 20 \* 60000 \|\| esiDue\(\["\/characters\/orders"\], trAutoLast, 120000\)\) trAutoSync\(true\)\.then\(trAutoNotify\);/.test(src), 'Hintergrund: Abgleich im EVE-Takt der Orders (höchstens alle 20 Min.) mit Meldung');
+    assert(src.includes('try{ await tscNames(Object.keys(tids)') && src.includes('if (/^#\\d+$/.test(t.name || "") && n && n.charAt(0) !== "#"){ t.name = n; changed = true; }'), '21.10.: Warennamen vor dem Abgleich auflösen, alte „#…“-Namen nachträglich ersetzen');
     console.log('\nALL II4 TESTS PASSED'); process.exit(0);
   }catch(e){ console.error(e.message); process.exit(1); }
 })();

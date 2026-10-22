@@ -16,7 +16,7 @@ const order = d => [...d.querySelectorAll('#neocom > .neo-btn')].filter(b => b.i
     const def = order(d);
     assert(def.join(',') === 'station,haul,market,track,sell,orders,contracts,appraisal,courier,wallet,assets,fits,industry,mining,jump,map,intel,radar,wormhole,chars,skills,pi,mail,music,game,home,settings,account', 'Standard-Reihenfolge (BB13: nach Gruppen)');
     let rows = d.querySelectorAll('#neo-order .neo-row');
-    assert([...rows].filter(r => r.querySelector('button[title="nach oben"]')).length === 35 && rows.length === 37 && /Trading/.test(rows[0].textContent) && rows[0].querySelector('svg') && /Einstellungen/.test(rows[35].textContent), 'Einstellungen: eine Liste mit Symbol und Namen, Overlay-Symbole mit Pfeilen, Einstellungen/Konto fest unten');
+    assert([...rows].filter(r => r.querySelector('button[title="nach oben"]')).length === 36 && rows.length === 38 && /Trading/.test(rows[0].textContent) && rows[0].querySelector('svg') && /Einstellungen/.test(rows[36].textContent), 'Einstellungen: eine Liste mit Symbol und Namen, Overlay-Symbole mit Pfeilen, Einstellungen/Konto fest unten');
     assert($('panel-settings').contains($('neo-order')), 'Liegt in Einstellungen › Darstellung');
     // Navigation nach oben schieben (3x ↑ vom letzten Platz)
     for (let i = 0; i < 13; i++){ rows = d.querySelectorAll('#neo-order .neo-row'); const idx = [...rows].findIndex(r => /Navi/.test(r.children[1].textContent.replace(/­/g, ''))); rows[idx].querySelector('button[title="nach oben"]').onclick(); }

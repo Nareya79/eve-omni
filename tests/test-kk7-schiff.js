@@ -36,7 +36,7 @@ const hid = id => $(id).closest('.field').hidden;
     const h = [...d.querySelectorAll('#' + pan + ' .kk-steps > .opt-group:not([hidden]) > .opt-h')].map(x => x.textContent).filter(x => !/^①/.test(x));
     assert(h.length === 2 && /^② Womit fliegen/.test(h[0]) && /^③ Wie viel ISK/.test(h[1]) && /^① Wo kaufen/.test(d.querySelector('#kk-where > .opt-h').textContent), pre + ': drei nummerierte Schritte (① gemeinsam für beide Suchen)');
     assert(d.querySelector('#' + pan + ' .kk-steps').contains($(pre + '-sm')) && d.querySelector('#' + pan + ' .kk-steps').contains($(pre + '-budget')), pre + ': Schiff und Budget in den Schritten');
-    assert(d.querySelector('label[for=' + pre + '-depth]').textContent === 'Waren prüfen (Anzahl)' && d.querySelector('label[for=' + pre + '-extra]').textContent === 'Andocken & Handeln (Min.)', pre + ': klare Namen');
+    assert(d.querySelector('label[for=' + pre + '-depth]').textContent === 'Waren prüfen (Anzahl, max. 2000)' && d.querySelector('label[for=' + pre + '-extra]').textContent === 'Andocken & Handeln (Min.)', pre + ': klare Namen');
     $(pre + '-sellmode').value = 'instant'; $(pre + '-sellmode').dispatchEvent(new w.Event('change', { bubbles: true })); await tick();
     assert(hid(pre + '-selldays') && /sofort an Kauforders/.test($(pre + '-calc').textContent), pre + ': „Verkauf darf dauern“ nur bei Verkaufsorder');
     $(pre + '-sellmode').value = 'order'; $(pre + '-sellmode').dispatchEvent(new w.Event('change', { bubbles: true })); await tick();

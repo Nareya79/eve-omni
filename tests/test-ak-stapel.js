@@ -89,11 +89,14 @@ try{
   assert(/stackHover\(w, stackTarget\(w, c\)\);/.test(main) && /if \(t && old\)\{ stackJoin\(/.test(main), 'Ziehen: Ziel leuchtet, Loslassen = Reiter');
   assert(/function syncSats\(show, front\)\{\n  stackClean\(\);/.test(main), 'Stapel beim Start wiederherstellen (syncSats räumt auf)');
   assert(/o\.viewNames = VIEWS;/.test(main), 'Reiternamen an die Seite');
-  assert(/stackTab: id =>/.test(pre) && /stackOut: \(id, x, y\) =>/.test(pre), 'preload: stackTab + stackOut');
+  assert(/stackTab: id =>/.test(pre) && /stackOut: \(id, x, y, drag\) =>/.test(pre), 'preload: stackTab + stackOut');
   // Seite
   assert(!/tabs\.firstChild/.test(html) && /var ttl = tabs\.querySelector\("\.sat-title"\);/.test(html), 'Titel landet im eigenen Reiter, nicht im ersten (live gefunden)');
   assert(/const ids = \(stackOf\(id\) \|\| \{ ids: \[id\] \}\)\.ids\.slice\(\);/.test(main) && /type: 'active', id, ids \}/.test(main), 'aktiv = ganzer Stapel (Nutzer 19.10.)');
-  assert(/var acts = cmd\.ids \|\| \[cmd\.id\]; de\.classList\.toggle\("ov-active", acts\.indexOf\(view\) >= 0\)/.test(html) && /acts\.map\(function\(a\)\{ return 'html\.ov-eve/.test(html), 'Seite + OmniCom: alle Reiter des Stapels aktiv');
+  assert(/var acts = cmd\.ids \|\| \[cmd\.id\]; de\.classList\.toggle\("ov-active", view === "neocom" \|\| acts\.indexOf\(view\) >= 0\)/.test(html) && /acts\.map\(function\(a\)\{ return 'html\.ov-eve/.test(html), 'Seite + OmniCom: alle Reiter des Stapels aktiv');
+  assert(/html\.sat-stack #ov-root \.ov-tab\{white-space:nowrap;cursor:grab;flex:0 1 auto;min-width:26px;overflow:hidden;display:inline-flex;align-items:center;gap:4px\}/.test(html) && !/html\.sat-stack #ov-root \.ov-tab\.sat-title\{flex:none/.test(html) && /tn\.className = "st-n"; tn\.textContent = \(s\.viewNames \|\| \{\}\)\[id\] \|\| id;/.test(html) && /tn\.className = "st-n"; tn\.textContent = d\.title \|\| view; ttl\.appendChild\(tn\);/.test(html), 'AP: aktiver und hinterer Reiter gleich gebaut (gleiche Breite, gleicher Abstand zur gelben Zahl, ✕ hält Platz frei)');
+  assert(/tabs\.addEventListener\("pointermove", function\(ev\)\{\s*var d = stDown; if \(!d \|\| d\.out \|\| !H\.stackOutEnd \|\| !stOutside\(ev\)\) return;\s*d\.out = true; H\.stackOut\(d\.id, ev\.screenX, ev\.screenY, true\);/.test(html) && /if \(d\.out\)\{ H\.stackOutEnd\(d\.id\); return; \}/.test(html), 'AS: Reiter springt beim Ziehen aus der Leiste heraus (nicht erst beim Loslassen)');
+  assert(/if \(drag\) satDrag\(sats\[id\], 'start'\);/.test(main) && /ipcMain\.on\('evecore:stackOutEnd', \(ev, id\) => \{ const w = sats\[String\(id\)\]; if \(w && selfDrags\.has\(w\)\) satDrag\(w, 'end'\); \}\);/.test(main) && /stackOutEnd: id => ipcRenderer\.send\('evecore:stackOutEnd', String\(id\)\)/.test(pre), 'AS: gelöstes Fenster folgt der Maus (satDrag), Loslassen = einrasten oder als Reiter ablegen');
   assert(/function stackTabs\(s\)\{/.test(html) && /de\.classList\.toggle\("sat-stack", !!st\)/.test(html), 'Seite zeichnet Reiter');
   assert(/H\.stackOut\(d\.id, ev\.screenX, ev\.screenY\)/.test(html) && /H\.stackTab\(d\.id\)/.test(html), 'Seite: Herausziehen + Klick');
   assert(/H\.popMenu\(\[\{ label: T\("Lösen"\) \}\]\)/.test(html) && /"Lösen": "Detach"/.test(html), 'Rechtsklick „Lösen“ (DE/EN)');

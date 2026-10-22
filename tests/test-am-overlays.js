@@ -73,6 +73,7 @@ const tok = (id, name) => ({ access_token: 'x.' + Buffer.from(JSON.stringify({ s
     await tog('handel'); await p.waitForTimeout(300); s = await st();
     assert(/Search options ▴/.test(s.text), 'EN: „Search options ▴“');
     assert(!errs.length, 'keine Seitenfehler ' + errs.join(' | '));
+    assert(/var clr = has && !busy \? '<button type="button" class="ovm-clr" data-ova="resClear" data-arg="' \+ rk \+ '" title="Suchergebnis löschen">/.test(html) && /else if \(k === "scan"\)\{ tscRows = \[\];/.test(html), 'AR1: kleines ✕ oben neben „Suchoptionen“ (zu und offen), löscht Trades-, Hauling- und Hub-Ergebnis sofort');
     console.log('\nALL AM OVERLAY TESTS PASSED');
   }catch(e){ console.error(e); process.exitCode = 1; }
   finally{ await b.close(); }

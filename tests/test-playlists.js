@@ -69,7 +69,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', resources:'usable', url:'h
     T.ovSatAction('musik', { type: 'jb', cmd: 'plrm:0' });
     assert(store().lists[0].urls.length === 0, 'X5: − im Overlay nimmt aus der Playlist');
     // Loeschen
-    $('jb-pl-del').onclick();
+    await $('jb-pl-del').onclick();   // AT: Rückfrage ist jetzt asynchron
     assert(store().lists.length === 0 && store().list === '' && T.jbxTracks().length === 3, 'Playlist gelöscht, zurück auf alle Titel');
     console.log('\nALL PLAYLIST TESTS PASSED');
     process.exit(0);
