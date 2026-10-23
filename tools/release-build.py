@@ -21,7 +21,7 @@ def sha(p):
     return h.hexdigest()
 def arg(name):
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv and sys.argv.index(name) + 1 < len(sys.argv) else None
-def names(v): return ['EVE-Omni-Setup-' + v + '.exe', 'EVE-Omni-' + v + '-portable.zip', 'EVE-Omni-Soundtrack.zip']
+def names(v): return ['EVE-Omni-Setup-' + v + '.exe', 'EVE-Omni-Update-' + v + '.exe', 'EVE-Omni-' + v + '-portable.zip', 'EVE-Omni-Soundtrack.zip']   # BC2: Update = Setup ohne Soundtrack
 
 def summen(out, v):
     (out / 'SHA256SUMS.txt').write_text(''.join(sha(out / n) + '  ' + n + '\n' for n in names(v)), encoding='utf-8', newline='\n')
@@ -62,6 +62,7 @@ def main():
         for root, dirs, files in os.walk(SRC):
             for f in files:
                 if f.endswith('.alt'): continue
+                if root == str(SRC) and f == 'EVE-Omni.html': continue   # 23.10.: lokale Kopie neben der exe nie ausliefern (5.2.0 hatte 5.1.0)
                 p = Path(root) / f; z.write(p, ('EVE Omni' / p.relative_to(SRC)).as_posix())
     say('  ' + pz.name + ' (' + str(pz.stat().st_size // 1048576) + ' MB)')
     # 3) Soundtrack-ZIP
@@ -81,6 +82,10 @@ def main():
     subprocess.run([str(ISCC[0]), '/Q', '/DAppVersion=' + v, '/DSrcDir=' + str(SRC), '/DOutDir=' + str(out), '/DIconFile=' + str(R / 'Programm-Quellcode/src/icon.ico'), str(R / 'tools/installer.iss')], check=True)
     setup = out / ('EVE-Omni-Setup-' + v + '.exe')
     say('  ' + setup.name + ' (' + str(setup.stat().st_size // 1048576) + ' MB)')
+    # BC2: Update-Setup ohne Soundtrack (EVE Omni lädt es über „Jetzt aktualisieren“)
+    subprocess.run([str(ISCC[0]), '/Q', '/DAppVersion=' + v, '/DNoSoundtrack', '/DSrcDir=' + str(SRC), '/DOutDir=' + str(out), '/DIconFile=' + str(R / 'Programm-Quellcode/src/icon.ico'), str(R / 'tools/installer.iss')], check=True)
+    upd = out / ('EVE-Omni-Update-' + v + '.exe')
+    say('  ' + upd.name + ' (' + str(upd.stat().st_size // 1048576) + ' MB)')
     # 5) Prüfsummen
     summen(out, v)
     say('  SHA256SUMS.txt')
@@ -88,12 +93,24 @@ def main():
     # 6) Probe: still installieren, prüfen, still deinstallieren (Daten bleiben – stiller Modus antwortet „Nein“)
     if '--ohne-test' not in sys.argv:
         tmp = Path(tempfile.mkdtemp(prefix='eveomni-setup-'))
+        # 23.10.: Probe hat dieselbe AppId wie die echte Installation – ihr Deinstallieren löschte deren Windows-Eintrag (Apps) + Startmenü-Verknüpfung.
+        # Vorher sichern, danach zurückspielen.
+        KEY = r'HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\{6E0D2B7A-4C1F-4B8E-9A55-3E0E7A1B0001}_is1'
+        LNK = Path(os.environ.get('APPDATA', '')) / 'Microsoft/Windows/Start Menu/Programs/EVE Omni.lnk'
+        had_key = subprocess.call(['reg', 'export', KEY, str(tmp / 'uninst.reg'), '/y'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0
+        lnk_bak = LNK.read_bytes() if LNK.exists() else None
         try:
             r = subprocess.run([str(setup), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/DIR=' + str(tmp / 'EVE Omni'), '/COMPONENTS=main,soundtrack,omnibreaker', '/LOG=' + str(tmp / 'setup.log')], timeout=600)
             inst = tmp / 'EVE Omni'
             iv = json.loads((inst / 'resources/app/package.json').read_text(encoding='utf-8'))['version'] if (inst / 'resources/app/package.json').exists() else None
             c1 = r.returncode == 0 and (inst / 'EVE-Omni.exe').exists() and iv == v and (inst / 'resources/app/evecore/EVE-Omni.html').exists() and any((inst / 'resources/app/soundtrack').glob('*.mp3'))
             say(('  OK    ' if c1 else '  FEHLER ') + 'Probe-Installation (exe, Version ' + str(iv) + ', HTML, Soundtrack)')
+            # BC2: Update-Setup still drüber (ohne /EOUPDATE, sonst startet das Programm) – Soundtrack muss bleiben, alte HTML neben der exe weg
+            (inst / 'EVE-Omni.html').write_text('alt', encoding='utf-8')
+            ru = subprocess.run([str(upd), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/DIR=' + str(inst), '/LOG=' + str(tmp / 'update.log')], timeout=600)
+            cu = ru.returncode == 0 and (inst / 'EVE-Omni.exe').exists() and any((inst / 'resources/app/soundtrack').glob('*.mp3')) and not (inst / 'EVE-Omni.html').exists()
+            say(('  OK    ' if cu else '  FEHLER ') + 'Probe-Update (Soundtrack bleibt, alte HTML neben der exe weg)')
+            c1 = c1 and cu
             un = inst / 'unins000.exe'
             r2 = subprocess.run([str(un), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'], timeout=300) if un.exists() else None
             import time; time.sleep(3)
@@ -101,11 +118,17 @@ def main():
             say(('  OK    ' if c2 else '  FEHLER ') + 'Probe-Deinstallation')
             ok = ok and c1 and c2
         finally:
+            subprocess.call(['reg', 'delete', KEY, '/f'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if had_key: subprocess.call(['reg', 'import', str(tmp / 'uninst.reg')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if lnk_bak is not None: LNK.write_bytes(lnk_bak)
+            elif LNK.exists(): LNK.unlink()
+            say('  OK    Windows-Eintrag + Startmenü der echten Installation wiederhergestellt' if had_key else '  Hinweis: keine echte Installation – nichts wiederherzustellen')
             shutil.rmtree(tmp, ignore_errors=True)
         with zipfile.ZipFile(pz) as z:
             n = set(z.namelist()); pv = json.loads(z.read('EVE Omni/resources/app/package.json'))['version']
-            c3 = 'EVE Omni/EVE-Omni.exe' in n and pv == v and 'EVE Omni/resources/app/evecore/EVE-Omni.html' in n and not any(x.endswith('.alt') for x in n)
-        say(('  OK    ' if c3 else '  FEHLER ') + 'portable ZIP (exe, Version ' + pv + ', HTML)')
+            hv = [m.group(1) for x in n if x.endswith('EVE-Omni.html') and 'omnibreaker' not in x.lower() for m in [re.search(r'var EVECORE_VERSION = "([^"]+)"', z.read(x).decode('utf-8', 'replace'))] if m]
+            c3 = 'EVE Omni/EVE-Omni.exe' in n and pv == v and 'EVE Omni/resources/app/evecore/EVE-Omni.html' in n and not any(x.endswith('.alt') for x in n) and 'EVE Omni/EVE-Omni.html' not in n and hv and all(x == v for x in hv)
+        say(('  OK    ' if c3 else '  FEHLER ') + 'portable ZIP (exe, Version ' + pv + ', HTML ' + '/'.join(hv) + ')')
         ok = ok and c3
         # AU3: Symbol der exe im fertigen Paket nachprüfen
         tz = Path(tempfile.mkdtemp(prefix='eveomni-exe-'))

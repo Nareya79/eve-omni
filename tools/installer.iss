@@ -31,7 +31,12 @@ DisableDirPage=yes
 UsePreviousAppDir=no
 PrivilegesRequired=lowest
 OutputDir={#OutDir}
+; BC2 (23.10.): /DNoSoundtrack = EVE-Omni-Update-<v>.exe für das Update aus dem Programm – ohne Soundtrack (der vorhandene bleibt liegen)
+#ifdef NoSoundtrack
+OutputBaseFilename=EVE-Omni-Update-{#AppVersion}
+#else
 OutputBaseFilename=EVE-Omni-Setup-{#AppVersion}
+#endif
 SetupIconFile={#IconFile}
 UninstallDisplayIcon={app}\EVE-Omni.exe
 UninstallDisplayName=EVE Omni
@@ -71,19 +76,27 @@ Name: "omnibreaker"; Description: "{cm:Game}"; Types: full
 Name: "desktopicon"; Description: "{cm:Desktop}"; Flags: unchecked
 
 [Files]
-Source: "{#SrcDir}\*"; DestDir: "{app}"; Components: main; Excludes: "*.alt,resources\app\soundtrack\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SrcDir}\*"; DestDir: "{app}"; Components: main; Excludes: "*.alt,\EVE-Omni.html,resources\app\soundtrack\*"; Flags: ignoreversion recursesubdirs createallsubdirs
+#ifndef NoSoundtrack
 Source: "{#SrcDir}\resources\app\soundtrack\*"; DestDir: "{app}\resources\app\soundtrack"; Components: soundtrack; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+#endif
 
 [Icons]
 ; Gleicher Ort und Name wie die Verknüpfung, die das Programm selbst pflegt (Windows-Meldungen brauchen die AppUserModelID)
 Name: "{userprograms}\EVE Omni"; Filename: "{app}\EVE-Omni.exe"; AppUserModelID: "de.eveomni.app"
 Name: "{userdesktop}\EVE Omni"; Filename: "{app}\EVE-Omni.exe"; Tasks: desktopicon
 
+[InstallDelete]
+; 23.10.: alte EVE-Omni.html neben der exe (5.2.0 lieferte 5.1.0 mit) – die eingebaute in resources\app\evecore gilt
+Type: files; Name: "{app}\EVE-Omni.html"
+
 [UninstallDelete]
 Type: files; Name: "{app}\resources\app\ohne-omnibreaker"
 Type: files; Name: "{app}\resources\app\install-lang"
 
 [Run]
+; BC2: Update aus dem Programm (/EOUPDATE, still) – danach EVE Omni wieder starten
+Filename: "{app}\EVE-Omni.exe"; Flags: nowait; Check: EoUpdate
 Filename: "{app}\EVE-Omni.exe"; Description: "{cm:LaunchProgram,EVE Omni}"; Flags: nowait postinstall skipifsilent
 
 [Code]
@@ -93,9 +106,17 @@ begin
   Result := Exec(ExpandConstant('{cmd}'), '/C tasklist /FI "IMAGENAME eq EVE-Omni.exe" /NH | find /I "EVE-Omni.exe" >NUL', '', SW_HIDE, ewWaitUntilTerminated, Rc) and (Rc = 0);
 end;
 
+function EoUpdate(): Boolean;
+begin
+  Result := Pos('/EOUPDATE', Uppercase(GetCmdTail)) > 0;
+end;
+
 function WaitClosed(): Boolean;
+var I: Integer;
 begin
   Result := True;
+  // BC2: beim Update aus dem Programm beendet sich EVE Omni gerade selbst – bis 20 s warten statt gleich zu fragen
+  if EoUpdate() then for I := 1 to 40 do begin if not EveOmniRunning() then break; Sleep(500); end;
   while EveOmniRunning() do
     if SuppressibleMsgBox(CustomMessage('Running'), mbError, MB_RETRYCANCEL, IDCANCEL) = IDCANCEL then begin Result := False; exit; end;
 end;

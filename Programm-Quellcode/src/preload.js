@@ -20,6 +20,9 @@ ipcRenderer.on('evecore:cmd', (ev, cmd) => { if (cmdCb) { try{ cmdCb(cmd); }catc
 contextBridge.exposeInMainWorld('evecoreHost', {
   isHost: true,
   version: initial.version,
+  selfUpdate: !!initial.selfUpdate,   // BC2: installierte Version kann sich selbst aktualisieren
+  runSelfUpdate: tag => ipcRenderer.invoke('evecore:selfUpdate', String(tag)),
+  cancelSelfUpdate: () => ipcRenderer.send('evecore:selfUpdateCancel'),
   noGame: !!initial.noGame,
   installLang: initial.installLang || '',
   getSettings: () => ipcRenderer.invoke('evecore:getSettings'),

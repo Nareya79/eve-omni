@@ -192,20 +192,31 @@ public static class EcFg {
   static Dictionary<uint, string> pidName = new Dictionary<uint, string>();
   static string ProcName(uint pid){
     string n;
-    if (pidName.TryGetValue(pid, out n)) return n;
+    lock (pidName){ if (pidName.TryGetValue(pid, out n)) return n; }
     n = "";
-    try{ n = Process.GetProcessById((int)pid).ProcessName.ToLowerInvariant(); }catch{}
-    pidName[pid] = n;
+    try{ n = Process.GetProcessById((int)pid).ProcessName.ToLowerInvariant(); }catch{ return ""; }   // BD (23.10.): Fehlschlag nicht merken, nächste Sekunde neu fragen
+    lock (pidName) pidName[pid] = n;
     return n;
+  }
+  // BD (23.10.): Windows vergibt PIDs neu – Einträge ohne sichtbares Fenster vergessen, sonst galt ein neuer EVE-Client
+  // (vom Launcher gestartet) unter einer alten PID als fremdes Programm: keine Vorschau bis zum Neustart von EVE Omni
+  static void PidPrune(Dictionary<uint, bool> seen){   // kein HashSet (System.Core)
+    lock (pidName){
+      List<uint> gone = new List<uint>();
+      foreach (uint k in pidName.Keys) if (!seen.ContainsKey(k)) gone.Add(k);
+      foreach (uint k in gone) pidName.Remove(k);
+    }
   }
   static string lastSig = null;
   static void Scan(){
     List<Client> found = new List<Client>();
+    Dictionary<uint, bool> seen = new Dictionary<uint, bool>();
     EnumWindows(delegate(IntPtr h, IntPtr l){
       if (!IsWindowVisible(h)) return true;
       int len = GetWindowTextLength(h);
       if (len < 3 || len > 200) return true;
       uint pid; GetWindowThreadProcessId(h, out pid);
+      seen[pid] = true;
       if (ProcName(pid) != "exefile") return true;
       StringBuilder sb = new StringBuilder(len + 2);
       GetWindowText(h, sb, sb.Capacity);
@@ -214,7 +225,7 @@ public static class EcFg {
       found.Add(new Client(h.ToInt64(), t));
       return true;
     }, IntPtr.Zero);
-    if (pidName.Count > 500) pidName.Clear();
+    PidPrune(seen);
     found.Sort(delegate(Client a, Client b){ return a.Hwnd.CompareTo(b.Hwnd); });
     StringBuilder sig = new StringBuilder();
     foreach (Client c in found){ if (sig.Length > 0) sig.Append('\t'); sig.Append(c.Hwnd).Append('=').Append(c.Title.Replace('\t', ' ')); }

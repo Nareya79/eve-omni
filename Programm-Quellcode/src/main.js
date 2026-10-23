@@ -110,8 +110,21 @@ function demoOn(){ try{ return DEMO_ARG || (!!win && !win.isDestroyed() && /[?&]
 function satQuery(id){ return demoOn() ? { fenster: id, demo: '1' } : { fenster: id }; }
 function effectiveHtml(){
   if (S.htmlPath && fs.existsSync(S.htmlPath)) return S.htmlPath;
-  if (!TEST && fs.existsSync(besideExeHtml())) return besideExeHtml();
+  if (!TEST && fs.existsSync(besideExeHtml()) && !htmlOlder(besideExeHtml(), bundledHtml())) return besideExeHtml();
   return bundledHtml();
+}
+// 23.10.: HTML neben der exe nur, wenn sie nicht älter ist als die eingebaute (5.2.0 zeigte sonst 5.1.0 aus einer alten Kopie)
+const htmlVerMemo = {};
+function htmlVer(p){
+  try{ const m = fs.statSync(p).mtimeMs, c = htmlVerMemo[p];
+    if (c && c.m === m) return c.v;
+    const r = /var EVECORE_VERSION = "([^"]+)"/.exec(fs.readFileSync(p, 'utf8'));
+    return (htmlVerMemo[p] = { m: m, v: r ? r[1] : '' }).v; }catch(e){ return ''; }
+}
+function htmlOlder(a, b){
+  const x = htmlVer(a).split('.').map(Number), y = htmlVer(b).split('.').map(Number);
+  for (let i = 0; i < 3; i++){ if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); }
+  return false;
 }
 function backupDir(){ return S.backup.dir || path.join(app.getPath('documents'), 'EVE-Omni-Sicherungen'); }
 function iconPath(){ return path.join(__dirname, 'icon.png'); }
@@ -412,6 +425,7 @@ const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet:
 /* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
    Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
 const MAIN_EN = {
+  'Jetzt aktualisieren': 'Update now', 'EVE Omni wird beendet, aktualisiert und danach neu gestartet. Deine Daten und Einstellungen bleiben erhalten.': 'EVE Omni will close, update and then restart. Your data and settings are kept.',   // BC2
   'Position und Größe sperren': 'Lock position and size', 'Deckkraft': 'Opacity', 'Durchklicken (nur Browser)': 'Click-through (browser only)', 'Durchklicken (nur Discord)': 'Click-through (Discord only)', 'Hintergrund durchsichtig': 'Transparent background', 'Hintergrund-Deckkraft': 'Background opacity', 'geht mit dieser Discord-Version gerade nicht': 'does not work with this Discord version right now', 'Discord ganz beenden': 'Quit Discord completely', '✕ blendet nur aus – das hier beendet Discord': '✕ only hides – this quits Discord', 'Im Standard-Browser öffnen': 'Open in default browser', 'Abmelden (Discord-Sitzung löschen)': 'Log out (clear Discord session)', 'Abmelden': 'Log out', 'Bei Discord abmelden?': 'Log out of Discord?', 'Löscht die Anmeldung nur in diesem Fenster. Beim nächsten Öffnen meldest du dich neu an.': 'Clears the login in this window only. You log in again next time you open it.',
   'Ausschalten: Einstellungen › Programm › Durchklicken': 'Turn off: Settings › App › Click-through', 'Immer im Vordergrund': 'Always on top',
   'Startseite': 'Home page', 'Aktuelle Seite als Startseite': 'Current page as home page', 'Startseite öffnen': 'Open home page',
@@ -443,7 +457,7 @@ const MAIN_EN = {
   'Lesezeichen konnten nicht gelesen werden.': 'Could not read the bookmarks.', 'Ersetzen = alten Import-Ordner durch den neuen ersetzen · Zusätzlich = zweiten Ordner anlegen': 'Replace = swap the old import folder for the new one · Add as well = create a second folder'
 };
 // Teilstücke in zusammengesetzten Texten (längste zuerst)
-const MAIN_EN_PH = [[/^Wirklich alle (\d+) EVE-Clients beenden\?$/, 'Really quit all $1 EVE clients?'], [/^EVE-Clients umschalten mit /, 'Cycle EVE clients with '],
+const MAIN_EN_PH = [[/^EVE Omni auf (.+) aktualisieren\?$/, 'Update EVE Omni to $1?'], [/^Wirklich alle (\d+) EVE-Clients beenden\?$/, 'Really quit all $1 EVE clients?'], [/^EVE-Clients umschalten mit /, 'Cycle EVE clients with '],
   [/ nicht eingeloggt$/, ' not logged in'], [/ \(Konto\)$/, ' (account)'], [/^Alle (\d+) in Tabs öffnen$/, 'Open all $1 in tabs'], [/^In (.+) sind keine Lesezeichen\.$/, 'There are no bookmarks in $1.'],
   [/^Ordner „(.+)“ mit (\d+) Lesezeichen löschen\?$/, 'Delete folder „$1“ with $2 bookmarks?'], [/^Ordner „(.+)“ gibt es schon\.$/, 'Folder „$1“ already exists.'],
   [/^(\d+) Lesezeichen importiert\.$/, '$1 bookmarks imported.'], [/^Ordner „(.+)“ in der Lesezeichen-Leiste – sortieren unter „Lesezeichen verwalten“\.$/, 'Folder „$1“ in the bookmark bar – sort it under „Manage bookmarks“.'], [/ – Durchklicken aktiv$/, ' – click-through active'], [/\bUmschalt\b/g, 'Shift'], [/\bStrg\b/g, 'Ctrl'], [/\bTaste$/, 'key']];
@@ -2151,6 +2165,45 @@ const HOTKEY_ACTIONS = {
 };
 // EVE Omni neu starten: dieselbe exe an ihrem Platz – nach einem Update ist das schon die neue Version
 function restartApp(){ quitting = true; app.relaunch(); app.quit(); }
+/* BC2 (23.10.): Update direkt aus EVE Omni – nur installierte Version (unins000.exe neben der exe; portable → Download-Seite).
+   Lädt EVE-Omni-Update-<v>.exe (Setup ohne Soundtrack, der bleibt liegen) aus dem GitHub-Release nach %TEMP%, prüft SHA256 gegen
+   SHA256SUMS.txt, fragt im Design und startet das Setup still mit /EOUPDATE (installer.iss startet EVE Omni danach neu). */
+const UPD_REL = 'https://api.github.com/repos/Nareya79/eve-omni/releases/tags/', UPD_DL = /^https:\/\/github\.com\/Nareya79\/eve-omni\/releases\/download\//;
+let updAbort = null;
+function updCan(){ return IS_WIN && !TEST && fs.existsSync(path.join(path.dirname(process.execPath), 'unins000.exe')); }
+async function selfUpdate(tag, wc){
+  if (!updCan()) return { ok: false, why: 'portable' };
+  if (updAbort) return { ok: false, why: 'busy' };
+  tag = String(tag || ''); if (!/^v?\d+\.\d+\.\d+$/.test(tag)) return { ok: false, why: 'tag' };
+  const v = tag.replace(/^v/, ''), name = 'EVE-Omni-Update-' + v + '.exe', file = path.join(app.getPath('temp'), name);
+  const { net } = require('electron'), prog = p => { try{ if (!wc.isDestroyed()) wc.send('evecore:cmd', { type: 'updProg', p: p }); }catch(e){} };
+  const ac = updAbort = new AbortController();
+  try{
+    const rel = await (await net.fetch(UPD_REL + encodeURIComponent(tag), { headers: { Accept: 'application/vnd.github+json' }, signal: ac.signal })).json();
+    const asset = n => (rel.assets || []).find(a => a.name === n && UPD_DL.test(a.browser_download_url));
+    const a = asset(name), s = asset('SHA256SUMS.txt');
+    if (!a || !s) return { ok: false, why: 'noasset' };
+    const sums = await (await net.fetch(s.browser_download_url, { signal: ac.signal })).text();
+    const want = ((sums.split(/\r?\n/).find(l => l.trim().endsWith('  ' + name)) || '').split(/\s+/)[0] || '').toLowerCase();
+    if (!/^[0-9a-f]{64}$/.test(want)) return { ok: false, why: 'noasset' };
+    const r = await net.fetch(a.browser_download_url, { signal: ac.signal });
+    if (!r.ok || !r.body) return { ok: false, why: 'net' };
+    const total = Number(r.headers.get('content-length')) || a.size || 0, h = require('crypto').createHash('sha256'), out = fs.createWriteStream(file);
+    let got = 0, lastP = 0; prog(0);
+    for await (const ch of r.body){ h.update(ch); got += ch.length; if (!out.write(ch)) await new Promise(res => out.once('drain', res));
+      const p = total ? Math.floor(got * 100 / total) : 0; if (p !== lastP){ lastP = p; prog(p); } }
+    await new Promise((res, rej) => out.end(e => e ? rej(e) : res()));
+    if (h.digest('hex') !== want){ try{ fs.unlinkSync(file); }catch(e){} return { ok: false, why: 'hash' }; }
+    const o = { buttons: ['Jetzt aktualisieren', 'Abbrechen'], defaultId: 0, cancelId: 1, message: 'EVE Omni auf ' + v + ' aktualisieren?',
+      detail: 'EVE Omni wird beendet, aktualisiert und danach neu gestartet. Deine Daten und Einstellungen bleiben erhalten.' };
+    const ans = await (eoAskAny(win, o) || dialog.showMessageBox(win, o));
+    if (ans.response !== 0) return { ok: false, why: 'cancel' };
+    require('child_process').spawn(file, ['/SILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/EOUPDATE', '/DIR=' + path.dirname(process.execPath)], { detached: true, stdio: 'ignore' }).unref();
+    saveSettings(true); quitting = true; setTimeout(() => app.quit(), 300);
+    return { ok: true };
+  }catch(e){ return { ok: false, why: ac.signal.aborted ? 'cancel' : 'net' }; }
+  finally{ updAbort = null; }
+}
 function registerHotkeys(){
   globalShortcut.unregisterAll();
   hotkeyStatus = {};
@@ -2316,7 +2369,7 @@ function ensureShortcut(){
     let cur = null;
     try{ cur = shell.readShortcutLink(lnk); }catch(e){}
     try{ const xd = path.dirname(process.execPath); for (const f of fs.readdirSync(xd)) if (/^EVE-Omni\.\d+\.alt$/.test(f)) fs.unlinkSync(path.join(xd, f)); }catch(e){}   // AU: alte exe nach Symbol-Tausch wegraeumen
-    const ICO = 7;   // CC5 + EE4 (H3) + FF2 + AU (exe wieder Hauptlogo) + Startmenü aus icon.ico + Logo 20 % größer: neues Symbol -> Verknuepfung einmal neu schreiben und den Symbol-Speicher von Windows auffrischen (Startmenue, Windows-Meldungen)
+    const ICO = 8;   // CC5 + EE4 (H3) + FF2 + AU (exe wieder Hauptlogo) + Startmenü aus icon.ico + Logo 20 % größer + 23.10. Symbol B in allen Größen: neues Symbol -> Verknuepfung einmal neu schreiben und den Symbol-Speicher von Windows auffrischen (Startmenue, Windows-Meldungen)
     if (!cur || cur.target !== want.target || cur.icon !== want.icon || S.lnkIco !== ICO){
       shell.writeShortcutLink(lnk, cur ? 'replace' : 'create', want);
       if (S.lnkIco !== ICO){ S.lnkIco = ICO; saveSettings(); try{ execFile('ie4uinit.exe', ['-show'], { windowsHide: true }, () => {}); }catch(e){} }
@@ -2329,7 +2382,7 @@ function applyAutostart(){
 }
 
 /* ---------------- IPC ---------------- */
-ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion(), installLang: installLang, noGame: fs.existsSync(path.join(__dirname, 'ohne-omnibreaker')) }; });   // noGame: Installer hat OmniBreaker abgewählt
+ipcMain.on('evecore:initial', ev => { ev.returnValue = { settings: publicSettings(), version: app.getVersion(), selfUpdate: updCan(), installLang: installLang, noGame: fs.existsSync(path.join(__dirname, 'ohne-omnibreaker')) }; });   // noGame: Installer hat OmniBreaker abgewählt
 ipcMain.handle('evecore:getSettings', () => publicSettings());
 ipcMain.handle('evecore:setSettings', (ev, patch) => {
   patch = patch || {};
@@ -2777,13 +2830,15 @@ ipcMain.on('evecore:launchEve', () => launchEve());   // DD5
 ipcMain.on('evecore:quitEve', () => quitEve());
 ipcMain.handle('evecore:ask', (ev, o) => { const p = eoAskAny(BrowserWindow.fromWebContents(ev.sender) || win, o || {}); return p ? p.then(r => r.response) : Promise.reject(new Error('busy')); });   // AT: Rückfragen der Seite (sonst Windows-Fenster)   // FF5
 ipcMain.on('evecore:restart', () => restartApp());
+ipcMain.handle('evecore:selfUpdate', (ev, tag) => selfUpdate(tag, ev.sender));   // BC2
+ipcMain.on('evecore:selfUpdateCancel', () => { if (updAbort) updAbort.abort(); });
 // L5: OmniCom-Knopf – offen und sichtbar -> schliessen, sonst oeffnen
 ipcMain.on('evecore:toggleBrowser', () => { if (bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) bwin.close(); else openBrowser(); });
 ipcMain.on('browser:cmd', (ev, type, arg) => { if (bwin && !bwin.isDestroyed() && ev.sender === bwin.webContents) browserCmd(String(type), String(arg || '')); else if (dwin && !dwin.isDestroyed() && ev.sender === dwin.webContents) discordCmd(String(type), String(arg || '')); });   // DC: Discord-Leiste nutzt dieselbe Brücke
 ipcMain.on('evecore:toggleDiscord', () => toggleDiscord());   // DC
 ipcMain.on('evecore:showMain', () => showWin(true));
 // EVE-Login im Standard-Browser (nur die EVE-Anmeldeseite)
-ipcMain.on('evecore:openExternal', (ev, url) => { url = String(url || ''); if (/^https:\/\/login\.eveonline\.com\//.test(url)) shell.openExternal(url); });
+ipcMain.on('evecore:openExternal', (ev, url) => { url = String(url || ''); if (/^https:\/\/login\.eveonline\.com\//.test(url) || (/^https:\/\//.test(url) && OWN_SITES.test(url))) shell.openExternal(url); });   // BC1 (23.10.): auch eigene Seiten (Update-Balken „Zur Download-Seite“ tat nichts)
 ipcMain.on('evecore:quit', () => { quitting = true; app.quit(); });
 ipcMain.on('evecore:killfeed', (ev, on) => { if (!TEST) kfSet(on); else kf.on = !!on; });
 ipcMain.handle('evecore:intelList', () => intelList());   // HZ23

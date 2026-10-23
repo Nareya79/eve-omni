@@ -93,6 +93,7 @@ Windows 10/11, 64 Bit. Kostenlos, ohne Konto und ohne API-Schlüssel.
 |---|---|
 | `EVE-Omni-Setup-x.y.z.exe` | **Installer (empfohlen).** Keine Admin-Rechte nötig. |
 | `EVE-Omni-x.y.z-portable.zip` | Portable Version: entpacken und `EVE-Omni.exe` starten. |
+| `EVE-Omni-Update-x.y.z.exe` | Nutzt EVE Omni selbst für „Update installieren“ (Installer ohne Soundtrack) – musst du nicht herunterladen. |
 | `EVE-Omni-Soundtrack.zip` | Optional: der EVE Omni Soundtrack (23 Titel, MP3). |
 | `SHA256SUMS.txt` | Prüfsummen, um den Download zu prüfen. |
 

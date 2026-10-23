@@ -7,12 +7,12 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'v6-'));
 const py = args => { const r = cp.spawnSync('python', [path.join(ROOT, 'tools/release-build.py')].concat(args), { encoding: 'utf8', env: Object.assign({}, process.env, { PYTHONIOENCODING: 'utf-8' }) }); return { code: r.status, out: r.stdout + r.stderr }; };
 try{
   const out = path.join(dir, '9.9.9'); fs.mkdirSync(out);
-  const files = ['EVE-Omni-Setup-9.9.9.exe', 'EVE-Omni-9.9.9-portable.zip', 'EVE-Omni-Soundtrack.zip'];
+  const files = ['EVE-Omni-Setup-9.9.9.exe', 'EVE-Omni-Update-9.9.9.exe', 'EVE-Omni-9.9.9-portable.zip', 'EVE-Omni-Soundtrack.zip'];   // BC2: + Update ohne Soundtrack
   files.forEach((f, i) => fs.writeFileSync(path.join(out, f), 'inhalt ' + i));
   let r = py(['--summen', out]);
   assert(r.code === 0 && /OK +Dateiliste/.test(r.out) && /OK +Prüfsummen/.test(r.out), 'V6: --summen schreibt SHA256SUMS.txt, Ordner vollständig');
   const sums = fs.readFileSync(path.join(out, 'SHA256SUMS.txt'), 'utf8');
-  assert(sums.split('\n').filter(Boolean).length === 3 && files.every(f => new RegExp('^[0-9a-f]{64}  ' + f.replace(/\./g, '\\.') + '$', 'm').test(sums)), 'V6: SHA256SUMS.txt hat je Datei eine Zeile „<sha256>  <Name>“');
+  assert(sums.split('\n').filter(Boolean).length === 4 && files.every(f => new RegExp('^[0-9a-f]{64}  ' + f.replace(/\./g, '\\.') + '$', 'm').test(sums)), 'V6: SHA256SUMS.txt hat je Datei eine Zeile „<sha256>  <Name>“');
   assert(py(['--pruefen', out]).code === 0, 'V6: --pruefen auf vollständigem Ordner ist grün');
   fs.writeFileSync(path.join(out, files[0]), 'signiert');   // wie nach dem Signieren: Installer getauscht
   r = py(['--pruefen', out]);
@@ -21,7 +21,7 @@ try{
   fs.writeFileSync(path.join(out, 'extra.txt'), 'x');
   r = py(['--pruefen', out]);
   assert(r.code === 1 && /FEHLER Dateiliste/.test(r.out), 'V6: zusätzliche Datei im Release-Ordner wird gemeldet');
-  fs.unlinkSync(path.join(out, 'extra.txt')); fs.unlinkSync(path.join(out, files[2]));
+  fs.unlinkSync(path.join(out, 'extra.txt')); fs.unlinkSync(path.join(out, files[3]));
   r = py(['--pruefen', out]);
   assert(r.code === 1 && /FEHLER Dateiliste/.test(r.out), 'V6: fehlende Soundtrack-ZIP wird gemeldet');
 
