@@ -39,7 +39,7 @@
 
 ### 🪟 In-game overlay – your tools right over EVE
 - Small see-through windows that float over the game – only while EVE is in front.
-- Views: Trades · Hauling · Watchlist · Market · Wallet · Assets · Fittings · Characters · Skills · Mining · Industry · Wormholes · Route · Map · Local · Gang alarm · Jukebox
+- Views: Trades · Hauling · Watchlist · Market · Wallet · Assets · Fittings · Characters · Skills · Mining · Industry · Wormholes · Route · OmniMap · Local · Gang alarm · Jukebox
 - One compact window or each view as its own window, snapped to the screen edge; transparency per window, lock position, auto-hide.
 - **Stack overlays like in EVE:** drag an overlay by its title bar onto another one and they become tabs; drag a tab out to get its own window again. Opacity, lock, click-through and always-on-top apply to the whole stack.
 - **OmniCom:** the launcher of the overlay, in four layouts (grid, favourites + folders, expandable groups, a bar that grows). Drag icons into groups and back out, like folders on a phone. Optional buttons to start and quit EVE, and a left click on the clock opens your timers.
@@ -60,7 +60,7 @@
 | **Setup assistant** | Pick your look first – EVE (Caldari colours) or EVE Omni (gold on dark blue) – then colour scheme and overlays |
 | **Planetary industry (PI)** | Your colonies with an alarm when extractors run out |
 | **Skills** | Skill queue and trading skills – fees are calculated from your real skills |
-| **Navigation & wormholes** | Route planner, jump planner, map with jump bridges, Thera & Turnur connections via EVE-Scout, wormhole info, autopilot destination in one click |
+| **Navigation & wormholes** | **OmniMap** – the whole universe with your route, live kills, layers, activity, your characters and assets; route planner, jump planner, jump bridges, Thera & Turnur via EVE-Scout, wormhole info, autopilot destination |
 | **PvP & intel** | Local check with zKillboard info, kills and jumps per system, dangerous systems, gang alarm with live “Hostile reported” window |
 | **Fittings** | Own section with overlay: My fittings + EVE Workbench, copy fittings in EFT format |
 | **Clones & implants** | Jump clones and implants of all characters |
