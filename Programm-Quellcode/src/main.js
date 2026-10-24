@@ -421,7 +421,7 @@ if (TEST) global.__evecoreTest = {
 
 /* ---------------- Einzelfenster (eine Ansicht je Fenster, frei platzierbar) ---------------- */
 const VIEWS = { trades: 'Trades', route: 'Navigation', skills: 'Skills', wallet: 'Wallet', scanner: 'Scanner-Plan', handel: 'Hauling', track: 'Watchlist',
-                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'OmniCom', karte: 'Karte', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', sound: 'Sound', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', workbench: 'Workbench', produktion: 'Produktion', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
+                local: 'Local', mail: 'Mail', chars: 'Charaktere', pi: 'Planeten', musik: 'Jukebox', neocom: 'OmniCom', karte: 'OmniMap', alarm: 'Alert', gangreport: 'Gang-Report', radar: 'Radar', appraisal: 'Wertschätzer', courier: 'Kurier', mining: 'Mining', dscan: 'D-Scan', sound: 'Sound', piplan: 'PI-Planer', wurmloch: 'Wurmlöcher', workbench: 'Workbench', produktion: 'Produktion', markt: 'Markt', assets: 'Assets', industrie: 'Industrie', notiz: 'Notizen', leistung: 'Leistung', uhr: 'Uhr & Timer', spiel: 'OmniBreaker' };
 /* 4.0.73: Englisch auch außerhalb der Seite – Tray, Rechtsklick-Menüs, Dialoge, Vorschau-Beschriftung.
    Sprache meldet die Seite (setSettings lang); bis dahin bzw. bei Neuinstallation die Windows-Sprache. */
 const MAIN_EN = {
@@ -447,8 +447,8 @@ const MAIN_EN = {
   'EVE läuft noch – erst alle EVE-Clients schließen.': 'EVE is still running – close all EVE clients first.', 'EVECore läuft noch.': 'EVECore is still running.',
   'EVECore heißt jetzt EVE Omni und übernimmt beim ersten Start alle Daten. Bitte EVECore zuerst beenden (Symbol unten rechts › Beenden) und EVE Omni dann neu starten.': 'EVECore is now called EVE Omni and takes over all data on the first start. Please quit EVECore first (icon bottom right › Quit) and then restart EVE Omni.',
   // Overlay-Namen (Tray › Overlays)
-  'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Hauling': 'Hauling', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map',
-  'Rechtschreibprüfung': 'Spell check', 'Zum Wörterbuch hinzufügen': 'Add to dictionary', 'Keine Vorschläge': 'No suggestions', 'Ausschneiden': 'Cut', 'Kopieren': 'Copy', 'Einfügen': 'Paste', 'Alles auswählen': 'Select all',   // AQ2
+  'Navigation': 'Navigation', 'Scanner-Plan': 'Scanner plan', 'Hauling': 'Hauling', 'Charaktere': 'Characters', 'Planeten': 'Planets', 'Karte': 'Map', 'OmniMap': 'OmniMap',
+  'Rechtschreibprüfung': 'Spell check', 'Neu laden': 'Reload', 'Mikrofon (Sprachkanäle)': 'Microphone (voice channels)', 'Discord darf das Mikrofon nutzen': 'Discord may use the microphone', 'aus – Discord fragt sonst vergeblich': 'off – Discord asks in vain otherwise', 'Zum Wörterbuch hinzufügen': 'Add to dictionary', 'Keine Vorschläge': 'No suggestions', 'Ausschneiden': 'Cut', 'Kopieren': 'Copy', 'Einfügen': 'Paste', 'Alles auswählen': 'Select all',   // AQ2
   'Wertschätzer': 'Appraisal', 'Kurier': 'Courier', 'PI-Planer': 'PI planner', 'Wurmlöcher': 'Wormholes', 'Industrie': 'Industry', 'Produktion': 'Manufacturing', 'Notizen': 'Notes',
   'Leistung': 'Performance', 'Uhr & Timer': 'Clock & timers',
   'Neuer Ordner': 'New folder', 'Neuer Ordner darin': 'New folder inside', 'Lesezeichen verwalten …': 'Manage bookmarks …', 'Lesezeichen importieren': 'Import bookmarks',
@@ -1188,7 +1188,7 @@ async function bmImport(src){
 }
 // P2: Hauptfenster erfaehrt, ob das Browser-Fenster offen ist (Markierung im OmniCom-Overlay)
 function browserOpenPush(){ send({ type: 'browserOpen', open: !!(bwin && !bwin.isDestroyed() && bwin.isVisible() && !bwin.isMinimized()) }); }
-function browserPush(){ if (bwin && !bwin.isDestroyed() && bview){ bwin.webContents.send('browser:state', browserState()); bedit = ''; } }   // BM: „bearbeiten“ nur einmal schicken
+function browserPush(){ if (bwin && !bwin.isDestroyed() && !bwin.webContents.isDestroyed() && bview){ bwin.webContents.send('browser:state', browserState()); bedit = ''; } }   // BM: „bearbeiten“ nur einmal schicken
 // AI2 (18.10.): nach dem Zeigen neu einpassen + neu zeichnen (ein WebContentsView, der bei verstecktem/minimiertem Fenster angehängt wurde, malt sonst nicht)
 function browserRepaint(){ [0, 80, 300].forEach(ms => setTimeout(() => { if (!bwin || bwin.isDestroyed() || !bview) return; browserLayout(); try{ bview.webContents.invalidate(); }catch(e){} }, ms)); }
 function browserLayout(){
@@ -1989,7 +1989,7 @@ function showView(id){
    Oben eine schmale Leiste (discord.html, nutzt browser-preload.js), darunter discord.com in eigener dauerhafter Sitzung
    "persist:discord" ohne Zugriff aufs Programm. Anmelden macht der Nutzer selbst im Fenster – EVE Omni liest und speichert
    keine Zugangsdaten. Nur Anzeige: kein Mikrofon/Kamera, keine Desktop-Meldungen, nichts geht an EVE. */
-const DISCORD_BAR_H = 26, DISCORD_URL = (process.env.EVECORE_TEST && process.env.EVECORE_DISCORD_URL) || 'https://discord.com/app';   // Test: nachgebaute Seite
+const DISCORD_BAR_H = 26, DISCORD_BAR_H_EVE = 32, DISCORD_URL = (process.env.EVECORE_TEST && process.env.EVECORE_DISCORD_URL) || 'https://discord.com/app';   // Test: nachgebaute Seite
 let dwin = null, dview = null, dcCssKey = '', dcBgState = '', dcUnread = -1, dcSentN = 0;
 /* DC2 (14.10.2026): nur die Hintergrundflächen von Discord durchsichtig (Fenster ist transparent angelegt). Discord-Variablen ändern sich
    mit Discord-Updates – deshalb bei jedem Laden neu einfügen, danach prüfen; klappt es nicht, Seite wieder deckend (nie unlesbar). */
@@ -2033,18 +2033,19 @@ function discordLook(){
   dcBarPush();
 }
 // SS2 (15.10.2026): Leiste wie die Overlay-Fenster – Knöpfe zeigen Durchklicken / Vordergrund / Sperre
-function dcBarPush(){ if (dwin && !dwin.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock }, look: S.popLook || null, act: extAct === 'discord' ? (S.ovMark ?? 'full') : '' }); } }   // AN2: look
+function dcBarPush(){ if (dwin && !dwin.isDestroyed() && !dwin.webContents.isDestroyed()){ const c = S.windows.discord || {}; dwin.webContents.send('browser:state', { dc: { ct: !!S.clickThrough || !!c.ct, top: satTop('discord'), lock: !!c.lock }, look: S.popLook || null, act: extAct === 'discord' ? (S.ovMark ?? 'full') : '' }); } }   // AN2: look
 function dcSet(p){ S.windows = merge(S.windows || {}, { discord: p }); saveSettings(); discordLook(); pushSettings(); }
 // AG2 (18.10.): Discord wie ein Overlay skaliert (Overlay-Skalierung der Seite × eigener Zoom per Strg + Mausrad, gemerkt in windows.discord.zoom)
 function dcZoom(){ if (!dview) return; const z = Math.max(0.3, Math.min(4, (Number(S.ovScale) || 1) * (Number((S.windows.discord || {}).zoom) || 1))); if (Math.abs(dview.webContents.getZoomFactor() - z) > 0.001) dview.webContents.setZoomFactor(z); }
 function dcZoomStep(dir){ const z0 = Number((S.windows.discord || {}).zoom) || 1; dcSet({ zoom: Math.round(Math.max(0.5, Math.min(2.5, z0 + (dir > 0 ? 0.1 : -0.1))) * 10) / 10 }); dcZoom(); }
 const DC_WHEEL_JS = "if (!window.__eoz){ window.__eoz = 1; addEventListener('wheel', function(e){ if (!e.ctrlKey) return; e.preventDefault(); console.log('__eozoom:' + (e.deltaY < 0 ? 1 : -1)); }, { passive: false, capture: true }); }";
-function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); const f = S.popLook && S.popLook.eve ? 1 : 0; dview.setBounds({ x: f, y: DISCORD_BAR_H, width: w - 2 * f, height: Math.max(0, h - DISCORD_BAR_H - f) });   /* Stil EVE: 1 px für den Rahmen */ } }
+function discordLayout(){ if (dwin && !dwin.isDestroyed() && dview){ const [w, h] = dwin.getContentSize(); const f = S.popLook && S.popLook.eve ? 1 : 0, bh = f ? DISCORD_BAR_H_EVE : DISCORD_BAR_H; dview.setBounds({ x: f, y: bh, width: w - 2 * f, height: Math.max(0, h - bh - f) });   /* BJ: Stil EVE = Leiste 32 px wie die Overlays */   /* Stil EVE: 1 px für den Rahmen */ } }
 function discordOpenPush(){ send({ type: 'discordOpen', open: !!(dwin && !dwin.isDestroyed() && dwin.isVisible() && !dwin.isMinimized()) }); }
 function discordMenu(){
   if (!dwin || dwin.isDestroyed()) return;
   const c = S.windows.discord || {}, set = dcSet;
   eoMenu(dwin, [
+    { label: 'Neu laden', click: () => { if (dview) dview.webContents.reload(); } },   // BJ: im Stil EVE ist ⟳ nicht mehr in der Leiste
     { label: 'Position und Größe sperren', type: 'checkbox', checked: !!c.lock, click: () => set({ lock: !c.lock }) },
     { label: 'Deckkraft', submenu: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3].map(a => ({ label: Math.round(a * 100) + ' %', type: 'radio', checked: Math.abs((Number(c.alpha) || 1) - a) < 0.01, click: () => set({ alpha: a }) })) },
     { label: 'Durchklicken (nur Discord)', type: 'checkbox', checked: !!c.ct, sublabel: 'Ausschalten: Einstellungen › Programm › Durchklicken', click: () => set({ ct: !c.ct }) },
@@ -2053,12 +2054,21 @@ function discordMenu(){
     { label: 'Hintergrund durchsichtig', type: 'checkbox', checked: dcBg().on, sublabel: dcBgState === 'bad' ? 'geht mit dieser Discord-Version gerade nicht' : '', click: () => { set({ bgOn: !dcBg().on }); dcBgApply(); } },
     { label: 'Hintergrund-Deckkraft', enabled: dcBg().on && dcBgState !== 'bad', submenu: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(p => ({ label: p + ' %', type: 'radio', checked: Math.round(dcBg().a * 100) === p, click: () => { set({ bgAlpha: p / 100 }); dcBgApply(); } })) },
     { label: 'Rechtschreibprüfung', type: 'checkbox', checked: c.spell !== false, click: () => { set({ spell: c.spell === false }); dcSpell(); } },   // AQ2
+    { label: 'Mikrofon (Sprachkanäle)', type: 'checkbox', checked: !!c.mic, sublabel: c.mic ? 'Discord darf das Mikrofon nutzen' : 'aus – Discord fragt sonst vergeblich', click: () => { set({ mic: !c.mic }); if (c.mic && dview) dview.webContents.reload(); } },   // BL2: Abschalten lädt neu (laufende Aufnahme endet)
     { type: 'separator' },
     { label: 'Im Standard-Browser öffnen', click: () => shell.openExternal(DISCORD_URL) },
     { label: 'Abmelden (Discord-Sitzung löschen)', click: () => eoAsk(dwin, { buttons: ['Abmelden', 'Abbrechen'], defaultId: 1, cancelId: 1, message: 'Bei Discord abmelden?', detail: 'Löscht die Anmeldung nur in diesem Fenster. Beim nächsten Öffnen meldest du dich neu an.' })
       .then(r => { if (r.response === 0 && dview){ delete S.discordLast; saveSettings(); } if (r.response === 0 && dview) dview.webContents.session.clearStorageData().then(() => dview && dview.webContents.loadURL(DISCORD_URL)); }) },
     { label: 'Discord ganz beenden', sublabel: '✕ blendet nur aus – das hier beendet Discord', click: () => { if (dwin && !dwin.isDestroyed()) dwin.destroy(); } }
   ]);
+}
+// BL2 (24.10.): Mikrofon für Discord-Sprachkanäle – nur mit Schalter im ⋮-Menü (Standard aus), nur Ton (keine Kamera), nur discord.com
+function dcMicOk(perm, types, url){
+  if (!(S.windows.discord || {}).mic) return false;
+  let host = ''; try { host = new URL(String(url || '')).hostname; } catch (e) {}
+  if (!/(^|\.)discord\.com$/.test(host)) return false;
+  if (perm === 'speaker-selection') return true;
+  return perm === 'media' && Array.isArray(types) && types.length > 0 && types.every(t => t === 'audio');
 }
 // AQ2 (21.10.): Rechtschreibprüfung (Windows-Prüfung, Windows-Sprachen) an/aus; Rechtsklick im Eingabefeld = Vorschläge + Bearbeiten
 function dcSpell(){ if (dview) try{ dview.webContents.session.setSpellCheckerEnabled((S.windows.discord || {}).spell !== false); }catch(e){} }
@@ -2101,8 +2111,8 @@ function openDiscord(){
   wc.on('focus', () => extActSet('discord'));   // Aktiv-Balken: Klick in den Chat
   wc.on('context-menu', (e, p) => { const it = dcCtxItems(p, wc); if (it.length && dwin && !dwin.isDestroyed()) eoMenu(dwin, it); });   // AQ2: vorher kein Menü bei Rechtsklick
   dcSpell();
-  ses.setPermissionRequestHandler((x, perm, cb) => cb(perm === 'clipboard-sanitized-write' || perm === 'fullscreen'));   // kein Mikrofon, keine Kamera, keine Meldungen
-  ses.setPermissionCheckHandler((x, perm) => perm === 'clipboard-sanitized-write');
+  ses.setPermissionRequestHandler((x, perm, cb, d) => cb(perm === 'clipboard-sanitized-write' || perm === 'fullscreen' || dcMicOk(perm, d && d.mediaTypes, d && d.requestingUrl)));   // keine Kamera, keine Meldungen; Mikrofon nur mit Schalter (BL2)
+  ses.setPermissionCheckHandler((x, perm, origin, d) => perm === 'clipboard-sanitized-write' || dcMicOk(perm, d && d.mediaType ? [d.mediaType] : [], origin));
   wc.setUserAgent(wc.getUserAgent().replace(/ Electron\/\S+/, '').replace(/\) \S+\/[\d.]+ Chrome\//, ') Chrome/'));   // wie ein normaler Chrome, sonst meldet Discord „Browser nicht unterstützt“
   wc.setWindowOpenHandler(({ url }) => { linkOpen(url); return { action: 'deny' }; });   // Links aus dem Chat → EVE-Omni-Browser (TT2), eigene Seiten → Standard-Browser
   wc.on('will-navigate', (e, url) => { if (!/^https:\/\/([\w-]+\.)*discord(app)?\.com\//.test(url)){ e.preventDefault(); if (/^https?:\/\//.test(url)) shell.openExternal(url); } });
@@ -2588,6 +2598,9 @@ function satDrag(w, phase){
 ipcMain.on('evecore:satDrag', (ev, phase) => { const sid = satIdOf(ev.sender); if (sid) satDrag(sats[sid], phase); });
 // AK: Reiter anklicken = nach vorn, Reiter herausziehen/„Lösen“ = eigenes Fenster (x/y = Mausposition, sonst versetzt)
 ipcMain.on('evecore:stackTab', (ev, id) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)) stackShow(id); });
+// BF (23.10.): Reiter per Maus umsortieren – nur dieselben Ansichten in neuer Reihenfolge
+ipcMain.on('evecore:stackOrder', (ev, ids) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (!s || !Array.isArray(ids)) return; ids = ids.map(String);
+  if (ids.length !== s.ids.length || !ids.every(id => s.ids.includes(id))) return; s.ids = ids; stackSave(); });
 ipcMain.on('evecore:stackClose', (ev, id) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)){ neoClickAt = Date.now(); closeSat(id); } });   // AK3: ✕ am Reiter = nur diese Ansicht
 ipcMain.on('evecore:stackFront', (ev, id) => { if (stackHidden(String(id))) stackShow(String(id)); });   // AK3: OmniCom-Kachel holt den Reiter nach vorn
 ipcMain.on('evecore:stackOut', (ev, id, x, y, drag) => { const sid = satIdOf(ev.sender), s = sid && stackOf(sid); if (s && s.ids.includes(id)){ stackOut(id, Number(x), Number(y)); if (drag) satDrag(sats[id], 'start'); } });   // AS: drag = Fenster folgt gleich der Maus
@@ -2830,6 +2843,7 @@ ipcMain.on('evecore:launchEve', () => launchEve());   // DD5
 ipcMain.on('evecore:quitEve', () => quitEve());
 ipcMain.handle('evecore:ask', (ev, o) => { const p = eoAskAny(BrowserWindow.fromWebContents(ev.sender) || win, o || {}); return p ? p.then(r => r.response) : Promise.reject(new Error('busy')); });   // AT: Rückfragen der Seite (sonst Windows-Fenster)   // FF5
 ipcMain.on('evecore:restart', () => restartApp());
+ipcMain.on('evecore:trace', (ev, s) => neoTraceAdd(String(s || '').slice(0, 300)));   // BE3
 ipcMain.handle('evecore:selfUpdate', (ev, tag) => selfUpdate(tag, ev.sender));   // BC2
 ipcMain.on('evecore:selfUpdateCancel', () => { if (updAbort) updAbort.abort(); });
 // L5: OmniCom-Knopf – offen und sichtbar -> schliessen, sonst oeffnen

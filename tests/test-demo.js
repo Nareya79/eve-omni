@@ -23,7 +23,7 @@ const BAD_HOSTS = /esi\.evetech\.net|login\.eveonline\.com|zkillboard\.com|dotla
   await p.goto(FILE + '?demo=1'); await p.waitForTimeout(3500);
   ok(await p.evaluate(() => !!document.querySelector('.demo-bar') && /DEMO/.test(document.querySelector('.demo-bar').textContent)), 'V1: Banner „DEMO – erfundene Daten“');
   ok(await p.evaluate(() => JSON.parse(localStorage.getItem('eve-zentrale-characters')).map(c => c.character_name).join() === 'Aria Demo,Kael Demo,Nova Demo'), 'V1: drei Demo-Charaktere geladen');
-  const areas = { station: /Drone Damage Amplifier II|Hobgoblin II/, track: /Damage Control II/, wallet: /Aria Demo/, skills: /Tycoon|Transport Ships/, chars: /Kaels Charon|Charon/, orders: /aktive Orders/, map: /The Forge/, wormhole: /J-System/, mining: /Erz/ };
+  const areas = { station: /Drone Damage Amplifier II|Hobgoblin II/, track: /Damage Control II/, wallet: /Aria Demo/, skills: /Tycoon|Transport Ships/, chars: /Kaels Charon|Charon/, orders: /aktive Orders/, map: /Navigation/, wormhole: /J-System/, mining: /Erz/ };
   for (const [t, re] of Object.entries(areas)){
     await p.evaluate(t => document.getElementById('neo-btn-' + t).click(), t); await p.waitForTimeout(t === 'map' ? 3000 : 1500);
     const txt = await p.evaluate(() => (document.querySelector('section.panel.active') || document.body).innerText);

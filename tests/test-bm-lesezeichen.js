@@ -12,7 +12,7 @@ class WC { constructor(){ this.ev = {}; this.url = ''; this.title = ''; this.nav
 class View { constructor(){ this.webContents = new WC(); } setBounds(b){ this.b = b; } }
 class Win { constructor(o){ this.o = o; this.ev = {}; this.kids = []; const me = this;
     this.contentView = { addChildView(v){ me.kids.push(v); }, removeChildView(v){ me.kids = me.kids.filter(x => x !== v); } };
-    this.webContents = { send: (c, s) => { me.st = s; }, on(){} }; }
+    this.webContents = { send: (c, s) => { me.st = s; }, on(){}, isDestroyed: () => false }; }
   on(e, f){ (this.ev[e] = this.ev[e] || []).push(f); } once(e, f){ this.on(e, f); } emit(e){ (this.ev[e] || []).forEach(f => f()); }
   isDestroyed(){ return !!this.dead; } getContentSize(){ return [900, 700]; } loadFile(){} setMenu(){} show(){} focus(){} isVisible(){ return true; } isMinimized(){ return false; } isMaximized(){ return false; } getBounds(){ return { x: 0, y: 0, width: 900, height: 700 }; }
   close(){ this.dead = true; this.emit('closed'); } setOpacity(){} setIgnoreMouseEvents(){} setResizable(){} }

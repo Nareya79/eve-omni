@@ -58,9 +58,11 @@ contextBridge.exposeInMainWorld('evecoreHost', {
   stackTab: id => ipcRenderer.send('evecore:stackTab', String(id)),   // AK
   stackOut: (id, x, y, drag) => ipcRenderer.send('evecore:stackOut', String(id), Number(x), Number(y), !!drag),
   stackOutEnd: id => ipcRenderer.send('evecore:stackOutEnd', String(id)),   // AS
-  stackClose: id => ipcRenderer.send('evecore:stackClose', String(id)),   // AK3
+  stackClose: id => ipcRenderer.send('evecore:stackClose', String(id)),
+  stackOrder: ids => ipcRenderer.send('evecore:stackOrder', (ids || []).map(String)),   // BF   // AK3
   stackFront: id => ipcRenderer.send('evecore:stackFront', String(id)),
-  neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),   // Diagnose OmniCom-Linksklick (07.10.)
+  neoLog: text => ipcRenderer.send('evecore:neoLog', String(text).slice(0, 20000)),
+  trace: text => ipcRenderer.send('evecore:trace', String(text).slice(0, 300)),   // BE3: Zeile ins Programm-Protokoll (neocom-log.txt)   // Diagnose OmniCom-Linksklick (07.10.)
   pickMusicDir: () => ipcRenderer.invoke('evecore:pickMusicDir'),
   listMusic: () => ipcRenderer.invoke('evecore:listMusic'),
   removeMusicDir: d => ipcRenderer.invoke('evecore:removeMusicDir', d),

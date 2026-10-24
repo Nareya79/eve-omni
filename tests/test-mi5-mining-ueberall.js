@@ -21,8 +21,7 @@ const w = new JSDOM(html, { runScripts:'dangerously', url:'https://claude.ai/art
     // Karte
     const ms = T.mpMiningSys();
     assert(ms[30000142] && /Abgebaut \(30 Tage\)/.test(ms[30000142]) && !ms[30000144] && /Perimeter I - Moon 1: Brocken in/.test(ms[30000145]), 'MI5: Mining-Systeme = Tagebuch (30 Tage, nicht älter) + Mond-Extraktionen');
-    assert($('mp-o-mn') && html.indexOf('pb("mapTog", "mn"') >= 0, 'MI5: Schalter „⛏ Mining“ in großer Karte und Overlay-Karte');
-    assert(/\.mn-ring/.test(html) && /class="mn-ring"/.test(html) && /"mn-ring"\)/.test(html), 'MI5: Ring in beiden Karten');
+    assert(/M\.mn\)\{ try\{ ox\.mn = mpMiningSys\(\)/.test(html), 'MI5/K6: Mining-Systeme gehen an die neue Karte (Menü „EVE Omni“)');
     // Assets: → Verkaufen
     T.asRender({ v: true, v2: 1, n: 1, g: [{ cid: '111', name: 'Eins', locs: [{ id: String(JITA), name: 'Jita IV - Moon 4 - Caldari Navy Assembly Plant', sys: null, st: null,
       rows: [{ tid: 62516, name: 'Compressed Veldspar', qty: 40000, estValue: 8e5, vol: 40 }, { tid: 34, name: 'Tritanium', qty: 5, estValue: 20, vol: 0.05 }] }] }] });

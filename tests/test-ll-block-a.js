@@ -34,7 +34,7 @@ assert(/const SNAP = 8;/.test(main) && /const BREAK = 25;/.test(main) && /const 
 assert(/\$\("ov-pin"\)\.onclick = function\(\)\{ H\.getSettings\(\)\.then\(function\(s\)\{ var w = \{\}; w\[view\] = \{ top: !satTopOn\(s\) \}/.test(html), 'LL2: Pin setzt windows[view].top');
 // LL3: Strg+Mausrad
 assert(/w\[view\] = \{ zoom: satZoom \}/.test(html) && /type: "mapFont", arg: up \? "1" : "-1"/.test(html), 'LL3: Fenster-Zoom + Kartenschrift');
-assert(/if \(!svg \|\| ev\.ctrlKey\) return;/.test(html), 'LL3: Karte zoomt bei Strg nicht mit');
+assert(/if \(ev\.ctrlKey \|\| ev\.target !== cv\) return;/.test(html), 'LL3: Karte zoomt bei Strg nicht mit');
 // LL7: Demo-Leiste zieht, Kopfzeile darunter
 assert(/\.demo-bar\{[^}]*-webkit-app-region:drag/.test(html) && /html\.demo header\.top\{top:26px\}/.test(html), 'LL7: Demo-Leiste ziehbar');
 // 14.10.: 1 px Abstand zum Nachbarfenster

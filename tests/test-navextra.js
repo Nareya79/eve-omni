@@ -90,26 +90,9 @@ function makeWindow(extra){
     const s6 = T.rtLoad(); delete s6.locFollow; w.localStorage.setItem('eve-zentrale-esiroute-v1', JSON.stringify(s6));
     $('rt-from').value = 'irgendwas'; T.chData()['111'].loc = { solar_system_id: 4 }; T.rtLocFollowTick(); await tick(50);
     assert(T.rtLoad().last.pos === 3 && $('rt-from').value === 'MJXW-P' && /Ziel erreicht/.test($('rt-status').textContent), 'HH6: folgt ohne Haken, Start läuft mit, „Ziel erreicht“');
-    // Karte
-    T.navShow('map'); await tick(1200);
-    assert(!$('nav-map-wrap').hidden && $('nav-sub-map').getAttribute('aria-selected') === 'true', 'Unterbereich „Karte“');
-    assert($('mp-region').options.length === 2, 'Regionsliste (ohne Wurmloch-Regionen)');
-    const ms = T.mpState();
-    assert(ms.region === 10000060 && Object.keys(ms.data.sys).length === 4 && ms.data.edges.length === 4 && ms.data.ext['5'], 'Region der Route geladen: 4 Systeme, 4 Verbindungen, Nachbarsystem außerhalb');
-    const svg = $('mp-svg');
-    assert(svg.querySelectorAll('circle.n').length === 5 && svg.querySelectorAll('line.r').length === 3 && svg.querySelectorAll('circle.k').length === 1, 'Karte: Systeme, Route hervorgehoben, Kill-Ring');
-    assert(svg.querySelector('image.me-img[data-me="111"]') && /Delve/.test($('mp-status').textContent), 'Eigener Charakter auf der Karte');
-    assert(JSON.parse(w.localStorage.getItem('eve-zentrale-map-v1')).r['10000060'], 'Region gespeichert (Speicher-Schlüssel eve-zentrale-map-v1)');
-    const n = CALLS.length; await T.mpShow(10000060);
-    assert(CALLS.filter((u, i) => i >= n && /\/universe\/(systems|stargates)\//.test(u)).length === 0, 'Zweites Öffnen ohne neue Abfragen');
-    // Klick auf System
-    const node = svg.querySelector('circle.n[data-sys="3"]');
-    node.dispatchEvent(new w.MouseEvent('pointerdown', { bubbles: true, clientX: 5, clientY: 5 }));
-    node.dispatchEvent(new w.MouseEvent('pointerup', { bubbles: true, clientX: 5, clientY: 5 }));
-    await tick(50);
-    assert(!$('mp-info').hidden && /Q-JQSG/.test($('mp-info').textContent) && /Kills 1 Std: 7 Schiffe/.test($('mp-info').textContent), 'Infokasten mit Kills und Sprüngen');
-    const btn = [...$('mp-info').querySelectorAll('button')].find(b => b.textContent === 'Ziel'); btn.onclick();
-    assert($('rt-to').value === 'Q-JQSG' && !$('nav-esi-wrap').hidden, 'Aus der Karte: als Ziel übernehmen');
+    // Karte (K6: neue Karte)
+    T.navShow('map'); await tick(300);
+    assert(!$('nav-map-wrap').hidden && $('nav-sub-map').getAttribute('aria-selected') === 'true' && $('km-big').querySelector('.km'), 'Unterbereich „Karte“ zeigt die neue Karte');
     console.log('\nALL NAV EXTRA TESTS PASSED');
     process.exit(0);
   }catch(e){ console.error(e); process.exit(1); }

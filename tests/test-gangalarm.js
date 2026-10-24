@@ -148,72 +148,15 @@ const kill = (id, sys, att, opts) => ({ killmail_id: id, esi: { killmail_id: id,
     // Kill-Strom-Normalisierung (Format killmail/zkb wie RedisQ)
     const n2 = T.gaNormalize({ killID: 7, killmail: { killmail_id: 7, solar_system_id: 3, killmail_time: '2026-09-23T10:00:00Z', victim: { ship_type_id: 1 }, attackers: [{ character_id: 1, ship_type_id: 2 }, { faction_id: 500001 }] }, zkb: {} });
     assert(n2 && n2.sys === 3 && n2.att === 1 && n2.attAll === 2, 'Auch das ältere Format (killmail/zkb) wird verstanden');
-    // Karte als Overlay
-    const mapBox = d.createElement('div'); T.ovRenderMap(mapBox); await tick(1500);
+    // Karte als Overlay (K6: nur noch die neue Karte) – Zustand für die Leinwand: Gang-Alarm + mein Standort
     const mb2 = d.createElement('div'); T.ovRenderMap(mb2);
-    assert(mb2.querySelector('svg.mp-svg') && mb2.querySelectorAll('circle.n').length === 5 && mb2.querySelector('circle.ga-ring') && mb2.querySelector('image.me-img[href*="characters/111/portrait"]'), 'Karte-Overlay: Region mit Systemen, Gang-Alarm als roter Ring, mein Porträt');
-    const mt = [...mb2.querySelectorAll('image.me-img[data-tip]')].map(x => x.getAttribute('data-tip')).join(' | ');
-    assert(/Taron Velkar/.test(mt) && /System: <b>Bravo<\/b>/.test(mt) && /Delve/.test(mt) && /im Weltraum/.test(mt) && /portrait\?size=128/.test(mt), 'M2/Q7: eigener Tooltip am Porträt mit Bild, Name, System, Region und Station/Weltraum: ' + mt);
-    assert(mb2.querySelector('rect.me-ring') && !mb2.querySelector('circle.me-ring'), 'Q7: eckige Porträts wie in RIFT');
-    // T17: Porträt 128 px, normale Namen blenden beim Herauszoomen aus, Route/Auswahl nicht
-    assert(mb2.querySelector('image.me-img[href*="size=128"]') && mb2.querySelector('text.nm'), 'T17: scharfes Porträt und ausblendbare Namen');
-    const zs = mb2.querySelector('svg.mp-svg'), zw = v => { zs.getBoundingClientRect = () => ({ width: 340, height: 240 }); zs.setAttribute('viewBox', '0 0 ' + v + ' ' + (v * .7)); T.mapZoomCls(mb2); };
-    zw(1000); assert(zs.classList.contains('zn'), 'T17: ganze Region im kleinen Fenster – Namen aus');
-    zw(200); assert(!zs.classList.contains('zn') && !zs.classList.contains('zx'), 'T17: herangezoomt – Namen an');
-    assert(/Delve/.test(mb2.textContent) && /du: Bravo/.test(mb2.textContent), 'Kopf: Region und mein System');
-    const vb1 = mb2.querySelector('svg').getAttribute('viewBox');
-    T.ovMapCmd('region'); const mb3 = d.createElement('div'); T.ovRenderMap(mb3);
-    assert(vb1 !== '0 0 1000 700' && mb3.querySelector('svg').getAttribute('viewBox') === '0 0 1000 700', 'Umschaltbar: Nah (um mich herum) / ganze Region');
-    // N1: Werkzeuge der großen Karte im Overlay
-    const mapR = () => { const b = d.createElement('div'); T.ovRenderMap(b); return b; };
-    assert(!mapR().querySelector('[data-ova="mapMode"]'), 'KA6: Steuerung standardmäßig hinter ☰');
-    T.ovSatAction('karte', { type: 'mapTog', arg: 'menu' });
-    let mn = mapR();
-    assert(mn.querySelectorAll('[data-ova="mapMode"]').length === 6 && mn.querySelector('[data-ovf="q"]') && mn.querySelector('[data-ova="mapRoute"]') && mn.querySelector('path.gr-m'), 'N1: Farbmodi, Suche, Route-Region, Gang-Report-Raute');
-    T.ovSatAction('karte', { type: 'mapMode', arg: 'kills' }); mn = mapR();
-    assert(/Kills der letzten Stunde/.test(mn.textContent) && mn.querySelector('[data-arg="kills"][aria-pressed="true"]'), 'N1: Farbmodus Kills mit Legende');
-    assert(T.ovLoad().mapColor === 'sec' && T.ovLoad().mapColor2 === 'kills' && mn.querySelector('[data-arg="kills"][data-ring="1"]') && mn.querySelector('[data-arg="sec"][aria-pressed="true"]') && /Rahmen: .*äußerer Rahmen: /.test(mn.textContent), 'Q7: zweite Auswahl kommt als Ring dazu, Legende für beide');
-    T.ovSatAction('karte', { type: 'mapMode', arg: 'stations' });
-    ['M', 'R'].forEach(c => T.ovSatAction('karte', { type: 'mapSvc', arg: c })); mn = mapR();
-    assert(T.ovLoad().mapColor2 === 'stations' && T.ovLoad().mapSvc === 'MR' && mn.querySelectorAll('[data-ova="mapSvc"][aria-pressed="true"]').length === 2 && /Markt \+ Reparatur/.test(mn.textContent), 'Q7: neue Auswahl ersetzt den Ring; Dienste mehrfach wählbar');
-    T.ovSatAction('karte', { type: 'mapSvc', arg: 'M' }); T.ovSatAction('karte', { type: 'mapMode', arg: 'sec' });
-    assert(T.ovLoad().mapSvc === 'R' && T.ovLoad().mapColor === 'stations' && !T.ovLoad().mapColor2, 'Q7: Dienst abwählbar; Füllung abgewählt -> Ring rückt nach');
-    T.ovSatAction('karte', { type: 'mapMode', arg: 'kills' }); T.ovSatAction('karte', { type: 'mapMode', arg: 'stations' }); mn = mapR();
-    const nT = mn.querySelectorAll('svg text').length;
-    T.ovSatAction('karte', { type: 'mapTog', arg: 'names' }); mn = mapR();
-    assert(mn.querySelectorAll('svg text').length < nT, 'N1: Namen ausblendbar');
-    const sid = mn.querySelector('circle.n[data-ova="mapSel"]').getAttribute('data-arg');
-    T.ovSatAction('karte', { type: 'mapSel', arg: sid }); mn = mapR();
-    const inf = mn.querySelector('.ov-map-i');
-    assert(inf && mn.querySelector('circle.n.sel') && inf.querySelectorAll('[data-ova="mapCtx"]').length === 4 && inf.querySelector('a[href="https://zkillboard.com/system/' + sid + '/"]') && /Sprünge/.test(inf.textContent), 'N1: Klick auf System zeigt Infokasten (Kills, Route, Autopilot, Links)');
-    await T.ovMapFind('Delve'); await tick(50);
-    assert(T.ovLoad().mapReg && T.ovLoad().mapZoom === 'region', 'N1: Suche nach Regionsname wechselt die Region');
-    ['mapHome', 'mapSel'].forEach(t => T.ovSatAction('karte', { type: t, arg: '' }));
-    T.ovSatAction('karte', { type: 'mapMode', arg: 'sec' }); T.ovSatAction('karte', { type: 'mapTog', arg: 'names' });
-    assert(!T.ovLoad().mapReg && !T.ovLoad().mapSel && T.ovLoad().mapNames === true, 'N1: Standort-Knopf und × setzen zurück');
-    // Karte: Mausrad zoomt, Ergebnis wird gemerkt
-    T.ovMapCmd('near');
+    const ks = JSON.parse(mb2.querySelector('.km').getAttribute('data-km'));
+    assert(!mb2.querySelector('svg') && Array.isArray(ks.al) && ks.me.some(x => x[0] === '111'), 'Karte-Overlay: neue Karte mit Alarm-Liste und meinem Standort');
     T.ovSetMode('compact'); await tick(100);
     const so = T.ovLoad(); so.views = so.views.filter(v => v.id !== 'karte').concat([{ id: 'karte', on: true }]); so.view = 'karte'; T.ovSave(so); T.ovRender(); await tick(100);
-    const msvg = d.querySelector('#ov-body .ov-map svg');
-    const vb0 = msvg.getAttribute('viewBox');
-    msvg.dispatchEvent(new w.WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -100, clientX: 0, clientY: 0 }));
-    T.ovRender();
-    assert(d.querySelector('#ov-body .ov-map svg') === msvg, 'T2: während des Zoomens wird die Karte nicht neu gebaut');
-    await tick(50);
-    assert(msvg.getAttribute('viewBox') !== vb0 && Number(msvg.getAttribute('viewBox').split(' ')[2]) < Number(vb0.split(' ')[2]), 'Karte-Overlay: Mausrad zoomt hinein');
-    await tick(500);
-    assert(T.ovLoad().mapVb && T.ovLoad().mapVb.vb.length === 4, 'Zoom wird gemerkt (bleibt beim Neuzeichnen)');
-    const vbKeep = msvg.getAttribute('viewBox'); T.ovRender();
-    assert(d.querySelector('#ov-body .ov-map svg').getAttribute('viewBox') === vbKeep, 'Neuzeichnen behält den Ausschnitt');
-    // K15: Rechtsklick auf ein System -> Menue; „Meiden“ landet in der Routen-Meideliste
-    const sysC = d.querySelector('#ov-body .ov-map circle[data-msys]');
-    sysC.dispatchEvent(new w.MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 50, clientY: 60 }));
-    const ctx = d.getElementById('ov-ctx');
-    assert(ctx && ctx.querySelectorAll('button').length === 6 && /Route hierher/.test(ctx.textContent) && /Wegpunkt/.test(ctx.textContent) && ctx.textContent.indexOf(sysC.getAttribute('data-mn')) === 0, 'K15: Rechtsklick-Menü mit Systemname, Route, Ziel, Wegpunkt, Meiden, Kopieren');
-    ctx.querySelector('[data-arg^="avoid:"]').click(); await tick(50);
-    assert(/gemieden|nicht erkannt/.test(d.getElementById('ov-body').textContent), 'K15: Meiden meldet sich im Karten-Overlay');
-    assert(!d.getElementById('ov-ctx'), 'K15: Menü schließt nach dem Klick');
+    assert(d.querySelector('#ov-body .ov-map .km'), 'Karte-Overlay zeigt die neue Karte');
+    T.ovMapCmd('km:ctx:avoid:30000142:Jita'); await tick(50);
+    assert(/gemieden|nicht erkannt/.test(d.getElementById('ov-body').textContent), 'K15: Meiden aus dem Rechtsklick-Menü meldet sich im Karten-Overlay');
     // Hintergrund-Deckkraft je Fenster
     const sl = d.querySelector('#ovs-views [data-alpha-view="karte"]');
     assert(sl && d.querySelector('#ovs-views [data-alpha-view="local"]'), 'Einstellungen: eigener Regler je Overlay-Fenster');

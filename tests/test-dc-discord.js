@@ -4,7 +4,7 @@ function assert(c, m){ if(!c) throw new Error('ASSERTION FAILED: ' + m); console
 try{
   const m = fs.readFileSync('/home/claude/main.js', 'utf8'), p = fs.readFileSync('/home/claude/preload.js', 'utf8'), h = fs.readFileSync('/tmp/eve-zentrale-test14.html', 'utf8');
   assert(/partition: 'persist:discord'/.test(m) && /sandbox: true \} \}\);\n  const wc = v\.webContents/.test(m), 'eigene dauerhafte Sitzung, Seite ohne Zugriff aufs Programm');
-  assert(/setPermissionRequestHandler\(\(x, perm, cb\) => cb\(perm === 'clipboard-sanitized-write' \|\| perm === 'fullscreen'\)\)/.test(m) && /setPermissionCheckHandler\(\(x, perm\) => perm === 'clipboard-sanitized-write'\)/.test(m), 'kein Mikrofon, keine Kamera, keine Meldungen');
+  assert(/setPermissionRequestHandler\(\(x, perm, cb, d\) => cb\(perm === 'clipboard-sanitized-write' \|\| perm === 'fullscreen' \|\| dcMicOk\(/.test(m) && /setPermissionCheckHandler\(\(x, perm, origin, d\) => perm === 'clipboard-sanitized-write' \|\| dcMicOk\(/.test(m), 'keine Kamera, keine Meldungen; Mikrofon nur über dcMicOk (BL2, Schalter)');
   assert(m.includes("wc.setWindowOpenHandler(({ url }) => { linkOpen(url); return { action: 'deny' }; });") && m.includes('function linkOpen(url){') && m.includes('OWN_SITES.test(url)'), 'TT2: Links aus dem Chat → EVE-Omni-Browser, eigene Seiten → Standard-Browser');
   assert(/discordToggle: ''/.test(m) && /discordToggle: \(\) => toggleDiscord\(\)/.test(m) && /\{ id: "discordToggle", label: "Discord-Chat ein\/aus" \}/.test(h), 'Tastenkürzel: Standard leer, in Einstellungen setzbar');
   assert(/toggleDiscord: \(\) => ipcRenderer\.send\('evecore:toggleDiscord'\)/.test(p) && /ipcMain\.on\('evecore:toggleDiscord'/.test(m), 'Brücke Seite → Programm');
