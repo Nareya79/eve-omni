@@ -39,7 +39,7 @@
 
 ### 🪟 Overlay im Spiel – deine Tools direkt über EVE
 - Kleine, durchsichtige Fenster, die über dem Spiel schweben – nur solange EVE vorne ist.
-- Ansichten: Trades · Hauling · Watchlist · Handel · Wallet · Assets · Fittings · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · Karte · Local · Gang-Alarm · Jukebox
+- Ansichten: Trades · Hauling · Watchlist · Handel · Wallet · Assets · Fittings · Charaktere · Skills · Mining · Industrie · Wurmlöcher · Route · OmniMap · Local · Gang-Alarm · Jukebox
 - Ein kompaktes Fenster oder jede Ansicht als eigenes Fenster, rastet am Bildschirmrand ein; Deckkraft je Fenster, Position sperren, automatisch ausblenden.
 - **Overlays stapeln wie in EVE:** Ein Overlay an der Kopfleiste auf ein anderes ziehen macht daraus Reiter; einen Reiter herausziehen gibt wieder ein eigenes Fenster. Deckkraft, Sperren, Durchklicken und Vordergrund gelten für den ganzen Stapel.
 - **OmniCom:** der Starter des Overlays, in vier Aufbauten (Raster, Favoriten + Ordner, aufklappbare Gruppen, eine Leiste, die wächst). Symbole ziehst du wie Ordner auf dem Handy in Gruppen hinein und wieder heraus. Auf Wunsch mit Knöpfen zum Starten und Beenden von EVE; ein Linksklick auf die Uhr öffnet deine Timer.
@@ -60,7 +60,7 @@
 | **Einrichtungs-Assistent** | Zuerst den Look wählen – EVE (Caldari-Farben) oder EVE Omni (Gold auf Dunkelblau) –, dann Farbschema und Overlays |
 | **Planeten-Industrie (PI)** | Deine Kolonien mit Alarm, wenn Extraktoren auslaufen |
 | **Skills** | Skill-Warteschlange und Handels-Skills – Gebühren mit deinen echten Skills berechnet |
-| **Navigation & Wurmlöcher** | Routenplaner, Sprungplaner, Karte mit Jump Bridges, Thera- & Turnur-Verbindungen über EVE-Scout, Wurmloch-Infos, Autopilot-Ziel mit einem Klick |
+| **Navigation & Wurmlöcher** | **OmniMap** – das ganze Universum mit deiner Route, Live-Kills, Ebenen, Aktivität, deinen Charakteren und Assets; Routenplaner, Sprungplaner, Jump Bridges, Thera & Turnur über EVE-Scout, Wurmloch-Infos, Autopilot-Ziel |
 | **PvP & Intel** | Local-Check mit zKillboard-Infos, Kills und Sprünge je System, gefährliche Systeme, Gang-Alarm mit Live-Fenster „Feind gemeldet“ |
 | **Fittings** | Eigener Bereich mit Overlay: Meine Fittings + EVE Workbench, Fittings im EFT-Format kopieren |
 | **Klone & Implantate** | Sprungklone und Implantate aller Charaktere |
