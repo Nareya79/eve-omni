@@ -35,6 +35,12 @@ const html = fs.readFileSync('/tmp/eve-zentrale-test14.html', 'utf-8');
     const s4 = T.ovLoad(); s4.kmSel = '30000142'; T.ovSave(s4); T.ovRender(); await tick(80);
     const h3 = body.querySelector('.km');
     assert(h3 && h3 !== h2 && Math.abs(h3.__tl - 0.9) < 1e-6 && Math.abs(h3.__rot - 0.5) < 1e-6, 'Neuaufbau direkt nach Kippen behält Neigung/Drehung (' + (h3 && [h3.__tl, h3.__rot]) + ')');
+    // BT: System gewählt (Gleiten läuft) → Besitzer baut sofort neu → neues Fenster gleitet weiter zum Ziel
+    const q = h3.querySelector('.km-q'); q.value = 'Tama'; q.dispatchEvent(new w.Event('input', { bubbles: true })); await tick(60);
+    q.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); const tv = h3.__tv && h3.__tv.slice();
+    const s5 = T.ovLoad(); s5.kmSel = '30002813'; T.ovSave(s5); T.ovRender(); await tick(30);
+    const h4 = body.querySelector('.km');
+    assert(tv && h4 !== h3 && (h4.__tv || h4.__vb).slice(0, 2).map(x => x.toFixed(1)).join() === tv.slice(0, 2).map(x => x.toFixed(1)).join(), 'Neuaufbau während des Gleitens → gleitet weiter zum gewählten System (' + (h4.__tv || h4.__vb).slice(0, 2) + ' vs ' + (tv && tv.slice(0, 2)) + ')');
     console.log('\nALL KM NACHZIEHEN TESTS PASSED'); process.exit(0);
   }catch(e){ console.error(e); console.log('FAILED'); process.exit(1); }
 })();

@@ -95,7 +95,7 @@ function makeWindow(extra, host){
     $('is-start').onclick = oldIs;
     s1.view = 'handel'; T.ovSave(s1); T.ovRender(); T.ovSatAction('handel', { type: 'kkd', arg: 'umkreis' }); await tick(30);
     T.ovSatAction('handel', { type: 'haulSel', arg: '0' }); await tick(30);   // AB: Einkaufsliste erst nach dem Aufklappen
-    const cps = [...ob.querySelectorAll('.ov-card:not(.ov-opt)')].map(c => (c.querySelector('[data-copy]') || { getAttribute(){ return ''; } }).getAttribute('data-copy'));
+    const cps = [...ob.querySelectorAll('.hl-w')].map(c => (c.querySelector('[data-copy]') || { getAttribute(){ return ''; } }).getAttribute('data-copy'));
     assert(cps.join('|') === '120000|12', 'PQ1: Menge je Artikel kopierbar, Name ohne Kopier-Knopf: ' + cps.join('|'));
     const mb = [...ob.querySelectorAll('[data-copy]')].find(e => /Tritanium 120000/.test(e.getAttribute('data-copy')));
     assert(mb && mb.getAttribute('data-copy') === 'Tritanium 120000\nDamage Control II 12', 'Einkaufsliste für Multibuy (Name Menge je Zeile)');

@@ -71,7 +71,7 @@ function makeWindow(extra, host){
     assert(/überboten →/.test(body) && /99\.530/.test(body), 'Kauforder überboten, neuer Preis 99.530 (ein Schritt über 99.520)');
     assert(/änderbar in [234]:\d\d/.test(body), 'Sperrzeit (5 Minuten nach letzter Änderung) als Countdown');
     // R4: eigene Kauforder steht zu anderem Preis als geplant -> Gewinn wird mit dem echten Preis neu gerechnet; AV1 (22.10.): Verkauf zum Marktpreis (118.000 → 117.990) statt Plan 120.200
-    assert(/Gewinn netto \+7\.888,57 ISK\/Stk · gesamt \+947 Tsd\. ISK/.test(body), 'Gewinn netto pro Stück und gesamt: ' + (body.match(/Gewinn[^·]*·[^·]*/) || [''])[0]);
+    assert(/Stk \+7\.888,57 ISKgesamt \+947 Tsd\. ISK/.test(body), 'Gewinn netto pro Stück und gesamt: ' + (body.match(/Gewinn[^·]*·[^·]*/) || [''])[0]);
     assert(/1 überboten/.test(body) && /geplant netto \+947 Tsd\. ISK/.test(body), 'Zusammenfassung oben (Summe = gesamt der Karte, AV3)');
     const card = d.querySelector('#ov-body .ov-card');
     assert(card.classList.contains('alarm'), 'Karte leuchtet bei Alarm');

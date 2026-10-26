@@ -34,7 +34,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     assert(T.trEvaluate(t, live, fees).abortNow === 0 && /Bei Abbruch jetzt:/.test(T.trAbortHtml(T.trEvaluate(t, live, fees))), 'AV4: immer – auch laufender Trade ohne Käufe (Nutzer 22.10.)');
     assert(T.trEvaluate(Object.assign({}, t, { status: 'done' }), live, fees).abortNow === undefined, 'AV4: erledigter Trade ohne Zeile');
     // nur aufgeklappt: Hauptfenster tr-abort, Overlay ohne ov-keep (CSS tr-fold blendet aus)
-    assert(/card\.appendChild\(el\("div", "tr-abort item-sub", ab\)\)/.test(html) && /card\.appendChild\(el\("div", "ov-l txt", ab2\)\)/.test(html) && /\.tr-card\.tr-fold>:not\(\.tr-head\):not\(\.tr-upd\):not\(\.tr-res\)/.test(html), 'AV4: nur aufgeklappt (Hauptfenster + Overlay)');
+    assert(/card\.appendChild\(el\("div", "tr-abort item-sub", ab\)\)/.test(html) && /<span>Abbruch<\/span> ' \+ ab\(ev\.abortNow\)/.test(html) && /\.tr-card\.tr-fold>:not\(\.tr-head\):not\(\.tr-upd\):not\(\.tr-res\)/.test(html), 'AV4: nur aufgeklappt (Hauptfenster + Overlay)');
     assert(/"Bei Abbruch jetzt, sofort verkauft:": "If cancelled now, sold right away:"/.test(html) && /"Zum Marktpreis": "At market price"/.test(html) && /current market price/.test(html), 'Texte auch englisch');
     console.log('ALL TESTS PASSED');
   }catch(err){ console.error(err.message); process.exit(1); }

@@ -50,7 +50,7 @@ def allowed(rule, line, m):
     if rule in ('lange Base64-Kette', 'lange Hex-Kette'):
         pre = line[max(0, m.start() - 40):m.start()]
         if 'base64,' in pre or 'data:' in pre or 'sha256' in pre.lower() or 'sha512-' in pre or 'integrity=' in pre or 'virustotal.com/gui/file/' in pre or pre.endswith('@'): return True   # … auch Actions@Commit-SHA (V6)   # eingebettete Bilder/Prüfsummen
-        if rule == 'lange Hex-Kette' and len(hit) == 64 and re.match(r'RELEASE-NOTES', SRC_NAME[0].split('/')[-1]): return True   # SHA256 in Release-Notes
+        if rule == 'lange Hex-Kette' and len(hit) == 64 and re.match(r'RELEASE-NOTES|notes-mit-discord', SRC_NAME[0].split('/')[-1]): return True   # SHA256 in Release-Notes (auch Discord-Fassung)
         if rule == 'lange Base64-Kette' and not re.search(r'[0-9]', hit) or re.fullmatch(r'[a-z/]+', hit): return True   # Pfade/Wörter
     if rule == 'alte Rücksprung-Adresse' and re.search(r'(EVE-Omni\.html|main\.js)$', SRC_NAME[0]): return True   # Standard für „eigene Rücksprung-Adresse“ (V2, beim Nutzer nötig)
     return False

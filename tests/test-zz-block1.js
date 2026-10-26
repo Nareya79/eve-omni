@@ -16,7 +16,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     assert(/:is\(\.trk-run,\.lf-run\)\.st-way:not\(\.trk-ob\)\{--st:var\(--st-done,var\(--profit\)\)\}/.test(css), 'Lauf unterwegs ohne Warnung = grün (Watchlist + Läufe-Overlay)');
     assert(/\.ov-card\.ov-card\.trk-ob:is\(\.trk-run,\.lf-run\)\{--st:#e8c547\}/.test(css), 'Lauf-Warnung = echtes Gelb (Watchlist + Läufe-Overlay)');
     assert(/if \(x\.kind === "Lauf" && slow && !x\.bad\) x\.warn = true;/.test(html) && /tkStCls\(x\.ph, x\.bad \|\| \(x\.kind !== "Lauf" && slow\)\)/.test(html), 'Watchlist: Lauf zu langsam = gelb statt rot, Trades unverändert');
-    assert(/"ov-card lf-run" \+ tkStCls\(g\.phase, rBad\) \+ \(!rBad && \(vcRed\(run\) \|\| !!\(tmR && tmR\.slow\)\) \? " trk-ob" : ""\)/.test(html), 'Läufe-Overlay: rot nur hrBad, Warnung gelb');
+    assert(/"ov-card tc-card lf-run" \+ tkStCls\(g\.phase, rBad\) \+ \(!rBad && \(vcRed\(run\) \|\| !!\(tmR && tmR\.slow\)\) \? " trk-ob" : ""\)/.test(html), 'Läufe-Overlay: rot nur hrBad, Warnung gelb');
     assert(/function hrBad\(run, g\)\{\s*return \(g\.forecast !== null && g\.forecast < 0\) \|\|/.test(html), 'rot bleibt: Minus insgesamt oder vergessene Ware (hrBad unverändert)');
     // ZZ5: jbMqSync setzt Verzögerung 0 und startTime 0 (Animation an der Zeitleiste)
     const box = d.createElement('div'); box.innerHTML = '<span class="jb-mq jb-on"><span style="animation-delay:-7.3s">Titel</span></span>'; d.body.appendChild(box);

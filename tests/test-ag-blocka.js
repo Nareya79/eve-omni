@@ -22,7 +22,7 @@ try{
   assert(/html: mkMark\(box\.innerHTML\)/.test(html) && /mkRes\[tid\] = \{ ok: ok, msg: msg, t: Date\.now\(\) \}; if \(typeof ovPublishSatellites === "function"\)\{ ovPublishSatellites\(\); setTimeout\(ovPublishSatellites, 4100\); \}/.test(html), 'Ergebnis geht an die Overlays (und nach 4 s zurück)');
   assert(/\(fg\.clients\.length === 1 \? fg\.clients\[0\] : null\)/.test(main), 'main.js: kurz nach dem Start zählt der einzige laufende Client');
   // AG1
-  assert(/escapeHtml\(trStand\(t\)\) \+ \(oxh \? '<span class="ov-ox"> · ' \+ oxh \+ "<\/span>" : ""\)/.test(html) && /\.ov-card\.tr-fold \.ov-ox\{display:none\}/.test(html) && !/if \(oxh\) card\.appendChild\(ovLine\("txt"\)\)\.innerHTML = oxh;/.test(html), 'AG1: „läuft ab“ in der Ortszeile, zugeklappt ausgeblendet');
+  assert(/trStand\(t\) \+ \(oxh \? " · " \+ oxh\.replace\(\/<\[\^>\]\*>\/g, ""\) : ""\)/.test(html) && /var oxs = oxTrade\(t\.id, true\); if \(oxs\) card\.appendChild\(el\("div", "ov-l txt ov-keep", oxs\)\);/.test(html), 'AG1/CB: „läuft ab“ im ⓘ-Tooltip, unter 24 Std. sichtbar als Zeile');
   // AG8
   const j = html.indexOf('function ovPfB(n)'), pf = html.slice(j, html.indexOf('\n', j));
   const ovPfB = new Function('ovSigned', pf + ';return ovPfB;')(n => (n >= 0 ? '+' : '') + n);

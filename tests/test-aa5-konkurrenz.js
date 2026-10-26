@@ -45,7 +45,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     T.trLiveSet('t1', { types: { buys: book.buys.concat([o(true, 100, 2), o(true, 100, 3), o(true, 100, 4)]), sells: book.sells }, own: {}, time: now });
     assert(T.compTrade('t1').level === 'heiß', 'Trade: Konkurrenz aus dem geladenen Buch');
     T.trRender();
-    const pill = x => x && x.querySelector('.comp-p');
+    const pill = x => x && x.querySelector('.comp-p, .trk-ic[title^="Konkurrenz"]');   // CA/CB: im Overlay als ⚔-Symbol
     assert(/heiß/.test(pill(d.querySelector('#trades-list .tr-card')).textContent), 'Meine Trades: ⚔ heiß');
     const view = id => { const b = d.createElement('div'); T.ovRenderViewInto(id, b); return b; };
     assert(pill(view('trades').querySelector('.ov-card')) && pill(view('track').querySelector('.trk-trade')), 'Trades- und Watchlist-Overlay: Symbol');

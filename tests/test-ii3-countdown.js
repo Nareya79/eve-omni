@@ -28,6 +28,9 @@ const { chromium } = require('playwright');
   ok(r.narrow && r.anim === 'ov-marq', 'schmales Fenster: Laufschrift');
   ok(!r.wide, 'breites Fenster: steht still');
   ok(/Markt .*→/.test(r.tip), 'Tooltip mit EVE-Stand → neu ab bleibt: ' + r.tip);
+  // EN (25.10.2026): Datenart + „neu“ übersetzt (vorher „Ort 2:58“ im Englischen)
+  const en = await p.evaluate(() => { document.documentElement.lang = 'en'; const n = Date.now(); const t = window.__test.esiCdTxt([['Ort', n + 178e3], ['Markt', n - 1]], n); document.documentElement.lang = 'de'; return t; });
+  ok(/^Location 2:5\d · Market new$/.test(en), 'EN-Fußzeile übersetzt: ' + en);
   await b.close();
   console.log(fails ? '\nII3 TESTS FAILED' : '\nALL II3 TESTS PASSED'); process.exit(fails ? 1 : 0);
 })();

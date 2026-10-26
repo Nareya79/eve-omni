@@ -38,7 +38,7 @@ function assert(c, m){ if(!c) throw new Error('ASSERTION FAILED: ' + m); console
         return { none, foot: f.age, tip: f.tip, exp, nxDone: T.tkNextHtml({ state: 'done', charId: '91000001' }) };
       });
       await p.waitForTimeout(400); r.txt = await p.evaluate(() => document.getElementById('aq-box').textContent); r.nx = await p.evaluate(() => document.getElementById('aq-nx').textContent.trim());
-      assert(r.nx === (lang === 'de' ? 'neu: ' : 'new: ') + r.exp && r.nxDone === '', lang + ': hinter der Glocke frühestes „neu“ (Orders 15 Min.) in Ortszeit, erledigte ohne (' + r.nx + ')');
+      assert(r.nx === '↻ ' + r.exp && r.nxDone === '', lang + ': hinter der Glocke frühestes „neu“ (Orders 15 Min.) in Ortszeit, erledigte ohne (' + r.nx + ')');
       if (lang === 'de'){
         assert(/^wartet auf EVE \(Buchungen bis ~60 Min\.\) EVE-Daten: Orders \d\d:\d\d, neu ab \d\d:\d\d · Buchungen \d\d:\d\d, neu ab \d\d:\d\d$/.test(r.txt), 'de: Zeiten je Charakter als Uhrzeit + „wartet auf EVE“ (' + r.txt + ')');
         assert(r.none === '', 'ohne EVE-Daten des Charakters keine Zeile');
@@ -47,7 +47,7 @@ function assert(c, m){ if(!c) throw new Error('ASSERTION FAILED: ' + m); console
       assert(!errs.length, lang + ': keine Seitenfehler ' + errs.join(' | '));
       await p.close();
     }
-    assert(/var eh = t\.status !== "done" \? trEsiHtml\(t\.charId, trEsiWait\(t, ev\)\) : ""; if \(eh\) card\.appendChild\(ovLine\("txt"\)\)\.innerHTML = eh;/.test(html) && /if \(eh\) card\.appendChild\(el\("div", "tr-esi-l", eh\)\);/.test(html) && /x\.state === "active" && trEsiHtml\(x\.charId\)/.test(html) && /var rh = run\.status !== "done" \? trEsiHtml\(run\.charId\)/.test(html), 'Zeile an Overlay-Karte, Meine Trades, Watchlist/Läufe und Overlay-Laufkarte');
+    assert(/if \(trEsiWait\(t, ev\)\) card\.appendChild\(el\("div", "ov-l txt", '<span class="pill warn" title="' \+ TR_ESI_TIP/.test(html) && /if \(eh\) card\.appendChild\(el\("div", "tr-esi-l", eh\)\);/.test(html) && /x\.state === "active" && trEsiHtml\(x\.charId\)/.test(html) && !/var rh = run\.status !== "done" \? trEsiHtml\(run\.charId\)/.test(html), 'CB: Overlay-Karte nur noch „wartet auf EVE“ (Zeiten im Fuß), Zeile an Meine Trades, Watchlist/Läufe; Overlay-Laufkarte ohne (CC)');
     console.log('\nALL AQ TESTS PASSED'); process.exit(0);
   }catch(e){ console.error(e.message); process.exit(1); }
   finally{ await br.close(); }

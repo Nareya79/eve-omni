@@ -33,7 +33,7 @@ assert(/const SNAP = 8;/.test(main) && /const BREAK = 25;/.test(main) && /const 
 // LL2: Pin im Einzelfenster schaltet nur dieses Fenster
 assert(/\$\("ov-pin"\)\.onclick = function\(\)\{ H\.getSettings\(\)\.then\(function\(s\)\{ var w = \{\}; w\[view\] = \{ top: !satTopOn\(s\) \}/.test(html), 'LL2: Pin setzt windows[view].top');
 // LL3: Strg+Mausrad
-assert(/w\[view\] = \{ zoom: satZoom \}/.test(html) && /type: "mapFont", arg: up \? "1" : "-1"/.test(html), 'LL3: Fenster-Zoom + Kartenschrift');
+assert(/w\[view\] = \{ zoom: satZoom \}/.test(html) && /ev\.target\.closest\("\.km canvas"\)\) return;/.test(html), 'LL3: Fenster-Zoom; auf der OmniMap regelt die Karte Strg+Mausrad selbst (Größe, 25.10.)');
 assert(/if \(ev\.ctrlKey \|\| ev\.target !== cv\) return;/.test(html), 'LL3: Karte zoomt bei Strg nicht mit');
 // LL7: Demo-Leiste zieht, Kopfzeile darunter
 assert(/\.demo-bar\{[^}]*-webkit-app-region:drag/.test(html) && /html\.demo header\.top\{top:26px\}/.test(html), 'LL7: Demo-Leiste ziehbar');

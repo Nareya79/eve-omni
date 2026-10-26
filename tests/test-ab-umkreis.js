@@ -19,17 +19,17 @@ const dest = (i, profit) => ({ stationId: i, stationName: 'Station ' + i + ' - M
       localStorage.setItem('eve-zentrale-handel-mode-v1', 'haul'); T.ovSatAction('handel', { type: 'kkd', arg: 'umkreis' }); }, list);
     await p.waitForTimeout(200);
     const st = () => p.evaluate(() => { const b = document.getElementById('ov-body');
-      return { rows: b.querySelectorAll('[data-ova="haulSel"]').length, open: b.querySelectorAll('[data-ova="haulSel"][aria-expanded="true"]').length, cards: b.querySelectorAll('.ov-card:not(.ov-opt)').length,
-        first: (b.querySelector('[data-ova="haulSel"]') || {}).textContent || '', more: (b.querySelector('[data-ova="haulMore"]') || {}).textContent || '', text: b.textContent }; });
+      return { rows: b.querySelectorAll('.hl-tog[data-ova="haulSel"]').length, open: b.querySelectorAll('.hl-tog[data-ova="haulSel"][aria-expanded="true"]').length, cards: b.querySelectorAll('.hl-w').length,
+        first: (b.querySelector('.hl-opt') || {}).textContent || '', more: (b.querySelector('[data-ova="haulMore"]') || {}).textContent || '', text: b.textContent }; });
     let s = await st();
     assert(s.rows === 5 && s.open === 0 && s.cards === 0, 'zugeklappt: die besten 5 Ziele als Zeilen, keine Einkaufsliste (' + JSON.stringify([s.rows, s.open, s.cards]) + ')');
-    assert(/Ziel 1: \+7(,0)? Mio\. ISK Gewinn · Einsatz 63(,0)? Mio\. ISK · Sprünge: 3/.test(s.first) && /empfohlen/.test(s.first), 'Zeile mit Gewinn, Einsatz, Sprüngen, empfohlen: ' + s.first);
+    assert(/^▸1.*→.*⇢ 3 Spr\..*empfohlen.*\+7(,0)? Mio\..*Einsatz 63(,0)? Mio\./.test(s.first), 'K1 (25.10.): Zeile wie Watchlist – Nr., Strecke, Sprünge, empfohlen, Kasten Gewinn + Einsatz: ' + s.first);
     assert(/mehr anzeigen \(2\)/.test(s.more), '„mehr anzeigen (2)“');
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulMore' })); s = await st();
     assert(s.rows === 7 && /weniger anzeigen/.test(s.more), 'mehr anzeigen → alle 7');
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulSel', arg: '0' })); s = await st();
-    assert(s.open === 1 && s.cards === 2 && /Einsatz 63(,0)? Mio\. ISK/.test(s.text) && /Einkauf ⌀/.test(s.text) && /Verkauf ⌀/.test(s.text) && /Multibuy|Einkaufsliste kopieren/.test(s.text), 'Klick: Hub-Ansicht mit Einsatz, ⌀ Preisen und Multibuy');
-    assert(await p.evaluate(() => !!document.querySelector('#ov-body [data-ova="haulEve"][data-arg="0"]') && !!document.querySelector('#ov-body [data-ova="hrAdd"][data-arg="0"]')), 'Knöpfe Route/→ EVE/Lauf merken für dieses Ziel');
+    assert(s.open === 1 && s.cards === 2 && /Einsatz 63(,0)? Mio\./.test(s.text) && /Ø Kauf/.test(s.text) && /Ø Verk\./.test(s.text) && /① Kaufen.*② Transport.*③ Verkaufen.*Ergebnis/.test(s.text) && /Multibuy|Einkaufsliste kopieren/.test(s.text), 'Klick (G1): Kacheln ① Kaufen ② Transport ③ Verkaufen Ergebnis, Einsatz, Ø Preise und Multibuy');
+    assert(await p.evaluate(() => !!document.querySelector('#ov-body [data-ova="runDest"][data-arg="res:0|b"]') && !!document.querySelector('#ov-body [data-ova="runRt"][data-arg="res:0|a"]') && !!document.querySelector('#ov-body [data-ova="hrAdd"][data-arg="0"]')), 'Knöpfe Route/⌖ Ziel in EVE an beiden Stationen + Lauf merken');
     await p.screenshot({ path: '/tmp/ab-de.png' });
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulSel', arg: '0' })); s = await st();
     assert(s.open === 0 && s.cards === 0, 'zweiter Klick klappt zu');
@@ -38,8 +38,8 @@ const dest = (i, profit) => ({ stationId: i, stationName: 'Station ' + i + ' - M
     await p.evaluate(L => { const T = window.__test; T.setOvData({ haul: { t: Date.now(), origin: 'Jita IV', originLabel: 'Jita IV - Moon 4 - Caldari Navy Assembly Plant', originSys: 'Jita', list: L } });
       T.ovSetMode('compact'); const s = T.ovLoad(); s.view = 'handel'; T.ovSave(s); T.ovSatAction('handel', { type: 'kkd', arg: 'umkreis' }); T.ovSatAction('handel', { type: 'haulSel', arg: '0' }); }, list);
     await p.waitForTimeout(300); s = await st();
-    assert(/Destination 1: \+7(\.0)? M(io\.)? ISK profit/i.test(s.first) && /Investment/.test(s.first) && /recommended/.test(s.first) && /show more \(2\)|show less/.test(s.more), 'EN: Zeile übersetzt: ' + s.first + ' | ' + s.more);
-    assert(/Investment/.test(s.text) && !/Einkauf ⌀|Ziel 1|Einsatz|erkannt/.test(s.text), 'EN: aufgeklappte Ansicht ohne deutsche Reste');
+    assert(/\+7(\.0)? M(io\.)?/i.test(s.first) && /Investment/.test(s.first) && /⇢ 3 j\./.test(s.first) && /recommended/.test(s.first) && /show more \(2\)|show less/.test(s.more), 'EN: Zeile übersetzt: ' + s.first + ' | ' + s.more);
+    assert(/Investment/.test(s.text) && !/Einkauf ⌀|Ziel 1|Einsatz|erkannt|Kaufen|Verkaufen|Ø Kauf|Ø Verk|Sprünge|Gewinn|Menge/.test(s.text), 'EN: aufgeklappte Ansicht ohne deutsche Reste');
     await p.screenshot({ path: '/tmp/ab-en.png' });
     assert(!errs.length, 'keine Seitenfehler ' + errs.join(' | '));
     console.log('ALL AB TESTS PASSED');

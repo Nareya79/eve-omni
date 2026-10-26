@@ -1351,7 +1351,11 @@ html.in-host.host-transparent body:not(.ov-mode) #host-grip{display:block}
 .km-list{margin:0;padding:0 0 0 22px;font-size:11.5px}.km-list li{padding:1px 0;cursor:pointer;display:flex;gap:6px}.km-list li span{font-family:var(--mono)}.km-list li em{margin-left:auto;font-style:normal;color:var(--text-muted);font-size:10.5px}
 .km-list li::marker{color:var(--text-muted)}.km-list li:hover{color:#fff}
 /* BI K2: Bedienung in der Karte (Stil der App: Farben aus dem Farbschema, eckig wie EVE) */
-.km-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--sans);font-size:12px;color:var(--text)}
+.km-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--sans);font-size:12px;color:var(--text)}.km-p{zoom:var(--km-mk, 1)}.km-view button{white-space:nowrap}
+.km .km-find{width:min(260px, calc(100% / var(--km-mk, 1) - 16px))}.km .km-color{max-width:calc(100% / var(--km-mk, 1) - 16px)}
+.km.km-nw .km-view{top:44px}.km.km-nw .km-find{width:calc(100% / var(--km-mk, 1) - 16px)}.km.km-nw .km-bar{top:80px}.km.km-nw :is(.km-rt, .km-act, .km-om){left:8px;right:8px;width:auto;top:80px;max-height:calc(100% / var(--km-mk, 1) - 88px);z-index:2}
+.km.km-nb .km-me{bottom:auto;top:80px}
+.km.km-nx .km-view{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% / var(--km-mk, 1) - 16px)}.km.km-nx :is(.km-bar, .km-me){top:114px}.km.km-nx :is(.km-rt, .km-act, .km-om){top:114px;max-height:calc(100% / var(--km-mk, 1) - 122px)}.km .km-color{z-index:1}   /* 25.10.: Regler „Größe“ / Strg+Mausrad skaliert auch die Menüs */
 .km-p{position:absolute;pointer-events:auto;background:color-mix(in srgb, var(--bg) 86%, transparent);border:1px solid color-mix(in srgb, var(--text) 16%, transparent);box-shadow:0 4px 14px rgba(0,0,0,.45);backdrop-filter:blur(6px)}
 .km-find{left:8px;top:8px;width:min(260px, calc(100% - 16px));z-index:3}   /* K8a: Vorschläge über Leiste und Panels */
 .km-q{width:100%;box-sizing:border-box;border:0;background:transparent;color:inherit;font:inherit;padding:6px 9px;outline:none}
@@ -1366,6 +1370,7 @@ html.in-host.host-transparent body:not(.ov-mode) #host-grip{display:block}
 .km-view button+button{border-left:1px solid color-mix(in srgb, var(--text) 12%, transparent)}
 .km-view button[aria-pressed="true"]{color:var(--text);box-shadow:inset 0 -2px 0 var(--accent);background:color-mix(in srgb, var(--accent) 12%, transparent)}
 .km-view button:hover,.km-color select:hover{color:var(--text)}
+.km-sz{display:flex;align-items:center;gap:5px;padding:0 9px;color:var(--text-muted);border-left:1px solid color-mix(in srgb, var(--text) 12%, transparent);cursor:default;font-size:inherit}.km-sz input{width:64px;accent-color:var(--accent);cursor:pointer}
 .km-color{left:8px;bottom:8px;padding:0 0 0 9px}.km-color label{display:flex;align-items:center;gap:4px;color:var(--text-muted)}
 .km-color select{color:var(--text);padding:5px 6px}.km-color option{background:var(--bg);color:var(--text)}
 .km-tip{position:absolute;z-index:3;pointer-events:none;min-width:200px;max-width:300px;padding:5px 10px 8px;background:rgba(14,14,14,.92);border:1px solid rgba(255,255,255,.15);border-radius:2px;box-shadow:0 8px 24px -6px rgba(0,0,0,.7);backdrop-filter:blur(12px) saturate(.25);font-family:var(--sans);font-size:12px;color:rgba(255,255,255,.9)}
@@ -1490,8 +1495,8 @@ html.ov-eve.sat-stack.ov-active[data-ovmark="full"] #ov-root .ov-tab.sat-title::
 :is(#panel-haul, #panel-intensiv)[data-hlv="runs"] > #hr-box > summary{display:none}
 .hl-cards{max-width:68rem}
 /* Overlay-Knöpfe auf der großen Seite (im Overlay hängen ihre Regeln an #ov-root) */
-:is(.hl-cards, #co-page) :is(.ov-rbtn button, .ovn-go, .ov-act > button){font:inherit;font-size:.76rem;padding:2px 9px;cursor:pointer;background:var(--tint);color:var(--text);border:1px solid var(--border-strong);border-radius:2px}
-:is(.hl-cards, #co-page) :is(.ov-rbtn button, .ovn-go, .ov-act > button):hover:not(:disabled){border-color:var(--accent-line);color:var(--accent-text);background:var(--accent-soft)}
+:is(.hl-cards, #co-page, .tc-main) :is(.ov-rbtn button, .ovn-go, .ov-act > button){font:inherit;font-size:.76rem;padding:2px 9px;cursor:pointer;background:var(--tint);color:var(--text);border:1px solid var(--border-strong);border-radius:2px}
+:is(.hl-cards, #co-page, .tc-main) :is(.ov-rbtn button, .ovn-go, .ov-act > button):hover:not(:disabled){border-color:var(--accent-line);color:var(--accent-text);background:var(--accent-soft)}
 .hl-cards > .ov-form.ovm, .hl-cards > .ov-act, .hl-cards > .ov-tchar{display:none}   /* Suche selbst steht unter „Läufe suchen“ */
 /* Trading: Trades scannen = Einstellungen, Ergebnisse = Vorschläge */
 #tsc-scan-view[data-part="search"] > :is(#tsc-summary, #tsc-result-wrap, #tsc-orders-wrap, #tsc-res-empty){display:none !important}
@@ -1505,6 +1510,87 @@ html:not([data-scheme="light"]) body:not(.ov-mode){--profit:#3ee07c;--loss:#ff52
 html.ov-eve:not([data-scheme="light"]), html.ov-eve:not([data-scheme="light"]) body{--profit:#00ff00;--profit-bg:rgba(0,255,0,.12)}
 html.ov-eve:not([data-scheme="light"]) :is(.pos, .ok, .ov-pf, .profit, .pill.profit, .pill.gk-ok, .gk-ok, .sl-profit, .stat-value.pos, b.pos):not(button):not(.ov-bar-mini){text-shadow:0 0 3px rgba(0,255,0,.28)}   /* BL3 (24.10.): Schein halbiert */
 html.ov-eve:not([data-scheme="light"]) .ov-card:not(.dn-neg) > .ov-bar-mini.dn{background:#00ff00;box-shadow:0 0 3px rgba(0,255,0,.3)}
+/* CA (25.10.): Watchlist-Zeile – Tönung und Balken in der Designfarbe, Name bekommt den Platz, rechts Kasten (ISK oben, Stückzahl darunter) mit abgeschrägter Kante;
+   :is(#ov-root,.trk-list) schlägt html.ov-eve #ov-root .ov-card (background) */
+html :is(#ov-root,.trk-list,.hl-cards) .ov-card.trk-sm:has(.trk-rb){display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;align-items:center;padding:var(--py,2px) var(--px,6px);background-image:linear-gradient(90deg, color-mix(in srgb, var(--accent) 20%, transparent), color-mix(in srgb, var(--accent) 5%, transparent))}
+.trk-list .ov-card.trk-sm{--py:6px;--px:10px}
+html :is(#ov-root,.trk-list) .ov-card.trk-sm.trk-ob:has(.trk-rb){background-image:linear-gradient(90deg, color-mix(in srgb, var(--st) 24%, transparent), color-mix(in srgb, var(--st) 5%, transparent))}
+.ov-card.trk-sm:has(.trk-rb) > .ov-h{display:contents}
+.ov-card.trk-sm:has(.trk-rb) > :not(.ov-h){grid-column:1 / -1}
+.ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini{grid-column:1;grid-row:2}
+.ov-card.trk-sm:has(.trk-rb) .ov-name{grid-column:1;display:flex;align-items:center;gap:5px}
+.ov-card.trk-sm:has(.trk-rb) .ov-name > *{flex:none}
+.ov-card.trk-sm:has(.trk-rb) .ov-name > .trk-nm{flex:0 1 auto;min-width:4em;max-width:none}
+.ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini:not(.dn){height:5px;margin-top:3px;background:color-mix(in srgb, var(--text) 8%, transparent)}
+.ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini:not(.dn) > span{background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, #000), color-mix(in srgb, var(--accent) 80%, #fff));box-shadow:0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)}
+.hl-opt > .ov-h{cursor:pointer}.hl-opt .hl-tog{all:unset;cursor:pointer;color:var(--text-muted);padding:0 2px}.hl-opt .hl-tog:focus-visible{outline:1px solid var(--accent)}.hl-opt .trk-q{white-space:nowrap}.ov-card.hl-opt .ov-name{flex-wrap:wrap;row-gap:1px}.ov-card.hl-opt .ov-name > .trk-nm{min-width:0}
+.ov-card.trk-sm.hl-opt .ov-name > .hl-nm{flex:1 1 7em;min-width:5em;container-type:inline-size;text-overflow:clip;font-weight:700}
+.hl-nm > span{display:inline-block;animation:hl-mq 10s ease-in-out infinite alternate}   /* passt der Name, ist die Strecke 0 → steht still */
+@keyframes hl-mq{0%,15%{transform:none}85%,100%{transform:translateX(min(0px, calc(100cqw - 100%)))}}
+@media (prefers-reduced-motion: reduce){ .hl-nm > span{animation:none} .ov-card.trk-sm.hl-opt .ov-name > .hl-nm{text-overflow:ellipsis} }   /* 25.10. K1 */
+.hl-cards .ov-card.trk-sm{--py:5px;--px:9px}
+.ov-card.hl-opt{container-type:inline-size}.hl-load{cursor:default}.hl-load .tc-st{min-width:0}   /* 25.10. G1 */
+.tc-tiles.tc-4{grid-template-columns:1.15fr 1fr 1.1fr .85fr}
+@container (max-width: 640px){ .tc-tiles.tc-4{grid-template-columns:1fr 1fr} .tc-tiles.tc-4 > .tc-t:last-child{grid-column:auto;display:block} }
+@container (max-width: 300px){ .tc-tiles.tc-4{grid-template-columns:1fr} }
+.hl-load ~ .tc-foot{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:2px 0 3px}.hl-load ~ .tc-foot .tc-upd{margin-left:auto;color:var(--text-muted);font-size:.86em}
+.hl-wl{margin-top:4px;padding-top:4px;border-top:1px solid color-mix(in srgb, var(--accent) 18%, transparent);cursor:default}
+.hl-wg{display:grid;grid-template-columns:auto minmax(0,max-content) auto auto auto auto;justify-content:start;gap:2px 16px;align-items:center;margin-top:4px}.hl-w{display:contents}
+.hl-wh{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.hl-wn{display:flex;align-items:center;gap:4px;min-width:0}.hl-wn > b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.hl-wn .trk-i{width:18px;height:18px;flex:none}
+@container (max-width: 470px){ .hl-wg{grid-template-columns:auto minmax(0,1fr) auto auto;column-gap:9px;justify-content:stretch} .hl-wx{display:none} }
+.trk-ic{line-height:1;cursor:help}.tic-ok{color:var(--profit)}.tic-warn{color:var(--warn)}.tic-bad{color:var(--loss)}.tic-unk{color:var(--text-muted)}
+.trk-r:has(.trk-rb){grid-column:2;grid-row:1 / span 2;align-self:stretch;display:flex;margin:calc(1px - var(--py,2px)) calc(1px - var(--px,6px)) calc(1px - var(--py,2px)) 0;padding-left:2px;background:var(--tv-e);clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+.trk-rb{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:1px 8px 1px 11px;line-height:1.12;background:var(--tv-b);clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px)}
+.trk-rb > b{font-size:1.08em;color:var(--text-strong)}.trk-rb .ov-u{font-size:.78em;font-weight:400}.trk-q{font-size:.86em;color:var(--text-muted)}
+.trk-r.tv-l{--tv-e:var(--loss);--tv-b:linear-gradient(90deg, color-mix(in srgb, var(--loss) 22%, var(--surface-2, var(--bg))), color-mix(in srgb, var(--loss) 9%, var(--surface-2, var(--bg))))}.trk-r.tv-l b{color:var(--loss)}
+.trk-r.tv-w{--tv-e:var(--profit);--tv-b:linear-gradient(90deg, color-mix(in srgb, var(--profit) 18%, var(--surface-2, var(--bg))), color-mix(in srgb, var(--profit) 6%, var(--surface-2, var(--bg))))}.trk-r.tv-w b{color:var(--profit)}
+.trk-r.tv-z{--tv-e:color-mix(in srgb, var(--accent) 60%, #6c7486);--tv-b:color-mix(in srgb, var(--accent) 8%, var(--surface-2, var(--bg)))}
+/* CB (25.10.): aufgeklappte Trade-Karte – drei Kacheln (Kaufen · Verkaufen · Ergebnis), Kopier-Kästchen; abgeschrägte Kanten als Fläche (::before innen), damit die Schräge eine Kante hat */
+html :is(#ov-root,.trk-list) .ov-card.tc-card{--py:4px;--px:6px;background-image:linear-gradient(90deg, color-mix(in srgb, var(--accent) 16%, transparent), color-mix(in srgb, var(--accent) 4%, transparent))}
+.tc-card > .ov-h > .trk-r{margin-left:4px}.tc-card > .ov-bar-mini{height:5px;margin:3px 0 0;background:color-mix(in srgb, var(--text) 8%, transparent)}
+.tc-card > .ov-bar-mini > span{background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, #000), color-mix(in srgb, var(--accent) 80%, #fff));box-shadow:0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)}
+.tc-inf{color:var(--text-muted)}
+.tc-tiles{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:5px;margin:6px 0 3px}
+.tc-t{--tc-e:color-mix(in srgb, var(--accent) 40%, transparent);--tc-f:color-mix(in srgb, var(--accent) 6%, var(--surface-2, var(--bg)));position:relative;min-width:0;padding:4px 7px 5px 10px;background:var(--tc-e);clip-path:polygon(11px 0,100% 0,100% 100%,0 100%,0 11px)}
+.tc-t::before{content:"";position:absolute;inset:1px;background:var(--tc-f);clip-path:polygon(10.6px 0,100% 0,100% 100%,0 100%,0 10.6px)}
+.tc-t > *{position:relative}
+.tc-t.tc-hot{--tc-e:var(--warn);--tc-f:color-mix(in srgb, var(--warn) 11%, var(--surface-2, var(--bg)))}
+.tc-t.tc-off{opacity:.5}
+.tc-h{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:1px}
+.tc-t .ov-l{gap:3px 5px;line-height:1.5}
+.tc-tiles .tsc-cp{position:relative;gap:2px;padding:1px 1px 1px 8px;background:color-mix(in srgb, var(--accent) 60%, transparent);clip-path:polygon(7px 0,100% 0,100% 100%,0 100%,0 7px)}
+.tc-tiles .tsc-cp::before{content:"";position:absolute;inset:1px;background:var(--bg);clip-path:polygon(6.6px 0,100% 0,100% 100%,0 100%,0 6.6px)}
+.tc-tiles .tsc-cp > *{position:relative}.tc-tiles .tsc-cp-v{font-weight:700;color:var(--text-strong)}.tc-tiles :not(.tc-st) > .tsc-cp:has(> .tsc-cp-b[data-copy]) > .tsc-cp-v{cursor:copy}
+.tc-tiles .tsc-cp > .tsc-cp-b{background:none;border-color:transparent}
+.tc-tiles .tsc-cp.cp-hot{background:color-mix(in srgb, var(--warn) 70%, #000);padding:3px 4px 3px 11px;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+.tc-tiles .tsc-cp.cp-hot::before{inset:1px;background:var(--surface-2, var(--bg));clip-path:polygon(8.6px 0,100% 0,100% 100%,0 100%,0 8.6px)}
+.tc-tiles .tsc-cp.cp-hot::after{content:"";position:absolute;inset:3px;background:linear-gradient(color-mix(in srgb, var(--warn) 95%, #fff), color-mix(in srgb, var(--warn) 78%, #000));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--warn) 55%, #fff);clip-path:polygon(7.2px 0,100% 0,100% 100%,0 100%,0 7.2px)}
+.tc-tiles .tsc-cp.cp-hot > *{z-index:1}   /* 25.10. (Nutzer): gelber Knopf mit eigenem Rahmen außen herum (Linie, kleiner Abstand, Knopf) */
+.tc-tiles .tsc-cp.cp-hot > *{color:#111}
+/* 25.10. (Nutzer): „nicht über/unter“ unten in der Kachel und dezent – oben steht nur, was gerade zu tun ist */
+.tc-t{display:flex;flex-direction:column}.tc-t > .tc-lim{order:9;margin-top:auto;padding-top:5px;border-top:1px dashed color-mix(in srgb, var(--text) 14%, transparent);font-size:.92em;opacity:.75}
+.tc-t > .tc-lim > span:first-child{color:var(--text-muted)}.tc-tiles .tc-lim > .tsc-cp{background:none;clip-path:none;padding:0}.tc-tiles .tc-lim > .tsc-cp::before{content:none}.tc-tiles .tc-lim .tsc-cp-v{font-weight:500;color:var(--text)}
+.tc-tiles .tc-lim > .tsc-cp:has(> .tsc-cp-b.ok){background:none}.tc-t > .tc-lim:has(.tsc-cp-b.ok){opacity:1}
+.tc-tiles :not(.tc-st) > .tsc-cp:has(> .tsc-cp-b.ok){background:var(--profit)}.tc-tiles :not(.tc-st) > .tsc-cp:has(> .tsc-cp-b.fail){background:var(--loss)}
+.tc-tiles .tsc-cp > .tsc-cp-b.ok{background:var(--profit);border-color:var(--profit);color:#06210b}.tc-tiles .tsc-cp > .tsc-cp-b.fail{color:var(--loss);border-color:var(--loss)}
+.tc-foot{gap:4px 8px;margin-top:2px}.tc-foot .tc-btns{margin-left:auto}
+.mb-w{display:inline-flex;flex-wrap:wrap;align-items:center;gap:3px 8px}.mb-np{display:inline-flex;flex-wrap:wrap;align-items:center;gap:3px 8px;font-size:.92em}.mb-np-i{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+/* 25.10. (Nutzer: „blinkt und leuchtet zu viel“): aufgeklappte Karte ruhig – kein Blinken/Schein, Kacheln neutral, nur die Kachel mit Aufgabe gelb; Zustand zeigt die zugeklappte Zeile */
+html :is(#ov-root, .trk-list, .tc-main) .ov-card.tc-card{animation:none;box-shadow:none;background-image:linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent)}
+.tc-t{--tc-e:color-mix(in srgb, var(--text) 18%, transparent);--tc-f:var(--surface-2, var(--bg))}
+.tc-t.tc-hot{--tc-e:var(--warn);--tc-f:color-mix(in srgb, var(--warn) 8%, var(--surface-2, var(--bg)))}
+.tc-tiles .tsc-cp{background:color-mix(in srgb, var(--text) 30%, transparent)}.tc-tiles .tsc-cp.cp-hot{background:color-mix(in srgb, var(--warn) 50%, #000)}
+.tc-card.tc-done .tc-t.tc-hot{--tc-e:color-mix(in srgb, var(--text) 18%, transparent);--tc-f:var(--surface-2, var(--bg))}
+.tc-steps{display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;margin:5px 0 0}
+.tc-steps > span{text-align:center;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 0;color:var(--text-muted);background:color-mix(in srgb, var(--text) 5%, transparent);clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%)}
+.tc-steps > span.done{color:var(--text);background:color-mix(in srgb, var(--accent) 16%, transparent)}.tc-steps > span.now{color:var(--accent-ink, #111);background:var(--accent)}
+.tc-card .ov-rbtn .tc-eve{border-color:var(--accent);color:var(--accent)}.tc-card .ov-rbtn .tc-eve.ok{border-color:var(--profit);color:var(--profit);background:var(--profit-bg)}.tc-card .ov-rbtn .tc-eve.bad{border-color:var(--loss);color:var(--loss)}
+.tc-t .ov-rbtn{margin-left:0}.tc-tiles .tc-st{flex-wrap:nowrap;min-width:0}.tc-tiles .tc-st > .tsc-cp{background:none;clip-path:none;padding:0;min-width:0;flex:1}.tc-tiles .tc-st > .tsc-cp::before{content:none}.tc-tiles .tc-st .tsc-cp-v{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tc-tiles .tc-st .tsc-cp-b{flex:none}.tc-card > details.hr-det{margin-top:6px}
+.tc-card .ov-name{display:flex;align-items:center;gap:4px}.tc-card .ov-name > *{flex:none}.tc-card .ov-name > .tsc-cp{flex:0 1 auto;min-width:3em;overflow:hidden}.tc-card .ov-name > .tsc-cp > .tsc-cp-v{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-card.tc-card{container-type:inline-size}
+@container (max-width: 470px){ .tc-tiles{grid-template-columns:1fr 1fr} .tc-t:last-child{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;column-gap:10px} .tc-t:last-child > .tc-h{grid-column:1 / -1} }
+@container (max-width: 300px){ .tc-tiles{grid-template-columns:1fr} .tc-t:last-child{grid-template-columns:1fr} }
 .pi-row .pi-img{border-radius:2px}
 #ov-root .st-x{display:none}
 html.sat-stack #ov-root .ov-tab .st-x{display:inline-block;margin-left:0;font-size:.76rem;opacity:0;cursor:pointer;color:inherit}
@@ -9331,7 +9417,37 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – OmniMap: ganzes Universum mit leuchtenden Sternen, kippen und drehen, „2D“-Schema, Färben nach Sicherheit, Truesec, Planeten, Sov u. a., Ebenen (Live-Kills, Alert, Gatecamps, Souveränität, Faction Warfare, Wurmlöcher), Aktivität bis 90 Tage, deine Charaktere, Assets, Mining und Stationen mit Dienst-Filter; Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, Jump Planner, Jump Bridges.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, OmniCom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), OmniCom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen), Equalizer, Lautstärke angleichen, Balken; Spotify, Deezer und Apple Music auch im Overlay.</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
 <p class="note pn-en">Patch notes are written in German. English summaries of every version: <a href="https://github.com/Nareya79/eve-omni/releases" target="_blank" rel="noopener">github.com/Nareya79/eve-omni/releases</a></p>
-<details class="skills-more" open><summary>Beta 5.3.0 · 24.10.2026</summary><ul class="about-list"><li>Neu: OmniMap – die neue Karte ersetzt die alte Regionskarte (Navigation › OmniMap und als Overlay): ganzes Universum mit leuchtenden Sternen, Tor-Linien und Nebel; echte Lage der Sterne oder „2D“ als Schema wie im Spiel; Mausrad zoomt, Ziehen verschiebt, rechte Maustaste dreht und kippt in einem Zug („Kippen“ bringt die Draufsicht zurück); Suche nach System oder Region; Tooltip mit Sicherheit, Region, Stern, Planeten, NPC-Stationen und Truesec; Rechtsklick-Menü (Route, Sprungroute, Ziel/Wegpunkt in EVE, Meiden, Route löschen, zKillboard …); „Färben nach“ Sicherheit, Truesec, Region, Planetentyp, Sterntyp, Asteroidengürtel, Industriekosten oder Sov-Fenster. „In der OmniMap zeigen“ (⌖ und anklickbare Systemnamen) öffnet die Karte direkt am System.</li><li>Neu: OmniMap › Navigation – Punkt zu Punkt (dieselbe Route wie Navigation › Reiseroute, mit Meiden-Liste und Jump Bridges; Start ist automatisch das System deines aktiven Charakters), Sprungreichweite (Schiff + Jump Drive Calibration) und Sprungplaner. Die aktive Route läuft neongrün Richtung Ziel, Gank-Systeme darauf sind rot markiert.</li><li>Neu: OmniMap › Aktivität – Sprünge, Schiffe, Kapseln oder NPC-Kills für 1 Std. bis 90 Tage als Leuchtwolken. EVE Omni zeichnet die stündlichen EVE-Zahlen dafür selbst auf.</li><li>Neu: OmniMap › Ebenen – Live-Kills & Kämpfe (rot pulsierend, Kampf als goldenes Schild; eigener Knopf „Live-Kills“ oben), Alert, Gatecamps, Kills und Verkehr der letzten Stunde, Souveränität mit Allianz-Kürzel, Faction Warfare, Wurmlöcher nach Thera/Turnur, Region hervorheben.</li><li>Neu: OmniMap › EVE Omni – deine Charaktere mit Mini-Porträt am Standort (einzeln abwählbar; Tooltip mit System, Station, Schiff und online-Status; der aktive EVE-Client leuchtet, die Karte folgt ihm), Assets als leuchtende Kiste mit eigenem Tooltip je Charakter, Mining-Systeme, NPC-Stationen mit Dienst-Filter (Klonbank, Sprungklon, Markt, Reparatur, Fitting, Versicherung, Industrie, Labor, Raffinerie – passende Systeme leuchten violett), Gank-Systeme und Gang-Report-Kämpfe.</li><li>Neu: Route per Rechtsklick – in der OmniMap und in Navigation › Reiseroute auf einem System: „Route löschen“, „Route ab hier löschen“ (das System wird das Ziel) und „Meiden und neu berechnen“.</li><li>Neu: Discord-Fenster – Mikrofon für Sprachkanäle (⋮ › „Mikrofon (Sprachkanäle)“, ab Werk aus; nur Ton, keine Kamera). Im Stil EVE sieht die Kopfleiste jetzt aus wie die der Overlays; „Neu laden“ steht im ⋮-Menü.</li><li>Neu: Reiter eines Overlay-Stapels per Maus umsortieren – Reiter in der Leiste nach links oder rechts ziehen, ein Strich zeigt die neue Stelle.</li><li>Neu: OmniCom-Gruppen im Hauptfenster gehen auf, wenn die Maus kurz darauf bleibt, und wieder zu, wenn sie weggeht. Ein Klick hält die Gruppe offen.</li><li>Geändert: Die Karte heißt jetzt OmniMap. Entfallen sind die alte Regionskarte, das Universum-Schema, die Regionsübersicht und „Als PNG speichern“.</li><li>Geändert: Kleine Schriften besser lesbar – bei 100 % sind alle Texte mindestens 11 px groß, Beschriftungen in Großbuchstaben (OmniCom) 10 px; lange OmniCom-Namen werden getrennt statt abgeschnitten.</li><li>Geändert: Farbschema Amarr (EVE) kräftiger – Gold statt blassem Braun (OmniCom, Rahmen, Symbole, Akzente). Grün im Stil EVE leuchtet etwas weniger stark.</li><li>Behoben: „Markt in EVE“ reagierte direkt nach dem Start von EVE Omni manchmal erst nach Minuten – die Anmeldung wird jetzt je Charakter nur einmal erneuert, hängt der EVE-Login, kommt nach 15 Sekunden ein ✗ mit Grund. Ein Charakter wird dabei nicht mehr versehentlich ausgeloggt.</li><li>Behoben: Mehrfachkauf eines Laufs meldete in EVE „Konnte nicht gelesen werden #17471“ – war ein Warenname bei EVE kurz nicht abrufbar, blieb „#Nummer“ hängen. Namen werden jetzt nach einer Minute neu abgefragt, gespeicherte Läufe bekommen den richtigen Namen automatisch.</li><li>Behoben: Waren ohne Bild bei EVE (z. B. SKINs) zeigten ein kaputtes Bild – jetzt ein neutrales Ersatzsymbol, überall in EVE Omni.</li><li>Behoben: Nach dem Schließen des Browser-Fensters kam manchmal die Meldung „A JavaScript error occurred in the main process – Object has been destroyed“.</li><li>Behoben: Pfeil „Große Ansicht“ im Overlay-Balken (Stil EVE) war zu klein und saß nicht mittig.</li></ul></details>
+<details class="skills-more" open><summary>Beta 5.4.0 · 26.10.2026</summary><ul class="about-list">
+<li>Neu: OmniMap – Regler „Größe“ oben in der Ansicht-Leiste (60–200 %, Doppelklick = 100 %) für Menüs, Porträts und Live-Kill-/Kampf-/Alarm-Kästen (bei wenig Platz rutschen die Menüs untereinander); Strg+Mausrad auf der Karte macht dasselbe (vorher wirkungslos), die Karte selbst zoomt dabei nicht.</li>
+<li>Geändert: Hauling-Ergebnisse (Im Umkreis und Zu festem Hub, Hauptfenster und Overlay) im Stil der Watchlist – je Ziel eine Zeile mit Nummer, Warenbildern und Strecke, Gank, Sprünge und ISK/Std. als Symbole (Text im Tooltip), rechts der Kasten mit Gewinn und Einsatz, darunter ein Balken für den belegten Laderaum. Als Name steht nur „→ Ziel“ (der Start steht oben), zu lange Namen laufen als Lauftext durch. Aufgeklappt wie die Lauf-Karte: Kacheln ① Kaufen (Station, Multibuy gelb, Einsatz) · ② Transport (Schiff, m³, Sprünge, Gank) · ③ Verkaufen · Ergebnis, „Route“ und „⌖ Ziel in EVE“ an beiden Stationen, darunter die Waren als schlanke Liste (Menge und Ø Kaufpreis zum Kopieren).</li>
+<li>Geändert: Watchlist-Karte – „nicht über“ und „nicht unter“ stehen dezent unten in der Kachel (weiter kopierbar); gelbe Kopier-Kästchen mit heller Kante, leichtem Verlauf und eigenem Rahmen außen herum.</li>
+<li>Geändert: Aufgeklappte Watchlist-Karten blinken und leuchten nicht mehr (das macht nur die zugeklappte Zeile); Kacheln neutral, nur die Kachel mit Aufgabe ist gelb. Auch „Meine Läufe“ und erledigte/abgebrochene Aufträge zeigen aufgeklappt die Kachel-Karte (mit Wieder öffnen · Prüfen · Löschen).</li>
+<li>Geändert: Aufgeklappter Hauling-Lauf mit Schritt-Leiste ① Kaufen · ② Unterwegs · ③ Verkaufen und Kacheln – der aktuelle Schritt leuchtet gelb; an Start- und Zielstation je „Route“ (von deinem Standort) und „⌖ Ziel in EVE“ (genau diese Station als Autopilot-Ziel). Die große Watchlist im Hauptfenster zeigt aufgeklappt dieselben Karten wie das Overlay – mit Kopier-Kästchen, bei Läufen zusätzlich die Warenliste.</li>
+<li>Geändert: Aufgeklappte Trade-Karte (Trades- und Watchlist-Overlay) in drei Kacheln Kaufen · Verkaufen · Ergebnis – Kauf immer links; neuer Preis bei überboten/unterboten, „setzen zu“ und „einstellen zu“ leuchtet gelb zum Kopieren, alle Preise in Kopier-Kästchen; Ort, Stand und Laufzeit im ⓘ-Tooltip; „↻“ und Gewinn stehen nur noch einmal, die Zeile „EVE-Daten“ steht im Fuß des Overlays. Zugeklappt stehen „aus Lauf …“, „nur Verkauf“ und „Verkaufs-Trades“ nur noch als Symbol ⇄/⇢ (Text im Tooltip). Abgeschrägte Ecken mit durchgehender Kante.</li>
+<li>Geändert: Watchlist (Overlay und große Ansicht) übersichtlicher – Konkurrenz ⚔, „von Hand offen“ ✋ und Gank-Ampel 🛡 sind farbige Symbole (Text im Tooltip), „neu: 11:10“ heißt jetzt „↻ 11:10“; rechts steht ein abgesetzter Kasten mit ISK oben und Stückzahl darunter (rot bei Verlust, grün bei Gewinn); Zeilen und Fortschrittsbalken in der Designfarbe, der Name bekommt mehr Platz.</li>
+<li>Behoben: Kopier-Knöpfe in den aufgeklappten Watchlist-Karten leuchteten nach dem Kopieren nicht grün (Overlay: der neue Preis baute die Karte sofort neu). Jetzt grün wie früher, auch Klick auf die Zahl selbst kopiert; „⌖ Ziel in EVE“ zeigt grün „✓ Ziel gesetzt“.</li>
+<li>Behoben: Mehrfachkauf meldete in EVE „Konnte nicht gelesen werden“ bei Waren, die EVE nicht veröffentlicht hat (z. B. Porträt-Hintergründe wie „Triglavian Background“) – sie stehen nicht mehr in der kopierten Liste, sondern darunter als „⚠ einzeln kaufen“ mit Menge und Markt-in-EVE-Knopf.</li>
+<li>Behoben: Overlays (z. B. Watchlist, OmniMap) zeigten „Fehler beim Zeichnen: … (reading 'Markt')“ statt ihres Inhalts.</li>
+<li>Behoben: OmniMap-Overlay – nach der Wahl eines Systems (Suche oder Klick) blieb die Karte auf halbem Weg stehen, statt bis zum System zu gleiten.</li>
+<li>Behoben: Im Update-Hinweis standen Formatzeichen (**) und „Downloads“ aus den Release-Notizen.</li></ul></details>
+<details class="skills-more"><summary>Beta 5.3.0 · 24.10.2026</summary><ul class="about-list">
+<li>Neu: OmniMap – die neue Karte ersetzt die alte Regionskarte (Navigation › OmniMap und als Overlay): ganzes Universum mit leuchtenden Sternen, Tor-Linien und Nebel; echte Lage der Sterne oder „2D“ als Schema wie im Spiel; Mausrad zoomt, Ziehen verschiebt, rechte Maustaste dreht und kippt in einem Zug („Kippen“ bringt die Draufsicht zurück); Suche nach System oder Region; Tooltip mit Sicherheit, Region, Stern, Planeten, NPC-Stationen und Truesec; Rechtsklick-Menü (Route, Sprungroute, Ziel/Wegpunkt in EVE, Meiden, Route löschen, zKillboard …); „Färben nach“ Sicherheit, Truesec, Region, Planetentyp, Sterntyp, Asteroidengürtel, Industriekosten oder Sov-Fenster. „In der OmniMap zeigen“ (⌖ und anklickbare Systemnamen) öffnet die Karte direkt am System.</li>
+<li>Neu: OmniMap › Navigation – Punkt zu Punkt (dieselbe Route wie Navigation › Reiseroute, mit Meiden-Liste und Jump Bridges; Start ist automatisch das System deines aktiven Charakters), Sprungreichweite (Schiff + Jump Drive Calibration) und Sprungplaner. Die aktive Route läuft neongrün Richtung Ziel, Gank-Systeme darauf sind rot markiert.</li>
+<li>Neu: OmniMap › Aktivität – Sprünge, Schiffe, Kapseln oder NPC-Kills für 1 Std. bis 90 Tage als Leuchtwolken. EVE Omni zeichnet die stündlichen EVE-Zahlen dafür selbst auf.</li>
+<li>Neu: OmniMap › Ebenen – Live-Kills & Kämpfe (rot pulsierend, Kampf als goldenes Schild; eigener Knopf „Live-Kills“ oben), Alert, Gatecamps, Kills und Verkehr der letzten Stunde, Souveränität mit Allianz-Kürzel, Faction Warfare, Wurmlöcher nach Thera/Turnur, Region hervorheben.</li>
+<li>Neu: OmniMap › EVE Omni – deine Charaktere mit Mini-Porträt am Standort (einzeln abwählbar; Tooltip mit System, Station, Schiff und online-Status; der aktive EVE-Client leuchtet, die Karte folgt ihm), Assets als leuchtende Kiste mit eigenem Tooltip je Charakter, Mining-Systeme, NPC-Stationen mit Dienst-Filter (Klonbank, Sprungklon, Markt, Reparatur, Fitting, Versicherung, Industrie, Labor, Raffinerie – passende Systeme leuchten violett), Gank-Systeme und Gang-Report-Kämpfe.</li>
+<li>Neu: Route per Rechtsklick – in der OmniMap und in Navigation › Reiseroute auf einem System: „Route löschen“, „Route ab hier löschen“ (das System wird das Ziel) und „Meiden und neu berechnen“.</li>
+<li>Neu: Discord-Fenster – Mikrofon für Sprachkanäle (⋮ › „Mikrofon (Sprachkanäle)“, ab Werk aus; nur Ton, keine Kamera). Im Stil EVE sieht die Kopfleiste jetzt aus wie die der Overlays; „Neu laden“ steht im ⋮-Menü.</li>
+<li>Neu: Reiter eines Overlay-Stapels per Maus umsortieren – Reiter in der Leiste nach links oder rechts ziehen, ein Strich zeigt die neue Stelle.</li>
+<li>Neu: OmniCom-Gruppen im Hauptfenster gehen auf, wenn die Maus kurz darauf bleibt, und wieder zu, wenn sie weggeht. Ein Klick hält die Gruppe offen.</li>
+<li>Geändert: Die Karte heißt jetzt OmniMap. Entfallen sind die alte Regionskarte, das Universum-Schema, die Regionsübersicht und „Als PNG speichern“.</li>
+<li>Geändert: Kleine Schriften besser lesbar – bei 100 % sind alle Texte mindestens 11 px groß, Beschriftungen in Großbuchstaben (OmniCom) 10 px; lange OmniCom-Namen werden getrennt statt abgeschnitten.</li>
+<li>Geändert: Farbschema Amarr (EVE) kräftiger – Gold statt blassem Braun (OmniCom, Rahmen, Symbole, Akzente). Grün im Stil EVE leuchtet etwas weniger stark.</li>
+<li>Behoben: „Markt in EVE“ reagierte direkt nach dem Start von EVE Omni manchmal erst nach Minuten – die Anmeldung wird jetzt je Charakter nur einmal erneuert, hängt der EVE-Login, kommt nach 15 Sekunden ein ✗ mit Grund. Ein Charakter wird dabei nicht mehr versehentlich ausgeloggt.</li>
+<li>Behoben: Mehrfachkauf eines Laufs meldete in EVE „Konnte nicht gelesen werden #17471“ – war ein Warenname bei EVE kurz nicht abrufbar, blieb „#Nummer“ hängen. Namen werden jetzt nach einer Minute neu abgefragt, gespeicherte Läufe bekommen den richtigen Namen automatisch.</li>
+<li>Behoben: Waren ohne Bild bei EVE (z. B. SKINs) zeigten ein kaputtes Bild – jetzt ein neutrales Ersatzsymbol, überall in EVE Omni.</li>
+<li>Behoben: Nach dem Schließen des Browser-Fensters kam manchmal die Meldung „A JavaScript error occurred in the main process – Object has been destroyed“.</li>
+<li>Behoben: Pfeil „Große Ansicht“ im Overlay-Balken (Stil EVE) war zu klein und saß nicht mittig.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.2.1 · 23.10.2026</summary><ul class="about-list"><li>Neu: Update direkt aus EVE Omni – „Update installieren“ im Update-Hinweis lädt das Update (ohne Soundtrack, der bleibt), prüft die Prüfsumme, installiert und startet EVE Omni neu. Nur für die installierte Version; die portable Version öffnet die Download-Seite. Funktioniert ab dem nächsten Update.</li><li>Behoben: In 5.2.0 lief nach dem Installieren noch die alte Oberfläche (Titel „Beta 5.1.0“) – eine alte Datei neben dem Programm wurde vorgezogen. Das Programm nimmt jetzt immer die neuere Oberfläche, der Installer räumt die alte Datei weg.</li><li>Behoben: „Zur Download-Seite“ im Update-Hinweis tat nichts.</li><li>Behoben: Vorschau eines EVE-Clients fehlte manchmal, wenn er über den Launcher gestartet wurde – kam erst nach einem Neustart von EVE Omni.</li><li>Geändert: Programm-Symbol in Infobereich, Taskleiste und Windows-Meldungen kräftiger – überall wie das Logo auf der Homepage.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.2.0 · 22.10.2026</summary><ul class="about-list"><li>Neu: Sound – Lautstärke je EVE-Client mit Portrait, Gesamtregler „Alle Clients“, hintere Clients automatisch leiser oder stumm; als Overlay, OmniCom-Kachel und unter Einstellungen › EVE-Clients. Tastenkürzel und Stream-Tasten: alle stumm, lauter, leiser.</li><li>Neu: Markt-Strukturen (Keepstar, Fortizar …) unter Einstellungen › Konto – Marktbuch der Struktur für Preise, Trades scannen und Trades; Hub-Handel mit Struktur als Einkaufs- oder Verkaufsort, Route ins 0.0 mit Routen-Prüfung (Camp, Aktivität, ruhig). Einmal neu einloggen (neue Berechtigung).</li><li>Neu: Trade-Gewinn rechnet zum aktuellen Marktpreis, ein kopierter neuer Preis zählt sofort; „Bei Abbruch jetzt“ zeigt auf der aufgeklappten Karte, was ein Abbruch gerade bringt oder kostet.</li><li>Neu: Versehentlich sofort verkauft? Die Trade-Karte bietet „nachkaufen?“ an – Ziel erhöhen, die neue Kauforder wird mit überwacht.</li><li>Neu: An Trades und Läufen steht, von wann die EVE-Daten sind und ab wann neue kommen („neu: 14:40“) – auch zugeklappt; „wartet auf EVE“, solange Käufe noch nicht gebucht sind.</li><li>Neu: Discord-Fenster – Rechtsklick auf ein falsch geschriebenes Wort zeigt Vorschläge und „Zum Wörterbuch hinzufügen“; Rechtschreibprüfung im ⚙-Menü abschaltbar.</li><li>Neu: Suchergebnis löschen (kleines ✕ neben „Suchoptionen“) in Trades, Hauling und Hub-Handel. „EVE Omni neu starten“ im Infobereich und unter Einstellungen.</li><li>Neu: Stil EVE noch näher am Spiel – Kopfleiste, Symbole, Reiter und Unterstrich 1:1 wie in EVE, Punktraster im aktiven Overlay, Grün wie in EVE. Kopfleiste und Reiter bleiben beim Zoomen gleich groß, nur der Inhalt zoomt.</li><li>Neu: Rückfragen und das Rechtsklick-Menü im Infobereich im EVE-Omni-Design.</li><li>Geändert: Gestapelte Reiter springen nicht mehr in Größe und Abstand; ein herausgezogener Reiter erscheint sofort als eigenes Fenster an der Maus. Overlays gleichen beim Einrasten und Größe-Ändern Höhe bzw. Breite an, wenn sie höchstens 10 px abweichen.</li><li>Geändert: Konkurrenz zählt deine eigenen Orders nicht mehr mit. Ort in der Watchlist nur noch aufgeklappt. Programm-Symbol überall gleich und etwas größer.</li><li>Geändert: „Waren prüfen“ springt sichtbar auf max. 2000; EVE starten/beenden im OmniCom-Overlay ab Werk an.</li><li>Behoben: Trades aus Orders hießen manchmal „#17871“ statt des Warennamens.</li></ul></details>
 <details class="skills-more"><summary>Beta 5.1.0 · 20.10.2026</summary><ul class="about-list"><li>Neu: Overlays stapeln wie in EVE – ein Overlay an der Kopfleiste auf ein anderes ziehen macht daraus Reiter; einen Reiter herausziehen gibt wieder ein eigenes Fenster. Deckkraft, Sperren, Durchklicken und Vordergrund gelten für den ganzen Stapel.</li><li>Neu: Hauptfenster aufgeräumt – Vor/Zurück oben links (auch Maustasten 4/5 und Alt + ←/→), Name des Bereichs in der Kopfleiste, Unterreiter aller Bereiche als Liste links; Kopfleiste, OmniCom-Leiste und Inhalt im Stil der Overlays.</li><li>Neu: Trading und Hauling mit gleichem Aufbau (Suchen · Ergebnisse · Meine Trades bzw. Meine Läufe · Gewinne), Hauling-Ergebnisse als Karten wie im Overlay, Meine Trades mit Reitern Laufend/Erledigt/Abgebrochen. „Markt-Scanner“ heißt jetzt „Trades scannen“. Orders an allen Stationen werden Trades; Orders und Order-Verlauf sind Reiter unter Trading.</li><li>Neu: Trades- und Hauling-Overlay gleich aufgebaut (Handelscharakter oben, „Suchoptionen“ immer an derselben Stelle); das Hauling-Overlay zeigt deine laufenden Läufe mit Summe, Sortieren und Zuklappen.</li><li>Neu: Eigener Bereich „Fittings“ (Meine Fittings + Workbench) mit OmniCom-Symbol und Overlay.</li><li>Neu: Uhr &amp; Timer – Timer mit Wochentagen und Wiederholung, Stoppuhr; Linksklick auf die OmniCom-Uhr öffnet die Timer.</li><li>Neu: OmniCom-Overlay mit zwei kleinen Knöpfen EVE starten (grün) / beenden (rot), einschaltbar unter Einstellungen › OmniCom.</li><li>Neu: Discord- und Browser-Fenster im Stil EVE – Rahmen, Symbole und Designfarbe wie die Overlays, das zuletzt angeklickte Fenster wird als aktiv markiert.</li><li>Neu: Kurier sucht die Region des Piloten automatisch mit, Filter „ab hier“. PI mit Bildern von Planeten und Anlagen. Watchlist-Lauf zeigt das empfohlene Fitting und die Gank-Ampel. Trades-Karte zeigt beim Einkauf schon den Verkaufspreis zum Kopieren. Symbolfarbe und Overlay-Stil als Knöpfe unter Darstellung.</li><li>Geändert: Preisverlauf (Kurven-Knopf) nur noch im Hauptfenster – dort auch bei Läufen, in den Overlays nicht mehr.</li><li>Behoben: Bei vielen Hauling-Läufen reagierten Hauptfenster und Overlays träge (Bereichswechsel bis 1 Sekunde) – jetzt unter 0,1 Sekunden.</li><li>Behoben: Ein Trade sprang auf erledigt, wenn die Kauforder voll war, EVE die letzten Käufe aber noch nicht gebucht hatte.</li><li>Behoben: Neuer Browser-Tab blieb grau; Overlays blitzten beim Öffnen kurz auf; Auswahllisten in den Einstellungen waren fensterbreit; in der Demo wirkte der Sprachwechsel nicht.</li></ul></details>
@@ -11392,6 +11508,13 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "“ gespeichert": "” saved",
     "“ gespeichert.": "” saved.",
     "Kasse": "cash",
+    "① Kaufen": "① Buy", "② Transport": "② Transport", "③ Verkaufen": "③ Sell", "Ø Kauf": "Ø buy", "Ø Verk.": "Ø sell", "Ø Einkaufspreis kopieren": "Copy Ø buy price",
+    "Spr.": "j.", "Klick: auf- oder zuklappen": "Click: expand or collapse", "Gewinn netto": "Net profit", "ISK pro Stunde": "ISK per hour", "Gewinn seit der Suche um mehr als 15 % gefallen": "Profit fell more than 15 % since the search",
+    "Größe": "Size", "Größe von Menüs, Porträts und Kill-/Alarm-Kästen – auch Strg+Mausrad auf der Karte; Doppelklick = 100 %": "Size of menus, portraits and kill/alert boxes – also Ctrl+mouse wheel on the map; double-click = 100 %", "Größe von Porträts und Kill-/Alarm-Kästen": "Size of portraits and kill/alert boxes",
+    "⚠ einzeln kaufen:": "⚠ buy separately:", "Diese Waren findet der Mehrfachkauf in EVE nicht (bei EVE nicht veröffentlicht) – im Marktfenster einzeln kaufen": "EVE's multibuy cannot find these items (not published by EVE) – buy them one by one in the market window",
+    "änderbar in": "editable in", "Transport": "Transport", "Unterwegs": "En route", "Schiff unbekannt": "Ship unknown", "⌖ Ziel in EVE": "⌖ Destination in EVE", "✓ Ziel gesetzt": "✓ Destination set", "✗ nicht gesetzt": "✗ not set", "setze …": "setting …",   // CC
+    "Route von deinem Standort zu dieser Station planen und im Navigations-Overlay zeigen": "Plan the route from your location to this station and show it in the Navigation overlay", "Genau diese Station in EVE als Ziel setzen (Autopilot)": "Set exactly this station as destination in EVE (autopilot)",
+    "fertig gekauft": "fully bought", "noch nichts": "nothing yet", "Abbruch": "on cancel", "eingestellt": "listed",   // CB
     "(Kapital": "(capital",
     "(kaufen)": "(buy)",
     "(mitgeliefert)": "(included)",
@@ -12702,6 +12825,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     return best;
   }
   var kmLastView = {};
+  function kmLvSave(host){ kmLastView[host.getAttribute("data-km-to")] = { vb: host.__vb.slice(), tv: host.__tv ? host.__tv.slice() : null, fs: host.__fs, at: Date.now(), tl: host.__tl, rot: host.__rot, tat: host.__tat || 0 }; }   // BT: auch das Gleit-Ziel
   function kmLayFor(host){   // K1c: Lage aus der Einstellung übernehmen; Ausschnitt bleibt auf demselben System
     var ly = kmOpt(host).lay === "2d" ? "2d" : "";
     if (host.__lay === undefined){ host.__lay = ly; kmLaySet(ly); return; }
@@ -12714,8 +12838,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   }
   function kmDraw(host){
     var cv = host.__cv; if (!cv || !cv.isConnected) return;
+    var mkv = String(kmMk(host)); if (host.__mkv !== mkv){ host.__mkv = mkv; host.style.setProperty("--km-mk", mkv); }   // 25.10.: Menüs der Karte wachsen mit der Größe mit
+    var ew = host.clientWidth / kmMk(host); host.classList.toggle("km-nw", ew > 0 && ew < 860); host.classList.toggle("km-nb", ew > 0 && ew < 700); host.classList.toggle("km-nx", ew > 0 && ew < 620);   // wenig Platz (Fenster ÷ Größe): Menüs untereinander statt übereinander
     kmLayFor(host);
-    kmLastView[host.getAttribute("data-km-to")] = { vb: host.__vb.slice(), fs: host.__fs, at: Date.now(), tl: host.__tl, rot: host.__rot, tat: host.__tat || 0 };
+    kmLvSave(host);
     var v = kmView(host), W = v.W, H = v.H, dpr = kmPx(host); if (!W || !H) return;
     if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
     var g = cv.getContext("2d"); if (!g) return;   // jsdom (Tests) hat keine Leinwand
@@ -13074,16 +13200,16 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     kmMeOn(host).forEach(function(e){ (by[e[1]] = by[e[1]] || []).push(e); });
     var ac = kmCss(host, "--accent", "#58a7bf");
     Object.keys(by).forEach(function(sid){
-      var o = D.by[sid]; if (!o) return; var x = X(o), y = Y(o); if (!isFinite(x)) return; var front = by[sid].some(function(e){ return e[0] === st.fc; }), s = front ? 11 : 8, c = 4;
+      var o = D.by[sid]; if (!o) return; var x = X(o), y = Y(o); if (!isFinite(x)) return; var front = by[sid].some(function(e){ return e[0] === st.fc; }), F = kmMk(host), s = (front ? 11 : 8) * F, c = 4 * F;
       var bracket = function(){ g.beginPath(); [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(function(q){ var cx = x + q[0] * s, cy = y + q[1] * s; g.moveTo(cx, cy - q[1] * c); g.lineTo(cx, cy); g.lineTo(cx - q[0] * c, cy); }); g.stroke(); };
       g.save();
       if (front){ g.strokeStyle = ac; g.lineWidth = 3; g.shadowColor = ac; g.shadowBlur = 22; bracket(); bracket(); g.shadowBlur = 8; g.strokeStyle = "#fff"; g.lineWidth = 1.4; bracket(); }   // K14: aktiver Client leuchtet kräftig in der Designfarbe
       else { g.strokeStyle = "rgba(150,230,255,.7)"; g.lineWidth = 1.5; g.shadowColor = "rgba(90,200,255,.95)"; g.shadowBlur = 5; bracket(); }
       g.restore();
-      var P = 28;   // Porträt 28 px auf ganzen Pixeln, Bild 128 px hochwertig verkleinert → scharf
+      var P = Math.round(28 * kmMk(host));   // Porträt 28 px × Größe auf ganzen Pixeln, Bild 128 px hochwertig verkleinert → scharf
       by[sid].forEach(function(e, n){ var px = Math.round(x - s - P - 6 - n * (P + 3)), py = Math.round(y - P / 2), im = kmPortrait(e[0]), fr = e[0] === st.fc;
         g.save(); if (fr){ g.shadowColor = ac; g.shadowBlur = 16; } g.fillStyle = "rgba(10,14,22,.9)"; g.fillRect(px - 1, py - 1, P + 2, P + 2); g.restore();
-        if (im){ g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high"; g.drawImage(im, px, py, P, P); } else { g.fillStyle = "#cfe8ff"; g.font = "600 14px sans-serif"; g.textAlign = "center"; g.fillText(String(e[2] || "?").charAt(0), px + P / 2, py + P / 2 + 1); g.textAlign = "left"; }
+        if (im){ g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high"; g.drawImage(im, px, py, P, P); } else { g.fillStyle = "#cfe8ff"; g.font = "600 " + Math.round(P / 2) + "px sans-serif"; g.textAlign = "center"; g.fillText(String(e[2] || "?").charAt(0), px + P / 2, py + P / 2 + 1); g.textAlign = "left"; }
         g.strokeStyle = fr ? ac : "rgba(255,255,255,.35)"; g.lineWidth = fr ? 2 : 1; g.strokeRect(px - (fr ? 1 : 0.5), py - (fr ? 1 : 0.5), P + (fr ? 2 : 1), P + (fr ? 2 : 1));
         host.__meHit.push([px, py, P, e]); });
     });
@@ -13178,16 +13304,17 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     return out;
   }
   function kmDrawPulses(g, host, X, Y, t){
-    var D = kmData(), list = kmPulses(host), mono = kmCss(host, "--mono", "monospace");
+    var D = kmData(), list = kmPulses(host), mono = kmCss(host, "--mono", "monospace"), F = kmMk(host);
     list.forEach(function(p){ var o = D.by[p.sys]; if (!o) return; var x = X(o), y = Y(o); if (!isFinite(x) || !isFinite(y)) return; var age = Math.min(1, (Date.now() - p.t) / (p.alarm ? 900000 : 30000)), s = 0.5 + 0.5 * Math.sin(t / 220 + o.i);
-      var R = (p.alarm ? 28 : p.big ? 24 : 14) * (0.85 + 0.25 * s) * (1 - age * 0.4), gr = g.createRadialGradient(x, y, 0, x, y, R);
+      var R = (p.alarm ? 28 : p.big ? 24 : 14) * F * (0.85 + 0.25 * s) * (1 - age * 0.4), gr = g.createRadialGradient(x, y, 0, x, y, R);
       gr.addColorStop(0, "rgba(255,90,80," + (0.85 - age * 0.4).toFixed(2) + ")"); gr.addColorStop(0.35, "rgba(230,30,40," + (0.45 - age * 0.2).toFixed(2) + ")"); gr.addColorStop(1, "rgba(200,0,30,0)");
       g.save(); g.globalCompositeOperation = "lighter"; g.fillStyle = gr; g.beginPath(); g.arc(x, y, R, 0, 6.2832); g.fill(); g.restore();
-      g.strokeStyle = p.alarm ? "rgba(255,80,80,.95)" : "rgba(255,110,100,.9)"; g.lineWidth = 1.4; g.beginPath(); g.arc(x, y, 4, 0, 6.2832); g.stroke();
-      g.font = "500 11px " + mono; g.textBaseline = "middle"; var w = g.measureText(p.lbl).width + 10, lx = Math.round(x - w / 2), ly = Math.round(y + 14);
-      var gold = p.big && !p.alarm; g.fillStyle = gold ? "rgba(40,30,8,.88)" : "rgba(40,8,10,.88)"; g.fillRect(lx, ly - 8, w, 16);
-      g.strokeStyle = gold ? "rgba(255,205,90,.85)" : "rgba(255,90,90,.85)"; g.lineWidth = 1; g.strokeRect(lx + 0.5, ly - 7.5, w - 1, 15);
-      g.fillStyle = gold ? "#ffe2a0" : "#ffb0a8"; g.fillText(p.lbl, lx + 5, ly + 0.5); });
+      g.strokeStyle = p.alarm ? "rgba(255,80,80,.95)" : "rgba(255,110,100,.9)"; g.lineWidth = 1.4; g.beginPath(); g.arc(x, y, 4 * F, 0, 6.2832); g.stroke();
+      var fs = Math.round(11 * F), bh = Math.round(16 * F), pd = Math.round(5 * F);
+      g.font = "500 " + fs + "px " + mono; g.textBaseline = "middle"; var w = g.measureText(p.lbl).width + 2 * pd, lx = Math.round(x - w / 2), ly = Math.round(y + 14 * F);
+      var gold = p.big && !p.alarm; g.fillStyle = gold ? "rgba(40,30,8,.88)" : "rgba(40,8,10,.88)"; g.fillRect(lx, ly - bh / 2, w, bh);
+      g.strokeStyle = gold ? "rgba(255,205,90,.85)" : "rgba(255,90,90,.85)"; g.lineWidth = 1; g.strokeRect(lx + 0.5, ly - bh / 2 + 0.5, w - 1, bh - 1);
+      g.fillStyle = gold ? "#ffe2a0" : "#ffb0a8"; g.fillText(p.lbl, lx + pd, ly + 0.5); });
     return list.length > 0;
   }
   function kmLayUi(host){   // Liste der Ebenen unter „Färben nach“
@@ -13364,6 +13491,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function kmCommit(host){ clearTimeout(host.__t); host.__t = setTimeout(function(){ try{ kmOmNeedSt(host); }catch(e){} if (host.__tv) return kmCommit(host); kmDrag = Math.max(0, kmDrag - (host.__busy ? 1 : 0)); host.__busy = 0; host.__vbSent = host.__vb.map(function(x){ return Math.round(x * 1000) / 1000; }).join(","); kmSay(host, "vb:" + host.__vbSent); }, 400); }   // K8d: eigener Ausschnitt kommt als Echo zurück → nicht übernehmen (sprang wegen Rundung)
   function kmSay(host, cmd){ var f = kmSend[host.getAttribute("data-km-to")]; if (f) f("km:" + cmd); }
   function kmGlide(host){   // weicher Zoom: Ausschnitt gleitet zum Ziel (host.__tv)
+    if (host.__vb) kmLvSave(host);   // BT (25.10.): Auswahl im Overlay → Besitzer baut sofort neu; ohne gemerktes Ziel blieb das Gleiten auf halbem Weg stehen
     if (host.__gl) return;
     host.__gl = requestAnimationFrame(function step(){
       var tv = host.__tv, vb = host.__vb; if (!tv){ host.__gl = 0; host.__glE = 0; return; }
@@ -13378,6 +13506,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   var KM_BAND = function(s){ var d = s > 0 && s < 0.05 ? 0.1 : Math.round(s * 10) / 10; return d >= 0.5 ? "Highsec" : d > 0 ? "Lowsec" : "Nullsec"; };
   function kmEsc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function kmOpt(host){ return host.__st.o || {}; }
+  function kmMk(host){ var v = Number(kmOpt(host).mk); return v >= 0.5 && v <= 2.5 ? v : 1; }   // 25.10.: Größe von Porträts und Kill-/Alarm-Kästen (Regler „Größe“, Strg+Mausrad auf der Karte)
   function kmSetOpt(host, k, v){ var o = host.__st.o = Object.assign({}, kmOpt(host)); o[k] = v; if (k === "bg") host.__st.bg = v;
     kmSay(host, "opt:" + k + ":" + (v !== null && typeof v === "object" ? JSON.stringify(v) : v === null ? "null" : v));   // erst speichern lassen, dann neu anzeigen (sonst lädt „need“ noch mit der alten Einstellung)
     kmUiSync(host); kmRedraw(host); }
@@ -13444,7 +13573,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function kmUi(host){
     var u = document.createElement("div"); u.className = "km-ui";
     u.innerHTML = '<div class="km-p km-find"><input type="search" class="km-q" placeholder="System oder Region suchen …" aria-label="System oder Region suchen" autocomplete="off" spellcheck="false"><div class="km-sug" hidden></div></div>' +
-      '<div class="km-p km-view" role="group" aria-label="Ansicht"><button type="button" data-kmo="sn" title="Namen aller Systeme beim Heranzoomen zeigen">Systemnamen</button><button type="button" data-kmo="rn" title="Namen der Regionen zeigen">Regionsnamen</button><button type="button" data-kmo="bg" title="Nebel-Hintergrund ein-/ausschalten">Hintergrund</button><button type="button" data-kmlive title="Live-Kills und Kämpfe auf der Karte ein-/ausschalten (wie unter Ebenen)">Live-Kills</button><button type="button" data-kmo="lay" title="Schema-Karte wie im Spiel (2D) statt echter Lage der Sterne – Lichtjahre und Sprungreichweite rechnen weiter mit der echten Lage">2D</button><button type="button" data-kmtl title="Karte nach hinten kippen / Draufsicht (auch Drehung zurück) – rechte Maustaste ziehen: hoch/runter kippt, links/rechts dreht">Kippen</button></div>' +
+      '<div class="km-p km-view" role="group" aria-label="Ansicht"><button type="button" data-kmo="sn" title="Namen aller Systeme beim Heranzoomen zeigen">Systemnamen</button><button type="button" data-kmo="rn" title="Namen der Regionen zeigen">Regionsnamen</button><button type="button" data-kmo="bg" title="Nebel-Hintergrund ein-/ausschalten">Hintergrund</button><button type="button" data-kmlive title="Live-Kills und Kämpfe auf der Karte ein-/ausschalten (wie unter Ebenen)">Live-Kills</button><button type="button" data-kmo="lay" title="Schema-Karte wie im Spiel (2D) statt echter Lage der Sterne – Lichtjahre und Sprungreichweite rechnen weiter mit der echten Lage">2D</button><button type="button" data-kmtl title="Karte nach hinten kippen / Draufsicht (auch Drehung zurück) – rechte Maustaste ziehen: hoch/runter kippt, links/rechts dreht">Kippen</button><label class="km-sz" title="Größe von Menüs, Porträts und Kill-/Alarm-Kästen – auch Strg+Mausrad auf der Karte; Doppelklick = 100 %">Größe <input type="range" min="0.6" max="2" step="0.1" value="1" data-kmsz aria-label="Größe von Porträts und Kill-/Alarm-Kästen"></label></div>' +
       '<div class="km-p km-color"><label>Färben nach <select class="km-c" aria-label="Färben nach"><option value="sec">Sicherheit</option><option value="ts">Truesec im Detail</option><option value="reg">Region</option><option value="pt">Planetentyp</option><option value="st">Sterntyp</option><option value="belt">Asteroidengürtel</option><option value="ind">Industriekosten</option><option value="sov">Sov-Fenster</option><option value="none">Aus (weiß)</option></select></label>' +
       '<select class="km-pt" aria-label="Planetentyp" hidden>' + KM_STAR.t.map(function(n, i){ return '<option value="' + i + '">' + n + "</option>"; }).join("") + '</select><button type="button" class="km-layb" data-kmlay>Ebenen <b>(1)</b></button><div class="km-lay" hidden></div><div class="km-leg" hidden></div></div>' +
       '<div class="km-p km-bar"><button type="button" data-kmp="route" aria-pressed="false" title="Routen, Sprungreichweite und Sprungplaner"><svg viewBox="0 0 24 24" style="stroke-width:1.2"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor" fill-opacity=".45" stroke-linejoin="round"/></svg><span>Navigation</span></button><button type="button" data-kmp="act" aria-pressed="false" title="Aktivität: Sprünge, Schiffe, Kapseln, NPC bis 90 Tage"><svg viewBox="0 0 48 48"><path d="M4 26h9l5-13 8 24 6-17 4 6h8" stroke-linejoin="round"/></svg><span>Aktivität</span></button><button type="button" data-kmp="om" aria-pressed="false" title="EVE Omni: Charaktere, Assets, Mining, Stationen, Gank, Gang-Report"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="7" fill="currentColor" fill-opacity=".45"/><path d="M24 3v8M24 37v8M3 24h8M37 24h8"/></svg><span>EVE Omni</span></button></div>' +
@@ -13457,6 +13586,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       if (ev.target.closest("[data-kmlive]")){ var LL = Object.assign({}, kmLy_(host)); if (LL.live) delete LL.live; else LL.live = 1; kmSetOpt(host, "ly", LL); kmLayUi(host); return; }   // BP (24.10.): Live-Kills oben ein/aus
       if (ev.target.closest("[data-kmme]")){ if (!kmFollow(host, true)){ var me = kmMeOn(host)[0]; if (me){ host.__st.fc = me[0]; kmFollow(host, true); } } return; } var b = ev.target.closest("[data-kmo]"); if (!b) return; var k = b.getAttribute("data-kmo"), on = b.getAttribute("aria-pressed") === "true"; kmSetOpt(host, k, k === "lay" ? (on ? "" : "2d") : !on); });   /* K1c: Lage als "2d"/"" */
     u.querySelector(".km-c").addEventListener("change", function(){ kmSetOpt(host, "c", this.value); });
+    var sz = u.querySelector("[data-kmsz]");   // 25.10.: Ziehen zeichnet sofort, Loslassen speichert (Hauptfenster + Overlay gemeinsam)
+    sz.addEventListener("input", function(){ host.__st.o = Object.assign({}, kmOpt(host), { mk: Number(sz.value) }); kmRedraw(host); kmAnim(host); });
+    sz.addEventListener("change", function(){ kmSetOpt(host, "mk", Number(sz.value)); });
+    sz.addEventListener("dblclick", function(){ sz.value = "1"; kmSetOpt(host, "mk", 1); });
     u.querySelector(".km-pt").addEventListener("change", function(){ kmSetOpt(host, "pt", this.value); });
     kmRtWire(host); kmLayWire(host); kmActWire(host); kmOmWire(host);
     var q = u.querySelector(".km-q"), sug = u.querySelector(".km-sug"), hits = [];
@@ -13489,6 +13622,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     [["sn", o.sn === true], ["rn", o.rn !== false], ["bg", host.__st.bg !== false], ["fol", o.fol !== false], ["lay", o.lay === "2d"]].forEach(function(x){ var b = u.querySelector('[data-kmo="' + x[0] + '"]'); if (b) b.setAttribute("aria-pressed", String(x[1])); });
     var lb = u.querySelector("[data-kmlive]"); if (lb) lb.setAttribute("aria-pressed", String(!!kmLy_(host).live));   // BP
     var c = u.querySelector(".km-c"); if (c && c.value !== (o.c || "sec")) c.value = o.c || "sec";
+    var sz = u.querySelector("[data-kmsz]"); if (sz && document.activeElement !== sz && Number(sz.value) !== kmMk(host)) sz.value = String(kmMk(host));
     kmRtSync(host); kmLayUi(host); kmActSync(host); kmOmSync(host);
     var pt = u.querySelector(".km-pt"); if (pt){ pt.hidden = (o.c || "sec") !== "pt"; if (pt.value !== String(o.pt || 0)) pt.value = String(o.pt || 0); }
   }
@@ -13503,7 +13637,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     host.__vbAttr = host.getAttribute("data-kmvb");
     if (!(vb.length === 4 && vb.every(isFinite)) && st.sel && kmData().by[st.sel]){ var o = kmData().by[st.sel]; host.__vb = [o.x - 60, o.y - 45, 120, 90]; }
     var LV = kmLastView[host.getAttribute("data-km-to")];   // 24.10.: Neuaufbau desselben Fensters (z. B. nach dem Ziehen) → zuletzt gezeigten Ausschnitt behalten, nicht den älteren gespeicherten
-    if (LV && !(st.go && st.go > LV.at && Date.now() - st.go < 15000)){   /* BO: ohne 5-s-Grenze – das Overlay baut bei jedem Update (Kills, Standort) neu; danach sprang die Karte samt Zoom zum Charakter */ host.__vb = LV.vb.slice(); host.__fs = LV.fs; if (Date.now() - LV.tat < 3000){ host.__tl = LV.tl; host.__rot = LV.rot; host.__tat = LV.tat; } }   /* BO3: kurz nach eigenem Kippen eigene Neigung/Drehung behalten */
+    if (LV && !(st.go && st.go > LV.at && Date.now() - st.go < 15000)){   /* BO: ohne 5-s-Grenze – das Overlay baut bei jedem Update (Kills, Standort) neu; danach sprang die Karte samt Zoom zum Charakter */ host.__vb = LV.vb.slice(); host.__fs = LV.fs; if (LV.tv) host.__tv = LV.tv.slice(); if (Date.now() - LV.tat < 3000){ host.__tl = LV.tl; host.__rot = LV.rot; host.__tat = LV.tat; } }   /* BO3: kurz nach eigenem Kippen eigene Neigung/Drehung behalten */
     var cv = host.__cv = document.createElement("canvas"); cv.className = "km-cv"; host.appendChild(cv);
     var cv2 = host.__cv2 = document.createElement("canvas"); cv2.className = "km-cv km-cv2"; host.appendChild(cv2);   // K4b: fließende Route
     if (window.ResizeObserver) new ResizeObserver(function(){ kmRedraw(host); }).observe(host);
@@ -13521,7 +13655,13 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     function raw(ev){ var r = host.getBoundingClientRect(), z = r.width / (host.clientWidth || r.width || 1) || 1; return [(ev.clientX - r.left) / z, (ev.clientY - r.top) / z]; }
     function at(ev){ var q = raw(ev); return kmTlBack(host, q[0], q[1]); }   // K7: gekippt → zurück in die ebene Karte   // CSS-zoom (Overlay-Größe, Strg+Mausrad): Maus in Kartenpixel umrechnen
     host.addEventListener("wheel", function(ev){
-      if (ev.ctrlKey || ev.target !== cv) return;   // Strg+Mausrad = Schrift (Einzelfenster); über Suche/Menü nicht zoomen
+      if (ev.ctrlKey && ev.target === cv){   // 25.10.: Strg+Mausrad auf der Karte = Größe von Porträts und Kill-/Alarm-Kästen (vorher „mapFont“ der alten Karte, wirkungslos)
+        ev.preventDefault(); ev.stopPropagation(); if (!ev.deltaY) return;
+        var mk = Math.round(Math.max(0.6, Math.min(2, kmMk(host) + (ev.deltaY < 0 ? 0.1 : -0.1))) * 10) / 10;
+        host.__st.o = Object.assign({}, kmOpt(host), { mk: mk }); kmUiSync(host); kmRedraw(host); kmAnim(host);
+        clearTimeout(host.__mkT); host.__mkT = setTimeout(function(){ kmSetOpt(host, "mk", kmMk(host)); }, 400); return;
+      }
+      if (ev.ctrlKey || ev.target !== cv) return;   // Strg+Mausrad über Suche/Menü = ganzes Fenster (Einzelfenster); dort nicht zoomen
       ev.preventDefault(); busy(); hover(null);
       var p = at(ev), v = kmView(host), mx = (p[0] - v.ox) / v.k, my = (p[1] - v.oy) / v.k, base = host.__tv || host.__vb;   // Punkt unter der Maus bleibt stehen
       var f = Math.pow(1.0018, Math.max(-300, Math.min(300, ev.deltaY))), w = Math.max(8, Math.min(1600, base[2] * f)), h = w * base[3] / base[2];
@@ -13566,7 +13706,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       host.__st.sel = id || null; kmRedraw(host); kmSay(host, "sel:" + id); kmActSync(host);   // K5b: Werte des gewählten Systems
     });
     host.addEventListener("pointerleave", function(){ if (!drag) hover(null); kmMeTip(host, null); });
-    kmFollow(host); kmDraw(host);
+    kmFollow(host); kmDraw(host); if (host.__tv) kmGlide(host);   // BT: Gleiten nach Neuaufbau fortsetzen
   }
   function kmMountAll(root){ [].forEach.call((root || document).querySelectorAll(".km"), kmMount); }
   // Zustand → Host-HTML (große Karte und Overlay)
@@ -13769,7 +13909,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (ps) ps.textContent = txt + (st.last ? " Zuletzt geprüft: " + new Date(st.last).toLocaleString("de-DE") + "." : "");
     if (!bar) return;
     bar.hidden = !show; if (!show) return;
-    var notes = (j.body || "").split("\n").map(function(l){ return l.replace(/^[#*\-\s]+/, "").trim(); }).filter(Boolean).slice(0, 3).join(" · ");
+    var notes = (j.body || "").split("\n").filter(function(l){ return !/^\s*(\||>|---|#|SHA256)|`/i.test(l); }).map(function(l){ return l.replace(/^[#*\-\s]+/, "").replace(/\*\*|__/g, "").trim(); }).filter(Boolean).slice(0, 3).join(" · ");   // 24.10.: Markdown (**) und Download-Tabelle/Prüfsummen nicht in den Hinweis
     bar.innerHTML = "<b>EVE Omni " + escapeHtml(j.tag.replace(/^v/, "")) + " ist da</b>" + (notes ? '<span class="upd-notes">' + escapeHtml(notes.length > 220 ? notes.slice(0, 220) + " …" : notes) + "</span>" : "") +
       (EVH && EVH.selfUpdate ? '<button type="button" class="btn" data-upd="self">Update installieren</button><button type="button" class="btn ghost" data-upd="go">Zur Download-Seite</button>' : '<button type="button" class="btn" data-upd="go">Zur Download-Seite</button>') + '<button type="button" class="btn ghost" data-upd="later">Später</button><button type="button" class="btn ghost" data-upd="skip">Diese Version überspringen</button>';
     bar.onclick = function(ev){ var b = ev.target.closest && ev.target.closest("[data-upd]"); if (!b) return; var k = b.getAttribute("data-upd");
@@ -13848,7 +13988,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (foc){ var f = root.querySelector('[data-ovf="' + foc + '"]'); if (f){ try{ f.focus(); if (sel && f.setSelectionRange && sel[0] !== null) f.setSelectionRange(sel[0], sel[1]); }catch(e){} } }
   }
   function ovFormAction(ev, root){
-    if (ev.target && ev.target.closest && ev.target.closest("a[href], .tsc-cp-b:not(.hc-btn), [data-mk]")) return null;   // Links (z. B. zKillboard) normal oeffnen; U2: Kopieren/Markt klappt die Karte nicht zu
+    if (ev.target && ev.target.closest && ev.target.closest("a[href], .tsc-cp-b:not(.hc-btn), [data-mk], .tc-tiles .tsc-cp-v")) return null;   // Links (z. B. zKillboard) normal oeffnen; U2: Kopieren/Markt klappt die Karte nicht zu
     var b = ev.target && ev.target.closest ? ev.target.closest("[data-ova]") : null;
     if (!b || !root.contains(b) || b.disabled) return null;
     root.__selOpen = 0; var cm = b.closest("#ov-ctx"); if (cm) cm.remove();   // BB15: Klick auf einen Knopf = Menü zu, Ergebnis gleich zeigen
@@ -14074,7 +14214,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     document.addEventListener("wheel", function(ev){
       if (!ev.ctrlKey) return; ev.preventDefault();
       var up = ev.deltaY < 0;
-      if (ev.target.closest && ev.target.closest(".ov-map")){ H.satAction({ type: "mapFont", arg: up ? "1" : "-1" }); return; }
+      if (ev.target.closest && ev.target.closest(".km canvas")) return;   // 25.10.: OmniMap regelt Strg+Mausrad selbst (Größe der Porträts/Kästen)
       satZoom = Math.round(Math.max(0.5, Math.min(2.5, satZoom + (up ? 0.1 : -0.1))) * 10) / 10; satScale();
       clearTimeout(satZoomT); satZoomT = setTimeout(function(){ var w = {}; w[view] = { zoom: satZoom }; satZoomT = 0; H.setSettings({ windows: w }); }, 400);
     }, { passive: false });   // kein Chromium-Zoom (gilt sonst fuer alle Fenster); Deckkraft per Mausrad entfernt 06.10.
@@ -14300,7 +14440,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       if (hk !== satHtml){   // DD0: gleicher Inhalt → nichts neu bauen (Hover/Klick bleiben); nach eigenem Klick immer (satHtml = null)
         var keep = body.scrollTop;
         ovFormKeep(body, function(){ body.innerHTML = d.html || ""; if (view === "neocom") neoLayout(); mapZoomCls(body); }); icEnsure();   /* 24.10.: Karte im nachgeholten Neuaufbau einhängen – sonst nach Ziehen leerer Rahmen bis zum nächsten Update */   // 08.10.: ovFormKeep baut beim Drücken erst nach dem Loslassen neu – Raster dann sonst ohne Spalten (Symbole senkrecht raus)
-        body.scrollTop = keep; mapZoomCls(body);
+        body.scrollTop = keep; mapZoomCls(body); satCpMark();
         var jv = jbxVizV && body.querySelector(".ov-jbviz"); if (jv) jbxVizSet(jv, jbxVizV);   // JB4: neue Leinwand nicht leer lassen
         if (view === "musik") jbMqSync(body);   // ZZ5: Lauftext läuft nach dem Neuaufbau bildgenau weiter
       }
@@ -14321,7 +14461,12 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       var h = Math.ceil(window.innerHeight - body.clientHeight + (bottom - top) + body.scrollTop + 6);
       if (Math.abs(h - window.innerHeight) > 3) H.resizeTo(window.innerWidth, h, true);
     }
-    var satFoot = null;
+    var satFoot = null, satCpOk = null;
+    function satCpMark(){   // zuletzt kopierter Knopf 1,2 s grün (bzw. rot) – auch wenn der Inhalt dazwischen neu gebaut wurde
+      var o = satCpOk; if (!o) return; var left = 1200 - (Date.now() - o.at); if (left <= 0){ satCpOk = null; return; }
+      [].forEach.call(body.querySelectorAll(".tsc-cp-b[data-copy]"), function(x){ if (x.getAttribute("data-copy") === o.t) x.classList.add(o.c); });
+      clearTimeout(satCpMark.t); satCpMark.t = setTimeout(function(){ [].forEach.call(body.querySelectorAll(".tsc-cp-b.ok, .tsc-cp-b.fail"), function(x){ x.classList.remove("ok", "fail"); }); satCpOk = null; }, left);
+    }
     function tick(){
       var now = Date.now();
       if (satFoot && satFoot.cd && satFoot.cd.length) ovAgeSet($("ov-age"), satFoot);   // II3: Countdown im Sekundentakt
@@ -14340,11 +14485,12 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       var sf = ev.target.closest ? ev.target.closest("[data-stfix]") : null;
       if (sf){ ev.stopPropagation(); stFixEdit(sf, function(v){ H.satAction({ type: "stFix", n: sf.getAttribute("data-stfix"), v: v }); }); return; }
       var b = ev.target.closest ? ev.target.closest(".tsc-cp-b:not(.hc-btn)") : null;
+      if (!b && ev.target.closest){ var cv = ev.target.closest(".tc-tiles .tsc-cp-v"); if (cv) b = cv.parentNode.querySelector(".tsc-cp-b[data-copy]"); }   // 25.10.: ganzes Kopier-Kästchen klickbar
       if (b){
         ev.stopPropagation();
         var t = b.getAttribute("data-copy") || "", tp = b.getAttribute("data-trpend");
         if (tp){ tp = tp.split("|"); H.satAction({ type: "trPend", id: tp[0], side: tp[1], p: Number(tp[2]) }); }   // AV2
-        var ok = function(v){ b.classList.add(v ? "ok" : "fail"); setTimeout(function(){ b.classList.remove("ok"); b.classList.remove("fail"); }, 900); };
+        var ok = function(v){ satCpOk = { t: t, c: v ? "ok" : "fail", at: Date.now() }; satCpMark(); };   // 25.10.: Grün auch nach dem Neuaufbau (satCpMark)
         if (H.copyText) H.copyText(t).then(function(){ ok(true); }, function(){ ok(false); });   // U2: ueber das Programm, Overlay hat keinen Fokus
         else if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ ok(true); }, function(){ ok(false); });
         return;
@@ -14459,7 +14605,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     (keys || []).forEach(function(p){ Object.keys(esiStamps).sort().forEach(function(k){ if ((k === p || k.indexOf(p + "/") === 0) && ks.indexOf(k) < 0) ks.push(k); }); });
     return ks.map(function(k){ var st = esiStand([k], true); return st && st.ex ? [ESI_LBL[k] || k.split("/").pop(), st.ex] : null; }).filter(Boolean);
   }
-  function esiCdTxt(cd, now){ return (cd || []).map(function(c){ return c[0] + " " + (c[1] > now ? fmtRemainShort(c[1] - now) : "neu"); }).join(" · "); }
+  // 25.10.: Liste in der Funktion – Einzelfenster (Overlays) brechen vor den var-Zuweisungen ab, eine var hier war dort undefined („reading 'Markt'“)
+  function esiCdTxt(cd, now){ var EN = { "Markt": "Market", "Historie": "History", "Transaktionen": "Transactions", "Namen": "Names", "Verträge": "Contracts", "Industrie": "Industry", "Warteschlange": "Queue", "Ort": "Location", "Schiff": "Ship", "Planeten": "Planets", "Kurierverträge": "Courier contracts" }; return (cd || []).map(function(c){ return kmTr(c[0], EN[c[0]] || c[0]) + " " + (c[1] > now ? fmtRemainShort(c[1] - now) : kmTr("neu", "new")); }).join(" · "); }   // Fußzeile EN: Countdown läuft am Übersetzer vorbei
   // Fußzeile links: Text + Countdown; Laufschrift, wenn breiter als der Platz (Hauptfenster und Einzelfenster)
   function ovAgeSet(el, f){
     if (!el) return;
@@ -16033,6 +16180,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       // B2: verpacktes Volumen (Schiffe werden verpackt transportiert)
       volCache[typeId] = data.packaged_volume || data.volume || null;
       if (data.name && nameMissing(typeId)) nameCache[typeId] = data.name;
+      mbPubNote(typeId, data.published);
       if (volCache[typeId]) volDirty = true;
     }catch(e){ volCache[typeId] = null; }
     return volCache[typeId];
@@ -16301,7 +16449,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     function done(ok){
       if (!btn) return;
       btn.classList.add(ok ? "ok" : "fail");
-      setTimeout(function(){ btn.classList.remove("ok"); btn.classList.remove("fail"); }, 900);
+      setTimeout(function(){ btn.classList.remove("ok"); btn.classList.remove("fail"); }, 1200);
     }
     function fallback(){
       try{
@@ -18304,13 +18452,36 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     main.appendChild(tscCopyCell('<span class="mono">bis '+fmtIsk(r.maxBuy)+' ISK/Stück</span>', mp, "Höchsten Einkaufspreis kopieren (" + mp + ") – so viel darf ein Stück höchstens kosten"));
     return main;
   }
+  /* 25.10.: Waren mit published=false (z. B. Porträt-Hintergründe, Typ 97898 „Triglavian Background“) findet der Mehrfachkauf in EVE nicht
+     („Konnte nicht gelesen werden“), obwohl sie im Markt gehandelt werden → aus der Liste nehmen, darunter „einzeln kaufen“ mit Markt-Knopf */
+  var MB_UNPUB_KEY = "eve-zentrale-mb-unpub-v1", mbUnpub = (function(){ try{ return JSON.parse(localStorage.getItem(MB_UNPUB_KEY)) || {}; }catch(e){ return {}; } })(), mbPubSeen = {};
+  function mbPubNote(tid, pub){
+    if (!tid || pub === undefined) return false; mbPubSeen[tid] = 1;
+    var was = !!mbUnpub[tid]; if (pub === false) mbUnpub[tid] = 1; else delete mbUnpub[tid];
+    if (was === !!mbUnpub[tid]) return false; try{ localStorage.setItem(MB_UNPUB_KEY, JSON.stringify(mbUnpub)); }catch(e){} return true;
+  }
+  function mbPubCheck(rows){   // einmal je Sitzung je Ware nachfragen, danach neu zeichnen, falls sich etwas ändert
+    var need = rows.map(function(r){ return r.tid; }).filter(function(t, i, a){ return t && !mbPubSeen[t] && a.indexOf(t) === i; }), ch = false;
+    if (!need.length) return; need.forEach(function(t){ mbPubSeen[t] = 1; });
+    tscPool(need, 6, async function(tid){ try{ var r = await fetch(ESI + "/universe/types/" + tid + "/?datasource=tranquility"); if (r.ok && mbPubNote(tid, (await r.json()).published)) ch = true; }catch(e){} })
+      .then(function(){ if (ch){ try{ ovRender(); trkRender(); hrRender(); }catch(e){} } });
+  }
+  function mbSplit(rows){ mbPubCheck(rows); var ok = [], no = []; rows.forEach(function(r){ (r.tid && mbUnpub[r.tid] ? no : ok).push(r); }); return { ok: ok, no: no }; }
+  function mbText(rows){ return rows.map(function(r){ return r.name + " " + r.q; }).join("\n"); }
+  function mbSingles(no){   // „einzeln kaufen“: Name, Menge zum Kopieren, Markt in EVE
+    var w = el("span", "mb-np", '<span class="warn" title="Diese Waren findet der Mehrfachkauf in EVE nicht (bei EVE nicht veröffentlicht) – im Marktfenster einzeln kaufen">⚠ einzeln kaufen:</span>');
+    no.forEach(function(r){ var x = el("span", "mb-np-i", escapeHtml(r.name) + " "); x.appendChild(tscCopyCell(fmtNum(r.q) + "×", String(r.q), "Menge kopieren (" + r.q + ")")); x.appendChild(mkBtn(r.tid)); w.appendChild(x); });
+    return w;
+  }
   function slCopyAll(rows){
     var cpAll = el("div", "hl-cp-all", "");
     var cpb = el("button", "btn ghost", "Einkaufsliste kopieren (für Multibuy)"); cpb.type = "button";
     cpb.title = "Kopiert alle Artikel als „Name Menge“ je Zeile – in EVE im Markt-Fenster „Multibuy“ öffnen und einfügen";
-    cpb.onclick = function(){ tscCopy(rows.map(function(r){ return r.name + " " + r.q; }).join("\n"), cpb); };
+    var sp = mbSplit(rows);
+    cpb.onclick = function(){ tscCopy(mbText(sp.ok), cpb); };
     var m3 = mbVol(rows); if (m3 !== null) cpb.textContent += " · " + fmtNum(m3, 0) + " m³";
     cpAll.appendChild(cpb);
+    if (sp.no.length) cpAll.appendChild(mbSingles(sp.no));
     return cpAll;
   }
 
@@ -19228,9 +19399,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var list = runs.filter(function(x){ return x.state === hrView; });
     if (!list.length){ box.innerHTML = '<div class="empty">' + (hrView === "done" ? "Noch keine erledigten Läufe." : hrView === "cancelled" ? "Keine abgebrochenen Läufe." : "Kein Lauf aktiv. Unter „Läufe suchen“ einen Vorschlag mit „＋ Lauf merken“ merken.") + "</div>"; return; }
     box.innerHTML = '<div class="sort-bar"><button class="btn ghost" type="button" data-hrfold="0" style="padding:1px 8px;font-size:.72rem;margin-right:4px">alle auf</button><button class="btn ghost" type="button" data-hrfold="1" style="padding:1px 8px;font-size:.72rem">alle zu</button></div>' +
-      list.map(function(x){ var k = x.kind + ":" + x.id; return hrFold[k] ? trkRow(x) : '<div data-hr-card="' + escapeHtml(k) + '">' + trkCard(x) + "</div>"; }).join("");
+      list.map(function(x){ var k = x.kind + ":" + x.id; return hrFold[k] ? trkRow(x) : '<div class="tc-main" data-hr-card="' + escapeHtml(k) + '" data-tc-main="' + escapeHtml(k) + '"></div>'; }).join("");   // 25.10.: gleiche Kachel-Karte wie Watchlist/Overlay
     box.querySelectorAll("[data-hrfold]").forEach(function(b){ b.onclick = function(){ var z = b.getAttribute("data-hrfold") === "1"; list.forEach(function(x){ hrFold[x.kind + ":" + x.id] = z; }); hrRender(); }; });
     box.querySelectorAll("[data-trk-row]").forEach(function(r){ r.onclick = function(){ hrFold[r.getAttribute("data-trk-row")] = false; hrRender(); }; });   // zugeklappt: Klick klappt auf
+    tcMount(box, list, function(k){ hrFold[k] = true; hrRender(); });
     box.querySelectorAll("[data-hr-card] .tr-head").forEach(function(h){ h.title = "Klick: Karte zu- oder aufklappen"; h.style.cursor = "pointer";
       h.onclick = function(e){ if (e.target.closest("button, a, .tsc-cp-b, [data-mk], .hc-btn, .pill")) return; hrFold[h.closest("[data-hr-card]").getAttribute("data-hr-card")] = true; hrRender(); }; });
     trkWireOpen(box);
@@ -19368,7 +19540,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function tkNextHtml(x){
     if (!x || x.state !== "active" || !x.charId) return "";
     var now = Date.now(), at = ["/characters/orders", "/characters/wallet/transactions"].map(function(k){ var st = esiCharStand(x.charId, k); return st && st.ex > now ? st.ex : 0; }).filter(Boolean);
-    return at.length ? ' <span class="item-sub tk-next" title="' + TR_ESI_TIP + '">neu: ' + fmtT(Math.min.apply(null, at)) + "</span>" : "";
+    return at.length ? ' <span class="item-sub tk-next" title="' + TR_ESI_TIP + '">↻ ' + fmtT(Math.min.apply(null, at)) + "</span>" : "";
   }
   function tkMuteBtn(x){ if (x.state !== "active") return ""; var k = escapeHtml(x.kind + ":" + x.id);
     return ' <button type="button" class="tk-mute' + (x.mute ? " off" : "") + '" data-ova="trkMute" data-arg="' + k + '" data-trk-mute="' + k + '" aria-pressed="' + !x.mute + '" title="' + (x.mute ? "Alarm für diesen Auftrag ist aus – Klick: wieder an" : "Alarm für diesen Auftrag an – Klick: aus (kein Ton, keine Meldung, kein Blinken)") + '">' + (x.mute ? "🔕" : "🔔") + "&#xFE0E;</button>"; }
@@ -19381,6 +19553,24 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // Ein Klick-Weg für alle Listen im Hauptfenster und im eingebetteten Overlay (Einzelfenster schicken data-ova="trkMute" ans Hauptfenster)
   document.addEventListener("click", function(ev){ var b = ev.target && ev.target.closest && ev.target.closest("[data-trk-mute]"); if (!b) return; ev.preventDefault(); ev.stopPropagation(); tkMuteToggle(b.getAttribute("data-trk-mute")); }, true);
   function tkKeepPill(x){ return x.keepOpen || x.keep ? ' <span class="pill warn" title="Von Hand wieder geöffnet – wird nicht automatisch erledigt">von Hand offen</span>' : ""; }
+  /* CA (25.10.): zugeklappte Watchlist-Zeile – Symbole statt Pills (Text im Tooltip), rechts Kasten mit ISK oben und Stückzahl/Datum darunter */
+  function tkKeepIc(x){ return x.keepOpen || x.keep ? ' <span class="trk-ic tic-warn" title="Von Hand wieder geöffnet – wird nicht automatisch erledigt">✋&#xFE0E;</span>' : ""; }
+  function compIc(c){ return c && c.level ? ' <span class="trk-ic tic-' + (c.level === "heiß" ? "bad" : c.level === "mittel" ? "warn" : "ok") + '" title="' + escapeHtml(compTitle(c)) + '">⚔&#xFE0E;</span>' : ""; }
+  function gkRunIc(id, cb){
+    var run = hrLoad().find(function(r){ return String(r.id) === String(id); }), g = run && gkRunCalc(run, cb); if (!g) return "";
+    var t = g.busy ? "Gank-Check: EHP wird berechnet …" : g.unk ? "Fitting unbekannt – Assets laden" : gkTip(g);
+    return ' <span class="trk-ic tic-' + (g.busy || g.unk ? "unk" : g.lvl) + '" title="' + escapeHtml(t) + '">🛡&#xFE0E;</span>';
+  }
+  function tcDecorate(full, x, open){   // BB10, SS7, CB: Nummer, ✋, Glocke an der vollen Karte; „↻“ nur einmal
+    var fn = full.querySelector(".ov-name"); if (!fn) return;
+    if (x.nr) fn.insertAdjacentHTML("afterbegin", tkNr(x)); if (open) fn.insertAdjacentHTML("afterbegin", "▾ ");
+    fn.insertAdjacentHTML("beforeend", (full.classList.contains("tc-card") ? tkKeepIc(x) : tkKeepPill(x)) + tkMuteBtn(x) + (fn.querySelector(".tk-next") ? "" : tkNextHtml(x)));
+  }
+  function tkRunIc(h){ var m = /title="([^"]*)">\s*(\S+)/.exec(h || ""); return m ? ' <span class="trk-ic tic-unk" title="' + m[1] + " – " + escapeHtml(h.replace(/<[^>]*>/g, "").trim()) + '">' + m[2] + "</span>" : ""; }   // 25.10.: zugeklappt „aus Lauf …“ / „nur Verkauf“ / „n Verkaufs-Trades“ nur als Symbol, Text im Tooltip
+  function tkValBox(x, sub){
+    var s = x.res === null || x.res === undefined || isNaN(x.res) ? "–" : ovSigned(x.res).replace(/ ISK$/, ""), m = /^(.*\d) (Tsd\.|Mio\.|Mrd\.|Bio\.|[kMBT])$/.exec(s);
+    return '<span class="trk-r ' + (x.res < 0 ? "tv-l" : x.res > 0 ? "tv-w" : "tv-z") + '"><span class="trk-rb"><b title="' + TK_TIP + '">' + (m ? escapeHtml(m[1]) + ' <span class="ov-u">' + m[2] + "</span>" : escapeHtml(s)) + "</b>" + (sub ? '<span class="trk-q">' + sub + "</span>" : "") + "</span></span>";
+  }
   function tkClick(arg){
     var i = arg.indexOf("|"), a = arg.slice(0, i), key = arg.slice(i + 1), j = key.indexOf(":");
     if (a === "chk"){ tkChkStart([key]); return; }
@@ -19649,13 +19839,31 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     // BB11: alle Reiter dieselben kompakten Zeilen (Klick klappt auf) – die Tabelle ist weg
     body.innerHTML = '<div class="trk-list">' + trkLevels(list).map(function(l){
       return trkLvHead(l, !trkFold[l.k], 'data-trk-fold="' + l.k + '"') +
-        (trkFold[l.k] ? "" : l.list.map(function(x){ var k = x.kind + ":" + x.id; return tkDayHead(x, this) + trkRow(x) + (trkOpen[k] || tkChkOpen[k] ? trkCard(x) : ""); }, {}).join(""));
+        (trkFold[l.k] ? "" : l.list.map(function(x){ var k = x.kind + ":" + x.id; return tkDayHead(x, this) + (trkOpen[k] && (x.kind === "Trade" || x.kind === "Lauf") ? '<div class="tc-main" data-tc-main="' + escapeHtml(x.kind + ":" + x.id) + '"></div>' : trkRow(x) + (trkOpen[k] || tkChkOpen[k] ? trkCard(x) : "")); }, {}).join(""));   // H2: Trade aufgeklappt = Kachel-Karte wie im Overlay
     }).join("") + ckh + "</div>";
     body.prepend(sortSel("track"));
+    tcMount(body, list);
     ovBlink(body, "track");
     body.querySelectorAll("[data-trk-fold]").forEach(function(b){ b.onclick = function(){ var k = b.getAttribute("data-trk-fold"); trkFold[k] = !trkFold[k]; try{ localStorage.setItem(TRK_FOLD_KEY, JSON.stringify(trkFold)); }catch(e){} trkRender(); }; });
     body.querySelectorAll("[data-trk-row]").forEach(function(r){ r.onclick = function(){ var k = r.getAttribute("data-trk-row"); trkOpen[k] = !trkOpen[k]; trkRender(); }; });
     trkWireOpen(body); ckWire(body);
+  }
+  function tcMount(body, list, onHead){   // H2 (25.10.): Kachel-Karte im Hauptfenster, Knöpfe wie im Overlay (ovSatAction), Klick auf den Kopf klappt zu
+    var ph = body.querySelectorAll("[data-tc-main]"); if (!ph.length) return;
+    var checks = ovTradeChecks(), fees = tscFees(tscReadCfg());
+    trLoad().forEach(function(t){ if (t.status === "done" && !checks.some(function(c){ return c.t.id === t.id; })) checks.push({ t: t, ev: trEvaluate(t, trLive[t.id], fees), live: trLive[t.id] }); });   // erledigte/abgebrochene
+    [].forEach.call(ph, function(p){
+      var key = p.getAttribute("data-tc-main"), kind = key.split(":")[0], id = key.slice(kind.length + 1), x = list.find(function(y){ return y.kind === kind && String(y.id) === id; });
+      var m = kind === "Trade" ? checks.find(function(c){ return String(c.t.id) === id; }) : hrLoad().find(function(r){ return String(r.id) === id; });
+      if (!m || !x){ trkOpen[key] = false; p.outerHTML = x ? trkRow(x) : ""; return; }
+      var card = kind === "Trade" ? ovTradeCard(m, null) : ovRunCard(m); tcDecorate(card, x, true);
+      var h = card.querySelector(".ov-h"); h.setAttribute("data-trk-row", key); h.title = "Klick: zuklappen"; h.style.cursor = "pointer";
+      if (onHead) h.onclick = function(e){ if (e && e.target.closest("button, a, .tsc-cp-b, [data-mk], .hc-btn")) return; onHead(key); };
+      if (x.state !== "active"){ card.classList.add("tc-done"); card.insertAdjacentHTML("beforeend", '<div class="ov-l tc-foot"><span class="muted">' + escapeHtml(tkWhenTxt(x)) + (x.tm ? " · " + tkTimeHtml(x.tm) : "") + '</span><span class="ov-rbtn tc-btns">' + tkBtnsHtml(x, true) + "</span></div>"); if (tkChkOpen[key]) card.appendChild(el("div", "ov-l txt", tkChkHtml(key))); }   // Wieder öffnen · Prüfen · Löschen (+ Prüf-Ergebnis)
+      if (kind === "Lauf") card.appendChild(hrDetail(m));   // Warenliste je Ware (Menge, Ø-Preis, Markt) wie bisher
+      p.appendChild(card); ovFormWire(p, function(a){ ovSatAction("track", a); });
+      p.addEventListener("click", function(e){ var v = e.target.closest && e.target.closest(".tc-tiles .tsc-cp-v"), b = v && v.parentNode.querySelector(".tsc-cp-b[data-copy]"); if (b){ e.stopPropagation(); b.click(); } });   // ganzes Kopier-Kästchen klickbar
+    });
   }
   function ckWire(body){   // CC4: Knöpfe im Kurier-Block + Gruppe zu/auf
     body.querySelectorAll("[data-ck]").forEach(function(b){ b.onclick = function(ev){ ev.stopPropagation(); ckAction({ type: "ck" + b.getAttribute("data-ck"), arg: b.getAttribute("data-ck-id") }); }; });
@@ -19682,8 +19890,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function trkRow(x){
     var k = x.kind + ":" + x.id;
     return '<div class="ov-card trk-sm' + x.st + (trkOb(x) ? " trk-ob" : "") + (x.kind === "Trade" ? " trk-trade" : " trk-run") + (x.mute ? " al-mute" : "") + '" data-trk-row="' + escapeHtml(k) + '" title="Klick: Details auf-/zuklappen">' +
-      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpen[k] ? trkWhere(x) : "") + (trkOpen[k] ? vcDots(x) : "") + tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? " " + compPill(compTrade(x.id), true) + hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x)) + '</span>' +
-      '<span class="trk-r">' + (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, tkRedraw) + " " : "") + '<b title="' + TK_TIP + '">' + ovSigned(x.res) + "</b> · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) + (x.state !== "active" && (x.end || x.t) ? ' · <span class="tk-dd" title="' + tkWhenTxt(x) + '">' + (x.state === "done" ? "erledigt " : "abgebr. ") + tkDay(x.end || x.t) + "</span>" : "") + (x.tm && trkOpen[k] ? " · " + tkTimeHtml(x.tm, true) : "") + "</span></div>" +   // BB1: zugeklappt ohne Zeit hinten
+      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpen[k] ? trkWhere(x) : "") + (trkOpen[k] ? vcDots(x) : "") + tkKeepIc(x) + (x.kind === "Trade" ? compIc(compTrade(x.id)) : x.state === "active" ? gkRunIc(x.id, tkRedraw) : "") + tkMuteBtn(x) + tkNextHtml(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x))) + '</span>' +
+      tkValBox(x, fmtNum(x.bought) + "/" + fmtNum(x.plan) + (x.state !== "active" && (x.end || x.t) ? ' · <span class="tk-dd" title="' + tkWhenTxt(x) + '">' + (x.state === "done" ? "erledigt " : "abgebr. ") + tkDay(x.end || x.t) + "</span>" : "") + (x.tm && trkOpen[k] ? " · " + tkTimeHtml(x.tm, true) : "")) + "</div>" +   // BB1: zugeklappt ohne Zeit hinten; CA: Symbole + Kasten
       '<div class="ov-bar-mini"><span style="width:' + (x.plan ? Math.min(100, (x.bought + x.sold) / (2 * x.plan) * 100) : 0).toFixed(0) + '%"></span></div></div>';
   }
   function trkCard(x){
@@ -27071,7 +27279,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // L4: Einkaufsliste „Name Menge“ je Zeile fuer Multibuy in EVE
   // Gesamtvolumen der Einkaufsliste (verpackt), null solange ein Volumen fehlt
   function mbVol(rows){ var v = 0; for (var i = 0; i < rows.length; i++){ var u = rows[i].vol || volCache[rows[i].tid]; if (!u) return null; v += u * rows[i].q; } return v; }
-  function ovMultibuy(rows){ var m3 = mbVol(rows); return ovCp("Einkaufsliste kopieren (Multibuy)" + (m3 !== null ? " · " + fmtNum(m3, 0) + " m³" : ""), rows.map(function(x){ return x.name + " " + x.q; }).join("\n"), "Alle Artikel als „Name Menge“ kopieren – in EVE im Markt „Multibuy“ einfügen"); }
+  function ovMultibuy(rows){ var m3 = mbVol(rows), sp = mbSplit(rows), w = el("span", "mb-w"); w.appendChild(ovCp("Einkaufsliste kopieren (Multibuy)" + (m3 !== null ? " · " + fmtNum(m3, 0) + " m³" : ""), mbText(sp.ok), "Alle Artikel als „Name Menge“ kopieren – in EVE im Markt „Multibuy“ einfügen")); if (sp.no.length) w.appendChild(mbSingles(sp.no)); return w; }
   function ovLine(cls){ return el("div", "ov-l" + (cls ? " " + cls : "")); }
   function ovAgo(t){
     if (!t) return "noch nicht geladen";
@@ -27257,111 +27465,115 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   }
   function ovTrUpdAll(){ return el("div", "ov-l", '<span class="ov-rbtn"><button type="button" data-ova="trUpd" data-arg="all" title="Orders, Fortschritt und Marktpreise aller Trades neu laden"' + (trRunning ? " disabled" : "") + ">Alle Preise aktualisieren</button></span> " + escapeHtml(trStandAll())); }
   function ovTradeCard(x, fid, fold){   // BB9: fold = ovLoad().trFold (nur im Trades-Overlay zusammenklappbar)
+      // CB (25.10.): aufgeklappt drei Kacheln Kaufen · Verkaufen · Ergebnis (Kauf immer links), Kopf wie die zugeklappte Zeile (Symbole, Kasse im Kasten), Ort/Stand im ⓘ
       var t = x.t, ev = x.ev, live = x.live, own = (live && live.own) || {};
-      var tmT = tkTimes()["Trade" + t.id], card = el("div", "ov-card" + (ovAlarmKeys[t.id] ? " alarm" : tkStCls(trPh(t, ev), trBad(ev) || !!(tmT && tmT.slow))) + (String(t.id) === fid ? " ov-focus" : "") + (fold && fold[t.id] ? " tr-fold" : ""));
+      var tmT = tkTimes()["Trade" + t.id], card = el("div", "ov-card tc-card" + (ovAlarmKeys[t.id] ? " alarm" : tkStCls(trPh(t, ev), trBad(ev) || !!(tmT && tmT.slow))) + (String(t.id) === fid ? " ov-focus" : "") + (fold && fold[t.id] ? " tr-fold" : ""));
       card.setAttribute("data-bk", "Trade:" + t.id);   // BB6
-      var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid)); nm.insertAdjacentHTML("beforeend", (t.status !== "done" ? tkNextHtml({ state: "active", charId: t.charId }) : "") + " " + compPill(compTrade(t.id), true) + trRunTag(t) + (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23
+      var h = el("div", "ov-h"), oxh = oxTrade(t.id);   // AA4
+      var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid));
+      nm.insertAdjacentHTML("beforeend", compIc(compTrade(t.id)) + (t.status !== "done" ? tkNextHtml({ state: "active", charId: t.charId }) : "") +
+        ' <span class="trk-ic tc-inf" title="' + escapeHtml(String(trHub(t).label || "").split(" (")[0] + " · " + trStand(t) + (oxh ? " · " + oxh.replace(/<[^>]*>/g, "") : "")) + '">ⓘ&#xFE0E;</span>' + trRunTag(t) +
+        (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23, BB31, U4, CC3, AG1
       var phase = ev.allSold ? ["fertig", "profit"] : (ev.buyPhase && ev.sellPhase ? ["Kauf+Verk.", "warn"] : (ev.buyPhase ? ["Kauf", "warn"] : ["Verkauf", "warn"]));
       h.appendChild(el("span", "pill " + phase[1], phase[0]));
+      h.insertAdjacentHTML("beforeend", tkValBox({ res: ev.result }, fmtNum(ev.p.bought) + "/" + fmtNum(t.qty)));
       if (fold){ h.setAttribute("data-ova", "trFold"); h.setAttribute("data-arg", t.id); h.title = "Klick: Karte zu- oder aufklappen"; }
       card.appendChild(h);
+      card.appendChild(el("div", "ov-bar-mini ov-keep", '<span style="width:' + (t.qty ? Math.min(100, ev.p.bought / t.qty * 100) : 0).toFixed(0) + '%"></span>'));
       if (live && live.error){ var le = ovLine("txt"); le.innerHTML = '<span class="bad">Preise nicht ladbar</span>'; card.appendChild(le); }
-      var oxh = oxTrade(t.id);   // AA4
-      card.appendChild(el("div", "ov-l ov-keep", '<b>' + escapeHtml(String(trHub(t).label || "").split(" (")[0]) + "</b> · " + escapeHtml(trStand(t)) + (oxh ? '<span class="ov-ox"> · ' + oxh + "</span>" : "")));   // BB31   // U4   // CC3: Ort auch zugeklappt   // AG1 (18.10.): „läuft ab“ in dieselbe Zeile (zugeklappt ausgeblendet)
-      // Kaufseite (17.10.: wird nach der Verkaufsseite einsortiert – Verkaufen oben, Kaufen unten)
-      var buyFrom = card.childNodes.length;
+      var oxs = oxTrade(t.id, true); if (oxs) card.appendChild(el("div", "ov-l txt ov-keep", oxs));   // läuft bald ab: sichtbar, sonst im ⓘ
+      var tile = function(hd){ var d = el("div", "tc-t"); d.appendChild(el("div", "tc-h", hd)); return d; }, warn = [];
+      var tb = tile("Kaufen"), ts = tile("Verkaufen"), tg = tile("Ergebnis");
+      // Kaufen
       if (ev.buyPhase){
         var lb = ovLine();
-        lb.appendChild(el("span", "", "Kauf:"));
         if (own.buy && ev.buyCheck && ev.buyCheck.status === "überboten"){
           lb.appendChild(el("span", "warn", "überboten →"));
-          lb.appendChild(trPendCp(ovCp(tscFmtPrice(ev.buyCheck.newPrice), tscCopyPrice(ev.buyCheck.newPrice), "Neuen Kaufpreis kopieren"), t.id, "buy", ev.buyCheck.newPrice));   // AV2
-          var lk = el("span", "", ovLockHtml(own.buy)); lb.appendChild(lk);
+          lb.appendChild(trPendCp(ovCp(tscFmtPrice(ev.buyCheck.newPrice), tscCopyPrice(ev.buyCheck.newPrice), "Neuen Kaufpreis kopieren"), t.id, "buy", ev.buyCheck.newPrice)).classList.add("cp-hot");   // AV2
+          lb.appendChild(el("span", "", ovLockHtml(own.buy))); tb.classList.add("tc-hot");
         } else if (own.buy){
           lb.appendChild(el("span", "ok", "vorne"));
           lb.appendChild(el("b", "", tscFmtPrice(own.buy.price)));
           lb.appendChild(el("span", "", "· offen " + fmtNum(own.buy.volume_remain)));
         } else if (ev.buyNow !== null && ev.buyNow !== undefined){
-          lb.appendChild(el("span", "", "setzen zu"));
-          lb.appendChild(ovCp(tscFmtPrice(ev.buyNow), tscCopyPrice(ev.buyNow), "Kaufpreis kopieren"));
+          lb.appendChild(el("span", "warn", "setzen zu"));
+          lb.appendChild(ovCp(tscFmtPrice(ev.buyNow), tscCopyPrice(ev.buyNow), "Kaufpreis kopieren")).classList.add("cp-hot");
           lb.appendChild(el("span", "", "Menge"));
-          lb.appendChild(ovCp(fmtNum(ev.toBuy), String(ev.toBuy), "Menge kopieren"));
+          lb.appendChild(ovCp(fmtNum(ev.toBuy), String(ev.toBuy), "Menge kopieren")); tb.classList.add("tc-hot");
         } else {
           lb.appendChild(el("span", "", "geplant"));
           lb.appendChild(ovCp(tscFmtPrice(t.buy), tscCopyPrice(t.buy), "Geplanten Kaufpreis kopieren"));
         }
-        card.appendChild(lb);
-        if (ev.maxBuy !== null){ var lx = ovLine(); lx.appendChild(el("span", "", "nicht über")); lx.appendChild(ovCp(tscFmtPrice(ev.maxBuy), tscCopyPrice(ev.maxBuy), "Höchstpreis kopieren")); card.appendChild(lx); }
-        if (ev.buyLoss){ var lt = ovLine("txt"); lt.innerHTML = '<span class="bad">Kaufen lohnt beim aktuellen Preis nicht mehr</span>'; card.appendChild(lt); }
-        else if (ev.buyTooHigh) card.appendChild(el("div", "ov-l txt ov-warn", twBuyMarginHtml(ev)));
-        if (ev.buyEmpty) card.appendChild(el("div", "ov-l txt", '<span class="muted">Markt leer – kein Vergleich möglich</span>'));
-      }
-      var buyNodes = [].slice.call(card.childNodes, buyFrom);
-      // Verkaufsseite
+        tb.appendChild(lb);
+        if (ev.maxBuy !== null){ var lx = ovLine("tc-lim"); lx.appendChild(el("span", "", "nicht über")); lx.appendChild(ovCp(tscFmtPrice(ev.maxBuy), tscCopyPrice(ev.maxBuy), "Höchstpreis kopieren")); tb.appendChild(lx); }
+        if (ev.buyLoss) warn.push(el("div", "ov-l txt", '<span class="bad">Kaufen lohnt beim aktuellen Preis nicht mehr</span>'));
+        else if (ev.buyTooHigh) warn.push(el("div", "ov-l txt ov-warn", twBuyMarginHtml(ev)));
+        if (ev.buyEmpty) warn.push(el("div", "ov-l txt", '<span class="muted">Markt leer – kein Vergleich möglich</span>'));
+      } else { tb.classList.add("tc-off"); tb.appendChild(el("div", "ov-l muted", t.status === "done" ? "fertig" : "fertig gekauft")); }
+      // Verkaufen
       if (!(ev.stock > 0 || own.sell) && t.status !== "done" && ev.sellNow !== null && ev.sellNow !== undefined){   // AL2: Verkaufspreis schon vorher zum Kopieren
         var lm = ovLine(); lm.appendChild(el("span", "", "Markt jetzt"));
-        lm.appendChild(ovCp(tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow), "Aktuellen Verkaufspreis kopieren")); card.appendChild(lm);
+        lm.appendChild(ovCp(tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow), "Aktuellen Verkaufspreis kopieren")); ts.appendChild(lm);
       }
       if (ev.stock > 0 || own.sell){
         var ls = ovLine();
-        ls.appendChild(el("span", "", "Verkauf:"));
         if (own.sell && ev.sellCheck && ev.sellCheck.status === "überboten"){
           if (ev.belowBreakEven){ ls.appendChild(el("span", "bad", "unterboten, Markt unter Mindestpreis")); }
           else {
             ls.appendChild(el("span", "warn", "unterboten →"));
-            ls.appendChild(trPendCp(ovCp(tscFmtPrice(ev.sellCheck.newPrice), tscCopyPrice(ev.sellCheck.newPrice), "Neuen Verkaufspreis kopieren"), t.id, "sell", ev.sellCheck.newPrice));   // AV2
+            ls.appendChild(trPendCp(ovCp(tscFmtPrice(ev.sellCheck.newPrice), tscCopyPrice(ev.sellCheck.newPrice), "Neuen Verkaufspreis kopieren"), t.id, "sell", ev.sellCheck.newPrice)).classList.add("cp-hot");   // AV2
             ls.appendChild(el("span", "", ovLockHtml(own.sell)));
           }
+          ts.classList.add("tc-hot");
         } else if (own.sell){
           ls.appendChild(el("span", "ok", "vorne"));
         } else if (ev.sellNow !== null && ev.sellNow !== undefined && !ev.belowBreakEven){
-          ls.appendChild(el("span", "warn", "noch keine Verkaufsorder ·"));
-          ls.appendChild(el("span", "", "einstellen zu"));
-          ls.appendChild(ovCp(tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow), "Verkaufspreis kopieren"));
+          ls.appendChild(el("span", "warn", "einstellen zu"));
+          ls.appendChild(ovCp(tscFmtPrice(ev.sellNow), tscCopyPrice(ev.sellNow), "Verkaufspreis kopieren")).classList.add("cp-hot");
           ls.appendChild(el("span", "", "Menge"));
-          ls.appendChild(ovCp(fmtNum(ev.stock), String(ev.stock), "Menge kopieren"));
+          ls.appendChild(ovCp(fmtNum(ev.stock), String(ev.stock), "Menge kopieren")); ts.classList.add("tc-hot");
         } else if (ev.belowBreakEven){
           ls.appendChild(el("span", "bad", "Markt unter Mindestpreis – abwarten"));
         }
-        card.appendChild(ls);
+        ts.appendChild(ls);
         if (own.sell){   // N3: was schon im Markt steht
-          var lo = ovLine();
-          lo.appendChild(el("span", "", "Verkaufsorder steht:"));
+          var lo = ovLine("muted");
+          lo.appendChild(el("span", "", "steht:"));
           lo.appendChild(el("b", "", fmtNum(own.sell.volume_remain) + " Stück zu " + tscFmtPrice(own.sell.price)));
-          card.appendChild(lo);
+          ts.appendChild(lo);
         }
-        var lm = ovLine();
-        lm.appendChild(el("span", "", "nicht unter"));
-        lm.appendChild(ovCp(tscFmtPrice(ev.breakEven), tscCopyPrice(ev.breakEven), "Mindestpreis kopieren"));
-        card.appendChild(lm);
-        if (ev.belowMargin && t.status !== "done") card.appendChild(el("div", "ov-l txt ov-warn", twSellMarginHtml(ev)));
+        var ln = ovLine("tc-lim");
+        ln.appendChild(el("span", "", "nicht unter"));
+        ln.appendChild(ovCp(tscFmtPrice(ev.breakEven), tscCopyPrice(ev.breakEven), "Mindestpreis kopieren"));
+        ts.appendChild(ln);
+        if (ev.belowMargin && t.status !== "done") warn.push(el("div", "ov-l txt ov-warn", twSellMarginHtml(ev)));
       }
-      if (ev.planDev !== undefined) card.appendChild(el("div", "ov-l txt ov-warn", twPlanHtml(ev, t, ovSigned)));
-      if (ev.sellEmpty && t.status !== "done") card.appendChild(el("div", "ov-l txt", '<span class="muted">Markt leer – kein Vergleich möglich</span>'));
-      buyNodes.forEach(function(n){ card.appendChild(n); });   // Kaufen unter Verkaufen
-      // Gewinn netto pro Stueck und gesamt
-      var lg = ovLine("txt"); lg.classList.add("ov-keep");
+      if (ts.childNodes.length < 2){ ts.classList.add("tc-off"); ts.appendChild(el("div", "ov-l muted", "noch nichts")); }
+      if (ev.planDev !== undefined) warn.push(el("div", "ov-l txt ov-warn", twPlanHtml(ev, t, ovSigned).split(" · <span>Gewinn netto")[0]));   // Gewinn steht in der Ergebnis-Kachel
+      if (ev.sellEmpty && t.status !== "done") warn.push(el("div", "ov-l txt", '<span class="muted">Markt leer – kein Vergleich möglich</span>'));
+      // Ergebnis
+      var ab = function(v){ return v === null || v === undefined ? "–" : ovPfB(v || 0); };   // -0 → „+0“
       if (ev.unit !== null){
-        lg.innerHTML = "<span title=\"" + escapeHtml(trSrcTip(ev)) + "\">Gewinn netto " + ovPfB(ev.unit) + "/Stk · gesamt " + ovPfB(ev.total) + "</span>" +
-          (ev.result !== null ? " · Kasse <b title=\"" + TK_TIP + "\" class=\"" + (ev.result >= 0 ? "ok" : "bad") + "\">" + ovSigned(ev.result) + "</b>" : "") +
-          (ev.forecast !== null ? " → <b class=\"" + (ev.forecast >= 0 ? "ok" : "bad") + "\" title=\"wenn alles verkauft\">" + ovSigned(ev.forecast) + "</b>" : "");
-      } else lg.innerHTML = "Gewinn: folgt nach dem Aktualisieren" + (ev.result !== null ? " · Kasse " + ovPfB(ev.result) + "" : "");
-      card.appendChild(lg);
-      var ab2 = trAbortHtml(ev); if (ab2) card.appendChild(el("div", "ov-l txt", ab2));
-      var rb2 = trRebuyHtml(t, ev); if (rb2) card.appendChild(el("div", "ov-l txt", rb2.replace(/<button[\s\S]*<\/button>/, function(b){ return '<span class="ov-rbtn">' + b.replace(' class="btn ghost"', "") + "</span>"; })));   // BA2   // AV4 – ohne ov-keep: nur aufgeklappt
-      if (t.status !== "done"){   // T11, BB10: Erledigt · Prüfen · Abbrechen wie überall
-        card.appendChild(el("div", "ov-l", '<span class="ov-rbtn">' + (ev.buyPhase && ev.p.bought ? '<button type="button" data-ova="trGo" data-arg="' + escapeHtml(t.id) + '" title="Einkauf ist fertig (auch wenn weniger als geplant) – weiter zum Verkauf">weiter</button>' : "") +
-          tkBtnsHtml({ kind: "Trade", id: t.id, state: "active" }, true) + "</span>"));
-        if (tkChkOpen["Trade:" + t.id]) card.appendChild(el("div", "ov-l txt", tkChkHtml("Trade:" + t.id)));
+        tg.appendChild(el("div", "ov-l", '<span title="' + escapeHtml(trSrcTip(ev)) + '"><span>Stk</span> ' + ovPfB(ev.unit) + "</span>"));
+        tg.appendChild(el("div", "ov-l", "<span>gesamt</span> " + ovPfB(ev.total)));
+      } else tg.appendChild(el("div", "ov-l muted", "Gewinn: folgt nach dem Aktualisieren"));
+      if (ev.result !== null) tg.appendChild(el("div", "ov-l", '<span title="' + TK_TIP + '">Kasse</span>' + (ev.forecast !== null ? ' → <span title="wenn alles verkauft">' + ovPfB(ev.forecast) + "</span>" : " " + ovPfB(ev.result))));
+      if (ev.abortNow !== undefined){   // AV4
+        tg.appendChild(el("div", "ov-l", '<span title="' + (ev.stock ? "Kasse bisher + Ware im Lager sofort an die beste Kauforder verkauft (nach Steuer)" : "Kasse bisher – die Maklergebühr einer offenen Kauforder ist schon bezahlt und kommt nicht zurück") + '"><span>Abbruch</span> ' + ab(ev.abortNow) + "</span>"));
+        if (ev.stock) tg.appendChild(el("div", "ov-l", '<span title="Kasse bisher + Ware im Lager als Verkaufsorder zum Marktpreis (nach Steuer und Maklergebühr) – dauert, bis sie verkauft ist"><span>eingestellt</span> ' + ab(ev.abortOrder) + "</span>"));
       }
-      var pct = t.qty ? Math.min(100, ev.p.bought / t.qty * 100) : 0;
-      var lp = ovLine("txt");
-      lp.innerHTML = "gekauft " + fmtNum(ev.p.bought) + "/" + fmtNum(t.qty) + " · verkauft " + fmtNum(ev.p.sold) + (ev.stock ? " · Lager " + fmtNum(ev.stock) : "");
-      card.appendChild(lp);
-      var bar = el("div", "ov-bar-mini", '<span style="width:' + pct.toFixed(0) + '%"></span>');
-      card.appendChild(bar);
-      var eh = t.status !== "done" ? trEsiHtml(t.charId, trEsiWait(t, ev)) : ""; if (eh) card.appendChild(ovLine("txt")).innerHTML = eh;   // AQ1
+      var tl = el("div", "tc-tiles"); tl.appendChild(tb); tl.appendChild(ts); tl.appendChild(tg); card.appendChild(tl);
+      warn.forEach(function(n){ card.appendChild(n); });
+      // Fuß: Fortschritt, nachkaufen, Knöpfe
+      var lf = el("div", "ov-l tc-foot", '<span class="muted">gekauft ' + fmtNum(ev.p.bought) + "/" + fmtNum(t.qty) + " · verkauft " + fmtNum(ev.p.sold) + (ev.stock ? " · Lager " + fmtNum(ev.stock) : "") + "</span>");
+      var rb2 = trRebuyHtml(t, ev); if (rb2) lf.insertAdjacentHTML("beforeend", " " + rb2.replace(/<button[\s\S]*<\/button>/, function(b){ return '<span class="ov-rbtn">' + b.replace(' class="btn ghost"', "") + "</span>"; }));   // BA2
+      if (t.status !== "done"){   // T11, BB10: Erledigt · Prüfen · Abbrechen wie überall
+        lf.insertAdjacentHTML("beforeend", '<span class="ov-rbtn tc-btns">' + (ev.buyPhase && ev.p.bought ? '<button type="button" data-ova="trGo" data-arg="' + escapeHtml(t.id) + '" title="Einkauf ist fertig (auch wenn weniger als geplant) – weiter zum Verkauf">weiter</button>' : "") +
+          tkBtnsHtml({ kind: "Trade", id: t.id, state: "active" }, true) + "</span>");
+      }
+      card.appendChild(lf);
+      if (t.status !== "done" && tkChkOpen["Trade:" + t.id]) card.appendChild(el("div", "ov-l txt", tkChkHtml("Trade:" + t.id)));
+      if (trEsiWait(t, ev)) card.appendChild(el("div", "ov-l txt", '<span class="pill warn" title="' + TR_ESI_TIP + '">wartet auf EVE (Buchungen bis ~60 Min.)</span>'));   // AQ1: Zeiten stehen im Fuß des Overlays
       return card;
   }
 
@@ -27407,15 +27619,15 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         }
         var card = full || el("div", "ov-card trk-sm" + (x.state === "active" ? x.st + (trkOb(x) ? " trk-ob" : "") :
           x.state === "done" ? x.st + (x.res < 0 ? " dn-neg" : " dn-pos") + (Date.now() - (x.end || 0) < 90000 ? " st-flash" : "") : x.res >= 0 ? " good" : " bad"));   // U12: überboten gelb; Z4: erledigt grün, kurz aufleuchten
-        if (full){ var fn = full.querySelector(".ov-name"); if (fn){ if (x.nr) fn.insertAdjacentHTML("afterbegin", tkNr(x)); fn.insertAdjacentHTML("beforeend", tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x)); } }   // BB10, SS7
+        if (full) tcDecorate(full, x);   // BB10, SS7
         card.classList.add(x.kind === "Trade" ? "trk-trade" : "trk-run"); if (x.mute) card.classList.add("al-mute");   // S10, SS7: Trades / Läufe farbig unterscheiden
         card.setAttribute("data-ova", "trkDet"); card.setAttribute("data-arg", x.id); card.setAttribute("data-ovrc", "trkPage");
         if (x.kind === "Trade") card.setAttribute("data-bk", "Trade:" + x.id);   // BB11: Blinken wie im Trades-Overlay
         card.title = (x.state !== "active" ? tkWhenTxt(x) + "\n" : "") + "Klick: Details auf-/zuklappen · Rechtsklick: in EVE Omni öffnen";
         if (!full){
           var h = el("div", "ov-h");
-          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpenIds(o).indexOf(String(x.id)) >= 0 ? trkWhere(x) : "") + tkKeepPill(x) + tkMuteBtn(x) + tkNextHtml(x) + (x.kind === "Trade" && x.state === "active" ? " " + compPill(compTrade(x.id), true) : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + trRunTag(x) : trRunPill(x))));   // AA5, BB23
-          h.appendChild(el("span", "trk-r", (x.kind === "Lauf" && x.state === "active" ? gkRunPillShort(x.id, ovRender) + " " : "") + ovPfB(x.res) + "" + (x.state === "active" ? " · " + fmtNum(x.bought) + "/" + fmtNum(x.plan) : " · " + (x.state === "done" ? "" : "abgebr. ") + tkDay(x.end || x.t)) + (x.tm && x.state !== "active" ? " · " + tkTimeHtml(x.tm, true) : "")));   // AI3; BB1: laufend zugeklappt ohne Zeit hinten (dafür „neu:“): Ampel rechts, nicht im abgeschnittenen Namen
+          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpenIds(o).indexOf(String(x.id)) >= 0 ? trkWhere(x) : "") + tkKeepIc(x) + (x.state !== "active" ? "" : x.kind === "Trade" ? compIc(compTrade(x.id)) : gkRunIc(x.id, ovRender)) + tkMuteBtn(x) + tkNextHtml(x) + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x)))));   // AA5, BB23; CA: Ampel als Symbol
+          h.insertAdjacentHTML("beforeend", tkValBox(x, x.state === "active" ? fmtNum(x.bought) + "/" + fmtNum(x.plan) : (x.state === "done" ? "" : "abgebr. ") + tkDay(x.end || x.t) + (x.tm ? " · " + tkTimeHtml(x.tm, true) : "")));   // AI3; BB1: laufend ohne Zeit hinten (dafür „↻“); CA: Kasten rechts
           card.appendChild(h);
           // II2: Punkte und „herausnehmen“ nur aufgeklappt (ovRunCard/vcCard) – zugeklappt zeigt der rote Rahmen den Verlust
           var oxs = x.kind === "Trade" && x.state === "active" ? oxTrade(x.id, true) : "";   // AA4: nur unter 24 Std
@@ -27439,27 +27651,67 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   }
   // T15: mehrere Karten gleichzeitig aufgeklappt (frueher nur eine Id)
   function trkOpenIds(o){ var d = o.trkDet; return (Array.isArray(d) ? d : d != null ? [d] : []).map(String); }
-  function ovRunCard(run){
-      var tmR = tkTimes()["Lauf" + run.id], g = hrProgress(run), rBad = hrBad(run, g), card = el("div", "ov-card lf-run" + tkStCls(g.phase, rBad) + (!rBad && (vcRed(run) || !!(tmR && tmR.slow)) ? " trk-ob" : ""));   // SS9/ZZ1: Sell-Order besser, einzelne Ware im Minus oder zu langsam = gelb; rot nur hrBad
-      var h = el("div", "ov-h");
-      h.appendChild(el("span", "ov-name", escapeHtml(run.fromName.replace(/ \(.*/, "").split(" - ")[0]) + " → " + escapeHtml(run.toName.split(" - ")[0]) + (run.status !== "done" ? tkNextHtml({ state: "active", charId: run.charId }) : "")));   // BB2
+  // CC (25.10.): Lauf – Route von deinem Standort zur Start- bzw. Zielstation; „Ziel in EVE“ setzt genau diese Station (Autopilot)
+  function runStBtns(k){   // CC: Route von deinem Standort + genau diese Station als Ziel in EVE (Lauf „id|a/b“, Suchergebnis „res:i|a/b“)
+    var st = haulEveSt["st:" + k], live = st && (st.busy || Date.now() - st.t < 8000);
+    return '<span class="ov-rbtn"><button type="button" data-ova="runRt" data-arg="' + escapeHtml(k) + '" title="Route von deinem Standort zu dieser Station planen und im Navigations-Overlay zeigen">Route</button>' +
+      '<button type="button" class="tc-eve' + (live && !st.busy ? (st.ok ? " ok" : " bad") : "") + '" data-ova="runDest" data-arg="' + escapeHtml(k) + '"' + (live && st.msg ? ' title="' + escapeHtml(st.msg) + '"' : ' title="Genau diese Station in EVE als Ziel setzen (Autopilot)"') + (live && st.busy ? " disabled" : "") + ">" +
+      (live ? (st.busy ? "setze …" : st.ok ? "✓ Ziel gesetzt" : "✗ nicht gesetzt") : "⌖ Ziel in EVE") + "</button></span>";
+  }
+  function resStRun(k){   // HL/G1: Suchergebnis (Hub-Option „hub“ oder Umkreis-Ziel i) wie ein Lauf – Start- und Zielstation
+    var H = ovHubLast, L = ovHaulLast, d = k !== "hub" && L && L.list[Number(k)];
+    if (k === "hub") return H ? { from: H.src.station, fromName: H.src.stationName || H.src.label, to: H.dst.station, toName: H.dst.stationName || H.dst.label } : null;
+    return d ? { from: L.originStation, fromName: L.originLabel || "", to: d.stationId, toName: d.stationName } : null;
+  }
+  async function runStAction(type, arg){
+    var p = arg.split("|"), run = /^res:/.test(p[0]) ? resStRun(p[0].slice(4)) : hrLoad().find(function(r){ return String(r.id) === p[0]; }); if (!run || !(p[1] === "a" ? run.fromName : run.toName)) return;
+    var name = p[1] === "a" ? run.fromName : run.toName, sid = p[1] === "a" ? run.from : run.to, k = "st:" + arg;
+    if (type === "runDest"){
+      haulEveSt[k] = { busy: true, t: Date.now() }; ovRender(); trkRender();
+      var cid = await mkChar("esi-ui.write_waypoint.v1"), msg = cid ? await rtApDest(cid, sid, name.split(" - ")[0], false) : "Kein Charakter mit Autopilot-Berechtigung – einmal neu einloggen.";
+      haulEveSt[k] = { ok: /im Spiel gesetzt/.test(msg), t: Date.now(), msg: (cid ? (charNameById(cid) || "") + ": " : "") + msg };
+      ovRender(); trkRender(); setTimeout(function(){ ovRender(); trkRender(); }, 8100); return;
+    }
+    var to = eveSysName(name), from = null, lc = await mkChar("esi-location.read_location.v1");
+    if (lc) from = await myLocSys(lc).catch(function(){ return null; });
+    if (!from || from === to) from = p[1] === "b" ? eveSysName(run.fromName) : from;   // Standort unbekannt: Strecke Start → Ziel
+    if (!from || from === to){ haulRouteMsg = "Du bist schon in " + to + "."; ovRender(); return; }
+    haulRouteMsg = "Frage die Route bei EVE an …"; ovRender();
+    await haulRoute(from, to, false, true); ovShowRoute();
+  }
+  function ovRunCard(run){   // CC (25.10.): Schritt-Leiste ① Kaufen ② Unterwegs ③ Verkaufen + drei Kacheln, Route/Ziel in EVE an beiden Stationen, Kasse im Fuß
+      var tmR = tkTimes()["Lauf" + run.id], g = hrProgress(run), rBad = hrBad(run, g), card = el("div", "ov-card tc-card lf-run" + tkStCls(g.phase, rBad) + (!rBad && (vcRed(run) || !!(tmR && tmR.slow)) ? " trk-ob" : ""));   // SS9/ZZ1: Sell-Order besser, einzelne Ware im Minus oder zu langsam = gelb; rot nur hrBad
+      var step = run.status === "done" || g.phase === "verkauft" || g.phase === "wird verkauft" ? 3 : g.phase === "unterwegs" ? 2 : 1, rid = escapeHtml(run.id);
+      var h = el("div", "ov-h"), tip = (run.charName ? run.charName + " · " : "") + String(tkTimeHtml(tmR)).replace(/<[^>]*>/g, "");
+      h.appendChild(el("span", "ov-name", trkPics(run.charId, run.items, 3) + " " + trkNm(run.fromName.replace(/ \(.*/, "").split(" - ")[0] + " → " + run.toName.split(" - ")[0]) +
+        (run.status !== "done" ? gkRunIc(run.id, ovRender) + tkNextHtml({ state: "active", charId: run.charId }) : "") + (tip ? ' <span class="trk-ic tc-inf" title="' + escapeHtml(tip) + '">ⓘ&#xFE0E;</span>' : "") + trRunPill({ kind: "Lauf", id: run.id, state: run.status !== "done" ? "active" : "done" })));   // BB2
       h.appendChild(el("span", "pill " + (g.phase === "verkauft" ? "profit" : "warn"), g.phase));
+      h.insertAdjacentHTML("beforeend", tkValBox({ res: g.profit }, fmtNum(g.bought) + "/" + fmtNum(g.plan)));
       card.appendChild(h);
-      card.appendChild(ovLine("txt")).innerHTML = trkPics(run.charId, run.items, 8) + " " + tkTimeHtml(tmR);
-      var rh = run.status !== "done" ? trEsiHtml(run.charId) : ""; if (rh) card.appendChild(ovLine("txt")).innerHTML = rh;   // AQ1
-      [["Kauf", run.fromName], ["Verkauf", run.toName]].forEach(function(k){ var st = ovLine("ov-st"); st.appendChild(el("span", "ov-lbl", k[0])); st.appendChild(stCell(k[1])); card.appendChild(st); });   // T13
-      if (run.ship) card.appendChild(el("div", "ov-l txt", "Schiff <b>" + escapeHtml(String(run.ship).split(" (")[0]) + "</b>" + (run.fit ? " · " + runFitHtml(run) : "") + (run.ehp ? ' · <span class="muted">' + shortIsk(run.ehp).replace(" ISK", "") + " EHP</span>" : "") + " " + gkRunPill(run.id, ovRender)));   // AI3
-      card.appendChild(el("div", "ov-l", ovRouteBtns("run:" + escapeHtml(run.id))));
-      var l = ovLine("txt");
-      l.innerHTML = "gekauft " + fmtNum(g.bought) + "/" + fmtNum(g.plan) + " · verkauft " + fmtNum(g.sold) + " · Kasse <b title=\"" + TK_TIP + "\">" + ovSigned(g.profit) + "</b>" + (g.forecast !== null && g.sold < g.bought ? " → <b title=\"wenn alles verkauft\">" + ovSigned(g.forecast) + "</b>" : "") + " · Plan " + shortIsk(run.items.reduce(function(a, x){ return a + x.p; }, 0)) +
-        '<span class="ov-rbtn">' + (g.phase === "wird gekauft" ? '<button type="button" data-ova="hrGo" data-arg="' + escapeHtml(run.id) + '" title="Einkauf ist fertig (auch wenn weniger als geplant) – weiter zu „unterwegs“">weiter</button>' : "") +
-        (run.status !== "done" && !trRunTrades(run.id).length ? '<button type="button" data-ova="hrOrd" data-arg="' + escapeHtml(run.id) + '" title="' + TR_ORD_TIP + '">→ als Orders</button>' : "") +   // BB23
-        tkBtnsHtml({ kind: "Lauf", id: run.id, state: run.status !== "done" ? "active" : run.cancelled ? "cancelled" : "done" }, true) + "</span>";   // BB10
-      card.appendChild(l);
-      // U10: im Overlay nur die Multibuy-Liste, Einzel-Kopierknöpfe je Ware bleiben im Hauptfenster (T13)
-      var mbl = ovLine("txt"); mbl.appendChild(ovMultibuy(run.items)); card.appendChild(mbl);
-      var vcH = vcCard(run.id); if (vcH) card.appendChild(ovLine("txt")).innerHTML = vcH;   // T28
-      card.appendChild(el("div", "ov-bar-mini", '<span style="width:' + (g.plan ? Math.min(100, (g.bought + g.sold) / (2 * g.plan) * 100) : 0).toFixed(0) + '%"></span>'));
+      card.appendChild(el("div", "ov-bar-mini ov-keep", '<span style="width:' + (g.plan ? Math.min(100, (g.bought + g.sold) / (2 * g.plan) * 100) : 0).toFixed(0) + '%"></span>'));
+      card.appendChild(el("div", "tc-steps", ["Kaufen", "Unterwegs", "Verkaufen"].map(function(s, i){ return '<span class="' + (i + 1 < step || run.status === "done" ? "done" : i + 1 === step ? "now" : "") + '">' + "①②③".charAt(i) + " " + s + "</span>"; }).join("")));
+      var tile = function(hd, n){ var d = el("div", "tc-t" + (run.status === "done" ? "" : n === step ? " tc-hot" : n < step ? " tc-off" : "")); d.appendChild(el("div", "tc-h", hd)); return d; };
+      var stTile = function(d, name, side){   // Station kopieren + Route von deinem Standort + genau diese Station als Ziel in EVE
+        var l = ovLine("tc-st"); l.appendChild(stCell(name)); l.title = name; d.appendChild(l);
+        d.appendChild(el("div", "ov-l", runStBtns(run.id + "|" + side)));
+      };
+      var tb = tile("Kaufen", 1), tw = tile("Transport", 2), ts = tile("Verkaufen", 3);
+      stTile(tb, run.fromName, "a");
+      var miss = Object.keys(g.items).filter(function(k){ return g.items[k].q > 0 && !g.items[k].b; }).length;
+      tb.appendChild(el("div", "ov-l", "<span>gekauft <b>" + fmtNum(g.bought) + "</b> / " + fmtNum(g.plan) + "</span>" + (step === 1 && g.bought && miss ? ' <span class="warn">fehlt: ' + miss + " " + (miss > 1 ? "Waren" : "Ware") + "</span>" : "")));
+      if (step === 1 && run.status !== "done"){ var mb = ovLine(); mb.appendChild(ovMultibuy(run.items)).querySelector(".tsc-cp").classList.add("cp-hot"); tb.appendChild(mb); }   // U10
+      if (run.ship) tw.appendChild(el("div", "ov-l", "<b>" + escapeHtml(String(run.ship).split(" (")[0]) + "</b>" + (run.fit ? " " + runFitHtml(run) : "") + (run.ehp ? ' <span class="muted">' + shortIsk(run.ehp).replace(" ISK", "") + " EHP</span>" : "")));   // AI3
+      else tw.appendChild(el("div", "ov-l muted", "Schiff unbekannt"));
+      if (run.status !== "done"){ var gp = gkRunPill(run.id, ovRender); if (gp) tw.appendChild(el("div", "ov-l", gp)); }
+      stTile(ts, run.toName, "b");
+      ts.appendChild(el("div", "ov-l", "<span>verkauft <b>" + fmtNum(g.sold) + "</b> / " + fmtNum(g.bought) + "</span>"));
+      var vcH = vcCard(run.id); if (vcH) ts.appendChild(el("div", "ov-l txt", vcH));   // T28
+      var tl = el("div", "tc-tiles"); tl.appendChild(tb); tl.appendChild(tw); tl.appendChild(ts); card.appendChild(tl);
+      var lf = el("div", "ov-l tc-foot", '<span><span title="' + TK_TIP + '">Kasse</span> ' + ovPfB(g.profit) + (g.forecast !== null && g.sold < g.bought ? ' → <span title="wenn alles verkauft">' + ovPfB(g.forecast) + "</span>" : "") + ' <span class="muted">· Plan ' + shortIsk(run.items.reduce(function(a, x){ return a + x.p; }, 0)) + "</span></span>");
+      lf.insertAdjacentHTML("beforeend", '<span class="ov-rbtn tc-btns">' + (g.phase === "wird gekauft" ? '<button type="button" data-ova="hrGo" data-arg="' + rid + '" title="Einkauf ist fertig (auch wenn weniger als geplant) – weiter zu „unterwegs“">weiter</button>' : "") +
+        (run.status !== "done" && !trRunTrades(run.id).length ? '<button type="button" data-ova="hrOrd" data-arg="' + rid + '" title="' + TR_ORD_TIP + '">→ als Orders</button>' : "") +   // BB23
+        (run.status !== "done" ? tkBtnsHtml({ kind: "Lauf", id: run.id, state: "active" }, true) : "") + "</span>");   // BB10 – erledigt: Knöpfe im Fuß von tcMount
+      card.appendChild(lf);
       return card;
   }
   /* Overlay „Navigation“: einfacher Modus wie in EVE – Start, Ziel, Kürzeste/Sicherste/Unsicherer (Gates) oder Sprungroute (DOTLAN) */
@@ -27999,18 +28251,32 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     body.appendChild(sortBar("haul"));
     var best = haulBest(L.list), all = sortList("haul", L.list, HAUL_SORT), show = ovHaulMore ? all : all.slice(0, 5);
     show.forEach(function(d, pos){
-      var i = L.list.indexOf(d), on = L.sel === i, hd = el("div", "ov-card ov-opt" + (d === best ? " good" : ""));
-      hd.innerHTML = '<button type="button" class="ov-opt-h" data-ova="haulSel" data-arg="' + i + '" aria-expanded="' + on + '">' + (on ? "▾" : "▸") + " Ziel " + (pos + 1) + ": " + ovPfB(d.profit) + " Gewinn" +
-        (d.spend ? " · Einsatz <b>" + shortIsk(d.spend) + "</b>" : "") + " · Sprünge: <b>" + d.jumps + "</b>" + (d.iskh != null ? " · <b>" + shortIsk(d.iskh) + "</b>/Std." : "") +
-        " · → " + escapeHtml(String(d.stationName).split(" - ")[0]) + gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend) + gkRouteTag(d.gkSys) + (d === best ? ' <span class="pill profit">empfohlen</span>' : "") + "</button>";
-      body.appendChild(hd);
-      if (on) ovRenderLoad(body, { src: { label: L.origin || L.originLabel || "Start", stationName: L.originLabel }, dst: { label: d.stationName, stationName: d.stationName }, rows: d.items || [], ship: d.ship,
+      var i = L.list.indexOf(d), on = L.sel === i, row;
+      body.appendChild(row = hlOptRow({ act: "haulSel", arg: i, on: on, good: d === best, nr: pos + 1, items: d.items, from: L.origin || "Start", to: String(d.stationName).split(" - ")[0], profit: d.profit, spend: d.spend,
+        vol: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0, icons: hlPillIc(gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend), "🛡&#xFE0E;") + hlPillIc(gkRouteTag(d.gkSys), "⚠&#xFE0E;") + hlOptIcs(d.jumps, d.iskh, d === best) }));
+      if (on) ovRenderLoad(row, { src: { label: L.origin || L.originLabel || "Start", stationName: L.originLabel, station: L.originStation }, dst: { label: d.stationName, stationName: d.stationName, station: d.stationId }, rows: d.items || [], ship: d.ship,
         profit: d.load ? d.load.profit : d.profit, spend: d.load ? d.load.spend : d.spend, volUsed: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0 },
-        (L.originSys ? ovRouteBtns(i) : "") + (d.items && d.items.length ? ovHrBtn(L.t, i) : ""), "");
+        { key: i, jumps: d.jumps, iskh: d.iskh, gk: gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend) + gkRouteTag(d.gkSys), btns: d.items && d.items.length ? ovHrBtn(L.t, i) : "" });
     });
     if (all.length > 5) body.appendChild(el("div", "ov-l", '<span class="ov-rbtn"><button type="button" data-ova="haulMore">' + (ovHaulMore ? "weniger anzeigen" : "mehr anzeigen (" + (all.length - 5) + ")") + "</button></span>"));
   }
 
+  // 25.10. (Nutzer wählte K1): Ergebnis-Zeile wie die zugeklappte Watchlist – Warenbilder + Strecke, Symbole statt Pills (Text im Tooltip), rechts Kasten Gewinn/Einsatz, Balken = Laderaum
+  function hlPillIc(h, sym){
+    if (!h) return ""; var c = (/class="pill ([^"]*)"/.exec(h) || [0, ""])[1], t = /title="([^"]*)"/.exec(h), tx = h.replace(/<[^>]*>/g, "").trim();
+    var lv = /gk-rt|gk-warn|\bwarn/.test(c) ? "warn" : /gk-bad|loss/.test(c) ? "bad" : /gk-ok|profit/.test(c) ? "ok" : "unk";
+    return ' <span class="trk-ic tic-' + lv + '" title="' + (sym ? (t ? t[1] : tx) : tx + (t ? " – " + t[1] : "")) + '">' + (sym || tx.split(" ")[0]) + "</span>";
+  }
+  function hlOptIcs(jumps, iskh, best){
+    return (jumps != null ? ' <span class="trk-q" title="Sprünge">⇢ ' + jumps + " <span>Spr.</span></span>" : "") + (iskh != null ? ' <span class="trk-q" title="ISK pro Stunde">⏱ ' + shortIsk(iskh) + "<span>/Std.</span></span>" : "") + (best ? ' <span class="pill profit">empfohlen</span>' : "");
+  }
+  function hlOptRow(o){   // 25.10. (Nutzer: Ziel nicht zu erkennen): Name nur „→ Ziel“ (Start steht oben „ab …“), zu lang → Lauftext
+    var c = el("div", "ov-card trk-sm hl-opt" + (o.good ? " good" : "")), a = 'data-ova="' + o.act + '" data-arg="' + o.arg + '"';
+    c.innerHTML = '<div class="ov-h" ' + a + ' title="Klick: auf- oder zuklappen"><span class="ov-name"><button type="button" class="hl-tog" ' + a + ' aria-expanded="' + o.on + '">' + (o.on ? "▾" : "▸") + '</button><span class="trk-nr">' + o.nr + "</span>" +
+      trkPics("", o.items || [], 3) + '<span class="trk-nm hl-nm" title="' + escapeHtml(o.from + " → " + o.to) + '"><span>→ ' + escapeHtml(o.to) + "</span></span>" + o.icons + "</span>" + tkValBox({ res: o.profit }, o.spend ? "<span>Einsatz</span> " + shortIsk(o.spend) : "").replace(' title="' + TK_TIP + '"', ' title="Gewinn netto"') + "</div>" +
+      (o.cargo ? '<div class="ov-bar-mini" title="Laderaum ' + fmtNum(o.vol || 0, 0) + " / " + fmtNum(o.cargo, 0) + ' m³"><span style="width:' + Math.min(100, (o.vol || 0) / o.cargo * 100).toFixed(0) + '%"></span></div>' : "");
+    return c;
+  }
   // 18.10.: Ergebnis verwerfen (Overlay + Hauptfenster); Alter steht dabei, ab 1 Std. gelb
   function ovResClearBtn(k, t){ var old = t && Date.now() - t > 3600000; return '<span class="ov-rbtn"' + (old ? ' title="Ergebnis ist älter als 1 Std."' : "") + '>' + (t ? '<span class="' + (old ? "warn" : "muted") + '">' + escapeHtml(ovAgo(t).replace("Stand: ", "")) + "</span> " : "") +
     '<button type="button" data-ova="resClear" data-arg="' + k + '" title="Ergebnis ausblenden – die nächste Suche rechnet neu">Ergebnis verwerfen</button></span>'; }
@@ -28030,13 +28296,12 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (H.opts) body.appendChild(el("div", "ov-l", '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="all" title="Die Orders aller Optionen neu laden – ohne neue Suche">Alle Preise aktualisieren</button></span> ' + hubUpdTxt({ at: 0 }, H.t)));   // T12
     // K6/R10: alle Optionen als Zeile (Option 1 gruen = empfohlen), Klick klappt eine komplett auf
     (H.opts || [H]).forEach(function(o, i){
-      var on = i === (H.opts ? H.sel : 0), hd = el("div", "ov-card ov-opt" + (i === 0 ? " good" : ""));
-      hd.innerHTML = '<button type="button" class="ov-opt-h" data-ova="hubSel" data-arg="' + i + '" aria-expanded="' + on + '">' + (on ? "▾" : "▸") + " Option " + (i + 1) + ": " + ovPfB(o.profit) + " Gewinn" +
-        (o.spend ? " · Einsatz <b>" + shortIsk(o.spend) + "</b>" : "") + (o.jumps != null ? " · Sprünge: <b>" + o.jumps + "</b>" : "") + (o.iskh != null ? " · <b>" + shortIsk(o.iskh) + "</b>/Std." : "") + (o.at && o.profit < o.prev * 0.85 ? ' <span class="bad">⚠</span>' : "") + (o.busy ? " …" : "") + " · → " + escapeHtml(o.dst.label.replace(/ \(.*/, "")) + gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend) + gkRouteTag(o.gkSys) + rtCheckPill(o.rc) + (i === 0 ? ' <span class="pill profit">empfohlen</span>' : "") + "</button>";
-      body.appendChild(hd);
-      if (on) ovRenderLoad(body, H, ovRouteBtns("hub") + ovHrBtn(H.t + "-" + (H.sel || 0), "hub") +
-        '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="' + H.sel + '" title="Nur die Orders dieser Waren neu laden und neu rechnen – ohne neue Suche"' + (H.busy ? " disabled" : "") + '>Preise aktualisieren</button></span>', hubUpdTxt(H, ovHubLast.t));
-      if (on && o.rc) body.appendChild(el("div", "ov-l txt gk-line gk-" + rtCheckCls(o.rc), rtCheckHtml(o.rc)));   // AO2d
+      var on = i === (H.opts ? H.sel : 0), row;
+      body.appendChild(row = hlOptRow({ act: "hubSel", arg: i, on: on, good: i === 0, nr: i + 1, items: o.rows, from: String(H.src && H.src.label || "").split(" (")[0], to: o.dst.label.replace(/ \(.*/, ""), profit: o.profit, spend: o.spend,
+        vol: o.volUsed, cargo: o.ship && o.ship.cap || H.cargo, icons: (o.at && o.profit < o.prev * 0.85 ? ' <span class="trk-ic tic-bad" title="Gewinn seit der Suche um mehr als 15 % gefallen">⚠&#xFE0E;</span>' : "") + (o.busy ? " …" : "") +
+          hlPillIc(gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend), "🛡&#xFE0E;") + hlPillIc(gkRouteTag(o.gkSys), "⚠&#xFE0E;") + hlPillIc(rtCheckPill(o.rc)) + hlOptIcs(o.jumps, o.iskh, i === 0) }));
+      if (on) ovRenderLoad(row, H, { key: "hub", jumps: o.jumps, iskh: o.iskh, gk: gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend) + gkRouteTag(o.gkSys) + (o.rc ? '<div class="gk-line gk-' + rtCheckCls(o.rc) + '">' + rtCheckHtml(o.rc) + "</div>" : ""),   // AO2d
+        btns: ovHrBtn(H.t + "-" + (H.sel || 0), "hub") + '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="' + H.sel + '" title="Nur die Orders dieser Waren neu laden und neu rechnen – ohne neue Suche"' + (H.busy ? " disabled" : "") + '>Preise aktualisieren</button></span>', upd: hubUpdTxt(H, ovHubLast.t) });
     });
   }
   // AM3: laufende Läufe im Hauling-Overlay wie die Trades im Trades-Overlay (Erledigte → Watchlist)
@@ -28055,40 +28320,38 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       if (fo[run.id]) c.classList.add("tr-fold");
       h.setAttribute("data-ova", "hrFold"); h.setAttribute("data-arg", run.id); h.title = "Klick: Karte zu- oder aufklappen";
       h.firstChild.insertAdjacentHTML("afterbegin", tkNr(x));
-      c.lastChild.classList.add("ov-keep");   // Fortschrittsbalken auch zugeklappt
       body.appendChild(c);
     });
   }
-  // Eine aufgeklappte Ladung (Hub-Option oder Umkreis-Ziel): Kopf mit Einsatz, Knöpfe, Stationen, Multibuy, je Ware Menge/⌀ Preise/Gewinn
-  function ovRenderLoad(body, H, btns, upd){
-    var sum = el("div", "ov-sum");
-    sum.innerHTML = "<span><b>" + escapeHtml(H.src.label.replace(/ \(.*/, "")) + " → " + escapeHtml(H.dst.label.replace(/ \(.*/, "")) + "</b></span>" +
-      "<span>netto gesamt " + ovPfB(H.profit) + "</span><span>Einsatz <b>" + shortIsk(H.spend) + "</b></span>" + (H.cargo ? "<span>" + fmtNum(H.volUsed, 0) + " / " + fmtNum(H.cargo, 0) + " m³</span>" : "") +
-      (H.ship ? "<span>Schiff <b>" + escapeHtml(H.ship.name) + "</b>" + (H.ship.buy ? " (kaufen)" : "") + " · " + fitIcons(H.ship) + "</span>" : "");
-    body.appendChild(sum);
-    if (btns) body.appendChild(el("div", "ov-l", btns));   // T1: Knoepfe eigene Zeile
-    if (upd) body.appendChild(el("div", "ov-l", upd));   // T12
-    [["Kauf", H.src.stationName], ["Verkauf", H.dst.stationName]].forEach(function(k){   // T1: je Station eine Zeile
-      if (!k[1]) return;   // AB: Umkreis ab „Eigenes System“ ohne Station
-      var st = ovLine("ov-st"); st.appendChild(el("span", "ov-lbl", k[0])); st.appendChild(stCell(k[1])); body.appendChild(st);
-    });
-    var mb = ovLine("txt"); mb.appendChild(ovMultibuy(H.rows)); body.appendChild(mb);   // L4
-    body.appendChild(sortBar("hub"));
+  // Eine aufgeklappte Ladung (Hub-Option oder Umkreis-Ziel) – HL/G1 (25.10., Nutzer wählte G1): Kacheln wie die Lauf-Karte (① Kaufen · ② Transport · ③ Verkaufen · Ergebnis),
+  // Route + „⌖ Ziel in EVE“ an beiden Stationen, Multibuy gelb, darunter die Waren als schlanke Liste (Menge ⧉, Ø Kauf ⧉, ▤ Markt, ∿ Verlauf)
+  function ovRenderLoad(box, H, o){
+    var tl = el("div", "tc-tiles tc-4 hl-load"), tile = function(hd, hot){ var d = el("div", "tc-t" + (hot ? " tc-hot" : "")); d.appendChild(el("div", "tc-h", hd)); tl.appendChild(d); return d; };
+    var stT = function(d, S, side){ if (!S.stationName) return;   // AB: Umkreis ab „Eigenes System“ ohne Station
+      var l = ovLine("tc-st"); l.appendChild(stCell(S.stationName)); l.title = S.stationName; d.appendChild(l); d.appendChild(el("div", "ov-l", runStBtns("res:" + o.key + "|" + side))); };
+    var tb = tile("① Kaufen", 1), tw = tile("② Transport"), ts = tile("③ Verkaufen"), tg = tile("Ergebnis");
+    stT(tb, H.src, "a");
+    var mb = ovLine(); mb.appendChild(ovMultibuy(H.rows)).querySelector(".tsc-cp").classList.add("cp-hot"); tb.appendChild(mb);
+    tb.appendChild(el("div", "ov-l", "<span>Einsatz <b>" + shortIsk(H.spend) + "</b></span>"));
+    if (H.ship) tw.appendChild(el("div", "ov-l", "<b>" + escapeHtml(H.ship.name) + "</b>" + (H.ship.buy ? " <span>(kaufen)</span>" : "") + " " + fitIcons(H.ship)));
+    tw.appendChild(el("div", "ov-l", (H.cargo ? "<span>" + fmtNum(H.volUsed, 0) + " / " + fmtNum(H.cargo, 0) + " m³</span>" : "") + (o.jumps != null ? "<span>⇢ <b>" + o.jumps + "</b> Sprünge</span>" : "")));
+    if (o.gk) tw.appendChild(el("div", "ov-l", o.gk));
+    stT(ts, H.dst, "b");
+    tg.appendChild(el("div", "ov-l", "<span>Gewinn " + ovPfB(H.profit) + "</span>" + (H.spend ? ' <span class="muted">' + fmtNum(H.profit / H.spend * 100, 1) + " %</span>" : "")));
+    if (o.iskh != null) tg.appendChild(el("div", "ov-l", "<span>⏱ <b>" + shortIsk(o.iskh) + "</b>/Std.</span>"));
+    box.appendChild(tl);
+    if (o.btns || o.upd) box.appendChild(el("div", "ov-l tc-foot", (o.btns || "") + (o.upd ? '<span class="tc-upd">' + o.upd + "</span>" : "")));   // T1, T12
+    var wl = el("div", "hl-wl"), g = el("div", "hl-wg");
+    g.innerHTML = '<span class="hl-wh">Menge</span><span class="hl-wh">Ware</span><span class="hl-wh">Ø Kauf</span><span class="hl-wh hl-wx">Ø Verk.</span><span class="hl-wh">Gewinn</span><span class="hl-wh hl-wx">m³</span>';
     sortList("hub", H.rows, HUB_SORT).forEach(function(r){
-      var card = el("div", "ov-card");
-      var h = el("div", "ov-h");
-      var nm = el("span", "ov-name"); nm.appendChild(tscNameCell(escapeHtml(r.name))); if (r.tid) nm.lastChild.appendChild(mkBtn(r.tid)); h.appendChild(nm);
-      card.appendChild(h);
-      var lb = ovLine();
-      lb.appendChild(el("span", "", "Kaufen"));
-      lb.appendChild(ovCp(fmtNum(r.q), String(r.q), "Menge kopieren"));
-      card.appendChild(lb);
-      card.appendChild(el("div", "ov-l txt", "<span class=\"ov-nw\">Einkauf ⌀ <b>" + tscFmtPrice(r.avgBuy) + "</b></span> · <span class=\"ov-nw\">Verkauf ⌀ <b>" + tscFmtPrice(r.avgSell) + "</b></span>"));
-      var lg = ovLine("txt");
-      lg.innerHTML = "Gewinn netto " + ovPfB(r.q ? r.p / r.q : 0) + "/Stk · gesamt " + ovPfB(r.p) + " · " + fmtNum(r.totalVol, 0) + " m³";
-      card.appendChild(lg);
-      body.appendChild(card);
+      var w = el("div", "hl-w"); w.appendChild(ovCp(fmtNum(r.q), String(r.q), "Menge kopieren"));
+      var nm = el("span", "hl-wn"); if (r.tid) nm.insertAdjacentHTML("beforeend", '<img class="trk-i" alt="" loading="lazy" src="https://images.evetech.net/types/' + encodeURIComponent(r.tid) + '/icon?size=32">');
+      nm.appendChild(el("b", "", escapeHtml(r.name))); if (r.tid) nm.appendChild(mkBtn(r.tid)); w.appendChild(nm);
+      w.appendChild(ovCp(tscFmtPrice(r.avgBuy), tscCopyPrice(r.avgBuy), "Ø Einkaufspreis kopieren"));
+      w.appendChild(el("span", "hl-wx", tscFmtPrice(r.avgSell))); w.appendChild(el("span", "", ovPfB(r.p))); w.appendChild(el("span", "hl-wx muted", fmtNum(r.totalVol, 0)));
+      g.appendChild(w);
     });
+    wl.appendChild(sortBar("hub")); wl.appendChild(g); box.appendChild(wl);
   }
 
   /* L1/S13: Radar wie gatecamp.space/radar – Gate-Camps im Umkreis (Stargates).
@@ -30346,6 +30609,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       if (tg) trUpdate(tg.id, { buyDone: true });
       ovRender(); return; }
     if (a.type === "mirrorTog" && OV_MIRROR[a.arg]){ var mo = ovLoad(), mk = ovMirKey(a.arg); mo.mirrorOpen = mo.mirrorOpen || {}; mo.mirrorOpen[mk] = !mo.mirrorOpen[mk]; ovSave(mo); ovRender(); return; }
+    if (a.type === "runRt" || a.type === "runDest"){ runStAction(a.type, String(a.arg)); return; }   // CC
     if (a.type === "haulRoute" || a.type === "haulEve"){
       var hr = /^run:/.test(a.arg) && hrLoad().find(function(x){ return "run:" + x.id === a.arg; });   // T13
       var hb = hr ? [eveSysName(hr.fromName), eveSysName(hr.toName)] : a.arg === "hub" ? (ovHubLast ? [ovHubLast.src.label.replace(/ \(.*/, ""), ovHubLast.dst.label.replace(/ \(.*/, "")] : null)
@@ -30812,7 +31076,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "5.3.0";
+  var EVECORE_VERSION = "5.4.0";
   (function(){ var bt = document.getElementById("beta-tag"); if (bt) bt.textContent = "Beta " + EVECORE_VERSION; })();   // AJ (18.10.): Version im Titel
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   // NX3: Funktionsliste (Einstellungen › Funktionen) – [Bereich, Funktion DE, Funktion EN, wo DE, wo EN, Ziel (OmniCom-Knopf oder set:<Einstellungsbereich>), Overlay-Ansicht]
@@ -32317,7 +32581,6 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (g && !g.busy){ g = Object.assign({}, g); g.paid = paid; g.jita = j; if (!(run.ehp > 0) && g.src === "Rumpf ohne Module") g.unk = true; }   // Schiff nicht in den Assets → kein rotes Ziel raten
     return g;
   }   // Ladungswert = bezahlter Einkauf (sp = Summe je Ware; p ist der Gewinn, nicht der Stückpreis)
-  function gkRunPillShort(id, cb){ return gkRunPill(id, cb).replace(/ [\d.,]+ ISK\/EHP<\/span>$/, "</span>"); }   // 18.10.: zugeklappte Zeile kurz, Zahl im Tooltip/aufgeklappt
   function gkRunPill(id, cb){ var run = hrLoad().find(function(r){ return String(r.id) === String(id); }); return run ? gkPill(gkRunCalc(run, cb)) : ""; }   // EF2: laufende Läufe in Watchlist + Overlay
   function gkRunShip(run){ return run.ship || hlShipName() || isShipName() || ""; }
   // Kernwerte am Schiff in den Assets (Overlay + große Seite), Skills des Besitzers

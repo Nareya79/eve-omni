@@ -43,8 +43,8 @@ function makeWindow(extra, host){
     b = view();
     const c1 = b.querySelector('.ov-card[data-bk="Trade:t1"]');
     assert(c1.classList.contains('tr-fold') && !b.querySelector('.ov-card[data-bk="Trade:t2"]').classList.contains('tr-fold'), 'BB9: Klick auf den Kopf klappt nur diese Karte zu');
-    assert(c1.querySelectorAll(':scope > .ov-keep').length === 2 && c1.querySelector('.ov-h .tsc-cp-b'), 'BB9: zugeklappt bleiben Stand + Gewinn, Kopieren am Namen');
-    assert(/^Jita · Stand|^Jita · Preise/.test(c1.querySelector(':scope > .ov-keep').textContent), 'CC3: zugeklappt steht auch das System (' + c1.querySelector(':scope > .ov-keep').textContent + ')');
+    assert(c1.querySelectorAll(':scope > .ov-keep').length === 1 && c1.querySelector('.ov-h .trk-r .trk-rb') && c1.querySelector('.ov-h .tc-inf') && c1.querySelector('.ov-h .tsc-cp-b'), 'BB9/CB: zugeklappt bleiben Kopf (Kasse im Kasten, Ort/Stand im ⓘ) + Balken, Kopieren am Namen');
+    assert(/^Jita · (Stand|Preise)/.test(c1.querySelector('.ov-h .tc-inf').title), 'CC3/CB: zugeklappt steht das System im ⓘ (' + c1.querySelector('.ov-h .tc-inf').title + ')');
     assert(JSON.parse(w.localStorage.getItem('eve-zentrale-overlay-v1')).trFold.t1 === true, 'BB9: Zustand in eve-zentrale-overlay-v1 gemerkt');
     const tc = d.querySelector('#trades-list .tr-card[data-bk="Trade:t1"]');
     assert(tc && tc.classList.contains('tr-fold'), 'BB9: große Seite „Meine Trades“ nutzt denselben Zustand');
@@ -401,14 +401,14 @@ function makeWindow(extra, host){
       // A: gleiche Knöpfe überall
       T.switchTab('track'); d.querySelector('[data-trk="active"]').click(); await tick(20);
       d.querySelector('[data-trk-row="Trade:t1"]').click(); await tick(20);
-      const card = d.querySelector('#trk-body .tr-card');
-      assert(['done', 'chk', 'cancel'].every(a => card.querySelector('[data-tk="' + a + '|Trade:t1"]')), 'BB10: Watchlist-Karte aktiv: Erledigt · Prüfen · Abbrechen');
+      const card = d.querySelector('#trk-body .tc-card');   // H2: Hauptfenster zeigt die Kachel-Karte des Overlays
+      assert(['done', 'chk', 'cancel'].every(a => card.querySelector('[data-ova="tk"][data-arg="' + a + '|Trade:t1"]')), 'BB10: Watchlist-Karte aktiv: Erledigt · Prüfen · Abbrechen');
       T.ovSatAction('track', { type: 'trkDet', arg: 't1' });
       assert(['done', 'chk', 'cancel'].every(a => ov('active').querySelector('[data-ova="tk"][data-arg="' + a + '|Trade:t1"]')), 'BB10: Overlay-Karte aufgeklappt mit denselben Knöpfen');
       const tb = d.createElement('div'); T.ovRenderViewInto('trades', tb);
       assert(tb.querySelector('[data-ova="tk"][data-arg="done|Trade:t1"]') && tb.querySelector('[data-ova="tk"][data-arg="cancel|Trade:t1"]'), 'BB10: Trades-Overlay mit Erledigt/Abbrechen');
       // C: Erledigt → Streifen → Rückgängig
-      card.querySelector('[data-tk="done|Trade:t1"]').click(); await tick(20);
+      card.querySelector('[data-ova="tk"][data-arg="done|Trade:t1"]').click(); await tick(20);
       assert(tr().status === 'done' && !d.getElementById('tk-undo').hidden && /Tritanium erledigt/.test(d.getElementById('tk-undo').textContent), 'BB10: Erledigt + Streifen „… erledigt · Rückgängig“');
       assert(/Rückgängig/.test(ov('done').textContent), 'BB10: Rückgängig auch im Overlay');
       d.querySelector('#tk-undo [data-tk-undo]').click(); await tick(20);
@@ -417,7 +417,7 @@ function makeWindow(extra, host){
       T.ovSatAction('track', { type: 'tk', arg: 'cancel|Trade:t1' });
       assert(tr().status === 'done' && tr().cancelled, 'BB10: Abbrechen im Overlay');
       T.ovSatAction('track', { type: 'tk', arg: 'reopen|Trade:t1' });
-      assert(tr().status === 'active' && tr().keepOpen && T.trkAll().find(x => x.id === 't1').keep && /von Hand offen/.test(ov('active').textContent), 'BB10: Wieder öffnen → keepOpen, Karte „von Hand offen“');
+      assert(tr().status === 'active' && tr().keepOpen && T.trkAll().find(x => x.id === 't1').keep && (/von Hand offen/.test(ov('active').textContent) || !!ov('active').querySelector('.trk-ic[title^="Von Hand wieder geöffnet"]')), 'BB10: Wieder öffnen → keepOpen, Karte „von Hand offen“');
       assert(/!t\.keepOpen && trEvaluate\(t, trLive\[t\.id\], fees0\)\.allSold/.test(src) && /x\.status !== "done" && !x\.keepOpen && hrProgress/.test(src) && /x\.state === "cancelled" \|\| x\.keep\) return false/.test(src), 'BB10: trRefresh/hrRefresh/tkAutoDone lassen von Hand Geöffnete offen');
       // Löschen → Papierkorb (alter Eintrag > 30 Tage fällt raus), Wiederherstellen
       T.tkAct('Trade', 't1', 'cancel'); T.tkAct('Trade', 't1', 'del');
@@ -478,13 +478,13 @@ function makeWindow(extra, host){
       // Hauling nur Hinweis, Läufe in der Watchlist
       T.hrUpdate(run.id, {}); await tick(20);
       assert($('hr-list').querySelectorAll('[data-hr-card]').length === 1 && $('hr-tabs').querySelector('[data-hrv="active"]').getAttribute('aria-selected') === 'true', 'AL7: Meine Läufe zeigt den Lauf als Zeile unter „Laufend“ (vorher nur Verweis → Watchlist)');
-      d.querySelector('[data-trk="active"]').click(); d.querySelector('[data-trk-row="Lauf:' + run.id + '"]').click(); await tick(20);
+      d.querySelector('[data-trk="active"]').click(); $('trk-body').querySelector('[data-trk-row="Lauf:' + run.id + '"]').click(); await tick(20);
       assert(/data-hr-buydone/.test(src) && $('trk-body').querySelector('.hr-det'), 'BB11: Lauf-Karte in der Watchlist mit „Weiter zu Unterwegs“ und Details');
       // Laufend: kompakte Zeilen, Klick → Watchlist; Wallet › Erledigt nur Summe
       T.troRender(); const tr0 = $('tro-body').querySelector('[data-trk-row="Trade:t1"]');
       assert(tr0 && !$('tro-body').querySelector('.tr-card'), 'BB11: Laufend = kompakte Zeilen');
       T.switchTab('station'); tr0.onclick(); await tick(20);
-      assert(d.querySelector('[data-trk="active"]').getAttribute('aria-selected') === 'true' && $('trk-body').querySelector('.tr-card'), 'BB11: Klick in „Laufend“ öffnet den Auftrag in der Watchlist');
+      assert(d.querySelector('[data-trk="active"]').getAttribute('aria-selected') === 'true' && $('trk-body').querySelector('.tc-card, .tr-card'), 'BB11: Klick in „Laufend“ öffnet den Auftrag in der Watchlist');
       assert(/1 erledigt · Summe/.test($('wv-done-body').textContent) && !$('wv-done-body').querySelector('table'), 'BB11: Wallet › Erledigt nur Summe');
       // Overlays: Trades nur aktive, Watchlist mit Suche, Summe, alle zu/auf, fertig noch sichtbar, Badge
       const tb = ovv('trades');
@@ -494,7 +494,7 @@ function makeWindow(extra, host){
       assert(!wb.querySelector('[data-arg="scan-run"], .ov-act'), 'NW3: keine Markt-Suche mehr im Watchlist-Overlay');
       T.ovSatAction('track', { type: 'trkDetAll', arg: 'auf' });
       const wa = ovv('track');
-      assert(/Stand \d\d:\d\d|Preise noch nicht geladen/.test(wa.textContent) && wa.querySelector('.ov-cp, [data-ova="cp"], .tsc-cp-b'), 'BB11: alle auf → volle Trade-Karte mit Preisen + Kopier-Knöpfen');
+      assert(wa.querySelector('.tc-card .tc-tiles') && /Stand \d\d:\d\d|Preise noch nicht geladen/.test(wa.querySelector('.tc-inf').title) && wa.querySelector('.ov-cp, [data-ova="cp"], .tsc-cp-b'), 'BB11: alle auf → volle Trade-Karte mit Preisen + Kopier-Knöpfen');
       T.ovSatAction('track', { type: 'trkDetAll', arg: 'zu' });
       assert(!T.ovLoad().trkDet, 'BB11: alle zu');
       assert(/Preis-Merkliste/.test($('tsc-view-watch').textContent) && !/Marktwatchlist/.test(src.replace(/<details class="skills-more"[^\n]*Beta[^\n]*/g, '')), 'BB11: „Marktwatchlist“ → „Preis-Merkliste“ (außer alten Patchnotes)');
