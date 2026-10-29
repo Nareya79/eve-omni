@@ -383,7 +383,7 @@ for f in sorted((R / 'Programm-Quellcode').glob('i18n-en-4073-*.json')):
     for k, v in json.load(open(f, encoding='utf-8')).items(): T.setdefault(k, v)
 p = R / 'EVE-Omni.html'
 h = open(p, encoding='utf-8', newline='').read()
-i = h.index('  var EN = { "Kurier"'); j = h.index('\n  };\n  var ATTR = ', i)
+i = h.index('  var EN = {\n'); j = h.index('\n  };\n  var ATTR = ', i)
 block = h[i:j]
 added = 0
 lines = []

@@ -390,6 +390,7 @@ if (TEST) global.__evecoreTest = {
   looksLikeDscan: t => looksLikeDscan(t),
   clipSent: () => clipSent,
   fgEvent: (h, n) => fgEvent(h, n),
+  mainHwnd: () => hwndOf(win),
   fgLine: l => fgLine(l),
   activateClient: h => activateClient(h),
   handleClip: f => handleClip(f),
@@ -1475,7 +1476,8 @@ function fgEvent(hwnd, name){
   const n = String(name || '').toLowerCase();
   // NW2: Vordergrundwechsel kurz nach einem OmniCom-Klick ins OmniCom-Protokoll (Diagnose Taskleiste)
   neoTraceAdd('Vordergrund ' + (n || '?') + ' ' + hwnd);   // Diagnose Overlays/Taskleiste
-  if (n === 'eve-omni' || n === 'evecore' || n === 'electron' || n === 'shell' || hwnd === '0') return;     // EVECore selbst / Taskleiste (W1) / kurz kein Fenster: nichts aendern
+  const mainFront = !!win && !win.isDestroyed() && String(hwnd) === hwndOf(win);   // NO1: Hauptfenster vorne = wie ein fremdes Programm, Overlays dahinter
+  if (!mainFront && (n === 'eve-omni' || n === 'evecore' || n === 'electron' || n === 'shell' || hwnd === '0')) return;     // Overlays selbst / Taskleiste (W1) / kurz kein Fenster: nichts aendern
   fg.hwnd = String(hwnd); fg.name = n;
   pvSync();   // Rahmen um die Vorschau des Clients, der gerade vorne ist
   const eve = n === 'exefile';
@@ -1516,7 +1518,7 @@ function zSet(w, top, last){
 }
 function zSetOne(w, top, last){
   if (w.__ov !== !!top && fg.proc){ w.__ov = !!top; const h = hwndOf(w); fgWrite('OV ' + h + ' ' + (top ? (last ? 2 : 1) : 0)); w.once('closed', () => fgWrite('OV ' + h + ' 0')); }   // Helfer hebt es selbst, sobald EVE vorne ist
-  if (top && onlyEveActive() && !fg.eve){
+  if (top && onlyEveActive() && !fg.eve && fg.hwnd !== hwndOf(w)){   // NO1: nie hinter sich selbst legen
     if (!w.__below) neoTraceAdd('hinter ' + (fg.name || '?') + ' gelegt: ' + w.getTitle());
     w.setAlwaysOnTop(false);
     if (fg.proc && fg.hwnd !== '0'){ try{ fg.proc.stdin.write('BELOW ' + hwndOf(w) + ' ' + fg.hwnd + '\n'); }catch(e){} }
@@ -1947,6 +1949,12 @@ function looksLikeDscan(t){
   const lines = String(t).split(/\r?\n|\r/).filter(l => l.trim());
   return lines.length > 0 && lines.filter(l => /^\d+\t[^\t]*\t[^\t]+(\t|$)/.test(l)).length >= lines.length * 0.8;
 }
+// WM1: Probe Scanner (je Zeile „ABC-123 ⇥ Gruppe ⇥ Typ ⇥ Name ⇥ Stärke ⇥ Entfernung“) – geht vor Wertschätzer und Local
+function looksLikeProbe(t){
+  if (!t || t.length > 200000) return false;
+  const lines = String(t).split(/\r?\n|\r/).filter(l => l.trim());
+  return lines.length > 0 && lines.filter(l => /^[A-Z]{3}-\d{3}\t/.test(l.trim())).length >= lines.length * 0.8;
+}
 // AA2: Liste für den Wertschätzer (Inventar/Vertrag mit Tab + Menge, oder EFT-Fitting) – geht vor Local
 function looksLikeAppraisal(t){
   if (!t || t.length > 200000) return false;
@@ -1965,6 +1973,7 @@ async function handleClip(force){
   const tt = String(t || '').trim();
   if (isSsoReturn(tt) && /[?&]code=/.test(tt) && tt.length < 4000 && tt !== lastSso){ lastSso = tt; send({ type: 'sso', url: tt }); if (win){ showWin(true); } return; }
   if (looksLikeDscan(t)){ if (S.localWatch) send({ type: 'dscanPaste', text: t }); return; }   // AA11
+  if (looksLikeProbe(t)){ if (S.localWatch) send({ type: 'probePaste', text: t }); return; }   // WM1
   if (looksLikeAppraisal(t)){ send({ type: 'apPaste', text: t }); return; }   // Seite nimmt es nur bei offenem Wertschätzer
   if (!S.localWatch) return;
   if (looksLikeLocal(t)){ clipSent++; send({ type: 'localPaste', text: t, auto: true }); }
