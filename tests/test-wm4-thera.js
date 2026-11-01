@@ -24,7 +24,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     let o = T.wmLoad().sys.J111613.sg['IDM-628'];
     assert(o.k === 'wh' && o.to === 'Thera' && o.src === 'EVE-Scout' && o.sz === 'large', 'Übernehmen: Wurmloch → Thera, Quelle gemerkt');
     b.innerHTML = T.wmHtml();
-    assert(!b.querySelector('[data-ova="whMapScout"]') && /IDM-628 · EVE-Scout → Thera/.test(b.textContent) && /large · bis/.test(b.textContent), 'Kette zeigt Thera mit Quelle; Vorschlag weg');
+    assert(!b.querySelector('[data-ova="whMapScout"]') && /IDM-628 · EVE-Scout[^→]* → Thera/.test(b.textContent) && /large · bis/.test(b.textContent), 'Kette zeigt Thera mit Quelle; Vorschlag weg');
     // Nein: Vorschlag verschwindet, Ziel bleibt leer
     await T.wmFromText('IRM-820\tCosmic Signature\t\t\t0.0%\t21.63 AU\nZZZ-000\tCosmic Signature\t\t\t0.0%\t1 AU', false);
     b.innerHTML = T.wmHtml();

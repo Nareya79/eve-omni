@@ -17,7 +17,8 @@
   function wrap(real){
     function keys(){ var o = []; for (var i = 0; i < real.length; i++){ var k = real.key(i); if (k && k.indexOf(DP) === 0) o.push(uk(k)); } return o; }
     var api = {
-      getItem: function(k){ return real.getItem(dk(k)); }, setItem: function(k, v){ real.setItem(dk(k), String(v)); }, removeItem: function(k){ real.removeItem(dk(k)); },
+      getItem: function(k){ return real.getItem(dk(k)); }, removeItem: function(k){ real.removeItem(dk(k)); },
+      setItem: function(k, v){ real.setItem(dk(k), String(v)); if (/^eve-zentrale-(client)?lang-v1$/.test(k)) real.setItem(k, String(v)); },   // Sprachwahl auch echt merken – die Demo holt sie beim Neuladen von dort (Teil 2)
       clear: function(){ keys().forEach(function(k){ real.removeItem(dk(k)); }); }, key: function(i){ return keys()[i] || null; }
     };
     Object.defineProperty(api, "length", { get: function(){ return keys().length; } });
@@ -58,19 +59,19 @@
    [12076,"50MN Microwarpdrive II",10,46,3402000,.19,350],[1319,"Expanded Cargohold II",5,764,1048000,.18,520],[1335,"Reinforced Bulkheads II",5,78,752000,.21,330],[2410,"Heavy Missile Launcher II",10,510,2104000,.16,260],
    [2629,"Scourge Fury Heavy Missile",.03,385,981,.2,2e5],[438,"1MN Afterburner II",5,46,689000,.2,280],[11269,"Multispectrum Energized Membrane II",5,328,1912000,.17,310],[3841,"Large Shield Extender II",10,38,5198000,.14,500],
    [1541,"Power Diagnostic System II",5,766,1301000,.16,420],[2605,"Nanofiber Internal Structure II",5,763,651000,.19,380],[24427,"Drone Link Augmentor II",25,645,2799000,.24,90],
-   [20185,"Charon",1300000,513,1612000000,.06,6],[12731,"Bustard",20000,380,291000000,.08,8],[648,"Badger",20000,28,1100000,.18,60],[649,"Tayra",20000,28,2120000,.17,40],[587,"Rifter",2500,25,651000,.16,110],
+   [20185,"Charon",1300000,513,1612000000,.06,6],[12731,"Bustard",20000,380,291000000,.08,8],[81046,"Deluge",20000,1202,166000000,.08,6],[4051,"Nitrogen Fuel Block",5,1136,17700,.12,4e5],[648,"Badger",20000,28,1100000,.18,60],[649,"Tayra",20000,28,2120000,.17,40],[587,"Rifter",2500,25,651000,.16,110],
    [621,"Caracal",10000,26,13200000,.12,90],[24698,"Drake",15000,419,60400000,.09,70],[32880,"Venture",2500,1283,1210000,.15,150],[17478,"Retriever",3750,463,33100000,.11,30],
    [2393,"Bacteria",.38,1042,412,.2,3e5],[3645,"Water",.38,1042,388,.2,4e5],[9832,"Coolant",1.5,1034,9800,.15,9e4],[2073,"Microorganisms",.01,1032,6.8,.25,3e6],[2268,"Aqueous Liquids",.01,1032,7.3,.25,3e6]
   ].forEach(function(x){ T[x[0]] = { id: x[0], n: x[1], v: x[2], g: x[3], p: x[4], sp: x[5], vol: x[6] }; });
   var SK = { 3446:"Broker Relations",16622:"Accounting",16597:"Advanced Broker Relations",3443:"Trade",3444:"Retail",16596:"Wholesale",18580:"Tycoon",16598:"Marketing",16594:"Procurement",16595:"Daytrading",3447:"Visibility",25235:"Contracting",
     3449:"Navigation",3402:"Science",3327:"Spaceship Command",3300:"Gunnery",3436:"Drones",3426:"CPU Management",3413:"Power Grid Management",3418:"Capacitor Management",24241:"Light Drone Operation",33467:"Customs Code Expertise",
-    3340:"Gallente Hauler",3341:"Minmatar Hauler",3342:"Caldari Hauler",3343:"Amarr Hauler",20524:"Caldari Freighter",19719:"Transport Ships",3332:"Caldari Frigate",3335:"Caldari Cruiser",3455:"Evasive Maneuvering",3453:"Warp Drive Operation",
+    3340:"Gallente Hauler",3341:"Minmatar Hauler",3342:"Caldari Hauler",3343:"Amarr Hauler",20524:"Caldari Freighter",19719:"Transport Ships",81032:"Upwell Hauler",3332:"Caldari Frigate",3335:"Caldari Cruiser",3455:"Evasive Maneuvering",3453:"Warp Drive Operation",
     3416:"Shield Operation",3419:"Shield Management",3394:"Hull Upgrades",3392:"Mechanics",1:"" };
   delete SK[1];
   Object.keys(SK).forEach(function(id){ if (!T[id]) T[id] = { id: +id, n: SK[id], v: .01, g: 255, p: 0, skill: true }; });
   var GRP = { 18:["Mineral",4],60:["Damage Control",7],38:["Shield Extender",7],100:["Combat Drone",18],85:["Hybrid Charge",8],385:["Heavy Missile",8],1136:["Fuel Block",4],1739:["Skill Injector",17],59:["Gyrostabilizer",7],302:["Magnetic Field Stabilizer",7],
     205:["Heat Sink",7],367:["Ballistic Control system",7],645:["Drone Damage Modules",7],46:["Propulsion Module",7],764:["Expanded Cargohold",7],78:["Reinforced Bulkhead",7],510:["Missile Launcher Heavy",7],328:["Armor Hardener",7],766:["Power Diagnostic System",7],
-    763:["Nanofiber Internal Structure",7],513:["Freighter",6],380:["Deep Space Transport",6],28:["Hauler",6],25:["Frigate",6],26:["Cruiser",6],419:["Combat Battlecruiser",6],1283:["Expedition Frigate",6],463:["Mining Barge",6],255:["Gunnery",16],
+    763:["Nanofiber Internal Structure",7],513:["Freighter",6],380:["Deep Space Transport",6],1202:["Blockade Runner",6],28:["Hauler",6],25:["Frigate",6],26:["Cruiser",6],419:["Combat Battlecruiser",6],1283:["Expedition Frigate",6],463:["Mining Barge",6],255:["Gunnery",16],
     1042:["Basic Commodities - Tier 1",43],1034:["Refined Commodities - Tier 2",43],1032:["Planet Solid - Raw Resource",42] };
   var CAT = { 4:"Material",6:"Ship",7:"Module",8:"Charge",16:"Skill",17:"Commodity",18:"Drone",42:"Planetary Resources",43:"Planetary Commodities" };
   // Schiffe/Module mit echten Dogma-Werten (für Laderaum, EHP, Gank-Ampel)
@@ -80,6 +81,7 @@
     648: { m: 10750000, c: 3900, a: {4:10750000,9:1680,263:1000,265:750,267:.5,268:.9,269:.75,270:.9,271:1,272:.8,273:.6,274:.5,109:.67,110:.67,111:.67,113:.67,12:3,13:4,14:1,1137:3,70:1.15,37:115,552:155,600:3,1281:1,48:200,11:40,38:3900,182:3342} },
     649: { m: 13000000, c: 7300, a: {4:13000000,9:2300,263:1400,265:850,267:.5,268:.9,269:.75,270:.9,271:1,272:.8,273:.6,274:.5,109:.67,110:.67,111:.67,113:.67,12:4,13:4,14:1,1137:3,70:1.1,37:110,552:215,600:3,1281:1,48:220,11:45,38:7300,182:3342} },
     621: { m: 11910000, c: 450, a: {4:11910000,9:1500,263:1950,265:1300,267:.5,268:.9,269:.75,270:.9,271:1,272:.6,273:.5,274:.4,109:.67,110:.67,111:.67,113:.67,12:4,13:5,14:5,1137:3,70:.5,37:235,552:110,600:3,1281:3,48:400,11:900,38:450,182:3335} },
+    81046: { m: 10800000, c: 4000, a: {4:10800000,9:1500,263:3000,265:750,267:.5,268:.45,269:.75,270:.1375,271:.8,272:.25,273:.5,274:.2,109:.67,110:.67,111:.67,113:.67,12:2,13:4,14:4,1137:2,70:.59,37:265,552:115,600:3.5,1281:1,48:300,11:190,38:4000,182:81032,183:19719} },   // UH: Deluge (ESI 01.11.)
     1319: { a: {149:1.275,150:.77} }, 1335: { a: {150:1.25,614:-10} } };
   // Systeme, Konstellationen, Regionen, Stargates aus der eingebauten Schema-Karte (MP_SCH steht im Hauptskript – erst später verfügbar)
   var U = null;
@@ -125,6 +127,7 @@
     Object.keys(T).forEach(function(k){ var t = T[k]; if (!t.p) return;
       var fac = f ? f[0] + (rnd() < .45 ? rnd() * (f[1] - f[0]) * 2 : -rnd() * .04) : 1, sell = tick(t.p * fac), buy = tick(sell * (1 - t.sp * (f ? .6 + rnd() * .5 : 1)));
       if (f && rnd() < .35) buy = tick(t.p * (1.08 + rnd() * .12));   // lohnend: Kauforder im Ziel-Hub über Jita-Verkauf
+      if (f && t.g === 1136) buy = tick(t.p * 1.16);   // UH: Fuel Blocks lohnen immer (Infrastrukturraum der Upwell-Hauler zeigen)
       var n = 4 + Math.floor(rnd() * 5), q = Math.max(1, Math.round(t.vol / 6));
       for (var i = 0; i < n; i++){
         out.push({ order_id: ++oid, type_id: t.id, is_buy_order: false, price: tick(sell * (1 + i * .004 + rnd() * .002)), volume_remain: Math.max(1, Math.round(q * (.3 + rnd()))), volume_total: q * 2, location_id: st, system_id: (STATIONS[st] || [])[1], issued: iso(NOW - rnd() * 3 * D), duration: 90, min_volume: 1, range: "region" });
@@ -200,11 +203,15 @@
         { item_id: bu, type_id: 12731, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 1335, location_id: bu, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 648, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
+        { item_id: ++item, type_id: 81046, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },   // UH: Deluge (Frachterpilot)
+        { item_id: item + 100000, type_id: 1319, location_id: item, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 34, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 2500000, is_singleton: false }]; }
     if (cid === ARIA){ var ac = ++item, ab = ++item; return [{ item_id: ++item, type_id: 649, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
       { item_id: ac, type_id: 20185, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
       { item_id: ++item, type_id: 1335, location_id: ac, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
       { item_id: ab, type_id: 12731, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
+      { item_id: ++item, type_id: 81046, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },   // UH: Deluge (Handelsfigur)
+      { item_id: item + 100000, type_id: 1319, location_id: item, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
       { item_id: ++item, type_id: 2456, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 70, is_singleton: false },
       { item_id: ++item, type_id: 40520, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 2, is_singleton: false },
       { item_id: ++item, type_id: 36, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 180000, is_singleton: false }]; }
@@ -212,8 +219,8 @@
       { item_id: ++item, type_id: 32880, location_id: 60008494, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true }];
   }
   function skills(cid){
-    var lv = cid === ARIA ? { 3446:5,16622:5,16597:4,3443:5,3444:5,16596:4,18580:3,16598:4,16594:4,16595:3,3447:3,25235:3,3449:4,3327:4,3342:4,19719:1 }
-      : cid === KAEL ? { 3446:2,16622:3,3443:4,3444:2,3449:5,3327:5,3342:5,20524:4,19719:4,3455:4,3453:4,3416:4,3419:4,3394:4,3392:4 } : { 3446:1,16622:2,3443:3,3449:4,3327:4,3335:4,3332:5,3300:3,3436:3,3426:4,3413:4,3418:3,24241:3 };
+    var lv = cid === ARIA ? { 3446:5,16622:5,16597:4,3443:5,3444:5,16596:4,18580:3,16598:4,16594:4,16595:3,3447:3,25235:3,3449:4,3327:4,3342:4,19719:1,81032:5 }
+      : cid === KAEL ? { 3446:2,16622:3,3443:4,3444:2,3449:5,3327:5,3342:5,20524:4,19719:4,81032:5,3455:4,3453:4,3416:4,3419:4,3394:4,3392:4 } : { 3446:1,16622:2,3443:3,3449:4,3327:4,3335:4,3332:5,3300:3,3436:3,3426:4,3413:4,3418:3,24241:3 };
     var l = Object.keys(lv).map(function(id){ var x = lv[id]; return { skill_id: +id, trained_skill_level: x, active_skill_level: x, skillpoints_in_skill: [0, 250, 1415, 8000, 45255, 256000][x] * 3 }; });
     return { skills: l, total_sp: BYCH[cid].sp, unallocated_sp: cid === KAEL ? 120000 : 0 };
   }
@@ -279,6 +286,17 @@
     if ((m = /^\/characters\/(\d+)\/$/.exec(path))) return BYCH[m[1]] ? res({ name: BYCH[m[1]].name, corporation_id: CORP.id, birthday: "2019-05-14T18:22:00Z", security_status: 2.4, gender: "female", race_id: 1 }) : res({ error: "not found" }, 404);
     if ((m = /^\/characters\/(\d+)\/(.*)$/.exec(path))){
       var cid = +m[1], sub = m[2], c = BYCH[cid]; if (!c) return res({ error: "forbidden" }, 403);
+      if (sub === "mail/labels/") return res({ total_unread_count: 2, labels: [{ label_id: 1, name: "Inbox", unread_count: 1 }, { label_id: 2, name: "Sent", unread_count: 0 }, { label_id: 4, name: "[Corp]", unread_count: 1 }, { label_id: 8, name: "[Alliance]", unread_count: 0 }] });   // EM
+      if (sub === "mail/lists/") return res([{ mailing_list_id: 145000001, name: "Jita Traders" }]);
+      if (sub === "mail/" && opts && opts.method === "POST") return res(Math.floor(NOW / 1000), 201);
+      if (sub === "mail/"){ var ot = CH.filter(function(x){ return x.id !== cid; })[0] || CH[0];
+        return res([{ mail_id: cid * 10 + 1, from: ot.id, subject: "Ladung Jita → Amarr", timestamp: iso(NOW - 0.5 * H), labels: [1], recipients: [{ recipient_id: cid, recipient_type: "character" }], is_read: false },
+          { mail_id: cid * 10 + 2, from: (PIL[0] || ot).id, subject: "Corp-Treffen Samstag", timestamp: iso(NOW - 5 * H), labels: [4], recipients: [{ recipient_id: CORP.id, recipient_type: "corporation" }], is_read: false },
+          { mail_id: cid * 10 + 3, from: (PIL[1] || ot).id, subject: "Preise in Hek", timestamp: iso(NOW - 26 * H), labels: [], recipients: [{ recipient_id: 145000001, recipient_type: "mailing_list" }], is_read: true },
+          { mail_id: cid * 10 + 4, from: cid, subject: "Re: Ladung Jita → Amarr", timestamp: iso(NOW - 0.2 * H), labels: [2], recipients: [{ recipient_id: ot.id, recipient_type: "character" }], is_read: true }]); }
+      if ((m = /^mail\/(\d+)\/$/.exec(sub))){ if (opts && (opts.method === "PUT" || opts.method === "DELETE")) return res(null, 204);
+        return res({ from: cid, subject: "Demo", timestamp: iso(NOW - H), read: true, labels: [1], recipients: [{ recipient_id: cid, recipient_type: "character" }],
+          body: '<font size="12" color="#bfffffff">Hallo,<br><br>die Ladung steht in <a href="showinfo:5//30000142">Jita</a> bereit – <a href="showinfo:34">Tritanium</a> und mehr.<br>Fragen an <a href="showinfo:1377//' + cid + '">mich</a> oder <a href="https://omni.nareya79.com/">omni.nareya79.com</a>.<br><br>o7</font>' }); }
       if (sub === "wallet/") return res(c.wallet);
       if (sub === "wallet/journal/") return pages(journalWithBalance(cid), url, 2500);
       if (sub === "wallet/transactions/") return res((TX[cid] || []).slice().sort(function(a, b){ return a.date < b.date ? 1 : -1; }));
@@ -329,6 +347,8 @@
     if ((m = /^\/markets\/(\d+)\/orders\/$/.exec(path))){ var reg = +m[1], ty = q(url, "type_id"), ot = q(url, "order_type") || "all";
       var L = book(reg).filter(function(o){ return (!ty || o.type_id === +ty) && (ot === "all" || (ot === "buy") === o.is_buy_order); }); return pages(L, url); }
     if ((m = /^\/markets\/(\d+)\/history\/$/.exec(path))) return res(hist(+m[1], +q(url, "type_id")));
+    if (path === "/markets/groups/"){ var mg = {}; Object.keys(T).forEach(function(k){ if (T[k].p) mg[1000 + T[k].g] = 1; }); return res(Object.keys(mg).map(Number)); }   // MB
+    if ((m = /^\/markets\/groups\/(\d+)\/$/.exec(path))){ var gg = +m[1] - 1000; return res({ market_group_id: +m[1], name: (GRP[gg] || ["Gruppe " + gg])[0], parent_group_id: undefined, types: Object.keys(T).filter(function(k){ return T[k].p && T[k].g === gg; }).map(Number) }); }
     if (path === "/markets/prices/") return res(Object.keys(T).filter(function(k){ return T[k].p; }).map(function(k){ return { type_id: +k, average_price: T[k].p, adjusted_price: T[k].p * .95 }; }));
     if ((m = /^\/contracts\/public\/(\d+)\/$/.exec(path))) return pages(+m[1] === FORGE ? [[60003760, 60008494, 18e6, 450e6, 120000], [60003760, 60011866, 9.5e6, 120e6, 30000], [60003466, 60004588, 6.1e6, 2.1e9, 340000], [60003760, 60005686, 11e6, 80e6, 12000]].map(function(x, i){
       return { contract_id: 190000001 + i, type: "courier", issuer_id: PIL[i].id, issuer_corporation_id: PIL[i].corp, start_location_id: x[0], end_location_id: x[1], reward: x[2], collateral: x[3], volume: x[4], days_to_complete: 3, date_issued: iso(NOW - (i + 1) * 5 * H), date_expired: iso(NOW + (6 - i) * D), title: i === 2 ? "fragile" : "" }; }) : [], url);
@@ -363,14 +383,14 @@
     put("eve-zentrale-characters", CH.map(function(c){ return { access_token: jwt(c), refresh_token: "demo", expires_at: NOW + 3650 * D, character_id: String(c.id), character_name: c.name, client_id: "demo" }; }));
     put("eve-zentrale-active-char", String(ARIA)); put("eve-zentrale-hauler-char", String(KAEL)); put("eve-zentrale-jump-pilot", String(CH[2].id));
     put("eve-zentrale-trades-v1", TRADES);
-    put("eve-zentrale-owned-ships-v1", ["Charon (Caldari)", "Bustard (Caldari)", "Badger (Caldari)", "Tayra (Caldari)"]);
+    put("eve-zentrale-owned-ships-v1", ["Charon (Caldari)", "Bustard (Caldari)", "Badger (Caldari)", "Tayra (Caldari)", "Deluge (Upwell)"]);
     put("eve-zentrale-hubhandel-v1", { src: "jita", dst: ["amarr", "dodixie"], ship: "Charon (Caldari)", cargo: "435.000", budget: "800.000.000", depth: "300", tax: "3.375", sellmode: "instant", selldays: "7", extra: "5" });
     put("eve-zentrale-haulruns-v1", [{ id: (NOW - 3 * H) + "-60008494", from: JITA, fromName: "Jita IV - Moon 4 - Caldari Navy Assembly Plant", to: 60008494, toName: "Amarr VIII (Oris) - Emperor Family Academy", charId: String(KAEL), charName: "Kael Demo", sm: "instant",
       items: [{ tid: 2048, name: "Damage Control II", q: 60, sp: 61200000, p: 7900000 }, { tid: 3841, name: "Large Shield Extender II", q: 40, sp: 207900000, p: 31400000 }, { tid: 4405, name: "Drone Damage Amplifier II", q: 80, sp: 183800000, p: 24100000 }],
       created: NOW - 3 * H, status: "active", ship: "Charon (Caldari)", buyDone: true }]);
     put("eve-zentrale-routeplanner-v1", { from: "Jita", to: "Amarr", pref: "secure" });
     put("eve-zentrale-kurier-v1", [{ id: 190000001, src: "merk", st: "gemerkt", from: "Jita IV - Moon 4 - Caldari Navy Assembly Plant", to: "Amarr VIII (Oris) - Emperor Family Academy", fl: JITA, tl: 60008494, rew: 18e6, col: 450e6, vol: 120000, days: 3, exp: NOW + 6 * D, t: NOW - H }]);
-    put("eve-zentrale-gksafe-v1", { is: true, hl: true });
+    put("eve-zentrale-gksafe-v1", { is: 2000, hl: 2000 });
   }
   DEMO.chars = CH; DEMO.trades = TRADES;
 
@@ -396,9 +416,9 @@
     .observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ["src"] }); }catch(e){}
   DEMO.face = face;
   // Knöpfe, die in der Demo nichts tun dürfen (Login, Sicherung, Sync, EVE starten/beenden, Autopilot, Fenster in EVE …)
-  var BLOCK = '#sso-login-btn,#sso-paste-btn,[data-chdel],[data-chlogout],#win-eve,#win-eve-q,[data-mk],[data-ap],[data-apdest],[data-rt-ap],[data-tsc-mk],' +
+  var BLOCK = '#sso-login-btn,#sso-paste-btn,[data-chdel],[data-chlogout],#win-eve,#win-eve-q,[data-neo="eveStart"],[data-neo="eveQuit"],[data-mk],[data-ap],[data-apdest],[data-rt-ap],[data-tsc-mk],' +
     '[data-ova="rtEve"],[data-ova="rtAp"],[data-ova="coEve"],[data-ova="coDest"],[data-ova="ckEve"],[data-ova="ckDest"],[data-ova="hcEve"],[data-ova="mkOpen"],[data-ova="miEve"],[data-ova="jpDest"],[data-ck="Eve"],[data-ck="Dest"],' +
-    '#bk-export,#bk-import,#bk-now,#bk-dir,#data-export,#data-import,#sync-bat,#sync-now,#sync-direct,[data-sync],[data-backup],[data-wl="login"],#rt-ap,#rt-eve,#rt-dest,#jp-ap';
+    '#bk-export,#bk-import,#bk-now,#bk-dir,#data-export,#data-import,#sync-bat,#sync-now,#sync-direct,[data-sync],[data-backup],[data-wl="login"],#rt-ap,#rt-eve,#rt-dest,#jp-ap,[data-demo-cl],[data-dest]';
   function toast(t){ var d = document.createElement("div"); d.className = "demo-toast"; d.textContent = t; document.body.appendChild(d); setTimeout(function(){ d.remove(); }, 2200); }
   DEMO.blocked = BLOCK; DEMO.toast = toast;
   document.addEventListener("click", function(ev){ var b = ev.target && ev.target.closest && ev.target.closest(BLOCK); if (!b) return; ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation(); toast("In der Demo nicht möglich"); }, true);
@@ -406,13 +426,30 @@
   DEMO.end = end;
   function ui(){
     var css = document.createElement("style");
-    css.textContent = "html.demo body{padding-top:" + (SAT ? 0 : 26) + "px}.demo-bar{position:fixed;top:0;left:0;right:0;height:26px;z-index:9500;display:flex;align-items:center;justify-content:center;gap:14px;background:#b8860b;color:#111;font:600 13px 'Segoe UI',sans-serif;letter-spacing:.04em;-webkit-app-region:no-drag}" +
+    css.textContent = "html.demo body{padding-top:" + (SAT ? 0 : 26) + "px}.demo-bar{position:fixed;top:0;left:0;right:0;height:26px;z-index:9500;display:flex;align-items:center;justify-content:center;gap:14px;background:#b8860b;color:#111;font:600 13px 'Segoe UI',sans-serif;letter-spacing:.04em;-webkit-app-region:drag;user-select:none}html.demo header.top{top:26px}.demo-bar button{-webkit-app-region:no-drag}" +   // LL7: Leiste zieht das Fenster (war no-drag über der Kopfzeile → Hauptfenster in der Demo nicht verschiebbar)
       ".demo-bar button{font:inherit;font-weight:600;padding:1px 10px;border:1px solid #111;background:#111;color:#f3d27a;border-radius:3px;cursor:pointer}.demo-tag{display:inline-block;margin:0 6px;padding:0 5px;border-radius:3px;background:#b8860b;color:#111;font:700 10px 'Segoe UI',sans-serif;letter-spacing:.06em;vertical-align:middle}" +
       ".demo-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:9600;background:#1b222b;color:#f3d27a;border:1px solid #b8860b;padding:8px 16px;border-radius:4px;font:13px 'Segoe UI',sans-serif}" +
       "html.demo header.top{top:26px !important}";
     document.head.appendChild(css);
     if (!SAT){ var bar = document.createElement("div"); bar.className = "demo-bar"; bar.innerHTML = "<span>DEMO – erfundene Daten</span>"; var b = document.createElement("button"); b.type = "button"; b.textContent = "Demo beenden"; b.onclick = end; bar.appendChild(b); document.body.appendChild(bar); }
     else { var put2 = function(){ var t = document.querySelector("#ov-tabs, .ov-bar"); if (t && !t.querySelector(".demo-tag")){ var s = document.createElement("span"); s.className = "demo-tag"; s.textContent = "DEMO"; t.insertBefore(s, t.firstChild); } }; put2(); setInterval(put2, 1500); }
+    if (!SAT) clients();
+  }
+  // GG3: Einstellungen › EVE-Clients – 4 Beispiel-Kacheln statt Live-Bild (selbst gemalte Szenen, keine CCP-Grafik)
+  function clients(){
+    var pane = document.getElementById("set-pane-clients"); if (!pane || pane.querySelector(".demo-cl-box")) return;
+    var sc = ["radial-gradient(circle at 70% 60%,#d9a441 0 9%,#7a4b16 10% 13%,transparent 14%),radial-gradient(ellipse at 30% 30%,#24476b,#0a1424 70%)",
+      "linear-gradient(160deg,transparent 45%,#8fa3b8 46% 49%,transparent 50%),radial-gradient(circle at 35% 70%,#3d6b4f 0 16%,transparent 17%),radial-gradient(ellipse at 60% 40%,#1d2f45,#070b12 75%)",
+      "radial-gradient(circle at 50% 50%,#ff9a3c 0 4%,#a3361b 5% 9%,transparent 22%),radial-gradient(ellipse at 50% 50%,#3b1a3f,#05060b 70%)",
+      "linear-gradient(#0d1520,#0d1520)"];
+    var box = document.createElement("div"); box.className = "cy-pv demo-cl-box"; box.style.margin = "6px 0 12px";
+    CH.map(function(c){ return c.name; }).concat(["Charakterauswahl"]).forEach(function(n, i){
+      var t = document.createElement("button"); t.type = "button"; t.className = "cy-tile"; t.setAttribute("data-demo-cl", ""); t.title = "Klick: " + n + " nach vorne holen";
+      t.style.background = sc[i]; t.style.borderColor = i ? "" : "#e0b84a";
+      t.innerHTML = '<span class="cy-tm" style="color:#c8d2dc;opacity:.55;align-items:flex-end;justify-content:flex-end;padding:5px 8px;font-size:11px">' + (i < 3 ? "EVE – " + n : "EVE – Charakterauswahl") + '</span><span class="cy-tn"></span>';
+      t.querySelector(".cy-tn").textContent = n; box.appendChild(t);
+    });
+    var h = pane.querySelector(".acc-h"); h.parentNode.insertBefore(box, h.nextSibling);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ui); else ui();
 })();

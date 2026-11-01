@@ -22,14 +22,21 @@ const dest = (i, profit) => ({ stationId: i, stationName: 'Station ' + i + ' - M
       return { rows: b.querySelectorAll('.hl-tog[data-ova="haulSel"]').length, open: b.querySelectorAll('.hl-tog[data-ova="haulSel"][aria-expanded="true"]').length, cards: b.querySelectorAll('.hl-w').length,
         first: (b.querySelector('.hl-opt') || {}).textContent || '', more: (b.querySelector('[data-ova="haulMore"]') || {}).textContent || '', text: b.textContent }; });
     let s = await st();
+    const tgt = () => p.evaluate(() => !!document.querySelector('#ov-body [data-ovf="hl-target-sys"]'));
+    assert(!(await tgt()), 'zugeklappt + Umkreis: kein Ziel-System-Feld');
+    await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'kkd', arg: 'sys' })); await p.waitForTimeout(100);
+    assert(await tgt() && await p.evaluate(() => /Eigenes Ziel/.test(document.getElementById('ov-body').textContent)), '01.11.: zugeklappt + „Eigenes Ziel“ → Textfeld Ziel-System sichtbar');
+    await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'kkd', arg: 'umkreis' })); await p.waitForTimeout(100); s = await st();
     assert(s.rows === 5 && s.open === 0 && s.cards === 0, 'zugeklappt: die besten 5 Ziele als Zeilen, keine Einkaufsliste (' + JSON.stringify([s.rows, s.open, s.cards]) + ')');
     assert(/^▸1.*→.*⇢ 3 Spr\..*empfohlen.*\+7(,0)? Mio\..*Einsatz 63(,0)? Mio\./.test(s.first), 'K1 (25.10.): Zeile wie Watchlist – Nr., Strecke, Sprünge, empfohlen, Kasten Gewinn + Einsatz: ' + s.first);
     assert(/mehr anzeigen \(2\)/.test(s.more), '„mehr anzeigen (2)“');
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulMore' })); s = await st();
     assert(s.rows === 7 && /weniger anzeigen/.test(s.more), 'mehr anzeigen → alle 7');
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulSel', arg: '0' })); s = await st();
-    assert(s.open === 1 && s.cards === 2 && /Einsatz 63(,0)? Mio\./.test(s.text) && /Ø Kauf/.test(s.text) && /Ø Verk\./.test(s.text) && /① Kaufen.*② Transport.*③ Verkaufen.*Ergebnis/.test(s.text) && /Multibuy|Einkaufsliste kopieren/.test(s.text), 'Klick (G1): Kacheln ① Kaufen ② Transport ③ Verkaufen Ergebnis, Einsatz, Ø Preise und Multibuy');
-    assert(await p.evaluate(() => !!document.querySelector('#ov-body [data-ova="runDest"][data-arg="res:0|b"]') && !!document.querySelector('#ov-body [data-ova="runRt"][data-arg="res:0|a"]') && !!document.querySelector('#ov-body [data-ova="hrAdd"][data-arg="0"]')), 'Knöpfe Route/⌖ Ziel in EVE an beiden Stationen + Lauf merken');
+    assert(s.open === 1 && s.cards === 2 && /Einsatz 63(,0)? Mio\./.test(s.text) && /Ø Kauf/.test(s.text) && /Ø Verk\./.test(s.text) && /① Kaufen.*② Verkaufen.*③ Transport.*Ergebnis/.test(s.text) && /Multibuy|Einkaufsliste kopieren/.test(s.text), 'Klick (G1, 01.11. getauscht): Kacheln ① Kaufen ② Verkaufen ③ Transport Ergebnis, Einsatz, Ø Preise und Multibuy');
+    assert(await p.evaluate(() => !!document.querySelector('#ov-body [data-ova="runDest"][data-arg="res:0|b"]') && !!document.querySelector('#ov-body [data-ova="runRt"][data-arg="res:0|a"]') && !!document.querySelector('#ov-body .hl-opt > .ov-h .ov-name [data-ova="hrAdd"][data-arg="0"]') && document.querySelectorAll('#ov-body [data-ova="hrAdd"]').length === 1), 'Knöpfe Route/⌖ Ziel in EVE an beiden Stationen + Lauf merken oben im Balken (nur aufgeklappte Zeile)');
+    await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'hrAdd', arg: '0' }));
+    assert(await p.evaluate(() => { const x = document.querySelector('#ov-body .hl-opt > .ov-h .hr-ok'); return !!x && /gemerkt/.test(x.textContent) && getComputedStyle(x).color !== getComputedStyle(document.querySelector('#ov-body .hl-tog')).color; }), '01.11.: gemerkt → Knopf grün „✓ gemerkt“');
     await p.screenshot({ path: '/tmp/ab-de.png' });
     await p.evaluate(() => window.__test.ovSatAction('handel', { type: 'haulSel', arg: '0' })); s = await st();
     assert(s.open === 0 && s.cards === 0, 'zweiter Klick klappt zu');

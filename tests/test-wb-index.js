@@ -44,7 +44,7 @@ const mkPage = (n, extra) => { const f = []; for (let i = 0; i < 4; i++){ const 
     assert(S.idx && S.hits.length === 2 && S.hits.every(h => h[2] === 22544) && S.hits[0][5] >= S.hits[1][5] && !calls.length, 'e) Hulk: 2 Treffer aus dem Index, neueste zuerst, kein Abruf');
     await p.evaluate(() => window.__test.wbView(document.body.appendChild(document.createElement('div')), true));
     let txt = await p.evaluate(() => { const d = document.createElement('div'); window.__test.wbView(d, true); return d.textContent; });
-    assert(/2 Fits für Hulk \(Index vom \d\d\.\d\d\.\d{4}, 20 Fits insgesamt\)/.test(txt) && /Index löschen \(0,0 MB\)/.test(txt), 'e) Anzeige „N Fits für Hulk (Index vom …, X Fits insgesamt)“ + Löschen mit Größe');
+    assert(/2 Fits für Hulk \(Index vom \d\d?\.\d\d?\.\d{4}, 20 Fits insgesamt\)/.test(txt) && /Index löschen \(0,0 MB\)/.test(txt), 'e) Anzeige „N Fits für Hulk (Index vom …, X Fits insgesamt)“ + Löschen mit Größe');
     await T('wbAction', { type: 'wbGo', form: { wbship: 'Gila' } }); S = await T('wbGetS');
     txt = await p.evaluate(() => { const d = document.createElement('div'); window.__test.wbView(d, true); return d.textContent; });
     assert(S.hits.length === 18 && /Mehr anzeigen \(/.test(txt) === false, 'e) Gila: 18 Treffer (unter 20, kein „Mehr“)');

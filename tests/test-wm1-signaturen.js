@@ -51,7 +51,7 @@ const w = new JSDOM(html, { runScripts: 'dangerously', url: 'https://claude.ai/a
     sg = T.wmLoad().sys.J111613.sg;
     assert(sg['IDM-628'].ty === 'B274' && sg['IDM-628'].to === J2, 'Ziel-Feld: Typ und System erkannt');
     b.innerHTML = T.wmHtml();
-    assert(/Kette/.test(b.textContent) && new RegExp('IDM-628 B274 → ' + J2).test(b.textContent), 'Kette: J111613 → IDM-628 B274 → ' + J2);
+    assert(/Kette/.test(b.textContent) && new RegExp('IDM-628 B274[^→]* → ' + J2).test(b.textContent), 'Kette: J111613 → IDM-628 B274 → ' + J2);
     // falsches System: Scan umhängen nimmt ihn im alten System zurück
     await T.wmFromText(['QQQ-111\tCosmic Signature\t\t\t0.0%\t1 AU'].join('\n'), false);
     assert(T.wmLoad().sys.J111613.sg['QQQ-111'], 'Scan landet im gewählten System');

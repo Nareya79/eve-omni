@@ -834,6 +834,7 @@ html.ov-eve .ov-mini .btn{color:inherit;border-color:rgba(255,255,255,.22)}
 .ov-l .bad{color:var(--loss);font-weight:600}
 .ov-l.ov-warn{color:var(--warn)} .ov-l .muted,.tr-empty{color:var(--text-muted)}
 .ov-l .ok{color:var(--profit);font-weight:600}
+.hl-opt .ov-name > .ov-rbtn{margin-left:auto;flex:none} .ov-rbtn button.hr-ok{border-color:var(--profit);color:var(--profit);background:var(--profit-bg);opacity:1}
 .ov-l .tsc-cp-b{width:1.2rem;height:1.2rem;font-size:.76rem}
 .ov-sum{font-size:.76rem;color:var(--text-muted);display:flex;gap:10px;flex-wrap:wrap}
 .ov-sum b{color:var(--text)}
@@ -1521,7 +1522,7 @@ html :is(#ov-root,.trk-list) .ov-card.trk-sm.trk-ob:has(.trk-rb){background-imag
 .ov-card.trk-sm:has(.trk-rb) .ov-name{grid-column:1;display:flex;align-items:center;gap:5px}
 .ov-card.trk-sm:has(.trk-rb) .ov-name > *{flex:none}
 .ov-card.trk-sm:has(.trk-rb) .ov-name > .trk-nm{flex:0 1 auto;min-width:4em;max-width:none}
-.ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini:not(.dn){height:5px;margin-top:3px;background:color-mix(in srgb, var(--text) 8%, transparent)}
+.ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini:not(.dn){height:3px;margin-top:3px;background:color-mix(in srgb, var(--text) 8%, transparent)}
 .ov-card.trk-sm:has(.trk-rb) > .ov-bar-mini:not(.dn) > span{background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, #000), color-mix(in srgb, var(--accent) 80%, #fff));box-shadow:0 0 5px color-mix(in srgb, var(--accent) 55%, transparent)}
 .hl-opt > .ov-h{cursor:pointer}.hl-opt .hl-tog{all:unset;cursor:pointer;color:var(--text-muted);padding:0 2px}.hl-opt .hl-tog:focus-visible{outline:1px solid var(--accent)}.hl-opt .trk-q{white-space:nowrap}.ov-card.hl-opt .ov-name{flex-wrap:wrap;row-gap:1px}.ov-card.hl-opt .ov-name > .trk-nm{min-width:0}
 .ov-card.trk-sm.hl-opt .ov-name > .hl-nm{flex:1 1 7em;min-width:5em;container-type:inline-size;text-overflow:clip;font-weight:700}
@@ -1540,8 +1541,8 @@ html :is(#ov-root,.trk-list) .ov-card.trk-sm.trk-ob:has(.trk-rb){background-imag
 .hl-wn{display:flex;align-items:center;gap:4px;min-width:0}.hl-wn > b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.hl-wn .trk-i{width:18px;height:18px;flex:none}
 @container (max-width: 470px){ .hl-wg{grid-template-columns:auto minmax(0,1fr) auto auto;column-gap:9px;justify-content:stretch} .hl-wx{display:none} }
 .trk-ic{line-height:1;cursor:help}.tic-ok{color:var(--profit)}.tic-warn{color:var(--warn)}.tic-bad{color:var(--loss)}.tic-unk{color:var(--text-muted)}
-.trk-r:has(.trk-rb){grid-column:2;grid-row:1 / span 2;align-self:stretch;display:flex;margin:calc(1px - var(--py,2px)) calc(1px - var(--px,6px)) calc(1px - var(--py,2px)) 0;padding-left:2px;background:var(--tv-e);clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
-.trk-rb{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:1px 8px 1px 11px;line-height:1.12;background:var(--tv-b);clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px)}
+.trk-r:has(.trk-rb){grid-column:2;grid-row:1 / span 2;align-self:stretch;display:flex;margin:calc(1px - var(--py,2px)) calc(1px - var(--px,6px)) calc(1px - var(--py,2px)) 0;padding:2px;background:var(--tv-e);clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+.trk-rb{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:1px 8px 1px 11px;line-height:1.12;background:var(--tv-b);clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px)}
 .trk-rb > b{font-size:1.08em;color:var(--text-strong)}.trk-rb .ov-u{font-size:.78em;font-weight:400}.trk-q{font-size:.86em;color:var(--text-muted)}
 .trk-r.tv-l{--tv-e:var(--loss);--tv-b:linear-gradient(90deg, color-mix(in srgb, var(--loss) 22%, var(--surface-2, var(--bg))), color-mix(in srgb, var(--loss) 9%, var(--surface-2, var(--bg))))}.trk-r.tv-l b{color:var(--loss)}
 .trk-r.tv-w{--tv-e:var(--profit);--tv-b:linear-gradient(90deg, color-mix(in srgb, var(--profit) 18%, var(--surface-2, var(--bg))), color-mix(in srgb, var(--profit) 6%, var(--surface-2, var(--bg))))}.trk-r.tv-w b{color:var(--profit)}
@@ -1765,6 +1766,8 @@ html.ov-eve #ov-root .ov-rbtn button{background:rgba(255,255,255,.035);border:1p
 .ov-body>.ov-map{flex:1 1 auto;min-height:0;display:flex;position:relative}
 #ov-body:has(.ov-map){overflow:hidden}
 .ov-ctx{position:fixed;z-index:50;display:flex;flex-direction:column;min-width:150px;padding:4px;background:var(--panel,#1b1f24);border:1px solid rgba(255,255,255,.25);box-shadow:0 4px 14px rgba(0,0,0,.4);font-size:.78rem}
+/* WM3 (30.10.): Wurmloch-Kette als Karte */
+.wm-map{overflow:auto;max-height:65vh;margin:4px 0;border:1px solid color-mix(in srgb, var(--text) 14%, transparent)} .wm-map svg{display:block;font-size:11px;user-select:none} .wm-n{cursor:grab} .wm-n.wm-drag{cursor:grabbing} .wm-n rect.wm-b{fill:var(--bg);stroke-width:1.5} .wm-n.cur rect.wm-b{stroke-width:3} .wm-n text{fill:var(--text)} .wm-n .wm-m{fill:var(--text);opacity:.65} .wm-e path{fill:none;stroke:var(--e1,#8ab);stroke-width:2} .wm-e.wm-sc path{stroke-dasharray:6 4} .wm-e text{fill:var(--text);opacity:.8;font-size:10px} .wm-e.wm-eol path{stroke:#b06ad8} .wm-e.wm-red path{stroke:#d8c23a} .wm-e.wm-crit path{stroke:#e0453f;stroke-width:3} .wm-e.wm-zu{opacity:.35} .wm-path .wm-crit{color:#e0453f} .wm-path .wm-eol{color:#b06ad8} .wm-path .wm-zu{text-decoration:line-through} select.wm-st{font:inherit;font-size:.75rem;padding:0 2px;background:rgba(0,0,0,.35);color:var(--text);border:1px solid var(--border-strong)} .wm-q{flex:1;min-width:0} .wm-f{cursor:pointer} .wm-f circle{fill:var(--bg);stroke:var(--text);opacity:.8}
 /* AH3 (18.10.): Menüs in der Seite im Stil EVE wie das EVE-Menü (Grundfarbe, 1-px-Kante, eckig, Auswahl Akzent) */
 html.ov-eve .ov-ctx{background:color-mix(in srgb, var(--bg) 94%, #a0b0c8);border:1px solid color-mix(in srgb, var(--text) 16%, var(--bg));border-radius:0;box-shadow:0 6px 18px rgba(0,0,0,.55);padding:3px 0;font-size:.84rem;color:var(--text)}
 html.ov-eve .ov-ctx b{padding:3px 10px 4px;font-weight:400;color:var(--text-muted)}
@@ -1987,7 +1990,7 @@ html.sat-rolled #ov-root > :not(.ov-bar){display:none!important} html.sat-rolled
 .wz-card{max-width:560px}.wz-card .opt-h{margin:12px 0 4px}.wz-sch{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px}.wz-col{display:flex;flex-direction:column;gap:4px}
 .wz-row{display:flex;gap:14px;align-items:center;margin-top:8px}.wz-row > span{white-space:nowrap}.wz-note{margin:12px 0 0;font-size:.78rem;color:var(--text-muted)}
 .play-k{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:10px}
-.gk-alt{white-space:nowrap} .mi-t.mi-tab td:nth-child(2){text-align:right}.mi-t.mi-tab td:nth-child(2):not(.mi-best){color:inherit} .sys-link{cursor:pointer} .sys-link:hover{text-decoration:underline dotted;color:var(--accent-text)} .wh-fx{display:flex;flex-wrap:wrap;gap:4px 14px} .wh-hits{flex-wrap:wrap;gap:4px} .wh-tag{font-size:.76rem} .sort-bar sup{font-size:.7rem;margin-right:2px;color:var(--accent)} .trk-where{font-size:.76rem;color:var(--text-muted);font-weight:400;white-space:nowrap}
+.gk-alt{white-space:nowrap} .mi-t.mi-tab td:nth-child(2){text-align:right}.mi-t.mi-tab td:nth-child(2):not(.mi-best){color:inherit} .sys-link{cursor:pointer} .sys-link:hover{text-decoration:underline dotted;color:var(--accent-text)} .wh-fx{display:flex;flex-wrap:wrap;gap:4px 14px} .wh-hits{flex-wrap:wrap;gap:4px} .wh-tag{font-size:.76rem} .sort-bar sup{font-size:.7rem;margin-right:2px;color:var(--accent)} .trk-where{font-size:.76rem;color:var(--text-muted);font-weight:400;white-space:nowrap} .trk-where.sm{font-size:.66rem;opacity:.85}
 .tr-grid > .sort-bar, .sq-grid > .sort-bar, .ch-grid > .sort-bar{grid-column:1 / -1;margin:0}
 .sort-sel{justify-content:flex-end;grid-column:1/-1}.sort-sel select{font:inherit;padding:1px 4px;background:var(--tint);color:var(--text);border:1px solid var(--border-strong);border-radius:2px;margin-left:4px}
 .sort-bar button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent-text);background:var(--accent-soft)}
@@ -6829,19 +6832,19 @@ if (typeof document !== 'undefined') {
    [12076,"50MN Microwarpdrive II",10,46,3402000,.19,350],[1319,"Expanded Cargohold II",5,764,1048000,.18,520],[1335,"Reinforced Bulkheads II",5,78,752000,.21,330],[2410,"Heavy Missile Launcher II",10,510,2104000,.16,260],
    [2629,"Scourge Fury Heavy Missile",.03,385,981,.2,2e5],[438,"1MN Afterburner II",5,46,689000,.2,280],[11269,"Multispectrum Energized Membrane II",5,328,1912000,.17,310],[3841,"Large Shield Extender II",10,38,5198000,.14,500],
    [1541,"Power Diagnostic System II",5,766,1301000,.16,420],[2605,"Nanofiber Internal Structure II",5,763,651000,.19,380],[24427,"Drone Link Augmentor II",25,645,2799000,.24,90],
-   [20185,"Charon",1300000,513,1612000000,.06,6],[12731,"Bustard",20000,380,291000000,.08,8],[648,"Badger",20000,28,1100000,.18,60],[649,"Tayra",20000,28,2120000,.17,40],[587,"Rifter",2500,25,651000,.16,110],
+   [20185,"Charon",1300000,513,1612000000,.06,6],[12731,"Bustard",20000,380,291000000,.08,8],[81046,"Deluge",20000,1202,166000000,.08,6],[4051,"Nitrogen Fuel Block",5,1136,17700,.12,4e5],[648,"Badger",20000,28,1100000,.18,60],[649,"Tayra",20000,28,2120000,.17,40],[587,"Rifter",2500,25,651000,.16,110],
    [621,"Caracal",10000,26,13200000,.12,90],[24698,"Drake",15000,419,60400000,.09,70],[32880,"Venture",2500,1283,1210000,.15,150],[17478,"Retriever",3750,463,33100000,.11,30],
    [2393,"Bacteria",.38,1042,412,.2,3e5],[3645,"Water",.38,1042,388,.2,4e5],[9832,"Coolant",1.5,1034,9800,.15,9e4],[2073,"Microorganisms",.01,1032,6.8,.25,3e6],[2268,"Aqueous Liquids",.01,1032,7.3,.25,3e6]
   ].forEach(function(x){ T[x[0]] = { id: x[0], n: x[1], v: x[2], g: x[3], p: x[4], sp: x[5], vol: x[6] }; });
   var SK = { 3446:"Broker Relations",16622:"Accounting",16597:"Advanced Broker Relations",3443:"Trade",3444:"Retail",16596:"Wholesale",18580:"Tycoon",16598:"Marketing",16594:"Procurement",16595:"Daytrading",3447:"Visibility",25235:"Contracting",
     3449:"Navigation",3402:"Science",3327:"Spaceship Command",3300:"Gunnery",3436:"Drones",3426:"CPU Management",3413:"Power Grid Management",3418:"Capacitor Management",24241:"Light Drone Operation",33467:"Customs Code Expertise",
-    3340:"Gallente Hauler",3341:"Minmatar Hauler",3342:"Caldari Hauler",3343:"Amarr Hauler",20524:"Caldari Freighter",19719:"Transport Ships",3332:"Caldari Frigate",3335:"Caldari Cruiser",3455:"Evasive Maneuvering",3453:"Warp Drive Operation",
+    3340:"Gallente Hauler",3341:"Minmatar Hauler",3342:"Caldari Hauler",3343:"Amarr Hauler",20524:"Caldari Freighter",19719:"Transport Ships",81032:"Upwell Hauler",3332:"Caldari Frigate",3335:"Caldari Cruiser",3455:"Evasive Maneuvering",3453:"Warp Drive Operation",
     3416:"Shield Operation",3419:"Shield Management",3394:"Hull Upgrades",3392:"Mechanics",1:"" };
   delete SK[1];
   Object.keys(SK).forEach(function(id){ if (!T[id]) T[id] = { id: +id, n: SK[id], v: .01, g: 255, p: 0, skill: true }; });
   var GRP = { 18:["Mineral",4],60:["Damage Control",7],38:["Shield Extender",7],100:["Combat Drone",18],85:["Hybrid Charge",8],385:["Heavy Missile",8],1136:["Fuel Block",4],1739:["Skill Injector",17],59:["Gyrostabilizer",7],302:["Magnetic Field Stabilizer",7],
     205:["Heat Sink",7],367:["Ballistic Control system",7],645:["Drone Damage Modules",7],46:["Propulsion Module",7],764:["Expanded Cargohold",7],78:["Reinforced Bulkhead",7],510:["Missile Launcher Heavy",7],328:["Armor Hardener",7],766:["Power Diagnostic System",7],
-    763:["Nanofiber Internal Structure",7],513:["Freighter",6],380:["Deep Space Transport",6],28:["Hauler",6],25:["Frigate",6],26:["Cruiser",6],419:["Combat Battlecruiser",6],1283:["Expedition Frigate",6],463:["Mining Barge",6],255:["Gunnery",16],
+    763:["Nanofiber Internal Structure",7],513:["Freighter",6],380:["Deep Space Transport",6],1202:["Blockade Runner",6],28:["Hauler",6],25:["Frigate",6],26:["Cruiser",6],419:["Combat Battlecruiser",6],1283:["Expedition Frigate",6],463:["Mining Barge",6],255:["Gunnery",16],
     1042:["Basic Commodities - Tier 1",43],1034:["Refined Commodities - Tier 2",43],1032:["Planet Solid - Raw Resource",42] };
   var CAT = { 4:"Material",6:"Ship",7:"Module",8:"Charge",16:"Skill",17:"Commodity",18:"Drone",42:"Planetary Resources",43:"Planetary Commodities" };
   // Schiffe/Module mit echten Dogma-Werten (für Laderaum, EHP, Gank-Ampel)
@@ -6851,6 +6854,7 @@ if (typeof document !== 'undefined') {
     648: { m: 10750000, c: 3900, a: {4:10750000,9:1680,263:1000,265:750,267:.5,268:.9,269:.75,270:.9,271:1,272:.8,273:.6,274:.5,109:.67,110:.67,111:.67,113:.67,12:3,13:4,14:1,1137:3,70:1.15,37:115,552:155,600:3,1281:1,48:200,11:40,38:3900,182:3342} },
     649: { m: 13000000, c: 7300, a: {4:13000000,9:2300,263:1400,265:850,267:.5,268:.9,269:.75,270:.9,271:1,272:.8,273:.6,274:.5,109:.67,110:.67,111:.67,113:.67,12:4,13:4,14:1,1137:3,70:1.1,37:110,552:215,600:3,1281:1,48:220,11:45,38:7300,182:3342} },
     621: { m: 11910000, c: 450, a: {4:11910000,9:1500,263:1950,265:1300,267:.5,268:.9,269:.75,270:.9,271:1,272:.6,273:.5,274:.4,109:.67,110:.67,111:.67,113:.67,12:4,13:5,14:5,1137:3,70:.5,37:235,552:110,600:3,1281:3,48:400,11:900,38:450,182:3335} },
+    81046: { m: 10800000, c: 4000, a: {4:10800000,9:1500,263:3000,265:750,267:.5,268:.45,269:.75,270:.1375,271:.8,272:.25,273:.5,274:.2,109:.67,110:.67,111:.67,113:.67,12:2,13:4,14:4,1137:2,70:.59,37:265,552:115,600:3.5,1281:1,48:300,11:190,38:4000,182:81032,183:19719} },   // UH: Deluge (ESI 01.11.)
     1319: { a: {149:1.275,150:.77} }, 1335: { a: {150:1.25,614:-10} } };
   // Systeme, Konstellationen, Regionen, Stargates aus der eingebauten Schema-Karte (MP_SCH steht im Hauptskript – erst später verfügbar)
   var U = null;
@@ -6896,6 +6900,7 @@ if (typeof document !== 'undefined') {
     Object.keys(T).forEach(function(k){ var t = T[k]; if (!t.p) return;
       var fac = f ? f[0] + (rnd() < .45 ? rnd() * (f[1] - f[0]) * 2 : -rnd() * .04) : 1, sell = tick(t.p * fac), buy = tick(sell * (1 - t.sp * (f ? .6 + rnd() * .5 : 1)));
       if (f && rnd() < .35) buy = tick(t.p * (1.08 + rnd() * .12));   // lohnend: Kauforder im Ziel-Hub über Jita-Verkauf
+      if (f && t.g === 1136) buy = tick(t.p * 1.16);   // UH: Fuel Blocks lohnen immer (Infrastrukturraum der Upwell-Hauler zeigen)
       var n = 4 + Math.floor(rnd() * 5), q = Math.max(1, Math.round(t.vol / 6));
       for (var i = 0; i < n; i++){
         out.push({ order_id: ++oid, type_id: t.id, is_buy_order: false, price: tick(sell * (1 + i * .004 + rnd() * .002)), volume_remain: Math.max(1, Math.round(q * (.3 + rnd()))), volume_total: q * 2, location_id: st, system_id: (STATIONS[st] || [])[1], issued: iso(NOW - rnd() * 3 * D), duration: 90, min_volume: 1, range: "region" });
@@ -6971,11 +6976,15 @@ if (typeof document !== 'undefined') {
         { item_id: bu, type_id: 12731, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 1335, location_id: bu, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 648, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
+        { item_id: ++item, type_id: 81046, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },   // UH: Deluge (Frachterpilot)
+        { item_id: item + 100000, type_id: 1319, location_id: item, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
         { item_id: ++item, type_id: 34, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 2500000, is_singleton: false }]; }
     if (cid === ARIA){ var ac = ++item, ab = ++item; return [{ item_id: ++item, type_id: 649, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
       { item_id: ac, type_id: 20185, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
       { item_id: ++item, type_id: 1335, location_id: ac, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
       { item_id: ab, type_id: 12731, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },
+      { item_id: ++item, type_id: 81046, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true },   // UH: Deluge (Handelsfigur)
+      { item_id: item + 100000, type_id: 1319, location_id: item, location_flag: "LoSlot0", location_type: "item", quantity: 1, is_singleton: true },
       { item_id: ++item, type_id: 2456, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 70, is_singleton: false },
       { item_id: ++item, type_id: 40520, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 2, is_singleton: false },
       { item_id: ++item, type_id: 36, location_id: JITA, location_flag: "Hangar", location_type: "station", quantity: 180000, is_singleton: false }]; }
@@ -6983,8 +6992,8 @@ if (typeof document !== 'undefined') {
       { item_id: ++item, type_id: 32880, location_id: 60008494, location_flag: "Hangar", location_type: "station", quantity: 1, is_singleton: true }];
   }
   function skills(cid){
-    var lv = cid === ARIA ? { 3446:5,16622:5,16597:4,3443:5,3444:5,16596:4,18580:3,16598:4,16594:4,16595:3,3447:3,25235:3,3449:4,3327:4,3342:4,19719:1 }
-      : cid === KAEL ? { 3446:2,16622:3,3443:4,3444:2,3449:5,3327:5,3342:5,20524:4,19719:4,3455:4,3453:4,3416:4,3419:4,3394:4,3392:4 } : { 3446:1,16622:2,3443:3,3449:4,3327:4,3335:4,3332:5,3300:3,3436:3,3426:4,3413:4,3418:3,24241:3 };
+    var lv = cid === ARIA ? { 3446:5,16622:5,16597:4,3443:5,3444:5,16596:4,18580:3,16598:4,16594:4,16595:3,3447:3,25235:3,3449:4,3327:4,3342:4,19719:1,81032:5 }
+      : cid === KAEL ? { 3446:2,16622:3,3443:4,3444:2,3449:5,3327:5,3342:5,20524:4,19719:4,81032:5,3455:4,3453:4,3416:4,3419:4,3394:4,3392:4 } : { 3446:1,16622:2,3443:3,3449:4,3327:4,3335:4,3332:5,3300:3,3436:3,3426:4,3413:4,3418:3,24241:3 };
     var l = Object.keys(lv).map(function(id){ var x = lv[id]; return { skill_id: +id, trained_skill_level: x, active_skill_level: x, skillpoints_in_skill: [0, 250, 1415, 8000, 45255, 256000][x] * 3 }; });
     return { skills: l, total_sp: BYCH[cid].sp, unallocated_sp: cid === KAEL ? 120000 : 0 };
   }
@@ -7147,7 +7156,7 @@ if (typeof document !== 'undefined') {
     put("eve-zentrale-characters", CH.map(function(c){ return { access_token: jwt(c), refresh_token: "demo", expires_at: NOW + 3650 * D, character_id: String(c.id), character_name: c.name, client_id: "demo" }; }));
     put("eve-zentrale-active-char", String(ARIA)); put("eve-zentrale-hauler-char", String(KAEL)); put("eve-zentrale-jump-pilot", String(CH[2].id));
     put("eve-zentrale-trades-v1", TRADES);
-    put("eve-zentrale-owned-ships-v1", ["Charon (Caldari)", "Bustard (Caldari)", "Badger (Caldari)", "Tayra (Caldari)"]);
+    put("eve-zentrale-owned-ships-v1", ["Charon (Caldari)", "Bustard (Caldari)", "Badger (Caldari)", "Tayra (Caldari)", "Deluge (Upwell)"]);
     put("eve-zentrale-hubhandel-v1", { src: "jita", dst: ["amarr", "dodixie"], ship: "Charon (Caldari)", cargo: "435.000", budget: "800.000.000", depth: "300", tax: "3.375", sellmode: "instant", selldays: "7", extra: "5" });
     put("eve-zentrale-haulruns-v1", [{ id: (NOW - 3 * H) + "-60008494", from: JITA, fromName: "Jita IV - Moon 4 - Caldari Navy Assembly Plant", to: 60008494, toName: "Amarr VIII (Oris) - Emperor Family Academy", charId: String(KAEL), charName: "Kael Demo", sm: "instant",
       items: [{ tid: 2048, name: "Damage Control II", q: 60, sp: 61200000, p: 7900000 }, { tid: 3841, name: "Large Shield Extender II", q: 40, sp: 207900000, p: 31400000 }, { tid: 4405, name: "Drone Damage Amplifier II", q: 80, sp: 183800000, p: 24100000 }],
@@ -8053,7 +8062,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   <p class="note" style="margin-bottom:16px">
     Hub-Handel: findet die gewinnst&auml;rkste Ladung zum Einkaufen im einen und Verkaufen im anderen Hub &ndash; nach Budget und freiem Laderaum (ohne Schiffsempfehlung, Fitting oder Zeit-Sch&auml;tzung).
     F&uuml;r Umkreissuche + Schiffsempfehlung (Skills, Ausrichtzeit, Warp-Geschwindigkeit, Reise-Implantate, Fitting-Vorschlag
-    und grobe Reisezeit): unter ① &bdquo;Alles im Umkreis&ldquo; oder &bdquo;Eigenes System&ldquo; w&auml;hlen.
+    und grobe Reisezeit): unter ① &bdquo;Alles im Umkreis&ldquo; oder &bdquo;Eigenes Ziel&ldquo; w&auml;hlen.
   </p>
 
   <div class="status-line">
@@ -9417,7 +9426,20 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
 <ul class="about-list"><li><b>Station-Trading</b> – Markt-Scanner je Hub, Vorschläge mit Kauf-/Verkaufspreis, „Meine Trades“ bis zum Abschluss (abbrechen, wieder öffnen), Trade-Alarm bei überbotenen Orders.</li><li><b>Hauling</b> – Umkreissuche oder festes Ziel, Route sicher/kürzeste/unsicher, Einkaufsliste zum Kopieren, Schiffsvorschlag aus dem Hangar (Skills + echte Cargo-Module, sonst Fitting-Vorschlag), Hauling-Läufe verfolgen.</li><li><b>Hub-Handel</b> – Beste Ladung zwischen zwei Hubs nach Budget und Laderaum (Flottenhangar der Deep Space Transporter zählt mit), sortiert nach Gewinn pro Stunde, Preise ohne neue Suche aktualisieren.</li><li><b>Kurier-Scanner</b> – öffentliche Kurierverträge frei wählbarer Regionen mit Sprüngen, Anflug, niedrigster Sicherheit und ISK pro Sprung / m³ / Stunde, Filter nach Laderaum, Collateral, Highsec und Sprüngen, Warnungen (Collateral, Struktur, Gank), Vertrag direkt in EVE öffnen.</li><li><b>Fittings</b> – Kernwerte je Schiff (Laderaum, Ausrichtzeit, Warp, Speed, EHP, Signatur, CPU/PG) als Näherung mit Skills, Vergleich zweier Fittings farbig mit Kaufpreis und Versicherung.</li><li><b>Mining</b> – Erz-Rechner: Wert je m³ roh, komprimiert und raffiniert (Jita, netto, mit Raffinier-Skills und Anlage) und ISK pro Stunde je Mining-Schiff, für Highsec bis Nullsec, Mond, Eis und Gas; Verkaufen: bester Hub je Erz netto mit Komprimieren-Hinweis und Route; Tagebuch: Mining je Tag mit Wert heute, länger als die 30 Tage von EVE; Mond: Extraktionen der Corp mit Timer in der Uhr; Karten-Ebene „Mining“, „→ Verkaufen“ in den Assets.</li><li><b>Watchlist</b> – Zuhause aller Aufträge: alle Trades, Hauling-Läufe und Kurierverträge (gemerkt, angenommen, selbst ausgestellt) an einer Stelle (Filter nur Trades / nur Läufe, auch im Overlay), in jedem Reiter dieselben kompakten Zeilen (Klick klappt auf), farbig nach Status, mit Einkaufsliste, Route und Ergebnis aus der Wallet (Tooltip erklärt jede Zahl); im Overlay alles aus dem Trades-Overlay (Preise, überboten, Kopier-Knöpfe, Markt scannen, Blinken, alle auf/zu), leiser Ton bei verkauft/erledigt; Verkaufs-Check für Läufe mit Direktverkauf mit Alarm bei Verlust; überall dieselben Knöpfe Erledigt · Wieder öffnen · Abbrechen · Löschen mit Rückgängig, Papierkorb 30 Tage; Erledigt-Verlauf bleibt gespeichert, angezeigt 30 / 90 Tage / alles.</li><li><b>Route nach EVE</b> – Jeder Vorschlag mit „Route“ (Reiseroute + Karte) und „→ EVE“ (Wegpunkte für den Autopiloten).</li><li><b>Wallet, Assets, Orders, Verträge, Industrie</b> – Alles über ESI für alle eingeloggten Charaktere, Gewinne aus den Wallet-Transaktionen; Wallet wie in EVE mit Ring-Diagramm, Buchungen, Transaktionen (Icon, Kunde, Ort, Filter, Suche, Summe) und Corp-Divisionen; Industrie-Jobs und Blaupausen auch im Overlay; Orders mit Ablauf-Warnung und freien Order-Slots je Charakter.</li><li><b>Navigation &amp; Karte</b> – OmniMap: ganzes Universum mit leuchtenden Sternen, kippen und drehen, „2D“-Schema, Färben nach Sicherheit, Truesec, Planeten, Sov u. a., Ebenen (Live-Kills, Alert, Gatecamps, Souveränität, Faction Warfare, Wurmlöcher), Aktivität bis 90 Tage, deine Charaktere, Assets, Mining und Stationen mit Dienst-Filter; Reiseroute ohne DOTLAN mit Gank-Warnung (Gank-Systeme + Hauler-Verluste 24 Std., auf Wunsch umfahren, rot markiert auf Karte und Radar, Alert bei Kills auf der Route) und „Route einfügen“ aus kopierten Systemnamen, die fertige Route auch aus dem Overlay als Wegpunkte an EVE, Jump Planner, Jump Bridges.</li><li><b>Intel &amp; Alert</b> – Local-Bedrohung (Strg+C im Local), D-Scan-Auswertung mit Grid und Warnungen, Probe-Scanner-Signaturen je System (neu/weg) mit Wurmloch-Kette, Alert live über zKillboard mit Report, Radar für Gate-Camps mit Gefahr-Balken.</li><li><b>Charaktere, Skills, PI</b> – Standort, Schiff, Klone, Skill-Warteschlangen und Planeten aller Charaktere, mit Porträts; PI-Planer (P0→P4 mit Linien, Mengen, Fabriken, Jita-Preise, auch als Overlay); „Lohnt sich“ rechnet aus, was Accounting/Broker Relations im Monat sparen.</li><li><b>Skillpläne</b> – Pläne je Charakter mit automatischen Voraussetzungen, Import „Skill Stufe“, Restzeit, Abgleich mit der Warteschlange, Remap-Hinweis und Injektor-Rechner; aktiver Plan im Skills-Overlay.</li><li><b>Overlay (EVE-Omni.exe)</b> – Einzelfenster über EVE, OmniCom-Overlay (Symbole per Ziehen tauschen, Symbolfarbe wählbar), Notizblock, Uhr mit Downtime-Alarm und eigenen Timern (Restzeit im Sekundentakt, leuchtet, blinkt bei Alarm, Rechtsklick-Menü, Tooltip mit nächstem Termin), OmniCom-Leiste im Hauptfenster in Gruppen (einklappbar, Symbole ausblendbar, schmal nur mit Symbolen), Aktualisieren im Takt von EVE (je Datenart „EVE-Stand → neu ab“ oben und im Tooltip der Fußzeile), Leistungs-Anzeige (Server, Ping, CPU/RAM), Symbol in der Taskleiste, Kompaktansicht, Einrasten, Einklappen per Doppelklick auf die Titelleiste, Schloss zum Sperren, nur über EVE sichtbar, EVE-Clients mit Tab durchschalten. Versteckt oder minimiert spart das Hauptfenster Rechenleistung, Overlays und Alarme laufen weiter.</li><li><b>Jukebox</b> – Musik aus mehreren Ordnern oder Internet-Radio, Favoriten und Playlists (umbenennen, sortieren, Titel entfernen), Equalizer, Lautstärke angleichen, Balken; Spotify, Deezer und Apple Music auch im Overlay.</li><li><b>Stream-Tasten</b> – Plugin für MiraBox Stream Dock (N4 usw.) und Elgato Stream Deck (auch Stream Deck +): Tasten „Overlay“, „Aktion“ (Overlays, Durchklicken, Local/D-Scan/Wertschätzer aus der Zwischenablage, Radar, Aktualisieren, Route → EVE, Timer, Jukebox) und „Anzeige“ (Downtime, Timer, Mond, überbotene Trades, Wallet, Alert, Local, Mining, Skills, CPU/RAM/GPU, Ping, Server – je Charakter, mit eigener Aktion beim Drücken), dazu vier Drehknöpfe mit Touch-Streifen (Jukebox, Deckkraft, Overlays wechseln, Timer). Läuft nur auf diesem PC (127.0.0.1).</li></ul>
 <h3 class="acc-h">Patchnotes</h3>
 <p class="note pn-en">Patch notes are written in German. English summaries of every version: <a href="https://github.com/Nareya79/eve-omni/releases" target="_blank" rel="noopener">github.com/Nareya79/eve-omni/releases</a></p>
-<details class="skills-more" open><summary>Beta 5.5.0 · 29.10.2026</summary><ul class="about-list">
+<details class="skills-more" open><summary>Beta 5.5.1 · 01.11.2026</summary><ul class="about-list">
+<li>Neu: Upwell-Hauler – Squall, Deluge, Torrent und Avalanche sind jetzt in Hauling und Hub-Handel dabei (vorher wurden sie im Hangar nicht erkannt). Die Deluge zählt wie Crane und Viator als Blockade Runner, der Torrent als Deep Space Transport mit Flottenhangar. Danke an Kristoff für die Meldung!</li>
+<li>Neu: Schalter „Infrastrukturraum mitzählen“ in ② (erscheint nur bei Upwell-Haulern, auch im Overlay). An: PI (P1–P4), Mond-Rohstoffe, Fuel Blocks, Eis-Produkte, Colony Reagents und Strukturen samt Modulen kommen zuerst in den Infrastrukturraum (+10 % je Level Upwell Hauler/Freighter), alles andere in den Laderaum. Das Ergebnis zeigt beide Räume getrennt („+ x / y m³ Infrastruktur“).</li>
+<li>Fehler behoben: Der Laderaum eigener Schiffe zählte nur Expanded Cargoholds – Cargo-Rigs (+15/20 %) fehlten, Reinforced Bulkheads (−10 %) auch. Jetzt rechnet Hauling wie die Gank-Ampel mit allen dreien.</li>
+<li>Geändert: Hauling-Overlay – „Verkaufen in › Eigenes System“ heißt jetzt „Eigenes Ziel“; das Textfeld für das Ziel-System erscheint auch bei eingeklappten Suchoptionen, sobald du „Eigenes Ziel“ drückst.</li>
+<li>Geändert: Hauling- und Hub-Handel-Ergebnisse – „Verkaufen“ steht jetzt neben „Kaufen“, „Transport“ darunter. „＋ Lauf merken“ sitzt oben im Balken neben den ISK (nur bei der aufgeklappten Zeile) und wird nach dem Merken grün („✓ gemerkt“).</li>
+<li>Neu: Wurmloch-Mapper – die Kette als Karte: in Navi &amp; Intel › Wurmlöcher steht sie jetzt als Baum von links nach rechts, jedes System mit Klasse (farbig), Effekt, Statics, offenen/allen Signaturen und deinen Charakteren dort. Klick wählt das System, Systeme lassen sich verschieben, Äste zuklappen (−/+), Rechtsklick: Lage zurücksetzen oder Verbindung löschen. Gestrichelte Linien kommen von EVE-Scout. Das Overlay zeigt die Kette weiter als Liste.</li>
+<li>Neu: Wurmloch-Mapper – Status je Loch: am Wurmloch „frisch“, „EOL“, „Masse reduziert“ oder „Masse kritisch“ wählen (wie beim Anschauen in EVE); die Linie in der Karte färbt sich (lila EOL, gelb reduziert, rot kritisch). Daneben steht die Restzeit, immer als Schätzung (aus EVE-Scout, EOL + 4 Std. oder Lebensdauer des Typs ab deinem ersten Scan); ist sie um, steht „vermutlich zu“ und die Linie wird blass – gelöscht wird nichts von selbst. Suchfeld über der Signaturliste. Im Overlay steht jetzt nur der Weg vom Heimsystem bis hier, „ganze Kette“ zeigt alles.</li>
+<li>Geändert: Watchlist – zugeklappte Trades zeigen wieder den Ort, aber klein und nur das System (📍 Jita); aufgeklappt wie bisher der volle Ort, im Tooltip auch zugeklappt.</li>
+<li>Geändert: Watchlist + Hauling – der Gewinn-Kasten rechts hat die farbige Kante jetzt ringsum gleich dick (vorher nur links und an der Schräge).</li>
+<li>Geändert: Watchlist + Hauling – der Fortschrittsbalken unter der zugeklappten Zeile ist etwas dünner.</li>
+<li>Geändert: Trades-Overlay – „⇢ nur Verkauf“ steht nur noch aufgeklappt als Text; zugeklappt nur das Symbol ⇢ (Text im Tooltip) wie in der Watchlist.</li>
+</ul></details>
+<details class="skills-more"><summary>Beta 5.5.0 · 29.10.2026</summary><ul class="about-list">
 <li>Neu: Wurmloch-Mapper, erster Teil (Wunsch aus GitHub #8) – im Probe Scanner Strg+A, Strg+C: EVE Omni ordnet die Signaturen deinem aktuellen System zu und zeigt je System, was neu, geändert oder weg ist (Wurmloch, Daten, Relikt, Gas, Kampfgebiet, Erz; ausgefilterte Anomalien zählen nicht als weg). Am Wurmloch „Ziel / Typ“ eintragen (z. B. „B274 J123456“) – daraus entsteht die Kette. Falsches System? Eintragen und „Übernehmen“ hängt den letzten Scan um. In Navi & Intel › Wurmlöcher und im Wurmloch-Overlay.</li>
 <li>Neu: Wurmloch-Mapper – Thera/Turnur: hat eine Signatur in deinem Scan dieselbe ID, die EVE-Scout für dieses System meldet, steht darunter „Vorschlag: → Thera“ mit Schiffsgröße und Restzeit – „Übernehmen“ trägt das Loch in die Kette ein (mit Quelle EVE-Scout), „Nein“ blendet den Vorschlag aus. Löcher, die EVE-Scout hier kennt, die dein Scan aber nicht hat, stehen als Hinweis darunter.</li>
 <li>Neu: Navigations-Overlay schickt die Route an EVE – unter der berechneten Route „→ EVE: ganze Route“ (jedes System ab „hier bin ich“ als Wegpunkt, der Autopilot fliegt genau diese Route, höchstens 50) und „→ EVE: nur Ziel“. Gilt für den EVE-Client, der zuletzt vorne war (Wunsch eines Testers).</li>
@@ -9868,7 +9890,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "Höchstes Kaufgebot": "Highest buy order", "Niedrigstes Verkaufsangebot": "Lowest sell order", "Meine Kauforder": "My buy order", "Meine Verkaufsorder": "My sell order",
     "Nettogewinn / Stück": "Net profit / unit", "Startpunkt": "Starting point", "Eigene Eingabe (System unten eintragen)": "Custom (enter system below)",
     "Eigenes System": "Custom system", "Ziel": "Destination", "Umkreis (alle Ziele im Radius)": "Radius (all destinations in range)",
-    "Eigenes Ziel (System eintragen)": "Custom destination (enter system)", "Eigenes Ziel-System": "Custom destination system", "Sicherste (nur Highsec)": "Safest (highsec only)",
+    "Eigenes Ziel (System eintragen)": "Custom destination (enter system)", "Eigenes Ziel": "Custom destination", "Eigenes Ziel-System": "Custom destination system", "Sicherste (nur Highsec)": "Safest (highsec only)",
     "Kürzeste": "Shortest", "Unsicherer": "Less secure", "Sicherste": "Safest", "Fracht": "Cargo", "Maximalschiff": "Largest ship", "– kein Auto-Laderaum –": "– no auto cargo –",
     "Laderaum (m³)": "Cargo hold (m³)", "5 Tsd.": "5k", "100 Mio.": "100 m", "max. m³ je Stück": "max. m³ per unit", "Suche": "Search", "Suchtiefe (Items)": "Search depth (items)",
     "Verkaufsart": "Sell mode", "sofort an Kauforders": "instantly to buy orders", "als Verkaufsorder einstellen": "as sell order", "höchstens Tage": "max. days",
@@ -10040,7 +10062,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "nur gank-sichere Ladung": "gank-safe cargo only", "Gank-Sicherheit": "Gank safety", "vorsichtig (1500 ISK/EHP)": "careful (1500 ISK/EHP)", "normal (2000 ISK/EHP)": "normal (2000 ISK/EHP)", "an der Grenze (3000 ISK/EHP)": "at the limit (3000 ISK/EHP)",
     "Min. per jump": "Min. per jump",
     "Extra min.": "Extra min.",
-    "Hub-Handel: findet die gewinnstärkste Ladung zum Einkaufen im einen und Verkaufen im anderen Hub – nach Budget und freiem Laderaum (ohne Schiffsempfehlung, Fitting oder Zeit-Schätzung). Für Umkreissuche + Schiffsempfehlung (Skills, Ausrichtzeit, Warp-Geschwindigkeit, Reise-Implantate, Fitting-Vorschlag und grobe Reisezeit): unter ① „Alles im Umkreis“ oder „Eigenes System“ wählen.": "Hub trading: finds the most profitable cargo to buy in one hub and sell in another – by budget and free cargo space. For a radius search with ship suggestion (skills, align time, warp speed, travel implants, fitting and rough travel time): choose “Everything in radius” or “Own system” under ①.",
+    "Hub-Handel: findet die gewinnstärkste Ladung zum Einkaufen im einen und Verkaufen im anderen Hub – nach Budget und freiem Laderaum (ohne Schiffsempfehlung, Fitting oder Zeit-Schätzung). Für Umkreissuche + Schiffsempfehlung (Skills, Ausrichtzeit, Warp-Geschwindigkeit, Reise-Implantate, Fitting-Vorschlag und grobe Reisezeit): unter ① „Alles im Umkreis“ oder „Eigenes Ziel“ wählen.": "Hub trading: finds the most profitable cargo to buy in one hub and sell in another – by budget and free cargo space. For a radius search with ship suggestion (skills, align time, warp speed, travel implants, fitting and rough travel time): choose “Everything in radius” or “Custom destination” under ①.",
     "Die Schiffsauswahl trägt nur den": "The ship selection only enters the",
     "(unrigged, ohne Skills, live aus ESI) in das Cargo-Feld ein – Cargo-Rigs, Racial-Freighter-/Transport-Skills und bereits geladene Fracht verändern deinen tatsächlich freien Laderaum, deshalb bleibt das Feld danach frei editierbar. Trag am besten deinen wirklich freien Platz ein, bevor du startest.": "(unrigged, without skills, live from ESI) into the cargo field – cargo rigs, racial freighter/transport skills and cargo already loaded change your real free space, so the field stays editable. Best enter your actual free space before you start.",
     "Lädt die kompletten Orderbücher von Quell- und Ziel-Hub und vergleicht": "Loads the complete order books of the source and target hub and compares",
@@ -11516,7 +11538,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "“ gespeichert": "” saved",
     "“ gespeichert.": "” saved.",
     "Kasse": "cash",
-    "① Kaufen": "① Buy", "② Transport": "② Transport", "③ Verkaufen": "③ Sell", "Ø Kauf": "Ø buy", "Ø Verk.": "Ø sell", "Ø Einkaufspreis kopieren": "Copy Ø buy price",
+    "① Kaufen": "① Buy", "② Transport": "② Transport", "③ Verkaufen": "③ Sell", "② Verkaufen": "② Sell", "③ Transport": "③ Transport", "Infrastrukturraum mitzählen": "Count infrastructure hold",
+    "Upwell-Hauler (Squall, Deluge, Torrent, Avalanche): Der Infrastrukturraum nimmt nur PI (P1–P4), Mond-Rohstoffe, Fuel Blocks, Eis-Produkte, Colony Reagents und Strukturen samt Modulen. An = diese Waren kommen zuerst dort hinein, alles andere in den Laderaum.": "Upwell haulers (Squall, Deluge, Torrent, Avalanche): the infrastructure hold only takes PI (P1–P4), moon materials, fuel blocks, ice products, colony reagents and structures with their modules. On = these goods go there first, everything else into the cargo hold.", "Ø Kauf": "Ø buy", "Ø Verk.": "Ø sell", "Ø Einkaufspreis kopieren": "Copy Ø buy price",
     "Spr.": "j.", "Klick: auf- oder zuklappen": "Click: expand or collapse", "Gewinn netto": "Net profit", "ISK pro Stunde": "ISK per hour", "Gewinn seit der Suche um mehr als 15 % gefallen": "Profit fell more than 15 % since the search",
     "Größe": "Size", "Größe von Menüs, Porträts und Kill-/Alarm-Kästen – auch Strg+Mausrad auf der Karte; Doppelklick = 100 %": "Size of menus, portraits and kill/alert boxes – also Ctrl+mouse wheel on the map; double-click = 100 %", "Größe von Porträts und Kill-/Alarm-Kästen": "Size of portraits and kill/alert boxes",
     "⚠ einzeln kaufen:": "⚠ buy separately:", "Diese Waren findet der Mehrfachkauf in EVE nicht (bei EVE nicht veröffentlicht) – im Marktfenster einzeln kaufen": "EVE's multibuy cannot find these items (not published by EVE) – buy them one by one in the market window",
@@ -11647,7 +11670,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "SKIN (30 Tage)": "SKIN (30 days)",
     "Buchungen von": "Entries of",
     "Budget gank-sicher": "Budget gank-safe",
-    "Flottenhangar Grundwert": "fleet hangar base value",
+    "Flottenhangar Grundwert": "fleet hangar base value", "Infrastruktur Grundwert": "infrastructure hold base value", "Cargo genutzt:": "Cargo used:", "Infrastruktur": "infrastructure hold",
     "Grundwert": "base value",
     "Flottenhangar": "fleet hangar",
     "Charaktere – einklappen": "Characters – collapse",
@@ -12483,7 +12506,26 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     "Gas": "Gas",
     "(oben)": "(above)",
     "Ziel / Typ": "Target / type",
-    "Ziel-System und/oder Wurmloch-Typ, z. B. „B274 J123456“": "Target system and/or wormhole type, e.g. “B274 J123456”"
+    "Ziel-System und/oder Wurmloch-Typ, z. B. „B274 J123456“": "Target system and/or wormhole type, e.g. “B274 J123456”",
+    // Nachtrag 04.10.2026 (Programm-Quellcode/i18n-en.py)
+    "Ziehen = verschieben · Rechtsklick = Menü": "Drag = move · Right-click = menu",
+    "Ast aufklappen": "Expand branch",
+    "Ast zuklappen": "Collapse branch",
+    "Lage zurücksetzen": "Reset position",
+    "Alle Lagen zurücksetzen": "Reset all positions",
+    "Verbindung löschen": "Delete connection",
+    "Status ?": "Status ?",
+    "frisch": "fresh",
+    "EOL (< 4 Std.)": "EOL (< 4 h)",
+    "Masse reduziert": "Mass reduced",
+    "Masse kritisch": "Mass critical",
+    "EOL + kritisch": "EOL + critical",
+    "nur Pfad": "path only",
+    "ganze Kette": "whole chain",
+    "Suche: Signatur, Art, Name, Ziel": "Search: signature, kind, name, target",
+    "Keine Signatur passt zur Suche.": "No signature matches the search.",
+    "Status des Lochs (wie beim Anschauen in EVE)": "Status of the hole (as shown when you look at it in EVE)",
+    "Schätzung aus Lebensdauer des Typs, EOL-Zeit oder EVE-Scout – kein sicherer Wert": "Estimate from the type's lifetime, the EOL time or EVE-Scout – not a certain value"
   };
   var ATTR = ["title", "placeholder", "aria-label"];
   /* Nachtrag 04.10.2026: Muster für Texte mit Zahlen/Namen (ganzer Text muss passen) + Teilsätze, die in vielen Statuszeilen vorkommen */
@@ -12544,7 +12586,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     [/^Panzerung von (.+) nicht berechenbar – gerechnet wird mit vollem Budget\.$/, "Tank of $1 can't be calculated – using the full budget."], [/^Kein eingeloggter Charakter kann (.+) laut Skill fliegen\.$/, "No logged-in character can fly $1 according to skills."],
     [/^⚠ Budget ist größer als das Wallet \((.+)\)\.$/, "⚠ Budget is larger than the wallet ($1)."], [/^⚠ Gank-Schutz begrenzt die Ladung auf (.+) – vom Budget wird weniger ausgegeben\.$/, "⚠ Gank protection limits the cargo to $1 – less of the budget is spent."],
     [/^⚠ Kein eingeloggter Charakter kann (.+) laut Skill fliegen\.$/, "⚠ No logged-in character can fly $1 according to skills."], [/^leer = ganzes Wallet(?: \((.+)\))?$/, function(m, a){ return "empty = whole wallet" + (a ? " (" + a + ")" : ""); }],
-    [/^bestes Schiff aus (\d+) im Hangar$/, "best ship of $1 in the hangar"], [/^(.+) m³ \(ohne Schiff\)$/, "$1 m³ (no ship)"], [/^Budget = Wallet(.*)$/, "Budget = wallet$1"],
+    [/^bestes Schiff aus (\d+) im Hangar$/, "best ship of $1 in the hangar"], [/^(.*) m³ Infrastruktur$/, "$1 m³ infrastructure hold"], [/^(.+) m³ \(ohne Schiff\)$/, "$1 m³ (no ship)"], [/^Budget = Wallet(.*)$/, "Budget = wallet$1"],
     [/^Gank-Schutz (vorsichtig|normal|knapp|\d+)(?:: Ladung höchstens (.+))?$/, function(m, l, v){ return "Gank protection " + ({ vorsichtig: "careful", normal: "normal", knapp: "tight" }[l] || l) + (v ? ": cargo at most " + v : ""); }], [/^Preisanpassung ([\d.,]+) % \(Rabatt ([\d.,]+) %\)$/, "Relist fee $1 % (discount $2 %)"],   // Trading › Gebühren
     // Alert-Fenster (ganze Sätze statt Stück-Übersetzung – sonst „2 jumps entfernt“, „Dein Character“)
     [/^(-?\d[.,]\d) · im System$/, "$1 · in system"], [/^(-?\d[.,]\d) · (\d+) Sprünge$/, "$1 · $2 jumps"], [/^(-?\d[.,]\d) · 1 Sprung$/, "$1 · 1 jump"], [/^(\d+) Sprünge$/, "$1 jumps"],
@@ -13811,7 +13853,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     body.appendChild(f);
     var here = whHere();
     if (here.length){ body.appendChild(el("div", "ov-sum", "<span>Deine Charaktere im Wurmloch</span>")); here.forEach(function(h){ body.appendChild(el("div", "ov-l txt", "<b>" + escapeHtml(h.name) + '</b> in <span class="sys-link" data-ova="whPick" data-arg="' + escapeHtml(h.w.n) + '" title="Details zeigen">' + escapeHtml(h.w.n) + "</span> ·" + whTag(h.w.id))); }); }
-    body.insertAdjacentHTML("beforeend", wmHtml());   // WM1
+    body.insertAdjacentHTML("beforeend", wmHtml(body.id === "wh-page"));   // WM1, WM3: große Seite mit Karte
     body.appendChild(el("div", "ovn-mode", '<button type="button" data-ova="thList" title="Aktuelle Wurmlöcher von Thera und Turnur (EVE-Scout)">Thera & Turnur ' + (thState.t ? "neu laden" : "zeigen") + "</button>"));   // EE3d
     var thl = thListHtml(); if (thl) body.insertAdjacentHTML("beforeend", thl);
     if (!q){ body.appendChild(el("div", "ov-empty", "J-System eintragen oder einfügen (z. B. aus dem Lokal-Chat) – Klasse, Effekt mit echten Zahlen, Statics, Planeten. Oder einen Wurmloch-Typ (z. B. C247) – wohin, Lebensdauer, Masse. Daten: anoik.is (Stand im Paket).")); return; }
@@ -13836,13 +13878,14 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function whPageOn(){ var p = document.getElementById("panel-wormhole"); return !!p && p.classList.contains("active"); }
   function whPageRender(){
     var box = document.getElementById("wh-page"); if (!box || !whPageOn()) return;
-    if (!box.__w){ box.__w = true; ovFormWire(box, whAction); }
-    ovFormKeep(box, function(){ box.innerHTML = ""; ovRenderWormhole(box); });
+    if (!box.__w){ box.__w = true; wmMapWire(box); ovFormWire(box, whAction); }
+    ovFormKeep(box, function(){ var mp = box.querySelector(".wm-map"), sc = mp && [mp.scrollLeft, mp.scrollTop]; box.innerHTML = ""; ovRenderWormhole(box);   // WM3: Karte bleibt an der Stelle
+      mp = sc && box.querySelector(".wm-map"); if (mp){ mp.scrollLeft = sc[0]; mp.scrollTop = sc[1]; } });
   }
   /* WM1 (28.10.2026, Issue #8, PLAN-Wurmloch-Mapper.md Stufe 2): Probe Scanner aus der Zwischenablage (im Fenster Strg+A, Strg+C) → Signaturen je System
      mit neu/geändert/weg, Wurmloch-Signatur „→ Ziel“ ergibt die Kette (als Text). Systeme per Name (in EVE eindeutig). Der Probe-Text nennt kein System:
      Standort frisch per ESI, sonst zuletzt gewähltes System – immer sichtbar „für System X“ mit Ändern (nimmt den letzten Scan dort zurück). */
-  var WM_KEY = "eve-zentrale-whmap-v1", WM_KEEP = 14 * 86400000, wmMsg = "", wmAsk = false;
+  var WM_KEY = "eve-zentrale-whmap-v1", WM_KEEP = 14 * 86400000, wmMsg = "", wmAsk = false, wmQ = "", wmTree = false;
   function wmLoad(){ var d = null; try{ d = JSON.parse(localStorage.getItem(WM_KEY)); }catch(e){} d = d && typeof d === "object" ? d : {}; d.sys = d.sys || {}; return d; }
   function wmSave(d){ try{ localStorage.setItem(WM_KEY, JSON.stringify(d)); }catch(e){} }
   function wmKind(g, t){   // Gruppe + Typ aus dem EN- oder DE-Client
@@ -13930,46 +13973,151 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       else if (m){ so.k = "wh"; so.to = m.to; so.src = "EVE-Scout"; so.sz = m.x.max_ship_size || ""; so.ex = m.x.expires_at || ""; delete so.scNo; }
       wmSave(d);
     }
+    if (a.type === "whMapSt"){ var so2 = d.cur && d.sys[d.cur] && d.sys[d.cur].sg[a.key]; if (!so2) return; so2.st = a.arg || ""; so2.stT = Date.now(); if (!so2.st) delete so2.stT; wmSave(d); }   // WM5
+    if (a.type === "whMapQ"){ wmQ = String(a.arg || "").trim(); return wmRender(); }
+    if (a.type === "whMapTree"){ wmTree = !wmTree; return wmRender(); }
+    if (a.type === "whMapFold"){ d.fold = d.fold || {}; if (d.fold[a.arg]) delete d.fold[a.arg]; else d.fold[a.arg] = 1; wmSave(d); }   // WM3
+    if (a.type === "whMapPos"){ (d.pos = d.pos || {})[a.arg] = a.xy; wmSave(d); }
+    if (a.type === "whMapPosReset"){ if (a.arg && d.pos) delete d.pos[a.arg]; else delete d.pos; wmSave(d); }
+    if (a.type === "whMapCut"){ var cu = String(a.arg || "").split("|"), co = d.sys[cu[0]] && d.sys[cu[0]].sg[cu[1]]; if (co){ co.to = ""; co.ty = ""; delete co.src; wmSave(d); } }
     if (a.type === "whMapNew"){ wmAsk = true; return wmRender(); }
     if (a.type === "whMapNewOk"){ d = { sys: {} }; wmSave(d); wmMsg = ""; }
     wmAsk = false; wmRender();
   }
   var WM_KIND = { wh: "Wurmloch", data: "Daten", relic: "Relikt", gas: "Gas", combat: "Kampfgebiet", ore: "Erz", other: "Sonstiges", "": "unbekannt" };
-  function wmChainHtml(d){   // Baum aus den „→“-Feldern; Wurzeln = Systeme, in die nichts führt
-    var kids = {}, into = {}, seen = {}, out = [];
+  function wmGraph(d){   // Verbindungen aus den „→“-Feldern; Wurzeln = Systeme, in die nichts führt (danach Ringe)
+    var kids = {}, into = {};
     Object.keys(d.sys).forEach(function(s){ var sg = d.sys[s].sg; Object.keys(sg).forEach(function(id){ var o = sg[id]; if (o.to && !o.gone){ (kids[s] = kids[s] || []).push([id, o]); into[o.to] = 1; } }); });
+    return { kids: kids, roots: Object.keys(d.sys).filter(function(s){ return !into[s]; }).concat(Object.keys(kids)) };
+  }
+  /* WM5 (30.10.2026, Stufe 5): Status je Loch von Hand (EOL, Masse), Restzeit nur als Schätzung – EVE-Scout-Ablauf, sonst EOL + 4 Std., sonst erster Scan + Lebensdauer
+     des Typs (Obergrenze: das Loch kann älter sein). Abgelaufen = „vermutlich zu“, nie still gelöscht. Overlay: Pfad Heim → hier, ganze Kette auf Knopf; Suche in der Signaturliste. */
+  var WM_ST = [["", "Status ?", "Status ?"], ["ok", "frisch", "fresh"], ["eol", "EOL (< 4 Std.)", "EOL (< 4 h)"], ["red", "Masse reduziert", "mass reduced"], ["crit", "Masse kritisch", "mass critical"], ["eolcrit", "EOL + kritisch", "EOL + critical"]];
+  function wmLife(o, now){   // → { zu, txt } oder null
+    var t = o.ty && whType(o.ty), end = o.ex ? Date.parse(o.ex) : /eol/.test(o.st || "") && o.stT ? o.stT + 4 * 3600000 : t && t.life && o.f ? o.f + t.life * 3600000 : 0;
+    if (!end) return null; var r = end - (now || Date.now());
+    return r <= 0 ? { zu: true, txt: NUM_EN ? "probably closed" : "vermutlich zu" } : { zu: false, txt: (NUM_EN ? "≤ ~" + Math.ceil(r / 3600000) + " h left (estimate)" : "noch ≤ ~" + Math.ceil(r / 3600000) + " Std. (geschätzt)") };
+  }
+  function wmStCls(o){ var l = wmLife(o); return l && l.zu ? " wm-zu" : /crit/.test(o.st || "") ? " wm-crit" : o.st === "red" ? " wm-red" : /eol/.test(o.st || "") ? " wm-eol" : ""; }
+  function wmStTxt(o){ var s = WM_ST.filter(function(x){ return x[0] && x[0] === o.st; })[0], l = wmLife(o); return [s && s[NUM_EN ? 2 : 1], l && l.txt].filter(Boolean).join(" · "); }
+  function wmPath(d){   // Pfad Wurzel → aktuelles System: [[System, über Signatur, Signatur-Objekt]]
+    var g = wmGraph(d), par = {}, out = [], s = d.cur, seen = {};
+    Object.keys(g.kids).forEach(function(a){ g.kids[a].forEach(function(k){ if (!par[k[1].to] && k[1].to !== a) par[k[1].to] = [a, k[0], k[1]]; }); });
+    while (s && !seen[s]){ seen[s] = 1; var p = par[s]; out.unshift([s, p ? p[1] : "", p ? p[2] : null]); s = p && p[0]; }
+    return out;
+  }
+  function wmChainHtml(d){   // Baum als Text (Overlay)
+    var g = wmGraph(d), kids = g.kids, seen = {}, out = [];
     function walk(s, dep, via){
       var w = whSys(s), rep = seen[s]; seen[s] = 1;
       out.push('<div class="ov-l txt" style="padding-left:' + (dep * 1.2) + 'em">' + (via ? '<span class="muted">' + escapeHtml(via) + " → </span>" : "") +
         '<span class="sys-link' + (s === d.cur ? " pos" : "") + '" data-ova="whMapPick" data-arg="' + escapeHtml(s) + '">' + escapeHtml(s) + "</span>" + (w ? " " + escapeHtml(whCls(w.cls)) : "") + (rep ? ' <span class="muted">(oben)</span>' : "") + "</div>");
-      if (!rep) (kids[s] || []).forEach(function(k){ walk(k[1].to, dep + 1, k[0] + (k[1].ty ? " " + k[1].ty : "") + (k[1].src ? " · " + k[1].src : "")); });
+      if (!rep) (kids[s] || []).forEach(function(k){ walk(k[1].to, dep + 1, k[0] + (k[1].ty ? " " + k[1].ty : "") + (k[1].src ? " · " + k[1].src : "") + (wmStTxt(k[1]) ? " · " + wmStTxt(k[1]) : "")); });
     }
-    Object.keys(d.sys).filter(function(s){ return !into[s]; }).concat(Object.keys(kids)).forEach(function(s){ if (!seen[s]) walk(s, 0, ""); });
+    g.roots.forEach(function(s){ if (!seen[s]) walk(s, 0, ""); });
     return out.join("");
   }
-  function wmHtml(){
+  /* WM3 (30.10.2026, Stufe 1): Kette als Karte (SVG) auf der großen Seite – Baum von links nach rechts, Knoten verschiebbar (d.pos), Ast zuklappen (d.fold),
+     Klick wählt das System, Rechtsklick: Ast zu/auf, Lage zurücksetzen, Verbindung löschen. Gestrichelt = von EVE-Scout. Das Overlay behält den Text-Baum. */
+  var WM_NW = 176, WM_NH = 66, WM_GAP = 112, WM_COL = { c1: "#3fa7e0", c2: "#27c4c4", c3: "#3fbf6a", c4: "#d8c23a", c5: "#e88a2a", c6: "#e0453f", thera: "#b06ad8", hs: "#3fbf6a", ls: "#e88a2a", ns: "#e0453f" };
+  function wmLayout(d){   // → { n: { System: { x, y, k } }, e: [{ a, b, id, o }], w, h }
+    var g = wmGraph(d), fold = d.fold || {}, P = d.pos || {}, n = {}, e = [], row = 0, W = 0, H = 0;
+    function walk(s, dep){
+      var me = n[s] = { k: (g.kids[s] || []).length, dep: dep }, ys = [];
+      if (!fold[s]) (g.kids[s] || []).forEach(function(k){ var t = k[1].to; e.push({ a: s, b: t, id: k[0], o: k[1] }); if (!n[t]) ys.push(walk(t, dep + 1).r); });
+      me.r = ys.length ? (ys[0] + ys[ys.length - 1]) / 2 : row++; return me;
+    }
+    g.roots.forEach(function(s){ if (!n[s]) walk(s, 0); });
+    Object.keys(n).forEach(function(s){ var m = n[s], p = P[s];
+      m.x = p ? p[0] : 12 + m.dep * (WM_NW + WM_GAP); m.y = p ? p[1] : 12 + m.r * (WM_NH + 18); W = Math.max(W, m.x + WM_NW + 24); H = Math.max(H, m.y + WM_NH + 12); });
+    return { n: n, e: e, w: W, h: H };
+  }
+  function wmEdgeD(a, b){ var x1 = a[0] + WM_NW, y1 = a[1] + WM_NH / 2, x2 = b[0], y2 = b[1] + WM_NH / 2, m = (x1 + x2) / 2; return "M" + x1 + " " + y1 + "C" + m + " " + y1 + " " + m + " " + y2 + " " + x2 + " " + y2; }
+  function wmSvg(d){
+    var L = wmLayout(d), here = whHere(), E = escapeHtml; if (!L.e.length) return "";
+    var es = L.e.map(function(x){ var A = L.n[x.a], B = L.n[x.b], t = x.o.ty && whType(x.o.ty);
+      return '<g class="wm-e' + (x.o.src ? " wm-sc" : "") + wmStCls(x.o) + '" data-wme="' + E(x.a + "|" + x.id) + '" data-a="' + E(x.a) + '" data-b="' + E(x.b) + '"><title>' + E([x.id, t ? whTypeTxt(t) : x.o.ty, x.o.src, wmStTxt(x.o)].filter(Boolean).join("\n")) + "</title>" +
+        '<path d="' + wmEdgeD([A.x, A.y], [B.x, B.y]) + '"/><text text-anchor="middle" x="' + ((A.x + WM_NW + B.x) / 2) + '" y="' + ((A.y + B.y + WM_NH) / 2 - 4) + '">' + E(x.id + (x.o.ty ? " " + x.o.ty : "")) + "</text></g>"; });
+    var ns = Object.keys(L.n).map(function(s){
+      var m = L.n[s], w = whSys(s), S = d.sys[s], col = WM_COL[w ? w.cls : ""] || "#8a96a8", act = S ? Object.keys(S.sg).filter(function(id){ return !S.sg[id].gone; }) : [];
+      var open = act.filter(function(id){ return !S.sg[id].an && !S.sg[id].k; }).length, fx = w && w.fx ? (w.danger ? "⚠ " : "") + (NUM_EN ? w.fx : WH_FX[w.fx] || w.fx) : w ? (NUM_EN ? "no effect" : "kein Effekt") : "K-Space";
+      var st = w && w.st.length ? "Statics " + w.st.map(function(t){ return t.n + "→" + whCls(t.dest).replace(/^(.)\w*sec$/, "$1S"); }).join(" ") : "", fo = (d.fold || {})[s];
+      var pp = here.filter(function(h){ return h.w.n === s; }).map(function(h, i){ return '<image href="https://images.evetech.net/characters/' + Number(h.cid) + '/portrait?size=32" x="' + (WM_NW - 22 - i * 20) + '" y="' + (WM_NH - 22) + '" width="18" height="18"><title>' + E(h.name) + "</title></image>"; }).join("");
+      return '<g class="wm-n' + (s === d.cur ? " cur" : "") + '" data-ova="whMapPick" data-arg="' + E(s) + '"' + (m.k ? ' data-k="1"' : "") + ' transform="translate(' + m.x + "," + m.y + ')"><title>' + E(w ? whSysLine(w) + (w.danger ? "\n⚠ " + w.danger : "") : s) + "</title>" +
+        '<rect class="wm-b" width="' + WM_NW + '" height="' + WM_NH + '" style="stroke:' + col + '"/><rect width="4" height="' + WM_NH + '" style="fill:' + col + '"/>' +
+        '<text x="10" y="15"><tspan font-weight="bold">' + E(s) + '</tspan> <tspan style="fill:' + col + '">' + E(w && whCls(w.cls) !== s ? whCls(w.cls) : "") + "</tspan></text>" +
+        '<text class="wm-m" x="10" y="29">' + E(fx) + '</text><text class="wm-m" x="10" y="43">' + E(st) + "</text>" +
+        (S ? '<text class="wm-m" x="10" y="58">' + (NUM_EN ? "Sigs " : "Sig. ") + open + " " + (NUM_EN ? "open" : "offen") + " / " + act.length + "</text>" : "") + pp +
+        (m.k ? '<g class="wm-f" data-ova="whMapFold" data-arg="' + E(s) + '"><title>' + (fo ? (NUM_EN ? "Expand branch" : "Ast aufklappen") : (NUM_EN ? "Collapse branch" : "Ast zuklappen")) + '</title><circle cx="' + WM_NW + '" cy="' + (WM_NH / 2) + '" r="8"/><text x="' + WM_NW + '" y="' + (WM_NH / 2 + 4) + '" text-anchor="middle">' + (fo ? "+" + m.k : "−") + "</text></g>" : "") + "</g>";
+    });
+    return '<div class="wm-map"><svg width="' + L.w + '" height="' + L.h + '">' + es.join("") + ns.join("") + "</svg></div>";
+  }
+  function wmMapWire(box){   // WM3: Knoten ziehen (Linien ziehen mit), Klick danach schlucken, Rechtsklick-Menü – vor ovFormWire verdrahten
+    var dr = null;
+    function xy(g){ var m = /translate\(([-\d.]+),([-\d.]+)\)/.exec(g.getAttribute("transform") || ""); return m ? [+m[1], +m[2]] : [0, 0]; }
+    function node(s){ return [].filter.call(box.querySelectorAll(".wm-n"), function(g){ return g.getAttribute("data-arg") === s; })[0]; }
+    box.addEventListener("pointerdown", function(ev){
+      var g = ev.button === 0 && ev.target.closest && !ev.target.closest(".wm-f") && ev.target.closest(".wm-n"); if (!g) return;
+      var p = xy(g); dr = { g: g, s: g.getAttribute("data-arg"), x: p[0], y: p[1], cx: ev.clientX, cy: ev.clientY };
+    });
+    box.addEventListener("pointermove", function(ev){
+      if (dr && !(ev.buttons & 1)) dr = null; if (!dr) return; var dx = ev.clientX - dr.cx, dy = ev.clientY - dr.cy;
+      if (!dr.mv){ if (Math.abs(dx) + Math.abs(dy) < 4) return; dr.mv = true; dr.g.classList.add("wm-drag"); try{ box.setPointerCapture(ev.pointerId); }catch(e){} }
+      dr.nx = Math.max(0, Math.round(dr.x + dx)); dr.ny = Math.max(0, Math.round(dr.y + dy)); dr.g.setAttribute("transform", "translate(" + dr.nx + "," + dr.ny + ")");
+      box.querySelectorAll(".wm-e").forEach(function(e){
+        var a = e.getAttribute("data-a"), b = e.getAttribute("data-b"); if (a !== dr.s && b !== dr.s) return;
+        var A = xy(node(a)), B = xy(node(b)), t = e.querySelector("text"); e.querySelector("path").setAttribute("d", wmEdgeD(A, B)); t.setAttribute("x", (A[0] + WM_NW + B[0]) / 2); t.setAttribute("y", (A[1] + B[1] + WM_NH) / 2 - 4);
+      });
+    });
+    box.addEventListener("pointerup", function(){ var d0 = dr; dr = null; if (!d0 || !d0.mv) return; box.__wmNo = Date.now(); wmAction({ type: "whMapPos", arg: d0.s, xy: [d0.nx, d0.ny] }); });
+    box.addEventListener("click", function(ev){ if (box.__wmNo && Date.now() - box.__wmNo < 500){ box.__wmNo = 0; ev.preventDefault(); ev.stopImmediatePropagation(); } }, true);
+    box.addEventListener("contextmenu", function(ev){
+      var n = ev.target.closest && ev.target.closest(".wm-n"), e = !n && ev.target.closest && ev.target.closest(".wm-e"); if (!n && !e) return;
+      ev.preventDefault(); var d = wmLoad(), it = [], s = n ? n.getAttribute("data-arg") : "", old = document.getElementById("wm-ctx"); if (old) old.remove();
+      if (n && n.hasAttribute("data-k")) it.push(["whMapFold", s, (d.fold || {})[s] ? "Ast aufklappen" : "Ast zuklappen"]);
+      if (n && (d.pos || {})[s]) it.push(["whMapPosReset", s, "Lage zurücksetzen"]);
+      if (e) it.push(["whMapCut", e.getAttribute("data-wme"), "Verbindung löschen"]);
+      if (d.pos && Object.keys(d.pos).length) it.push(["whMapPosReset", "", "Alle Lagen zurücksetzen"]);
+      if (!it.length) return;
+      var m = document.createElement("div"); m.id = "wm-ctx"; m.className = "ov-ctx"; m.style.left = ev.clientX + "px"; m.style.top = ev.clientY + "px";
+      m.innerHTML = "<b>" + escapeHtml(s || e.getAttribute("data-wme").split("|")[1]) + "</b>" + it.map(function(x, i){ return '<button type="button" data-i="' + i + '">' + escapeHtml(x[2]) + "</button>"; }).join("");
+      m.addEventListener("click", function(e2){ var b = e2.target.closest("[data-i]"); if (!b) return; var x = it[+b.getAttribute("data-i")]; m.remove(); wmAction({ type: x[0], arg: x[1] }); });
+      document.body.appendChild(m);
+      var r = m.getBoundingClientRect(); if (r.right > innerWidth - 4) m.style.left = Math.max(4, innerWidth - r.width - 4) + "px"; if (r.bottom > innerHeight - 4) m.style.top = Math.max(4, innerHeight - r.height - 4) + "px";
+      setTimeout(function(){ var close = function(e3){ if (!m.contains(e3.target)){ m.remove(); document.removeEventListener("pointerdown", close, true); } }; document.addEventListener("pointerdown", close, true); }, 0);
+    });
+  }
+  function wmHtml(big){   // big = große Seite (Kette als Karte), sonst Overlay (Text-Baum)
     var d = wmLoad(), S = d.cur && d.sys[d.cur], h = '<div class="ov-sum"><span><b>Signaturen</b> (Probe Scanner)</span><span class="ov-rbtn"><button type="button" data-ova="whMapClip" title="Probe-Scanner-Liste aus der Zwischenablage nehmen">Einfügen</button>' +
       (Object.keys(d.sys).length ? (wmAsk ? '<button type="button" class="neg" data-ova="whMapNewOk">Wirklich alles löschen?</button>' : '<button type="button" data-ova="whMapNew" title="Alle Systeme und Signaturen löschen">Kette neu</button>') : "") + "</span></div>" +
       '<div class="ov-form ovn"><div class="ovn-row"><input type="text" data-ovf="wmsys" value="' + escapeHtml(d.cur || "") + '" placeholder="System des Scans" spellcheck="false" autocomplete="off"><button type="button" data-ova="whMapSys" title="Letzten Scan diesem System zuordnen">Übernehmen</button></div></div>';
     if (wmMsg) h += '<div class="ov-act-st ovn-st">' + escapeHtml(wmMsg) + "</div>";
-    if (!S) return h + '<div class="ov-empty">Im Probe Scanner in die Liste klicken, Strg+A, Strg+C – EVE Omni ordnet die Signaturen deinem aktuellen System zu (mit „Zwischenablage beobachten“ von selbst, sonst „Einfügen“).</div>';
-    var L = S.last || { add: [], chg: [] }, ids = Object.keys(S.sg).sort(function(a, b){ return (S.sg[a].gone ? 1 : 0) - (S.sg[b].gone ? 1 : 0) || a.localeCompare(b); });
-    var act = ids.filter(function(id){ return !S.sg[id].gone; }), open = act.filter(function(id){ return !S.sg[id].an && !S.sg[id].k; }).length, w = whSys(d.cur);
-    h += '<div class="ov-sum"><span><b>' + escapeHtml(d.cur) + "</b>" + (w ? " " + escapeHtml(whCls(w.cls)) : "") + "</span><span><b>" + act.length + "</b> aktiv</span><span><b>" + open + "</b> offen</span><span>" + fmtT(S.t) + "</span></div>";
+    if (!S) return h + '<div class="ov-empty">Im Probe Scanner in die Liste klicken, Strg+A, Strg+C – EVE Omni ordnet die Signaturen deinem aktuellen System zu (mit „Zwischenablage beobachten“ von selbst, sonst „Einfügen“).</div>' + wmChainBox(d, big);   // WM3: Kette auch für Systeme ohne eigenen Scan
+    var L = S.last || { add: [], chg: [] }, q = wmQ.toLowerCase(), ids = Object.keys(S.sg).filter(function(id){ var o = S.sg[id]; return !q || [id, WM_KIND[o.k], o.nm, o.ty, o.to, o.t].join(" ").toLowerCase().indexOf(q) >= 0; }).sort(function(a, b){ return (S.sg[a].gone ? 1 : 0) - (S.sg[b].gone ? 1 : 0) || a.localeCompare(b); });
+    var act = Object.keys(S.sg).filter(function(id){ return !S.sg[id].gone; }), open = act.filter(function(id){ return !S.sg[id].an && !S.sg[id].k; }).length, w = whSys(d.cur);
+    h += '<div class="ov-sum"><span><b>' + escapeHtml(d.cur) + "</b>" + (w ? " " + escapeHtml(whCls(w.cls)) : "") + "</span><span><b>" + act.length + "</b> aktiv</span><span><b>" + open + "</b> offen</span><span>" + (S.t ? fmtT(S.t) : "") + "</span></div>" +
+      '<div class="ovn-row"><input type="search" class="wm-q" data-ova-change="whMapQ" value="' + escapeHtml(wmQ) + '" placeholder="Suche: Signatur, Art, Name, Ziel" spellcheck="false" autocomplete="off"></div>' + (q && !ids.length ? '<div class="ov-empty">Keine Signatur passt zur Suche.</div>' : "");
     var sc = wmScout(d.cur), scBy = {}; sc.forEach(function(m){ scBy[m.id] = m; });
     h += ids.map(function(id){
       var o = S.sg[id], m = !o.gone && !o.scNo && scBy[id] && scBy[id].to !== o.to ? scBy[id] : null, tag = o.gone ? '<span class="pill">weg</span>' : L.add.indexOf(id) >= 0 ? '<span class="pill pos">neu</span>' : L.chg.indexOf(id) >= 0 ? '<span class="pill">geändert</span>' : "";
       return '<div class="ov-l txt' + (o.gone ? " muted" : "") + '">' + ovCp(escapeHtml(id), id, "Signatur kopieren").outerHTML + " <b>" + escapeHtml(WM_KIND[o.k] || o.k) + "</b>" + (o.an ? ' <span class="muted">Anomalie</span>' : "") +
         (o.nm ? " " + escapeHtml(o.nm) : "") + (o.p && o.p < 100 ? ' <span class="muted">' + o.p.toLocaleString(NUM_LOC) + " %</span>" : "") + " " + tag +
-        (o.k === "wh" && !o.gone ? ' → <input type="text" class="wm-to" data-ova-change="whMapTo" data-arg="' + id + '" value="' + escapeHtml([o.ty, o.to].filter(Boolean).join(" ")) + '" placeholder="Ziel / Typ" title="Ziel-System und/oder Wurmloch-Typ, z. B. „B274 J123456“" spellcheck="false" style="width:9em">' : "") +
+        (o.k === "wh" && !o.gone ? ' → <input type="text" class="wm-to" data-ova-change="whMapTo" data-arg="' + id + '" value="' + escapeHtml([o.ty, o.to].filter(Boolean).join(" ")) + '" placeholder="Ziel / Typ" title="Ziel-System und/oder Wurmloch-Typ, z. B. „B274 J123456“" spellcheck="false" style="width:9em">' +
+          ' <select class="wm-st" data-ova-change="whMapSt" data-arg="' + id + '" title="Status des Lochs (wie beim Anschauen in EVE)">' + WM_ST.map(function(x){ return '<option value="' + x[0] + '"' + ((o.st || "") === x[0] ? " selected" : "") + ">" + escapeHtml(x[1]) + "</option>"; }).join("") + "</select>" +
+          (wmLife(o) ? ' <span class="' + (wmLife(o).zu ? "neg" : "muted") + '" title="Schätzung aus Lebensdauer des Typs, EOL-Zeit oder EVE-Scout – kein sicherer Wert">' + escapeHtml(wmLife(o).txt) + "</span>" : "") : "") +
         (o.src && o.to && !o.gone ? ' <span class="muted" title="' + escapeHtml(o.src) + '">' + escapeHtml((o.sz || "?") + (o.ex ? (NUM_EN ? " · until " : " · bis ") + fmtT(Date.parse(o.ex)) : "")) + "</span>" : "") +
         (m ? '<div class="ov-l txt">Vorschlag: <b>→ ' + escapeHtml(m.to) + '</b> <span class="muted">(EVE-Scout · ' + escapeHtml(wmScoutTxt(m)) + ')</span> <span class="ov-rbtn"><button type="button" data-ova="whMapScout" data-arg="' + id + '">Übernehmen</button><button type="button" data-ova="whMapScoutNo" data-arg="' + id + '">Nein</button></span></div>' : "") + "</div>";
     }).join("");
     var miss = sc.filter(function(m){ return !S.sg[m.id]; });   // EVE-Scout kennt Löcher hier, die der Scan (noch) nicht hat
     if (miss.length) h += '<div class="ov-l muted">' + (NUM_EN ? "EVE-Scout knows here: " : "EVE-Scout kennt hier: ") + miss.map(function(m){ return escapeHtml(m.id + " → " + m.to + " (" + wmScoutTxt(m) + ")"); }).join(", ") + "</div>";
-    var ch = wmChainHtml(d);
-    return h + (ch ? '<div class="ov-sum"><span><b>Kette</b></span></div>' + ch : "");
+    return h + wmChainBox(d, big);
   }
+  function wmChainBox(d, big){
+    if (!big){ var pa = wmPath(d); if (pa.length > 1 || wmTree){   // WM5: Overlay zeigt den Pfad, ganze Kette auf Knopf
+      var ph = pa.length > 1 ? '<div class="ov-l txt wm-path">' + pa.map(function(x, i){ return (i ? '<span class="muted' + (x[2] ? wmStCls(x[2]) : "") + '"> → ' + escapeHtml(x[1]) + " → </span>" : "") + '<span class="sys-link' + (x[0] === d.cur ? " pos" : "") + '" data-ova="whMapPick" data-arg="' + escapeHtml(x[0]) + '">' + escapeHtml(x[0]) + "</span>"; }).join("") + "</div>" : "";
+      return '<div class="ov-sum"><span><b>Kette</b></span><span class="ov-rbtn"><button type="button" data-ova="whMapTree">' + (wmTree ? "nur Pfad" : "ganze Kette") + "</button></span></div>" + ph + (wmTree ? wmChainHtml(d) : "");
+    } }
+    var ch = big ? wmSvg(d) : wmChainHtml(d); return ch ? '<div class="ov-sum"><span><b>Kette</b></span>' + (big ? '<span class="muted">Ziehen = verschieben · Rechtsklick = Menü</span>' : "") + "</div>" + ch : ""; }
   // EE3c: Meldung, sobald ein Charakter in ein J-System mit gefährlichem Effekt kommt (einmal je System)
   var whSeen = {};
   setInterval(function(){
@@ -14930,12 +15078,15 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // (Racial Freighter/Industrial je Rasse, "Transport Ships" für DST+Blockade Runner gemeinsam,
   // "Jump Freighters" für alle vier Jump-Frachter) - Quelle: EVE University Wiki.
   // fh: Flottenhangar (ESI dogma 912), zählt für Fracht mit, ohne Skill-/Modulbonus.
+  // UH (01.11.): Upwell-Hauler – cb: Laderaum-Bonus je Skill-Level (0 = keiner, laut ESI-Effekten), ih: Infrastrukturraum (dogma 5646, +10 %/Level desselben Skills, nur PI/Mond/Strukturen).
+  // ponytail: Torrent-Flottenhangar ohne +5 %/Level Transport Ships (wie die DSTs) – zu klein gerechnet, nie zu groß.
   var SHIPS = [
     {group:"Frachter (Freighter)", items:[
       {name:"Charon (Caldari)", cap:465000, skill:"Caldari Freighter"},
       {name:"Obelisk (Gallente)", cap:440000, skill:"Gallente Freighter"},
       {name:"Providence (Amarr)", cap:435000, skill:"Amarr Freighter"},
-      {name:"Fenrir (Minmatar)", cap:435000, skill:"Minmatar Freighter"}
+      {name:"Fenrir (Minmatar)", cap:435000, skill:"Minmatar Freighter"},
+      {name:"Avalanche (Upwell)", cap:205000, ih:2000000, cb:0, skill:"Upwell Freighter"}
     ]},
     {group:"Jump-Frachter (Jump Freighter)", items:[
       {name:"Rhea (Caldari)", cap:144000, skill:"Jump Freighters"},
@@ -14947,19 +15098,22 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       {name:"Bustard (Caldari)", cap:5000, fh:50000, skill:"Transport Ships"},
       {name:"Occator (Gallente)", cap:3900, fh:50000, skill:"Transport Ships"},
       {name:"Impel (Amarr)", cap:3100, fh:50000, skill:"Transport Ships"},
-      {name:"Mastodon (Minmatar)", cap:4500, fh:50000, skill:"Transport Ships"}
+      {name:"Mastodon (Minmatar)", cap:4500, fh:50000, skill:"Transport Ships"},
+      {name:"Torrent (Upwell)", cap:3000, fh:30000, ih:60000, cb:0, skill:"Upwell Hauler"}
     ]},
     {group:"Blockade Runner", items:[
       {name:"Crane (Caldari)", cap:4300, skill:"Transport Ships"},
       {name:"Viator (Gallente)", cap:3600, skill:"Transport Ships"},
       {name:"Prorator (Amarr)", cap:2900, skill:"Transport Ships"},
-      {name:"Prowler (Minmatar)", cap:3500, skill:"Transport Ships"}
+      {name:"Prowler (Minmatar)", cap:3500, skill:"Transport Ships"},
+      {name:"Deluge (Upwell)", cap:4000, ih:30000, cb:0, skill:"Upwell Hauler"}
     ]},
     {group:"Industrial (T1)", items:[
       {name:"Badger (Caldari)", cap:3900, skill:"Caldari Industrial"},
       {name:"Iteron Mark V (Gallente)", cap:5800, skill:"Gallente Industrial"},
       {name:"Bestower (Amarr)", cap:4800, skill:"Amarr Industrial"},
-      {name:"Mammoth (Minmatar)", cap:5500, skill:"Minmatar Industrial"}
+      {name:"Mammoth (Minmatar)", cap:5500, skill:"Minmatar Industrial"},
+      {name:"Squall (Upwell)", cap:3000, ih:45000, cb:0, skill:"Upwell Hauler"}
     ]}
   ];
 
@@ -15286,7 +15440,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   })();
 
   function shipCapLabel(s){
-    return s.cap.toLocaleString("de-DE") + " m³" + (s.fh ? " + " + s.fh.toLocaleString("de-DE") + " m³ Flottenhangar" : "") + " Grundwert";
+    return s.cap.toLocaleString("de-DE") + " m³" + (s.fh ? " + " + s.fh.toLocaleString("de-DE") + " m³ Flottenhangar" : "") + (s.ih ? " + " + s.ih.toLocaleString("de-DE") + " m³ Infrastruktur" : "") + " Grundwert";
   }
   // O3: Fitting je Schiff wählbar und gemerkt – wie im Hangar (ESI), n× Expanded Cargohold II oder eigener Wert
   var SHIPFIT_KEY = "eve-zentrale-shipfit-v1", ECH2 = 1.275;   // ECH II: Dogma 149 = 1,275, keine Stacking-Penalty
@@ -15303,7 +15457,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (f.mode === "auto") return ok ? { value: best.value, text: best.charName + ", Skill " + best.level +
       (best.moduleBonusPct !== null ? ", Cargo-Module +" + fmtNum(best.moduleBonusPct, 1) + " %" : best.ownsInstance ? ", ohne Cargo-Module" : ", kein eigenes Exemplar – Fitting wählen") } : best;
     var n = Number(f.mode), lvl = ok ? best.level : 0;
-    return { value: s.cap * (1 + lvl * 0.05) * Math.pow(ECH2, n) + s.fh, text: n + "× Expanded Cargohold II, Skill " + lvl + (ok ? " (" + best.charName + ")" : " (kein Charakter eingeloggt)") };
+    return { value: s.cap * (1 + lvl * shipCb(s)) * Math.pow(ECH2, n) + s.fh, text: n + "× Expanded Cargohold II, Skill " + lvl + (ok ? " (" + best.charName + ")" : " (kein Charakter eingeloggt)") };
   }
   async function shipLowSlots(s){
     try{ var id = (await resolveSkillTypeIds([shipTypeName(s)]))[shipTypeName(s)]; var st = id !== undefined ? await getShipStats(id) : null; return st && st.low || 0; }catch(e){ return 0; }
@@ -15413,7 +15567,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       ships.forEach(function(x){ lv[x.name] = Math.max(lv[x.name] || 0, byId[idMap[x.skill]] || 0); });
     }
     return (isBuyCache = ships.filter(function(x){ return lv[x.name] >= 1 && shipAutoOk(x.name); })
-      .map(function(x){ return { name: x.name, cap: Math.floor(x.cap * (1 + lv[x.name] * 0.05) + x.fh), buy: true }; })
+      .map(function(x){ return { name: x.name, cap: Math.floor(x.cap * (1 + lv[x.name] * shipCb(x)) + x.fh), buy: true }; })
       .sort(function(a, b){ return a.cap - b.cap; }));
   }
   // Jump-Frachter nie automatisch vorschlagen (teuer, gehören auf Sprungrouten, nicht ins Highsec-Hauling) – wählbar bleibt er von Hand
@@ -15586,6 +15740,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       if (cf.value !== want) cf.value = want;
     }
     sbField(pre + "-ship-info").hidden = m !== "auto";
+    var infF = sbField(pre + "-infra"); if (infF){ document.getElementById(pre + "-infra").checked = infraOn(); infF.hidden = !(m === "ship" ? infraBase(nm) : m === "auto" && (sbOwn || []).some(infraBase)); }   // UH2: nur bei Upwell-Haulern
     sbField(pre + "-cargo-info").hidden = m !== "ship";
     if (m === "auto"){
       var own = sbOwn || [];
@@ -15605,7 +15760,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var b = parseGroupedInt(c.budget), cg = sbCargoEff(pre), parts = [], warn = [], rt = sbRoute(pre);
     parts.push(rt.t); if (rt.warn) warn.push(rt.warn);
     if (m === "auto") parts.push(sbOwn && sbOwn.length ? "bestes Schiff aus " + sbOwn.length + " im Hangar" : "bestes Schiff aus deinem Hangar");
-    else if (m === "ship") parts.push(nm.split(" (")[0] + (cg > 0 ? " · " + fmtNum(cg, 0) + " m³" : ""));
+    else if (m === "ship") parts.push(nm.split(" (")[0] + (cg > 0 ? " · " + fmtNum(cg, 0) + " m³" : "") + (infraFor(nm) ? " + " + fmtNum(infraFor(nm), 0) + " m³ Infrastruktur" : ""));
     else parts.push((cg > 0 ? fmtNum(cg, 0) + " m³" : "kein Laderaum") + " (ohne Schiff)");
     parts.push(b > 0 ? "Budget " + shortIsk(b) : "Budget = Wallet" + (sbWallet ? " " + shortIsk(sbWallet) : ""));
     parts.push(lim ? "Gank-Schutz " + (GK_NAME[lim] || lim) + (g.safe != null ? ": Ladung höchstens " + shortIsk(g.safe) : "") : "Gank-Schutz aus");
@@ -15642,7 +15797,11 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         '<button type="button" data-sb="ship" data-sm="ship" title="Ein Schiff fest wählen – Laderaum kommt aus Skills und Fitting">Bestimmtes Schiff</button>' +
         '<button type="button" data-sb="cargo" data-sm="cargo" title="Ohne Schiff rechnen, nur mit dem eingetragenen Laderaum">Nur Laderaum eingeben</button></div></div>' +
         '<div class="field sb-f" style="flex:1 1 100%"><div class="sb-info" id="' + pre + '-ship-info"></div><div><button type="button" class="btn ghost sb-edit" data-sb="scan">Schiffe neu erkennen</button></div></div>');
-      sbField(SB[pre].fit).insertAdjacentHTML("afterend", '<div class="field sb-f" style="flex:1 1 100%"><label>Laderaum</label><div class="sb-info" id="' + pre + '-cargo-info"></div></div>');
+      sbField(SB[pre].fit).insertAdjacentHTML("afterend", '<div class="field sb-f" style="flex:1 1 100%"><label>Laderaum</label><div class="sb-info" id="' + pre + '-cargo-info"></div></div>' +
+        '<div class="field sb-f" style="flex:1 1 100%" title="Upwell-Hauler (Squall, Deluge, Torrent, Avalanche): Der Infrastrukturraum nimmt nur PI (P1–P4), Mond-Rohstoffe, Fuel Blocks, Eis-Produkte, Colony Reagents und Strukturen samt Modulen. An = diese Waren kommen zuerst dort hinein, alles andere in den Laderaum." hidden><label class="ovm-cb"><input type="checkbox" id="' + pre + '-infra"> Infrastrukturraum mitzählen</label></div>');   // UH2
+      document.getElementById(pre + "-infra").addEventListener("change", function(ev){ var on = ev.target.checked; try{ localStorage.setItem(INFRA_KEY, on ? "1" : "0"); }catch(e){}
+        ["hl", "is"].forEach(function(p){ var c = document.getElementById(p + "-infra"); if (c) c.checked = on; }); infraPrep().then(function(){ ["hl", "is"].forEach(sbRender); }); ["hl", "is"].forEach(sbRender); });
+      document.getElementById(pre + "-infra").checked = infraOn();
       sbField(SB[pre].gk).insertAdjacentHTML("afterend", '<div class="field sb-f" style="flex:1 1 100%"><div class="sb-info" id="' + pre + '-gk-info"></div></div>');
       f.parentNode.insertAdjacentHTML("afterend", '<div class="sb-calc" id="' + pre + '-calc"></div>');
       var bud = document.getElementById(SB[pre].budget);
@@ -15684,10 +15843,33 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function flattenShips(){
     var out = [];
     SHIPS.forEach(function(grp){
-      grp.items.forEach(function(s){ out.push({group:grp.group, name:s.name, cap:s.cap, fh:s.fh||0, skill:s.skill}); });
+      grp.items.forEach(function(s){ out.push({group:grp.group, name:s.name, cap:s.cap, fh:s.fh||0, skill:s.skill, cb:s.cb, ih:s.ih||0}); });
     });
     return out;
   }
+  function shipCb(s){ return s && s.cb != null ? s.cb : 0.05; }   // UH: Laderaum-Bonus je Skill-Level
+  // UH2: Infrastrukturraum – ein Schalter für Hauling + Hub-Handel. Erlaubt laut EVE-Tooltip: PI P1–P4 (Kat. 43), Strukturen + Strukturmodule (65/66),
+  // Mond-Rohstoffe 427, Fuel Blocks 1136, Eis-Produkte 423, Colony Reagents 4729. ponytail: Reaktionsstoffe/P0 fehlen bewusst (nicht bestätigt) – lieber zu wenig als eine Ladung, die nicht passt
+  var INFRA_KEY = "eve-zentrale-infra-v1", INFRA_GRP = { 427: 1, 1136: 1, 423: 1, 4729: 1 }, infraCatDone = false, infraLv = {}, TGRP_KEY = "eve-zentrale-typegrp-v1";
+  var typeGrp = (function(){ try{ return JSON.parse(localStorage.getItem(TGRP_KEY)) || {}; }catch(e){ return {}; } })();
+  function infraOn(){ try{ return localStorage.getItem(INFRA_KEY) === "1"; }catch(e){ return false; } }
+  function infraBase(nm){ var x = flattenShips().find(function(q){ return q.name === nm; }); return x && x.ih ? x : null; }
+  function infraFor(nm){ var x = infraOn() && infraBase(nm); return x ? Math.floor(x.ih * (1 + 0.1 * (infraLv[x.skill] || 0))) : 0; }   // +10 % je Level Upwell Hauler/Freighter (ESI-Effekt)
+  function infraOk(tid){ return !!INFRA_GRP[typeGrp[tid]]; }
+  async function infraPrep(){   // vor jeder Suche: erlaubte Gruppen + Skill-Level (ohne Login: Grundwert, also eher zu klein)
+    if (!infraOn()) return;
+    if (!infraCatDone){ infraCatDone = true; await Promise.all([43, 65, 66].map(async function(c){ try{ ((await (await fetch(ESI + "/universe/categories/" + c + "/?datasource=tranquility")).json()).groups || []).forEach(function(g){ INFRA_GRP[g] = 1; }); }catch(e){ infraCatDone = false; } })); }
+    var chars = haulerChars(); if (!chars.length) return;
+    try{ var ids = await resolveSkillTypeIds(["Upwell Hauler", "Upwell Freighter"]);
+      for (var i = 0; i < chars.length; i++){ var sk = (await esiAuthGetJson("/characters/" + chars[i].character_id + "/skills/", chars[i].character_id)).skills || [];
+        sk.forEach(function(k){ Object.keys(ids).forEach(function(n){ if (ids[n] === k.skill_id) infraLv[n] = Math.max(infraLv[n] || 0, k.trained_skill_level); }); }); } }catch(e){}
+  }
+  async function infraTypes(tids){
+    var need = tids.filter(function(t){ return typeGrp[t] === undefined; });
+    await tscPool(need, 8, async function(t){ try{ var r = await fetch(ESI + "/universe/types/" + t + "/?datasource=tranquility"); if (r.ok) typeGrp[t] = (await r.json()).group_id; }catch(e){} });
+    if (need.length) try{ localStorage.setItem(TGRP_KEY, JSON.stringify(typeGrp)); }catch(e){}
+  }
+  function infraTxt(r){ return r && r.ih > 0 ? " + " + fmtNum(r.ihUsed || 0, 0) + " / " + fmtNum(r.ih, 0) + " m³ Infrastruktur" : ""; }
   // Der ESI-/SDE-Typname des Schiffs ohne den Rassen-Zusatz in Klammern, z.B. "Charon (Caldari)" -> "Charon".
   function shipTypeName(s){ return s.name.split(" (")[0]; }
 
@@ -15871,6 +16053,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       var data = await res.json();
       var val = null;
       (data.dogma_attributes||[]).forEach(function(a){ if (a.attribute_id===149) val = a.value; });
+      if (val === null) (data.dogma_attributes||[]).forEach(function(a){ if (a.attribute_id===614 && a.value) val = 1 + a.value / 100; });   // UH (01.11.): Cargo-Rigs +15/20 %, Reinforced Bulkheads −10 % (wie die Gank-Rechnung)
       moduleCargoAttrCache[typeId] = val;
     }catch(e){
       moduleCargoAttrCache[typeId] = null;
@@ -15906,7 +16089,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         level = (skillId!==undefined) ? (byId[skillId]||0) : 0;
       }catch(e){ level = 0; }
       if (level < 1) continue; // Charakter kann das Schiff laut Skill noch nicht fliegen
-      var skillCap = s.cap * (1 + level*0.05);
+      var skillCap = s.cap * (1 + level*shipCb(s));
       var modMult = 1, ownsInstance = false;
       try{
         var assets = await esiAuthAllPages("/characters/" + cid + "/assets/", cid);
@@ -15929,10 +16112,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
             var mv = await getModuleCargoMultiplier(modTypeIds[mi]);
             if (mv!==null) rawVals.push(mv);
           }
-          if (rawVals.length){
-            var combined = combineCargoMultipliers(rawVals);
-            if (combined > modMult) modMult = combined;
-          }
+          var combined = combineCargoMultipliers(rawVals);   // UH: auch unter 1 (nur Bulkheads) – bestes eigenes Exemplar zählt
+          if (!(hi > 0) || combined > modMult) modMult = combined;
         }
       }catch(e){} // Assets nicht abrufbar - fällt für diesen Charakter auf die reine Skill-Basis zurück
       var effectiveCap = skillCap * modMult + s.fh;
@@ -16191,7 +16372,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
           if (skillId===undefined) return;
           var level = (levelByChar[t.character_id]||{})[skillId] || 0;
           if (level < 1) return; // Charakter kann das Schiff (laut ma&szlig;geblichem Skill) noch nicht fliegen
-          var skillCap = s.cap * (1 + level*0.05);
+          var skillCap = s.cap * (1 + level*shipCb(s));
           var modMult = (moduleMultByCharShip[t.character_id]||{})[shipTypeName(s)];
           var hasModuleData = (modMult !== undefined);
           var effectiveCap = (hasModuleData ? skillCap * modMult : skillCap) + (s.fh||0);
@@ -16346,6 +16527,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       // B2: verpacktes Volumen (Schiffe werden verpackt transportiert)
       volCache[typeId] = data.packaged_volume || data.volume || null;
       if (data.name && nameMissing(typeId)) nameCache[typeId] = data.name;
+      if (data.group_id) typeGrp[typeId] = data.group_id;   // UH2
       mbPubNote(typeId, data.published);
       if (volCache[typeId]) volDirty = true;
     }catch(e){ volCache[typeId] = null; }
@@ -18582,13 +18764,14 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // Kandidaten {tid, f(cap)}: erst nach Gewinn ohne Laderaum vorsortieren, fuer die besten 2×depth Volumen holen,
   // dann nach Gewinn sortieren, der in den Laderaum passt, und die besten depth nehmen
   // B4: maxUnit > 0 = nur Waren mit hoechstens so viel m³ je Stueck (kleine Fracht)
-  async function pickByCargo(cands, depth, cargo, onVol, maxUnit){
+  async function pickByCargo(cands, depth, cargo, onVol, maxUnit, ih){
     cands.forEach(function(c){ c.pot = c.f(Infinity); });
     cands = cands.filter(function(c){ return c.pot > 0; }).sort(function(a, b){ return b.pot - a.pot; }).slice(0, depth * 2);
     if (onVol) onVol(cands.length);
     await tscPool(cands, 8, function(c){ return getVolume(c.tid); });
     volSave();
-    cands.forEach(function(c){ var v = volCache[c.tid]; c.pot = v && !(maxUnit > 0 && v > maxUnit) ? c.f(Math.floor(cargo / v)) : 0; });
+    if (ih > 0) await infraTypes(cands.map(function(c){ return c.tid; }));   // UH2
+    cands.forEach(function(c){ var v = volCache[c.tid]; c.pot = v && !(maxUnit > 0 && v > maxUnit) ? c.f(Math.floor((cargo + (ih > 0 && infraOk(c.tid) ? ih : 0)) / v)) : 0; });
     return cands.filter(function(c){ return c.pot > 0; }).sort(function(a, b){ return b.pot - a.pot; }).slice(0, depth);
   }
   // Sofortverkauf: Posten der Leiter Angebote gegen Kauforders
@@ -18661,29 +18844,32 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       [].forEach.call(document.querySelectorAll(".cargo-res"), function(o){ o.value = v; }); });
   });
   // II6: gcap = gank-sichere Ladung (Grenze × EHP − Module); jede Ware zählt dafür mit lot.gp (höherer von Einkauf und Jita-Preis), das ISK-Budget mit dem Einkauf
-  function greedyAllocate(lots, keyFn, budget, cargo, gcap){
+  function greedyAllocate(lots, keyFn, budget, cargo, gcap, ih){
     cargo = Math.max(0, cargo - cargoReserve()) * CARGO_SPARE;
+    var ihCap = ih > 0 ? ih * CARGO_SPARE : 0, ihUsed = 0;   // UH2: erlaubte Waren erst in den Infrastrukturraum, Rest in den Laderaum
     if (typeof gcap !== "number" || !(gcap >= 0)) gcap = Infinity;   // null (z. B. aus JSON) = keine Grenze
     var sorted = lots.slice().sort(function(a,b){ return keyFn(b)-keyFn(a); });
     var spend=0, profit=0, volUsed=0, perItem={}, gv=0;
     for (var k=0;k<sorted.length;k++){
       var lot = sorted[k], gp = Math.max(lot.price, lot.gp || 0);
-      if (spend>=budget || volUsed>=cargo || gv>=gcap) break;
+      if (spend>=budget || gv>=gcap || (volUsed>=cargo && ihUsed>=ihCap)) break;
+      var inf = ihCap > 0 && infraOk(lot.tid), free = cargo - volUsed + (inf ? ihCap - ihUsed : 0);
       var take = lot.qty;
       var maxByBudget = Math.floor((budget-spend)/lot.price);
       take = Math.min(take, maxByBudget);
       if (gcap < Infinity) take = Math.min(take, Math.floor((gcap-gv)/gp));
-      var maxByCargo = lot.vol>0 ? Math.floor((cargo-volUsed)/lot.vol) : take;
+      var maxByCargo = lot.vol>0 ? Math.floor(Math.max(0, free)/lot.vol) : take;
       take = Math.min(take, maxByCargo);
       if (take<=0) continue;
-      spend += take*lot.price; profit += take*lot.margin; volUsed += take*lot.vol; gv += take*gp;
+      var tv = take*lot.vol; if (inf){ var ia = Math.min(tv, ihCap - ihUsed); ihUsed += ia; tv -= ia; }
+      spend += take*lot.price; profit += take*lot.margin; volUsed += tv; gv += take*gp;
       if (!perItem[lot.tid]) perItem[lot.tid] = {tid:lot.tid, q:0, sp:0, p:0, rev:0, mx:0, vol:lot.vol, daily:lot.daily || 0, gv:0};
       perItem[lot.tid].gv += take*gp;
       if (lot.price > perItem[lot.tid].mx) perItem[lot.tid].mx = lot.price;
       perItem[lot.tid].q += take; perItem[lot.tid].sp += take*lot.price; perItem[lot.tid].p += take*lot.margin;
       perItem[lot.tid].rev += take*lot.bPrice;
     }
-    return {spend:spend, profit:profit, volUsed:volUsed, perItem:perItem, gv:gv};
+    return {spend:spend, profit:profit, volUsed:volUsed, perItem:perItem, gv:gv, ihUsed:ihUsed, ih:ih > 0 ? ih : 0};
   }
   // II6: Jita-Preis je Ware für den Gank-Wert – erst EVEs Durchschnittspreis (eine Abfrage für alle Waren), ausgewählte Waren dann mit dem echten Jita-Verkaufspreis
   var gkJref = {}, gkJchk = {}, gkAvgT = 0, gkAdj = {};   // gkAdj: adjusted_price (Produktions-Planer, EIV)
@@ -18736,8 +18922,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         else if (db.buys.length) lots = lots.concat(ladderLots(+r.tid, sb.sells, db.buys, sc.fee, vol));
       });
       var st = HUB_STRATS.filter(function(x){ return x.name === o.strategy; })[0] || HUB_STRATS[0], res;
-      await gkJitaLoop(lots, H.srcJita, function(){ res = greedyAllocate(lots, st.key, H.budget, o.ship && o.ship.cap || H.cargo, o.ship && o.ship.safe != null ? o.ship.safe : o.gcap != null ? o.gcap : H.gcap); return { tids: Object.keys(res.perItem) }; }, (o.ship && o.ship.safe != null ? o.ship.safe : H.gcap) < Infinity);   // II6
-      o.prev = o.profit; o.profit = res.profit; o.spend = res.spend; o.gv = res.gv; o.volUsed = res.volUsed;
+      await gkJitaLoop(lots, H.srcJita, function(){ res = greedyAllocate(lots, st.key, H.budget, o.ship && o.ship.cap || H.cargo, o.ship && o.ship.safe != null ? o.ship.safe : o.gcap != null ? o.gcap : H.gcap, o.ih); return { tids: Object.keys(res.perItem) }; }, (o.ship && o.ship.safe != null ? o.ship.safe : H.gcap) < Infinity);   // II6
+      o.prev = o.profit; o.profit = res.profit; o.spend = res.spend; o.gv = res.gv; o.volUsed = res.volUsed; o.ihUsed = res.ihUsed;
       o.rows.length = 0;   // gleiche Liste wie im Hauptfenster – dort fuellt fill() sie neu
       Object.keys(res.perItem).forEach(function(tid){ o.rows.push(hubRow(tid, names[tid], res.perItem[tid])); });
       Object.assign(o, t9Rate("is", o.profit, o.jumps, o.perJump || 1));
@@ -18799,6 +18985,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       status.textContent = "Bitte Cargo (m³) und Budget (ISK) angeben.";
       startBtn.disabled=false; isRunning=false; return;
     }
+    await infraPrep(); var ihS = fleet.length ? Math.max.apply(null, fleet.map(function(v){ return infraFor(v.ship); })) : infraFor(isShipName());   // UH2
     var gkc = fleet.length ? {} : await gkCap("is", budget, isShipName() || (autoShips && autoShips.length ? autoShips[autoShips.length - 1].name : ""));   // FF3
     var gcap = fleet.length ? Math.max.apply(null, fleet.map(function(v){ return v.safe; })) : gkc.lim ? gkc.safe : Infinity;   // II6: Gank-Wert-Grenze getrennt vom ISK-Budget
     if (gkc.cut && !(gkc.safe > 0)) budget = 0;
@@ -18820,7 +19007,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       });
       checked += cands.length;
       var picked = await pickByCargo(cands, depth, cargo, function(n){ status.textContent = "Lade Volumen für " + n + " Waren mit Gewinn in " + dst.label + " …"; },
-        parseFloat(document.getElementById("is-maxunit").value));
+        parseFloat(document.getElementById("is-maxunit").value), ihS);
       if (sc.order){
         var gotH = 0;
         status.textContent = "Prüfe Markthistorie in " + dst.label + " … 0 / " + picked.length;
@@ -18841,9 +19028,9 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       var gkSysH = await gkRouteHit(await hubRoute(src.sys, dst.sys)), fH = gkSysH ? GK_ROUTE_F : 1, fleetH = gkFleetF(fleet, "is", fH);   // AG9
       var gcapH = fleet.length ? (fleetH.length ? Math.max.apply(null, fleetH.map(function(v){ return v.safe; })) : 0) : (fH < 1 && gkc.lim ? gkCapF(gkc, fH).safe : gcap);
       await gkJitaLoop(allLots, srcKey === "jita", function(){   // II6: Ladung auch zum Jita-Preis gank-sicher
-        dOpts = HUB_STRATS.map(function(x){ return { name: x.name, key: x.key, lots: allLots, isk: budget, res: greedyAllocate(allLots, x.key, budget, cargo, gcapH), dst: dst, gkSys: gkSysH, gcap: gcapH, fleet: fleetH }; }).sort(function(a,b){ return b.res.profit - a.res.profit; });
+        dOpts = HUB_STRATS.map(function(x){ return { name: x.name, key: x.key, lots: allLots, isk: budget, res: greedyAllocate(allLots, x.key, budget, cargo, gcapH, ihS), dst: dst, gkSys: gkSysH, gcap: gcapH, fleet: fleetH }; }).sort(function(a,b){ return b.res.profit - a.res.profit; });
         var t = {}; dOpts.forEach(function(o){ Object.keys(o.res.perItem).forEach(function(k){ t[k] = 1; }); });
-        if (fleetH.length) fleetH.forEach(function(v){ var r2 = greedyAllocate(allLots, dOpts[0].key, budget, v.cap, v.safe); Object.keys(r2.perItem).forEach(function(k){ t[k] = 1; }); });
+        if (fleetH.length) fleetH.forEach(function(v){ var r2 = greedyAllocate(allLots, dOpts[0].key, budget, v.cap, v.safe, infraFor(v.ship)); Object.keys(r2.perItem).forEach(function(k){ t[k] = 1; }); });
         return { tids: Object.keys(t) };
       }, gcapH < Infinity);
       perDst.push(dOpts);
@@ -18909,7 +19096,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
           opt.ship ? 'Schiff: <b>' + escapeHtml(opt.ship.name) + '</b> (' + fmtNum(opt.ship.cap, 0) + ' m³ – ' + (opt.ship.buy ? 'Kaufvorschlag: kleinstes passende, das du fliegen kannst, ohne Cargo-Module' : 'kleinstes passende aus deinem Hangar') + ')<br>' + shipFitHtml(opt.ship) : '') +
           'Strategie: ' + opt.name + ' &middot; ' + rows.length + ' Artikel in der Ladung<br>' +
           'Einsatz: <span class="mono">' + fmtIsk(opt.res.spend) + ' ISK</span> von ' + fmtIsk(budget) + ' ISK Budget (' + pct.toFixed(2) + ' % Rendite)<br>' +
-          'Cargo genutzt: <span class="mono">' + fmtNum(opt.res.volUsed,0) + ' / ' + fmtNum(cargo,0) + ' m³</span> (' + cargoPct.toFixed(1) + ' % voll) &middot; ' +
+          'Cargo genutzt: <span class="mono">' + fmtNum(opt.res.volUsed,0) + ' / ' + fmtNum(cargo,0) + ' m³' + infraTxt(opt.res) + '</span> (' + cargoPct.toFixed(1) + ' % voll) &middot; ' +
           sellSumText(sc);
         stCpFix(sumBox);
         block.appendChild(sumBox);
@@ -18950,7 +19137,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       // Detailtabelle nur für die beste Option
       var fillTable = function(){ body.innerHTML = ""; sortList("hub", options[0]._rows, HUB_SORT).forEach(function(r){ body.appendChild(isRow(r)); }); };
       fillTable(); hubMainFills.push(fillTable);
-      var hubOpts = options.map(function(o){ return { dst: o.dst, profit: o.res.profit, spend: o.res.spend, gv: o.res.gv, volUsed: o.res.volUsed, strategy: o.name, rows: o._rows, jumps: o.jumps, ship: o.ship, iskh: o.iskh, min: o.min, perJump: o.perJump }; });
+      var hubOpts = options.map(function(o){ return { dst: o.dst, profit: o.res.profit, spend: o.res.spend, gv: o.res.gv, volUsed: o.res.volUsed, ihUsed: o.res.ihUsed, ih: o.res.ih, strategy: o.name, rows: o._rows, jumps: o.jumps, ship: o.ship, iskh: o.iskh, min: o.min, perJump: o.perJump }; });
       ovHubLast = Object.assign({ t: Date.now(), src: src, cargo: cargo, budget: budget, gcap: gcap, srcJita: srcKey === "jita", sc: sc, opts: hubOpts, sel: -1 }, hubOpts[0]);
       hubUpdShow();   // R10: im Overlay erst alle zugeklappt
       setTimeout(ovRender, 0);
@@ -19166,6 +19353,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         fleet = await gkFleet(budget, "hl");
         if (fleet.length) cargo = Math.max.apply(null, fleet.map(function(v){ return v.cap; }));
       }
+      await infraPrep(); var ihS = fleet.length ? Math.max.apply(null, fleet.map(function(v){ return infraFor(v.ship); })) : infraFor(hlShipName());   // UH2
       var gkc = fleet.length ? {} : await gkCap("hl", budget, hlShipName());   // FF3
       var gcap = fleet.length ? Math.max.apply(null, fleet.map(function(v){ return v.safe; })) : gkc.lim ? gkc.safe : Infinity;   // II6: Gank-Wert-Grenze getrennt vom ISK-Budget
       if (gkc.cut && !(gkc.safe > 0)) budget = 0;   // HZ1: Module allein über der Grenze
@@ -19265,7 +19453,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         return { tid: +tid, f: function(cap){ return targets.reduce(function(m, t){ return Math.max(m, potentialProfit(byType[tid], t, sc.fee, budget, cap)); }, 0); } };
       });
       var candidates = await pickByCargo(cands, depthLimit, cargo, function(n){ status.textContent = "Lade Volumen für " + n + " Waren mit Gewinn …"; },
-        parseFloat(document.getElementById("hl-maxunit").value));
+        parseFloat(document.getElementById("hl-maxunit").value), ihS);
       if (!candidates.length){
         status.textContent = "Fertig. " + cands.length + " Waren geprüft, keine bringt im Umkreis Gewinn, der in Budget und Laderaum passt.";
         btn.disabled = false; return;
@@ -19308,9 +19496,9 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         var gkSys = await gkRouteHit(gkPath(depthBySystem, reach.stationSys[stId])), gkF = gkSys ? GK_ROUTE_F : 1;   // AG9
         var fleetR = gkFleetF(fleet, "hl", gkF), gcapR = fleet.length ? (fleetR.length ? Math.max.apply(null, fleetR.map(function(v){ return v.safe; })) : 0) : (gkF < 1 && gkc.lim ? gkCapF(gkc, gkF).safe : gcap);
         await gkJitaLoop(lotsForStation, false, function(){   // II6: Startpunkt ist fast nie Jita → Ladung zum Jita-Preis prüfen
-          alloc = greedyAllocate(lotsForStation, dens, budget, cargo, gcapR);
+          alloc = greedyAllocate(lotsForStation, dens, budget, cargo, gcapR, ihS);
           var t = Object.keys(alloc.perItem);
-          if (fleetR.length) fleetR.forEach(function(v){ Object.keys(greedyAllocate(lotsForStation, dens, budget, v.cap, v.safe).perItem).forEach(function(k){ if (t.indexOf(k) < 0) t.push(k); }); });
+          if (fleetR.length) fleetR.forEach(function(v){ Object.keys(greedyAllocate(lotsForStation, dens, budget, v.cap, v.safe, infraFor(v.ship)).perItem).forEach(function(k){ if (t.indexOf(k) < 0) t.push(k); }); });
           return { tids: t };
         }, gcapR < Infinity);
         if (fleet.length){ fo = { lots: lotsForStation, key: dens, jumps: reach.stationDepth[stId], isk: budget }; await gkFleetPick(fo, fleetR, "hl"); alloc = fo.res || { profit: 0, perItem: {} }; }   // FF6: bestes Schiff je Ziel (AG9: Flotte mit Routen-Faktor)
@@ -19965,7 +20153,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   var TRK_SORT = { t: function(x){ return x.state === "active" ? x.t : x.end || x.t; }, profit: function(x){ return x.res; }, name: function(x){ return x.name; },
     where: function(x){ return x.where || null; }, state: function(x){ return ["bad", "buy", "way", "sell", "done", "cancel"].indexOf(trkLv(x)); },   // FF4
     gk: function(x){ if (x.kind !== "Lauf" || x.state !== "active") return null; var run = hrLoad().find(function(r){ return String(r.id) === String(x.id); }), g = run && gkRunCalc(run); return g && !g.unk && g.q > 0 ? g.q : null; } };
-  function trkWhere(x){ return x.kind === "Trade" && x.where ? ' <span class="trk-where" title="Ort">📍 ' + escapeHtml(x.where) + "</span>" : ""; }   // FF4; AZ1 (22.10.): nur aufgeklappt (Aufrufer prüfen)
+  function trkWhere(x, sm){ return x.kind === "Trade" && x.where ? ' <span class="trk-where' + (sm ? " sm" : "") + '" title="' + (sm ? escapeHtml(x.where) : "Ort") + '">📍 ' + escapeHtml(sm ? eveSysName(x.where.replace(/ \(.*\)$/, "")) : x.where) + "</span>" : ""; }   // FF4; AZ1; 31.10.: zugeklappt nur System, klein
   function trkOb(x){ return x.state === "active" && (x.kind === "Trade" ? !!ovAlarmKeys[x.id] : !!x.warn); }   // 19.10. Nutzer: erledigte/abgebrochene nie gelb   // gelb: Trade-Alarm oder Lauf mit Verlust im Direktverkauf (SS9)
   function trkLv(x){ return x.state === "cancelled" ? "cancel" : x.state === "active" && trkOb(x) ? "bad" : x.st.trim().replace("st-", "") || "buy"; }
   // BB19: Standard nach Art (Trades, Läufe, Erledigt) – Probleme zeigt die Farbe (gelb/rot); „nach Status“ wie Z9 wählbar
@@ -20056,7 +20244,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function trkRow(x){
     var k = x.kind + ":" + x.id;
     return '<div class="ov-card trk-sm' + x.st + (trkOb(x) ? " trk-ob" : "") + (x.kind === "Trade" ? " trk-trade" : " trk-run") + (x.mute ? " al-mute" : "") + '" data-trk-row="' + escapeHtml(k) + '" title="Klick: Details auf-/zuklappen">' +
-      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpen[k] ? trkWhere(x) : "") + (trkOpen[k] ? vcDots(x) : "") + tkKeepIc(x) + (x.kind === "Trade" ? compIc(compTrade(x.id)) : x.state === "active" ? gkRunIc(x.id, tkRedraw) : "") + tkMuteBtn(x) + tkNextHtml(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x))) + '</span>' +
+      '<div class="ov-h"><span class="ov-name">' + (trkOpen[k] ? "▾ " : "▸ ") + tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + trkWhere(x, !trkOpen[k]) + (trkOpen[k] ? vcDots(x) : "") + tkKeepIc(x) + (x.kind === "Trade" ? compIc(compTrade(x.id)) : x.state === "active" ? gkRunIc(x.id, tkRedraw) : "") + tkMuteBtn(x) + tkNextHtml(x) + (ctAny(x.items) ? ' <span class="ct-tag">⚠ Schmuggel</span>' : "") + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x))) + '</span>' +
       tkValBox(x, fmtNum(x.bought) + "/" + fmtNum(x.plan) + (x.state !== "active" && (x.end || x.t) ? ' · <span class="tk-dd" title="' + tkWhenTxt(x) + '">' + (x.state === "done" ? "erledigt " : "abgebr. ") + tkDay(x.end || x.t) + "</span>" : "") + (x.tm && trkOpen[k] ? " · " + tkTimeHtml(x.tm, true) : "")) + "</div>" +   // BB1: zugeklappt ohne Zeit hinten; CA: Symbole + Kasten
       '<div class="ov-bar-mini"><span style="width:' + (x.plan ? Math.min(100, (x.bought + x.sold) / (2 * x.plan) * 100) : 0).toFixed(0) + '%"></span></div></div>';
   }
@@ -20314,7 +20502,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // J6: „Lauf merken“ im Overlay; gemerkt wird je Suche (t) und Ziel, damit der Knopf danach „✓ gemerkt“ zeigt
   var ovHrDone = {};
   function ovHrBtn(t, arg){
-    return '<span class="ov-rbtn">' + (ovHrDone[t + ":" + arg] ? '<button type="button" disabled>✓ gemerkt</button>' :
+    return '<span class="ov-rbtn">' + (ovHrDone[t + ":" + arg] ? '<button type="button" class="hr-ok" disabled>✓ gemerkt</button>' :
       '<button type="button" data-ova="hrAdd" data-arg="' + arg + '" title="In der Watchlist verfolgen: gekauft → unterwegs → verkauft">＋ Lauf merken</button>') + '</span>';
   }
   function ovHrAdd(arg){
@@ -20329,12 +20517,13 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var isk0 = parseGroupedInt("hl-budget") || await gkWallet(), g0 = await gkCap("hl", isk0, hlShipName()), cargo0 = sbCargoEff("hl"), gcap0 = g0.lim ? g0.safe : Infinity;   // FF3, FF6a, II6
     for (var i = 0; i < hlDestinations.length; i++){
       var dd = hlDestinations[i], lots = hlLotsByStation[dd.stationId] || [], cargo = dd.ship ? dd.ship.cap : cargo0, budget = isk0, gcap = dd.ship && dd.ship.safe != null ? dd.ship.safe : dd.gkSys && g0.lim ? gkCapF(g0, GK_ROUTE_F).safe : gcap0;   // FF6, AG9
-      var opts = [greedyAllocate(lots, function(l){ return l.margin/(l.vol||0.0001); }, budget, cargo, gcap), greedyAllocate(lots, function(l){ return l.margin/l.price; }, budget, cargo, gcap), greedyAllocate(lots, function(l){ return l.margin; }, budget, cargo, gcap)];
+      var ih = infraFor(dd.ship ? dd.ship.name : hlShipName());   // UH2
+      var opts = [greedyAllocate(lots, function(l){ return l.margin/(l.vol||0.0001); }, budget, cargo, gcap, ih), greedyAllocate(lots, function(l){ return l.margin/l.price; }, budget, cargo, gcap, ih), greedyAllocate(lots, function(l){ return l.margin; }, budget, cargo, gcap, ih)];
       opts.sort(function(a, b){ return b.profit - a.profit; });
       var best = opts[0], tids = Object.keys(best.perItem), items = [];
       for (var t = 0; t < tids.length; t++) items.push(hubRow(tids[t], await getTypeName(tids[t]), best.perItem[tids[t]]));   // AB1: dieselben Felder wie Hub-Handel (⌀ Einkauf/Verkauf, m³)
       dd.items = items.sort(function(a, b){ return b.p - a.p; });
-      dd.load = { profit: best.profit, spend: best.spend, volUsed: best.volUsed, cargo: cargo };
+      dd.load = { profit: best.profit, spend: best.spend, volUsed: best.volUsed, cargo: cargo, ihUsed: best.ihUsed, ih: best.ih };
     }
   }
   async function showDestinationDetail(d){
@@ -20350,9 +20539,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var budget = parseGroupedInt("hl-budget") || await gkWallet(), gkc = d.ship ? { safe: d.ship.safe, lim: 1 } : await gkCap("hl", budget, hlShipName()); if (!d.ship && d.gkSys) gkc = gkCapF(gkc, GK_ROUTE_F); var gcap = gkc.lim ? gkc.safe : Infinity;   // AG9   // FF3, FF6a, II6
     var sc = hlSellCfg || sellCfg("hl", parseFloat(document.getElementById("hl-tax").value) || 0);
 
-    var byDensity = greedyAllocate(lots, function(l){ return l.margin/(l.vol||0.0001); }, budget, cargo, gcap);
-    var byReturn = greedyAllocate(lots, function(l){ return l.margin/l.price; }, budget, cargo, gcap);
-    var byRaw = greedyAllocate(lots, function(l){ return l.margin; }, budget, cargo, gcap);
+    var ih = infraFor(d.ship ? d.ship.name : hlShipName());   // UH2
+    var byDensity = greedyAllocate(lots, function(l){ return l.margin/(l.vol||0.0001); }, budget, cargo, gcap, ih);
+    var byReturn = greedyAllocate(lots, function(l){ return l.margin/l.price; }, budget, cargo, gcap, ih);
+    var byRaw = greedyAllocate(lots, function(l){ return l.margin; }, budget, cargo, gcap, ih);
     var options = [
       {name:"höchste ISK/m³ (Frachtraum-Dichte)", res:byDensity},
       {name:"höchste Rendite pro ISK", res:byReturn},
@@ -20388,7 +20578,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         (d.ship && d.ship.fit ? 'Schiff: <b>' + escapeHtml(d.ship.name) + '</b> (' + fmtNum(d.ship.cap, 0) + ' m³, ' + fmtNum(Math.round(d.ship.ehp)) + ' EHP – automatisch gewählt, gank-sicher bis ' + shortIsk(d.ship.budget) + ')<br>' + shipFitHtml(d.ship) + gkFleetCmp(d) : '') +
         'Strategie: ' + opt.name + ' · ' + rows.length + ' Artikel in der Ladung<br>' +
         'Einsatz: <span class="mono">' + fmtIsk(opt.res.spend) + ' ISK</span> von ' + fmtIsk(budget) + ' ISK Budget (' + pct.toFixed(2) + ' % Rendite)<br>' +
-        'Cargo genutzt: <span class="mono">' + fmtNum(opt.res.volUsed,0) + ' / ' + fmtNum(cargo,0) + ' m³</span> (' + cargoPct.toFixed(1) + ' % voll) · ' +
+        'Cargo genutzt: <span class="mono">' + fmtNum(opt.res.volUsed,0) + ' / ' + fmtNum(cargo,0) + ' m³' + infraTxt(opt.res) + '</span> (' + cargoPct.toFixed(1) + ' % voll) · ' +
         sellSumText(sc);
       stCpFix(sumBox);
       block.appendChild(sumBox);
@@ -25318,7 +25508,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var box = el("div", "controls opt-group", '<div class="opt-h">① Wo kaufen → wohin verkaufen</div>' +
       '<div class="field"><label for="kk-buy">Einkaufen in</label><select id="kk-buy">' + Object.keys(HUBS).map(function(k){ return '<option value="' + k + '">' + escapeHtml(hubGet(k).label) + "</option>"; }).join("") + '<option value="sys">Eigenes System …</option></select></div>' +
       '<div class="field" style="flex:1 1 100%"><label>Verkaufen in</label><div class="sb-mode kk-dest" id="kk-dest">' + Object.keys(HUBS).map(function(k){ return '<button type="button" data-kkd="' + k + '">' + escapeHtml(hubGet(k).label.split(" (")[0]) + "</button>"; }).join("") +
-      '<button type="button" data-kkd="sys">Eigenes System</button><button type="button" data-kkd="umkreis">Alles im Umkreis</button></div></div>' +
+      '<button type="button" data-kkd="sys">Eigenes Ziel</button><button type="button" data-kkd="umkreis">Alles im Umkreis</button></div></div>' +
       '<div class="sb-info" id="kk-where-hint" style="flex:1 1 100%"></div><div class="item-sub" id="kk-here" style="flex:1 1 100%"></div>');
     box.id = "kk-where";
     var buyF = box.querySelector("#kk-buy").closest(".field");
@@ -27638,7 +27828,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       var h = el("div", "ov-h"), oxh = oxTrade(t.id);   // AA4
       var nm = el("span", "ov-name"); nm.innerHTML = trkPics(t.charId, [{ tid: t.tid, name: t.name }], 1) + " "; nm.appendChild(tscNameCell(escapeHtml(t.name))); nm.lastChild.appendChild(mkBtn(t.tid));
       nm.insertAdjacentHTML("beforeend", compIc(compTrade(t.id)) + (t.status !== "done" ? tkNextHtml({ state: "active", charId: t.charId }) : "") +
-        ' <span class="trk-ic tc-inf" title="' + escapeHtml(String(trHub(t).label || "").split(" (")[0] + " · " + trStand(t) + (oxh ? " · " + oxh.replace(/<[^>]*>/g, "") : "")) + '">ⓘ&#xFE0E;</span>' + trRunTag(t) +
+        ' <span class="trk-ic tc-inf" title="' + escapeHtml(String(trHub(t).label || "").split(" (")[0] + " · " + trStand(t) + (oxh ? " · " + oxh.replace(/<[^>]*>/g, "") : "")) + '">ⓘ&#xFE0E;</span>' + (fold && fold[t.id] ? tkRunIc(trRunTag(t)) : trRunTag(t)) +
         (t.run && t.status !== "done" && !t.sellOrderId ? ' <span class="pill warn" title="Omni hängt deine Verkaufsorder an, sobald EVE sie meldet (bis zu 20 Min.)">wartet auf Order</span>' : "")); h.appendChild(nm);   // BB23, BB31, U4, CC3, AG1
       var phase = ev.allSold ? ["fertig", "profit"] : (ev.buyPhase && ev.sellPhase ? ["Kauf+Verk.", "warn"] : (ev.buyPhase ? ["Kauf", "warn"] : ["Verkauf", "warn"]));
       h.appendChild(el("span", "pill " + phase[1], phase[0]));
@@ -27792,7 +27982,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
         card.title = (x.state !== "active" ? tkWhenTxt(x) + "\n" : "") + "Klick: Details auf-/zuklappen · Rechtsklick: in EVE Omni öffnen";
         if (!full){
           var h = el("div", "ov-h");
-          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + (trkOpenIds(o).indexOf(String(x.id)) >= 0 ? trkWhere(x) : "") + tkKeepIc(x) + (x.state !== "active" ? "" : x.kind === "Trade" ? compIc(compTrade(x.id)) : gkRunIc(x.id, ovRender)) + tkMuteBtn(x) + tkNextHtml(x) + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x)))));   // AA5, BB23; CA: Ampel als Symbol
+          h.appendChild(el("span", "ov-name", tkNr(x) + trkPics(x.charId, x.items, 3) + " " + trkNm(x.name) + trkWhere(x, trkOpenIds(o).indexOf(String(x.id)) < 0) + tkKeepIc(x) + (x.state !== "active" ? "" : x.kind === "Trade" ? compIc(compTrade(x.id)) : gkRunIc(x.id, ovRender)) + tkMuteBtn(x) + tkNextHtml(x) + (x.kind === "Trade" ? hcBtnHtml(x.items[0].tid) + tkRunIc(trRunTag(x)) : tkRunIc(trRunPill(x)))));   // AA5, BB23; CA: Ampel als Symbol
           h.insertAdjacentHTML("beforeend", tkValBox(x, x.state === "active" ? fmtNum(x.bought) + "/" + fmtNum(x.plan) : (x.state === "done" ? "" : "abgebr. ") + tkDay(x.end || x.t) + (x.tm ? " · " + tkTimeHtml(x.tm, true) : "")));   // AI3; BB1: laufend ohne Zeit hinten (dafür „↻“); CA: Kasten rechts
           card.appendChild(h);
           // II2: Punkte und „herausnehmen“ nur aufgeklappt (ovRunCard/vcCard) – zugeklappt zeigt der rote Rahmen den Verlust
@@ -28336,8 +28526,8 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   var OV_ACTS = { "haul-run": { btn: "hl-search-btn", st: "hl-status", label: "Hauling-Suche starten" }, "scan-run": { btn: "tsc-start", st: "tsc-status", label: "Trades scannen" },
     "hub-run": { btn: "is-start", st: "is-status", label: "Beste Ladung berechnen" } };
   // I11: dieselben Suchoptionen wie in der grossen Ansicht (Felder werden von dort gelesen, beim Start dorthin uebernommen)
-  var OV_MIRROR = { "haul-run": ["kk-buy", "hl-start", "kk-dest", "hl-target-sys", "hl-radius", "hl-route", "hl-sm", "hl-ship-info", "hl-max-ship", "hl-fit", "hl-cargo-info", "hl-cargo", "hl-reserve", "hl-budget", "hl-gksafe", "hl-gk-info", "hl-maxunit", "hl-depth", "hl-sellmode", "hl-selldays", "hl-minjump", "hl-extra", "hl-calc"],
-    "hub-run": ["kk-buy", "hl-start", "kk-dest", "hl-target-sys", "hl-radius", "is-route", "is-sm", "is-ship-info", "is-ship", "is-fit", "is-cargo-info", "is-cargo", "is-reserve", "is-budget", "is-gksafe", "is-gk-info", "is-maxunit", "is-depth", "is-sellmode", "is-selldays", "is-minjump", "is-extra", "is-calc"],
+  var OV_MIRROR = { "haul-run": ["kk-buy", "hl-start", "kk-dest", "hl-target-sys", "hl-radius", "hl-route", "hl-sm", "hl-ship-info", "hl-max-ship", "hl-fit", "hl-cargo-info", "hl-infra", "hl-cargo", "hl-reserve", "hl-budget", "hl-gksafe", "hl-gk-info", "hl-maxunit", "hl-depth", "hl-sellmode", "hl-selldays", "hl-minjump", "hl-extra", "hl-calc"],
+    "hub-run": ["kk-buy", "hl-start", "kk-dest", "hl-target-sys", "hl-radius", "is-route", "is-sm", "is-ship-info", "is-ship", "is-fit", "is-cargo-info", "is-infra", "is-cargo", "is-reserve", "is-budget", "is-gksafe", "is-gk-info", "is-maxunit", "is-depth", "is-sellmode", "is-selldays", "is-minjump", "is-extra", "is-calc"],
     // O2/3: Trades scannen-Suche auch im Trades- und Scanner-Plan-Overlay
     "scan-run": ["tsc-hub", "tsc-depth", "tsc-minprice", "tsc-minvol", "tsc-capital", "tsc-maxitem", "tsc-share", "tsc-days", "tsc-minmargin", "tsc-hidehot", "tsc-hotdown", "tsc-hotmid", "tsc-hothi", "tsc-hideflag"] };
   // 17.10.: Hauling und Hub-Handel teilen „Suchoptionen auf/zu“ – „Verkaufen in“ wechselt die Suchart, vorher sprang die andere dann offen auf
@@ -28345,7 +28535,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   // AM6: offen dieselben kleinen Knöpfe wie zugeklappt (ovm-mini) statt großer Kacheln
   function ovMirrorFields(act, mini){
     var ids = OV_MIRROR[act], cut = ids.indexOf("kk-dest");
-    if (mini){ if (cut < 0) return ""; ids = ids.slice(0, cut + 1); }   // Suchoptionen zu: nur Einkaufen in, Startsystem, Verkaufen in (kleine Knöpfe)
+    if (mini){ if (cut < 0) return ""; ids = ids.slice(0, cut + (ids[cut + 1] === "hl-target-sys" ? 2 : 1)); }   // 01.11.: Ziel-System auch zugeklappt (nur sichtbar bei „Eigenes Ziel“)   // Suchoptionen zu: nur Einkaufen in, Startsystem, Verkaufen in (kleine Knöpfe)
     return ids.map(function(id){
       var e = document.getElementById(id); if (!e) return "";
       if (mini && id === "kk-buy") return '<div class="ovn-row"><span class="ovm-l">Einkaufen in</span></div><div class="ovn-mode sb-mode ovm-mini">' + [].filter.call(e.options, function(o){ return !o.hidden; }).map(function(o){ return '<button type="button" data-ova="kkb" data-arg="' + escapeHtml(o.value) + '" aria-pressed="' + (o.value === e.value) + '">' + escapeHtml(o.textContent.split(" (")[0].replace(/ …$/, "")) + "</button>"; }).join("") + "</div>";
@@ -28361,7 +28551,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
       }
       var fw2 = e.closest(".field"); if (fw2 && fw2.hidden) return "";
       var lb = document.querySelector('label[for="' + id + '"]') || (e.closest(".field") || e).querySelector("label"), t = escapeHtml(lb ? lb.textContent : id), ctl;
-      if (e.type === "checkbox") return '<div class="ovn-row"><label class="ovm-cb"><input type="checkbox" data-ovf="' + id + '"' + (e.checked ? " checked" : "") + ">" + escapeHtml(e.parentNode.textContent.trim()) + "</label></div>";
+      if (e.type === "checkbox") return '<div class="ovn-row"><label class="ovm-cb"><input type="checkbox" data-ovf="' + id + '"' + (/-infra$/.test(id) ? " data-ov-now" : "") + (e.checked ? " checked" : "") + ">" + escapeHtml(e.parentNode.textContent.trim()) + "</label></div>";
       if (e.tagName === "SELECT") ctl = '<select data-ovf="' + id + '"' + (/^(is-ship|is-fit|hl-max-ship|hl-fit|kk-buy)$/.test(id) ? " data-ov-now" : "") + '>' + [].filter.call(e.options, function(o){ return !o.hidden; }).map(function(o){ return '<option value="' + escapeHtml(o.value) + '"' + (o.value === e.value ? " selected" : "") + ">" + escapeHtml(o.textContent) + "</option>"; }).join("") + "</select>";
       else if (e.tagName === "INPUT") ctl = '<input type="text" data-ovf="' + id + '" value="' + escapeHtml(e.value) + '" placeholder="' + escapeHtml(e.placeholder || "") + '" autocomplete="off" spellcheck="false"' + (e.classList.contains("jp-sys") ? ' list="ov-sysnames"' : "") + ">";
       else ctl = [].map.call(e.querySelectorAll("input[type=checkbox]"), function(c){ return '<label class="ovm-cb"><input type="checkbox" data-ovf="' + id + ":" + escapeHtml(c.value) + '"' + (c.checked ? " checked" : "") + ">" + escapeHtml(c.parentNode.textContent) + "</label>"; }).join("");
@@ -28423,10 +28613,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     show.forEach(function(d, pos){
       var i = L.list.indexOf(d), on = L.sel === i, row;
       body.appendChild(row = hlOptRow({ act: "haulSel", arg: i, on: on, good: d === best, nr: pos + 1, items: d.items, from: L.origin || "Start", to: String(d.stationName).split(" - ")[0], profit: d.profit, spend: d.spend,
-        vol: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0, icons: hlPillIc(gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend), "🛡&#xFE0E;") + hlPillIc(gkRouteTag(d.gkSys), "⚠&#xFE0E;") + hlOptIcs(d.jumps, d.iskh, d === best) }));
+        vol: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0, btn: d.items && d.items.length ? ovHrBtn(L.t, i) : "", icons: hlPillIc(gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend), "🛡&#xFE0E;") + hlPillIc(gkRouteTag(d.gkSys), "⚠&#xFE0E;") + hlOptIcs(d.jumps, d.iskh, d === best) }));
       if (on) ovRenderLoad(row, { src: { label: L.origin || L.originLabel || "Start", stationName: L.originLabel, station: L.originStation }, dst: { label: d.stationName, stationName: d.stationName, station: d.stationId }, rows: d.items || [], ship: d.ship,
-        profit: d.load ? d.load.profit : d.profit, spend: d.load ? d.load.spend : d.spend, volUsed: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0 },
-        { key: i, jumps: d.jumps, iskh: d.iskh, gk: gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend) + gkRouteTag(d.gkSys), btns: d.items && d.items.length ? ovHrBtn(L.t, i) : "" });
+        profit: d.load ? d.load.profit : d.profit, spend: d.load ? d.load.spend : d.spend, volUsed: d.load ? d.load.volUsed : 0, cargo: d.load ? d.load.cargo : 0, ihUsed: d.load && d.load.ihUsed, ih: d.load && d.load.ih },
+        { key: i, jumps: d.jumps, iskh: d.iskh, gk: gkOptPill(d.ship, hlShipName(), d.gv || d.spend, ovRender, d.spend) + gkRouteTag(d.gkSys), btns: "" });
     });
     if (all.length > 5) body.appendChild(el("div", "ov-l", '<span class="ov-rbtn"><button type="button" data-ova="haulMore">' + (ovHaulMore ? "weniger anzeigen" : "mehr anzeigen (" + (all.length - 5) + ")") + "</button></span>"));
   }
@@ -28443,7 +28633,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   function hlOptRow(o){   // 25.10. (Nutzer: Ziel nicht zu erkennen): Name nur „→ Ziel“ (Start steht oben „ab …“), zu lang → Lauftext
     var c = el("div", "ov-card trk-sm hl-opt" + (o.good ? " good" : "")), a = 'data-ova="' + o.act + '" data-arg="' + o.arg + '"';
     c.innerHTML = '<div class="ov-h" ' + a + ' title="Klick: auf- oder zuklappen"><span class="ov-name"><button type="button" class="hl-tog" ' + a + ' aria-expanded="' + o.on + '">' + (o.on ? "▾" : "▸") + '</button><span class="trk-nr">' + o.nr + "</span>" +
-      trkPics("", o.items || [], 3) + '<span class="trk-nm hl-nm" title="' + escapeHtml(o.from + " → " + o.to) + '"><span>→ ' + escapeHtml(o.to) + "</span></span>" + o.icons + "</span>" + tkValBox({ res: o.profit }, o.spend ? "<span>Einsatz</span> " + shortIsk(o.spend) : "").replace(' title="' + TK_TIP + '"', ' title="Gewinn netto"') + "</div>" +
+      trkPics("", o.items || [], 3) + '<span class="trk-nm hl-nm" title="' + escapeHtml(o.from + " → " + o.to) + '"><span>→ ' + escapeHtml(o.to) + "</span></span>" + o.icons + (o.on && o.btn ? o.btn : "") + "</span>" + tkValBox({ res: o.profit }, o.spend ? "<span>Einsatz</span> " + shortIsk(o.spend) : "").replace(' title="' + TK_TIP + '"', ' title="Gewinn netto"') + "</div>" +
       (o.cargo ? '<div class="ov-bar-mini" title="Laderaum ' + fmtNum(o.vol || 0, 0) + " / " + fmtNum(o.cargo, 0) + ' m³"><span style="width:' + Math.min(100, (o.vol || 0) / o.cargo * 100).toFixed(0) + '%"></span></div>' : "");
     return c;
   }
@@ -28468,10 +28658,10 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     (H.opts || [H]).forEach(function(o, i){
       var on = i === (H.opts ? H.sel : 0), row;
       body.appendChild(row = hlOptRow({ act: "hubSel", arg: i, on: on, good: i === 0, nr: i + 1, items: o.rows, from: String(H.src && H.src.label || "").split(" (")[0], to: o.dst.label.replace(/ \(.*/, ""), profit: o.profit, spend: o.spend,
-        vol: o.volUsed, cargo: o.ship && o.ship.cap || H.cargo, icons: (o.at && o.profit < o.prev * 0.85 ? ' <span class="trk-ic tic-bad" title="Gewinn seit der Suche um mehr als 15 % gefallen">⚠&#xFE0E;</span>' : "") + (o.busy ? " …" : "") +
+        vol: o.volUsed, cargo: o.ship && o.ship.cap || H.cargo, btn: ovHrBtn(H.t + "-" + (H.sel || 0), "hub"), icons: (o.at && o.profit < o.prev * 0.85 ? ' <span class="trk-ic tic-bad" title="Gewinn seit der Suche um mehr als 15 % gefallen">⚠&#xFE0E;</span>' : "") + (o.busy ? " …" : "") +
           hlPillIc(gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend), "🛡&#xFE0E;") + hlPillIc(gkRouteTag(o.gkSys), "⚠&#xFE0E;") + hlPillIc(rtCheckPill(o.rc)) + hlOptIcs(o.jumps, o.iskh, i === 0) }));
       if (on) ovRenderLoad(row, H, { key: "hub", jumps: o.jumps, iskh: o.iskh, gk: gkOptPill(o.ship, isShipName(), o.gv || o.spend, ovRender, o.spend) + gkRouteTag(o.gkSys) + (o.rc ? '<div class="gk-line gk-' + rtCheckCls(o.rc) + '">' + rtCheckHtml(o.rc) + "</div>" : ""),   // AO2d
-        btns: ovHrBtn(H.t + "-" + (H.sel || 0), "hub") + '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="' + H.sel + '" title="Nur die Orders dieser Waren neu laden und neu rechnen – ohne neue Suche"' + (H.busy ? " disabled" : "") + '>Preise aktualisieren</button></span>', upd: hubUpdTxt(H, ovHubLast.t) });
+        btns: '<span class="ov-rbtn"><button type="button" data-ova="hubUpd" data-arg="' + H.sel + '" title="Nur die Orders dieser Waren neu laden und neu rechnen – ohne neue Suche"' + (H.busy ? " disabled" : "") + '>Preise aktualisieren</button></span>', upd: hubUpdTxt(H, ovHubLast.t) });
     });
   }
   // AM3: laufende Läufe im Hauling-Overlay wie die Trades im Trades-Overlay (Erledigte → Watchlist)
@@ -28499,12 +28689,12 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var tl = el("div", "tc-tiles tc-4 hl-load"), tile = function(hd, hot){ var d = el("div", "tc-t" + (hot ? " tc-hot" : "")); d.appendChild(el("div", "tc-h", hd)); tl.appendChild(d); return d; };
     var stT = function(d, S, side){ if (!S.stationName) return;   // AB: Umkreis ab „Eigenes System“ ohne Station
       var l = ovLine("tc-st"); l.appendChild(stCell(S.stationName)); l.title = S.stationName; d.appendChild(l); d.appendChild(el("div", "ov-l", runStBtns("res:" + o.key + "|" + side))); };
-    var tb = tile("① Kaufen", 1), tw = tile("② Transport"), ts = tile("③ Verkaufen"), tg = tile("Ergebnis");
+    var tb = tile("① Kaufen", 1), ts = tile("② Verkaufen"), tw = tile("③ Transport"), tg = tile("Ergebnis");   // 01.11.: Verkaufen neben Kaufen
     stT(tb, H.src, "a");
     var mb = ovLine(); mb.appendChild(ovMultibuy(H.rows)).querySelector(".tsc-cp").classList.add("cp-hot"); tb.appendChild(mb);
     tb.appendChild(el("div", "ov-l", "<span>Einsatz <b>" + shortIsk(H.spend) + "</b></span>"));
     if (H.ship) tw.appendChild(el("div", "ov-l", "<b>" + escapeHtml(H.ship.name) + "</b>" + (H.ship.buy ? " <span>(kaufen)</span>" : "") + " " + fitIcons(H.ship)));
-    tw.appendChild(el("div", "ov-l", (H.cargo ? "<span>" + fmtNum(H.volUsed, 0) + " / " + fmtNum(H.cargo, 0) + " m³</span>" : "") + (o.jumps != null ? "<span>⇢ <b>" + o.jumps + "</b> Sprünge</span>" : "")));
+    tw.appendChild(el("div", "ov-l", (H.cargo ? "<span>" + fmtNum(H.volUsed, 0) + " / " + fmtNum(H.cargo, 0) + " m³" + infraTxt(H) + "</span>" : "") + (o.jumps != null ? "<span>⇢ <b>" + o.jumps + "</b> Sprünge</span>" : "")));
     if (o.gk) tw.appendChild(el("div", "ov-l", o.gk));
     stT(ts, H.dst, "b");
     tg.appendChild(el("div", "ov-l", "<span>Gewinn " + ovPfB(H.profit) + "</span>" + (H.spend ? ' <span class="muted">' + fmtNum(H.profit / H.spend * 100, 1) + " %</span>" : "")));
@@ -31246,7 +31436,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     if (window.IntersectionObserver) new IntersectionObserver(function(es){ cyPvShow(es[es.length - 1].isIntersecting); }).observe($("cy-pv"));
   })();
   /* ---------- Einstellungen: Unterbereiche + Versionsanzeige ---------- */
-  var EVECORE_VERSION = "5.5.0";
+  var EVECORE_VERSION = "5.5.1";
   (function(){ var bt = document.getElementById("beta-tag"); if (bt) bt.textContent = "Beta " + EVECORE_VERSION; })();   // AJ (18.10.): Version im Titel
   var SET_SUB_KEY = "eve-zentrale-settings-sub-v1";
   // NX3: Funktionsliste (Einstellungen › Funktionen) – [Bereich, Funktion DE, Funktion EN, wo DE, wo EN, Ziel (OmniCom-Knopf oder set:<Einstellungsbereich>), Overlay-Ansicht]
@@ -31285,7 +31475,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     ["Navigation & Intel", "D-Scan-Auswertung mit Warnungen", "D-scan evaluation with warnings", "Navi & Intel › Local", "Navi & Intel › Local", "intel", "dscan"],
     ["Navigation & Intel", "Alert: Kills in deiner Nähe live über zKillboard, mit Report", "Alert: kills near you live from zKillboard, with report", "OmniCom-Overlay › Alert", "OmniCom overlay › Alert", "", "alarm"],
     ["Navigation & Intel", "Radar: Gate-Camps im Umkreis", "Radar: gate camps in the radius", "Navi & Intel › Radar", "Navi & Intel › Radar", "radar", "radar"],
-    ["Navigation & Intel", "Wurmlöcher: J-Systeme, Wurmloch-Typen, Signaturen aus dem Probe Scanner und Kette", "Wormholes: J-systems, wormhole types, Probe Scanner signatures and chain", "Navi & Intel › Wurmlöcher", "Navi & Intel › Wormholes", "wormhole", "wurmloch"],
+    ["Navigation & Intel", "Wurmlöcher: J-Systeme, Wurmloch-Typen, Signaturen aus dem Probe Scanner und Kette als Karte mit Loch-Status", "Wormholes: J-systems, wormhole types, Probe Scanner signatures and chain as a map with hole status", "Navi & Intel › Wurmlöcher", "Navi & Intel › Wormholes", "wormhole", "wurmloch"],
     ["Navigation & Intel", "Intel-Kanäle mitlesen", "Read intel channels", "Einstellungen › Alarme", "Settings › Alarms", "set:alarm", ""],
     ["Charaktere", "Charaktere: Standort, Schiff, online, Klone, Implantate", "Characters: location, ship, online, clones, implants", "Charaktere", "Characters", "chars", "chars"],
     ["Charaktere", "Skills und Warteschlangen aller Charaktere", "Skills and queues of all characters", "Charaktere › Skills", "Characters › Skills", "skills", "skills"],
@@ -32521,7 +32711,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
     var sh = [271, 272, 273, 274], ar = [267, 268, 269, 270], hs = flattenShips().filter(function(s){ return s.skill && shipTypeName(s) === S.name; })[0], hk = hs && !lv ? 5 : 0;
     if (hs && lv){ try{ var hid = (await resolveSkillTypeIds([hs.skill]))[hs.skill]; hk = hid !== undefined ? lv[hid] || 0 : 0; }catch(e){} }   // Hauler: +5 % Laderaum je Stufe (wie Hauling)
     return { tid: shipTid, name: S.name, n: M.length, sk: !!lv,
-      cargo: S.cap * (1 + 0.05 * hk) * prod(vals(149)) * prod(pct(614)), align: computeAlignSeconds(S.mass + sum(796), agi), warp: (A[1281] || 0) * (A[600] || 1) * fitStack(pct(624)),
+      cargo: S.cap * (1 + shipCb(hs) * hk) * prod(vals(149)) * prod(pct(614)), align: computeAlignSeconds(S.mass + sum(796), agi), warp: (A[1281] || 0) * (A[600] || 1) * fitStack(pct(624)),
       speed: (A[37] || 0) * (1 + 0.05 * k("nav")) * fitStack(pct(1076).concat(vals(306))), sig: ((A[552] || 0) + sum(983)) * fitStack(pct(554)),
       hp: hp, ehp: hp.s / res(sh, sh) + hp.a / res(ar, ar) + hp.h / res([113, 111, 109, 110], [974, 975, 976, 977]),
       cpu: [sum(50), (A[48] || 0) * (1 + 0.05 * k("cpu"))], pg: [sum(30), (A[11] || 0) * (1 + 0.05 * k("pg"))],
@@ -32640,7 +32830,7 @@ window.eoNoteShow = function(t, ms){ var o = document.getElementById("eo-note");
   async function gkFleetPick(opt, fleet, pre){
     var all = [];
     for (var i = 0; i < fleet.length; i++){
-      var v = fleet[i], res = greedyAllocate(opt.lots, opt.key, opt.isk || v.budget, v.cap, v.safe);   // II6
+      var v = fleet[i], res = greedyAllocate(opt.lots, opt.key, opt.isk || v.budget, v.cap, v.safe, infraFor(v.ship));   // II6
       if (!(res.profit > 0)) continue;
       pre = pre || "is"; var pj = gkPJ[pre + v.ship] || (gkPJ[pre + v.ship] = await t9PerJump(pre, v.ship)), r9 = t9Rate(pre, res.profit, opt.jumps, pj);
       all.push({ v: v, res: res, r9: r9 });

@@ -46,6 +46,7 @@ try{
   assert(/^ <span class="trk-ic tic-unk" title="Verkaufs-Trade aus dem Hauling-Lauf X – ⇄ aus Lauf Jita IV → Onnamon IV">⇄<\/span>$/.test(ic1), 'zugeklappt: ⇄ statt „aus Lauf …“, Text im Tooltip');
   assert(/>⇢<\/span>$/.test(runIc(' <span class="pill tr-run-tag" title="t">⇢ nur Verkauf, ohne Einkauf</span>')) && /title="t – ⇄ 2 Verkaufs-Trades">⇄/.test(runIc(' <span class="pill tr-run-tag" title="t">⇄ 2 Verkaufs-Trades</span>')) && runIc('') === '', '⇢ nur Verkauf, ⇄ Verkaufs-Trades, leer bleibt leer');
   assert((html.match(/hcBtnHtml\(x\.items\[0\]\.tid\) \+ tkRunIc\(trRunTag\(x\)\) : tkRunIc\(trRunPill\(x\)\)/g) || []).length === 2, 'Overlay- und Hauptfenster-Zeile nutzen das Symbol');
+  assert(html.includes('(fold && fold[t.id] ? tkRunIc(trRunTag(t)) : trRunTag(t))'), 'Trades-Overlay: zugeklappt nur Symbol ⇢, aufgeklappt Text „nur Verkauf“');
   assert(/el\("div", "tc-steps", \["Kaufen", "Unterwegs", "Verkaufen"\]/.test(html) && /var tb = tile\("Kaufen", 1\), tw = tile\("Transport", 2\), ts = tile\("Verkaufen", 3\);/.test(html), 'CC: Schritt-Leiste + drei Kacheln');
   assert(/stTile\(tb, run\.fromName, "a"\);/.test(html) && /stTile\(ts, run\.toName, "b"\);/.test(html) && /data-ova="runRt"/.test(html) && /data-ova="runDest"/.test(html), 'CC: Route + Ziel in EVE an Start- und Zielstation');
   assert(/if \(a\.type === "runRt" \|\| a\.type === "runDest"\)\{ runStAction\(a\.type, String\(a\.arg\)\); return; \}/.test(html), 'CC: Aktionen im Overlay und Hauptfenster');
@@ -60,7 +61,7 @@ try{
   assert(/html :is\(#ov-root,\.trk-list,\.hl-cards\) \.ov-card\.trk-sm:has\(\.trk-rb\)\{display:grid;grid-template-columns:minmax\(0,1fr\) auto;[^}]*background-image:linear-gradient\(90deg, color-mix\(in srgb, var\(--accent\) 20%/.test(css), 'Zeile in der Designfarbe getönt, schlägt den EVE-Hintergrund');
   assert(css.indexOf('html :is(#ov-root,.trk-list,.hl-cards) .ov-card.trk-sm:has(.trk-rb){') > css.indexOf('html.ov-eve #ov-root .ov-card{background:'), 'Tönung steht nach der EVE-Regel');
   assert(/\.ov-bar-mini:not\(\.dn\) > span\{background:linear-gradient\(90deg, color-mix\(in srgb, var\(--accent\) 55%, #000\), color-mix\(in srgb, var\(--accent\) 80%, #fff\)\);box-shadow/.test(css), 'Balken: Verlauf + Schein in der Designfarbe');
-  assert(/\.trk-r:has\(\.trk-rb\)\{[^}]*padding-left:2px;background:var\(--tv-e\);clip-path:polygon\(9px 0,/.test(css) && /\.trk-rb\{[^}]*background:var\(--tv-b\);clip-path:polygon\(10px 0,/.test(css), 'Kante links + Schräge durchgehend (äußere Fläche = Kantenfarbe, innere versetzt)');
+  assert(/\.trk-r:has\(\.trk-rb\)\{[^}]*;padding:2px;background:var\(--tv-e\);clip-path:polygon\(9px 0,/.test(css) && /\.trk-rb\{[^}]*background:var\(--tv-b\);clip-path:polygon\(8px 0,/.test(css), 'Kante ringsum 2 px + Schräge durchgehend (äußere Fläche = Kantenfarbe, innere versetzt)');
   assert(/\.trk-r\.tv-l\{--tv-e:var\(--loss\)/.test(css) && /\.trk-r\.tv-w\{--tv-e:var\(--profit\)/.test(css) && /\.trk-r\.tv-z\{--tv-e:color-mix\(in srgb, var\(--accent\)/.test(css), 'Kantenfarbe rot/grün/Designfarbe');
   assert(/\.ov-name > \.trk-nm\{flex:0 1 auto;min-width:4em;max-width:none\}/.test(css), 'Name nicht mehr bei 13em abgeschnitten');
   console.log('\nALL CA WATCHLIST DESIGN TESTS PASSED');
