@@ -100,6 +100,29 @@ function saveSettings(now){
   const doSave = () => { try{ fs.mkdirSync(path.dirname(settingsFile()), { recursive: true }); fs.writeFileSync(settingsFile(), JSON.stringify(S, null, 2)); }catch(e){} };
   if (now) doSave(); else saveTimer = setTimeout(doSave, 400);
 }
+/* ---------------- Spielzeit (PT, 21.11.2026) ----------------
+   Zählt, solange mindestens ein EVE-Client läuft: gesamt, je Tag (60 Tage), je Charakter. Eigene Datei spielzeit.json,
+   damit Sync/Sicherung der Einstellungen die Zeit nicht überschreibt. Sichtbar nur in Einstellungen › EVE-Clients. */
+let PT = null, ptAt = Date.now(), ptDirty = false;
+function ptFile(){ return path.join(app.getPath('userData'), 'spielzeit.json'); }
+function ptDay(d){ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function ptAdd(pt, clients, sec, day){
+  pt.since = pt.since || day;
+  pt.total = (pt.total || 0) + sec;
+  pt.days = pt.days || {}; pt.days[day] = (pt.days[day] || 0) + sec;
+  Object.keys(pt.days).sort().slice(0, -60).forEach(k => delete pt.days[k]);
+  pt.ch = pt.ch || {};
+  Array.from(new Set(clients.map(c => c.name).filter(Boolean))).forEach(n => { pt.ch[n] = (pt.ch[n] || 0) + sec; });
+  return pt;
+}
+// Zeit seit dem letzten Aufruf gutschreiben, wenn in dieser Zeit ein Client lief. Lücke über 5 Min. = PC hat geschlafen, zählt nicht.
+function ptCount(save){
+  if (!PT){ try{ PT = JSON.parse(fs.readFileSync(ptFile(), 'utf8')) || {}; }catch(e){ PT = {}; } }
+  const now = Date.now(), sec = Math.round((now - ptAt) / 1000);
+  if (sec > 0){ ptAt = now; if (fg.clients.length && sec <= 300){ ptAdd(PT, fg.clients, sec, ptDay(new Date())); ptDirty = true; } }
+  if (save && ptDirty){ try{ fs.writeFileSync(ptFile(), JSON.stringify(PT)); ptDirty = false; }catch(e){} }
+  return PT;
+}
 
 /* ---------------- Pfade ---------------- */
 function bundledHtml(){ return path.join(__dirname, 'evecore', 'EVE-Omni.html'); }
@@ -173,6 +196,7 @@ function publicSettings(){
   o.fgHelper = fg.status;
   o.eveClients = fg.clients.map(c => ({ hwnd: c.hwnd, name: c.name, title: c.title }));
   o.eveFront = fg.lastEve || '';   // AO1: zuletzt vorne gewesener EVE-Client
+  o.playtime = ptCount();   // PT: Spielzeit
   o.cycleStatus = fg.cycle;
   o.wasCompact = wasCompact;
   o.viewNames = VIEWS;   // AK: Reiternamen im Stapel
@@ -1458,13 +1482,13 @@ function startFgWatch(){
       let i;
       while ((i = buf.indexOf('\n')) >= 0){ const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1); fgLine(line); }
     });
-    p.on('exit', () => { fg.proc = null; fg.status = 'fehler'; fg.clients = []; fg.cycle = ''; lastCycleLines = ''; fg.eve = true; applyWindowState(); pushSettings(); pvSync(); });
+    p.on('exit', () => { ptCount(); fg.proc = null; fg.status = 'fehler'; fg.clients = []; fg.cycle = ''; lastCycleLines = ''; fg.eve = true; applyWindowState(); pushSettings(); pvSync(); });
     p.on('error', () => { fg.proc = null; fg.status = 'fehler'; });
   }catch(e){ fg.status = 'fehler'; }
 }
 function fgLine(line){
   if (line === 'READY'){ fg.status = 'ok'; cycleSend(); pushSettings(); pvSync(); applyWindowState(); sndSent = {}; sndApply(); return; }   // applyWindowState: dem Helfer die Overlays melden (OV)
-  if (line.indexOf('EVES') === 0){ fg.clients = parseEves(line); pushSettingsSoon(); pvSync(); sndApply(); return; }
+  if (line.indexOf('EVES') === 0){ ptCount(); fg.clients = parseEves(line); pushSettingsSoon(); pvSync(); sndApply(); return; }
   if (/^SWITCH \d+/.test(line)){ fg.switches++; return; }
   if (/^CYCLE /.test(line)){ fg.cycle = line.slice(6).trim(); pushSettingsSoon(); return; }
   if (/^CLIP \d+/.test(line)){ fg.clip = true; setTimeout(() => handleClip(true), 60); return; }
@@ -2932,10 +2956,11 @@ if (!TEST && !app.requestSingleInstanceLock()){
     if (!S.shortcutDone){ S.shortcutDone = true; saveSettings(); }
     checkEve();
     setInterval(checkEve, 10000);
+    setInterval(() => ptCount(true), 60000);   // PT: Spielzeit jede Minute gutschreiben und sichern
     setTimeout(backupDueCheck, TEST ? 3000 : 60000);
     setInterval(backupDueCheck, 3600 * 1000);
   });
-  app.on('will-quit', () => { globalShortcut.unregisterAll(); saveSettings(true); try{ const p = fg.proc; fg.proc = null; if (p) p.kill(); }catch(e){} });
+  app.on('will-quit', () => { globalShortcut.unregisterAll(); saveSettings(true); ptCount(true); try{ const p = fg.proc; fg.proc = null; if (p) p.kill(); }catch(e){} });
   app.on('before-quit', () => { Object.keys(sats).forEach(id => { const w = sats[id]; if (w && !w.isDestroyed()) S.windows[id] = Object.assign({}, S.windows[id], { bounds: w.getBounds() }); }); });
   app.on('before-quit', () => { quitting = true; });
   // Erscheint ein Fenster des gemeinsamen Besitzers (Jukebox-Anzeige, Vorschau, Overlay), nimmt Windows den Geschwistern „immer oben“
